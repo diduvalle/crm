@@ -3,67 +3,133 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CRM · formação prática</title>
-<meta name="description" content="Um CRM completo usado como sala de aula. Quem conclui um módulo recebe um selo com página de verificação própria.">
-<meta name="theme-color" content="#0d2018">
-<meta property="og:title" content="Formação prática em CRM">
-<meta property="og:description" content="Um CRM completo usado como sala de aula.">
+<title>CRM como sala de aula</title>
+<meta name="description" content="Um CRM inteiro, feito para ser praticado. Aqui verificam-se os badges de quem concluiu a formação.">
+<meta name="theme-color" content="#efe9dd">
+<meta property="og:title" content="CRM como sala de aula">
+<meta property="og:description" content="Um CRM inteiro, feito para ser praticado.">
 <meta property="og:url" content="https://crm.cr0x.org/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;800&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Space+Mono:wght@400;700&display=swap">
 <style>
   :root{
-    --fundo:#0d2018;
-    --ouro:#d4af37;
-    --texto:#e9eee9;
-    --texto-2:#a8b6ac;
-    --linha:#1e3a2b;
+    --papel:#efe9dd;
+    --azul:#2b3a8f;
+    --laranja:#ff4b3e;
+    --tinta:#171412;
+    --tinta-2:#4a423c;
+    --fraco:#8a7f75;
   }
   *{box-sizing:border-box}
-  html,body{height:100%}
+  html{-webkit-text-size-adjust:100%}
   body{
-    margin:0;background:var(--fundo);color:var(--texto);
-    font-family:"Source Sans 3",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-    font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;
-    display:flex;align-items:center;justify-content:center;padding:40px 24px;
+    margin:0;background:var(--papel);color:var(--tinta);
+    font-family:Newsreader,Georgia,serif;font-size:19px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;position:relative;overflow-x:hidden;
   }
-  main{max-width:38rem;width:100%}
-  .selo{display:block;margin:0 0 30px;width:112px;height:112px}
+  /* trama de pontos, como uma impressao */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:radial-gradient(var(--tinta) 0.5px, transparent 0.6px);
+    background-size:4px 4px;opacity:.07;
+  }
+  .folha{max-width:64rem;margin:0 auto;padding:0 28px 90px;position:relative;z-index:1}
+
+  header{padding:74px 0 0;position:relative}
+  .tintas{position:absolute;inset:-40px -40px auto auto;width:520px;height:420px;pointer-events:none;overflow:hidden}
+  .tintas span{position:absolute;border-radius:50%;mix-blend-mode:multiply;opacity:.88}
+  .t1{width:330px;height:330px;background:var(--azul);right:0;top:0}
+  .t2{width:230px;height:230px;background:var(--laranja);right:180px;top:150px}
+  .marca{
+    font-family:"Space Mono",ui-monospace,monospace;font-size:.72rem;letter-spacing:.24em;
+    text-transform:uppercase;color:var(--azul);margin:0 0 26px;position:relative;z-index:2;
+  }
   h1{
-    font-size:clamp(1.7rem,4.6vw,2.3rem);line-height:1.12;letter-spacing:-.015em;
-    margin:0 0 16px;font-weight:700;text-wrap:balance;
+    font-family:Archivo,system-ui,sans-serif;font-weight:800;
+    font-size:clamp(2.6rem,7.4vw,5rem);line-height:.94;letter-spacing:-.035em;
+    margin:0 0 26px;max-width:15ch;position:relative;z-index:2;text-wrap:balance;
   }
-  p{margin:0 0 15px;color:var(--texto-2);max-width:52ch}
-  strong{color:var(--texto);font-weight:600}
+  h1 em{font-style:normal;color:var(--laranja)}
+  .abre{font-size:1.22rem;max-width:34ch;margin:0;color:var(--tinta-2);position:relative;z-index:2}
+
+  .regua{border:0;border-top:1.5px solid var(--tinta);margin:66px 0 46px}
+  .colunas{display:grid;gap:40px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+  .col h2{
+    font-family:"Space Mono",monospace;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--azul);margin:0 0 12px;font-weight:700;
+  }
+  .col p{margin:0 0 12px;font-size:1rem;color:var(--tinta-2)}
+  .col p:last-child{margin-bottom:0}
+  strong{font-weight:500;color:var(--tinta)}
+
+  .objeto{
+    display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:center;
+    margin:60px 0 0;padding:30px;border:1.5px solid var(--tinta);background:#e7dfd0;
+  }
+  .tile{width:132px;height:132px;background:#0d2018;padding:12px}
+  .tile svg{width:100%;height:100%;display:block}
+  .objeto h3{font-family:Archivo,sans-serif;font-weight:800;font-size:1.3rem;margin:0 0 8px;letter-spacing:-.015em}
+  .objeto p{margin:0 0 10px;font-size:1rem;color:var(--tinta-2)}
+  .objeto p:last-child{margin:0}
   .verif{
-    display:inline-block;margin-top:6px;
-    font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.82rem;
-    color:var(--ouro);border:1px solid var(--linha);border-radius:8px;padding:.5em .8em;
+    display:inline-block;font-family:"Space Mono",monospace;font-size:.8rem;
+    background:var(--azul);color:var(--papel);padding:.42em .7em;
   }
-  .rodape{
-    margin-top:34px;padding-top:20px;border-top:1px solid var(--linha);
-    color:#7d8f83;font-size:.88rem;
+  @media(max-width:620px){ .objeto{grid-template-columns:1fr} .tintas{width:300px;height:280px} .t1{width:200px;height:200px} .t2{width:150px;height:150px;right:110px;top:100px} }
+
+  footer{
+    margin-top:64px;padding-top:22px;border-top:1.5px solid var(--tinta);
+    font-family:"Space Mono",monospace;font-size:.76rem;color:var(--fraco);
+    display:flex;flex-wrap:wrap;gap:8px 28px;letter-spacing:.04em;
   }
-  a{color:var(--ouro);text-decoration:none;border-bottom:1px solid rgba(212,175,55,.35)}
-  a:hover,a:focus-visible{border-bottom-color:var(--ouro)}
-  a:focus-visible{outline:2px solid var(--ouro);outline-offset:3px;border-radius:2px}
+  a{color:var(--azul);text-decoration:none;border-bottom:1.5px solid var(--laranja)}
+  a:hover{color:var(--laranja)}
+  a:focus-visible{outline:2.5px solid var(--laranja);outline-offset:3px}
 </style>
 </head>
 <body>
-<main>
-  <svg class="selo" viewBox="0 0 200 200" width="112" height="112" role="img" aria-label="Selo de conclusão da formação em CRM">
-  
+<div class="folha">
+
+  <header>
+    <div class="tintas"><span class="t1"></span><span class="t2"></span></div>
+    <p class="marca">crm.cr0x.org</p>
+    <h1>Um CRM inteiro, usado como <em>sala de aula</em>.</h1>
+    <p class="abre">Empresas, contactos, propostas, campanhas, apoio ao cliente e RGPD - tudo a funcionar, para se aprender a mexer sem medo de partir.</p>
+  </header>
+
+  <hr class="regua">
+
+  <div class="colunas">
+    <div class="col">
+      <h2>O que é</h2>
+      <p>Um CRM completo, escrito de raiz para ser <strong>praticado</strong> e não vendido. Cada pessoa trabalha na sua cópia: cria empresas, negocia propostas, responde a pedidos de titulares de dados, engana-se e recomeça.</p>
+      <p>Nada do que lá está é real. É essa a ideia.</p>
+    </div>
+    <div class="col">
+      <h2>Quem faz</h2>
+      <p>Um projeto independente de <a href="https://www.linkedin.com/in/ldvale/" target="_blank" rel="noopener">Diogo du Valle</a>, construído para as formações que dá.</p>
+      <p>Sem fins comerciais, sem publicidade e sem contas para quem não anda numa turma.</p>
+    </div>
+    <div class="col">
+      <h2>Porquê aqui</h2>
+      <p>Os badges vivem neste endereço, e não no da escola, para nunca se confundirem com um certificado dela.</p>
+      <p>Quem emite é quem forma. Está escrito em cada página, e é verificável.</p>
+    </div>
+  </div>
+
+  <div class="objeto">
+    <div class="tile"><svg viewBox="0 0 200 200" role="img" aria-label="Exemplo de badge">
   <g transform="rotate(-5 100 100)">
     <circle cx="100" cy="100" r="76" fill="none" stroke="#d4af37" stroke-width="7"/>
     <circle cx="100" cy="100" r="64" fill="none" stroke="#d4af37" stroke-width="2.5"/>
-    <path id="ratop" d="M100,100 m-51,0 a51,51 0 1,1 102,0 a51,51 0 1,1 -102,0" fill="none"/>
-    <text font-family="'JetBrains Mono','SFMono-Regular',Consolas,monospace" font-size="9.5" font-weight="600" fill="#d4af37" letter-spacing="1.5">
-      <textPath href="#ratop" startOffset="25%" text-anchor="middle">FORMAÇÃO EM CRM</textPath>
+    <path id="raobj" d="M100,100 m-51,0 a51,51 0 1,1 102,0 a51,51 0 1,1 -102,0" fill="none"/>
+    <text font-family="'JetBrains Mono',monospace" font-size="9.5" font-weight="600" fill="#d4af37" letter-spacing="1.5">
+      <textPath href="#raobj" startOffset="25%" text-anchor="middle">FORMAÇÃO EM CRM</textPath>
     </text>
-    <path id="rbtop" d="M100,100 m-50,0 a50,50 0 1,0 100,0 a50,50 0 1,0 -100,0" fill="none"/>
-    <text font-family="'JetBrains Mono','SFMono-Regular',Consolas,monospace" font-size="9.5" fill="#d4af37" letter-spacing="3">
-      <textPath href="#rbtop" startOffset="25%" text-anchor="middle">2026</textPath>
+    <path id="rbobj" d="M100,100 m-50,0 a50,50 0 1,0 100,0 a50,50 0 1,0 -100,0" fill="none"/>
+    <text font-family="'JetBrains Mono',monospace" font-size="9.5" fill="#d4af37" letter-spacing="3">
+      <textPath href="#rbobj" startOffset="25%" text-anchor="middle">2026</textPath>
     </text>
     <rect x="55" y="77" width="28" height="47" rx="4" fill="none" stroke="#d4af37" stroke-width="3.4"/>
     <rect x="86" y="77" width="28" height="47" rx="4" fill="none" stroke="#d4af37" stroke-width="3.4"/>
@@ -76,21 +142,21 @@
     <rect x="91" y="93" width="18" height="7" rx="2" fill="#d4af37" opacity=".34"/>
     <rect x="122" y="93" width="18" height="7" rx="2" fill="#0d2018"/>
     <rect x="122" y="104" width="18" height="7" rx="2" fill="#0d2018" opacity=".45"/>
-  </g>
-</svg>
-
-  <h1>Formação prática em CRM</h1>
-
-  <p>Um CRM completo usado como sala de aula: empresas, contactos, propostas, campanhas, apoio ao cliente e conformidade com o RGPD. Um sítio onde se pode experimentar sem partir nada.</p>
-
-  <p>Quem conclui um módulo recebe um <strong>selo com página de verificação própria</strong>, para partilhar onde quiser.</p>
-
-  <span class="verif">crm.cr0x.org/b/&lt;id&gt;</span>
-
-  <div class="rodape">
-    Projeto pedagógico independente, sem fins comerciais.<br>
-    A edição anterior continua disponível em <a href="https://iefpcrm.cr0x.org">iefpcrm.cr0x.org</a>.
+  </g></svg></div>
+    <div>
+      <h3>Chegaste aqui por um badge?</h3>
+      <p>Quer dizer que alguém concluiu um módulo de formação e quis mostrá-lo. Cada badge tem a sua página, com o nome, a data, a formação e quem a deu.</p>
+      <p><strong>Não é uma certificação profissional</strong> nem substitui o certificado da entidade formadora. É o registo de que a pessoa esteve, fez e concluiu.</p>
+      <p style="margin-top:14px"><span class="verif">crm.cr0x.org/b/&lt;referência&gt;</span></p>
+    </div>
   </div>
-</main>
+
+  <footer>
+    <span>Projeto pedagógico independente</span>
+    <span>Sem fins comerciais</span>
+    <span>Edição anterior: <a href="https://iefpcrm.cr0x.org">iefpcrm.cr0x.org</a></span>
+  </footer>
+
+</div>
 </body>
 </html>
