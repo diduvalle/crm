@@ -120,6 +120,40 @@
   a{color:var(--azul);text-decoration:none;border-bottom:1.5px solid var(--azul)}
   a:hover{color:var(--tinta);border-bottom-color:var(--tinta)}
   a:focus-visible{outline:2.5px solid var(--azul);outline-offset:3px}
+
+  /* ---------- o editor, atras do #admin ----------
+     Vive na propria pagina para se escrever a ver o resultado, em vez de
+     escrever as cegas noutro sitio. Nao aparece a mais ninguem: sem a
+     ancora nem sequer e construido. */
+  #ed{
+    position:fixed;top:0;right:0;bottom:0;width:min(430px,92vw);z-index:50;
+    background:#fffdf8;border-left:1.5px solid var(--tinta);
+    display:flex;flex-direction:column;font-family:"Space Mono",monospace;
+    box-shadow:-18px 0 50px -30px rgba(0,0,0,.5);
+  }
+  #ed header{padding:16px 18px;border-bottom:1.5px solid var(--tinta);min-height:0}
+  #ed h2{font-family:Archivo,sans-serif;font-size:1.05rem;margin:0;font-weight:800}
+  #ed .sub{font-size:.68rem;color:var(--fraco);letter-spacing:.06em;margin-top:3px}
+  #ed .corpo{flex:1;overflow:auto;padding:16px 18px}
+  #ed label{display:block;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--azul);margin:16px 0 5px}
+  #ed label:first-child{margin-top:0}
+  #ed textarea,#ed input{
+    width:100%;font:inherit;font-size:.8rem;line-height:1.5;padding:8px 10px;
+    border:1.5px solid #cfc6b6;background:#fff;color:var(--tinta);border-radius:0;
+  }
+  #ed textarea{min-height:78px;resize:vertical}
+  #ed textarea:focus,#ed input:focus{outline:2px solid var(--azul);outline-offset:-2px;border-color:var(--azul)}
+  #ed .pe{padding:14px 18px;border-top:1.5px solid var(--tinta);display:flex;gap:10px;align-items:center}
+  #ed button{
+    font:inherit;font-size:.78rem;font-weight:700;padding:.6em 1em;cursor:pointer;
+    border:1.5px solid var(--tinta);background:var(--tinta);color:#fffdf8;
+  }
+  #ed button.sec{background:none;color:var(--tinta)}
+  #ed .estado{font-size:.68rem;color:var(--fraco);margin-left:auto}
+  #ed .dica{font-size:.66rem;color:var(--fraco);line-height:1.5;margin:14px 0 0}
+  body.editando .folha{margin-right:min(430px,92vw)}
+  @media(max-width:860px){ body.editando .folha{margin-right:0} #ed{width:100%} }
 </style>
 </head>
 <body>
@@ -148,22 +182,26 @@
       </svg>
     </div>
     <p class="marca">crm.cr0x.org</p>
-    <h1>Um CRM inteiro, usado como <em>sala de aula<svg class="pincel" viewBox="0 0 340 30" preserveAspectRatio="none" aria-hidden="true"><path d="M2.5 17.5c10-3.6 22-5.6 36-6.4 26-1.6 52 1.2 78 2.2 30 1.2 60-0.6 90-2.4 28-1.7 55-3 82-1.1 18 1.3 33 4 47 8.4 3 0.9 3.4 6.6 0.4 7.4-14 3.6-29 4.6-45 4.2-30-0.8-59-4.2-89-4.6-32-0.4-63 2.4-95 3-26 0.5-51-0.6-75-4-10-1.4-19-3.4-27-6.2-3-1-3.1-5.5-2.4-6.5z"/></svg></em>.</h1>
-    <p class="abre">Empresas, contactos, propostas, campanhas, apoio ao cliente e RGPD - tudo a funcionar, para se aprender a mexer sem medo de partir.</p>
+    <h1><span data-txt="titulo">Um CRM inteiro, usado como</span> <em><span data-txt="destaque">sala de aula</span><svg class="pincel" viewBox="0 0 340 30" preserveAspectRatio="none" aria-hidden="true"><path d="M2.5 17.5c10-3.6 22-5.6 36-6.4 26-1.6 52 1.2 78 2.2 30 1.2 60-0.6 90-2.4 28-1.7 55-3 82-1.1 18 1.3 33 4 47 8.4 3 0.9 3.4 6.6 0.4 7.4-14 3.6-29 4.6-45 4.2-30-0.8-59-4.2-89-4.6-32-0.4-63 2.4-95 3-26 0.5-51-0.6-75-4-10-1.4-19-3.4-27-6.2-3-1-3.1-5.5-2.4-6.5z"/></svg></em>.</h1>
+    <p class="abre" data-txt="abre">Empresas, contactos, propostas, campanhas, apoio ao cliente e RGPD - tudo a funcionar, para se aprender a mexer sem medo de partir.</p>
   </header>
 
   <hr class="regua">
 
   <div class="colunas">
     <div class="col">
-      <h2>O que é</h2>
-      <p>Um CRM completo, escrito de raiz para ser <strong>praticado</strong>. Cada pessoa trabalha na sua cópia: cria empresas, negocia propostas, responde a pedidos de titulares de dados, engana-se e recomeça.</p>
-      <p>Nada do que lá está dentro é real - <strong>só a experiência de o usar</strong>.</p>
+      <h2 data-txt="c1_rot">O que é</h2>
+      <div data-txt="c1_txt" data-bloco>
+        <p>Um CRM completo, escrito de raiz para ser <strong>praticado</strong>. Cada pessoa trabalha na sua cópia: cria empresas, negocia propostas, responde a pedidos de titulares de dados, engana-se e recomeça.</p>
+        <p>Nada do que lá está dentro é real - <strong>só a experiência de o usar</strong>.</p>
+      </div>
     </div>
     <div class="col">
-      <h2>Porque existe</h2>
-      <p>Nasceu do que faltava nos outros. Os CRM do mercado escondem metade atrás de um plano pago, enchem-se de coisas que ninguém pediu, e nenhum deixa uma pessoa partir tudo só para aprender.</p>
-      <p>Este é inteiro e sem publicidade, feito para se perceber como um CRM funciona <strong>por dentro</strong>.</p>
+      <h2 data-txt="c2_rot">Porque existe</h2>
+      <div data-txt="c2_txt" data-bloco>
+        <p>Nasceu do que faltava nos outros. Os CRM do mercado escondem metade atrás de um plano pago, enchem-se de coisas que ninguém pediu, e nenhum deixa uma pessoa partir tudo só para aprender.</p>
+        <p>Este é inteiro e sem publicidade, feito para se perceber como um CRM funciona <strong>por dentro</strong>.</p>
+      </div>
       <p style="margin-top:16px">Criado por <a href="https://www.linkedin.com/in/ldvale/" target="_blank" rel="noopener">Diogo du Valle</a>.</p>
     </div>
   </div>
@@ -194,11 +232,11 @@
     <rect x="122" y="104" width="18" height="7" rx="2" fill="#efe9dd" opacity=".45"/>
   </g></svg></div>
     <div>
-      <h3>Chegaste aqui por um badge?</h3>
-      <p>Quer dizer que alguém concluiu um módulo de formação e quis mostrá-lo.<br>
-         Cada badge tem a sua página, com o nome, a data, a formação e quem a deu.</p>
-      <p><strong>Não é uma certificação profissional</strong> nem substitui o certificado da entidade formadora.<br>
-         É o registo de que a pessoa esteve, fez e concluiu.</p>
+      <h3 data-txt="b_tit">Chegaste aqui por um badge?</h3>
+      <div data-txt="b_txt" data-bloco>
+        <p>Quer dizer que alguém concluiu um módulo de formação e quis mostrá-lo.<br>Cada badge tem a sua página, com o nome, a data, a formação e quem a deu.</p>
+        <p><strong>Não é uma certificação profissional</strong> nem substitui o certificado da entidade formadora.<br>É o registo de que a pessoa esteve, fez e concluiu.</p>
+      </div>
     </div>
   </div>
 
@@ -208,5 +246,7 @@
   </footer>
 
 </div>
+
+<script src="/admin.js" defer></script>
 </body>
 </html>
