@@ -11,15 +11,14 @@
 <meta property="og:url" content="https://crm.cr0x.org/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;800&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Space+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,500;0,800;1,800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Space+Mono:wght@400;700&display=swap">
 <style>
   :root{
     --papel:#efe9dd;
-    --azul:#0078bf;         /* Riso Blue */
-    --rosa:#ff48b0;         /* Riso Fluorescent Pink */
-    --laranja:#ff48b0;      /* alias, para nao mexer no resto */
+    --azul:#0078bf;
     --tinta:#171412;
     --tinta-2:#4a423c;
+    --neutra:#2a2622;      /* a tinta do quadro */
     --fraco:#8a7f75;
   }
   *{box-sizing:border-box}
@@ -29,7 +28,6 @@
     font-family:Newsreader,Georgia,serif;font-size:19px;line-height:1.6;
     -webkit-font-smoothing:antialiased;position:relative;overflow-x:hidden;
   }
-  /* trama de pontos, como uma impressao */
   body::before{
     content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
     background-image:radial-gradient(var(--tinta) 0.5px, transparent 0.6px);
@@ -37,29 +35,34 @@
   }
   .folha{max-width:64rem;margin:0 auto;padding:0 28px 90px;position:relative;z-index:1}
 
-  header{padding:74px 0 0;position:relative}
-  .tintas{position:absolute;top:-120px;right:-90px;width:560px;height:560px;pointer-events:none}
-  .tintas span{position:absolute;width:400px;height:400px;border-radius:50%;mix-blend-mode:multiply}
-  .t1{background:var(--azul);right:60px;top:80px}
-  .t2{background:var(--rosa);right:14px;top:126px}
-  /* o anel: a mesma circunferencia do carimbo, so que aqui a tinta e outra */
-  .t3{width:260px !important;height:260px !important;border:14px solid var(--azul);
-      background:none !important;right:210px;top:236px}
+  header{padding:74px 0 0;position:relative;min-height:330px}
+  /* o quadro do badge, em grande: o mesmo desenho, outra tinta */
+  .quadro{
+    position:absolute;top:6px;right:-34px;width:380px;height:380px;
+    pointer-events:none;opacity:.92;
+  }
+  .quadro svg{width:100%;height:100%;display:block}
   .marca{
     font-family:"Space Mono",ui-monospace,monospace;font-size:.72rem;letter-spacing:.24em;
     text-transform:uppercase;color:var(--azul);margin:0 0 26px;position:relative;z-index:2;
   }
   h1{
     font-family:Archivo,system-ui,sans-serif;font-weight:800;
-    font-size:clamp(2.6rem,7.4vw,5rem);line-height:.94;letter-spacing:-.035em;
-    margin:0 0 26px;max-width:14ch;position:relative;z-index:2;text-wrap:balance;
-    mix-blend-mode:multiply;
+    font-size:clamp(2.6rem,7.2vw,4.8rem);line-height:.96;letter-spacing:-.035em;
+    margin:0 0 28px;max-width:13ch;position:relative;z-index:2;text-wrap:balance;
   }
-  h1 em{font-style:normal;color:var(--azul)}
-  .abre{font-size:1.22rem;max-width:34ch;margin:0;color:var(--tinta-2);position:relative;z-index:2}
+  /* a pincelada por baixo, na tinta do quadro */
+  h1 em{
+    font-style:italic;color:var(--tinta);position:relative;display:inline-block;
+  }
+  h1 em .pincel{
+    position:absolute;left:-.06em;right:-.09em;bottom:.02em;height:.28em;
+    width:auto;z-index:-1;fill:var(--neutra);opacity:.9;
+  }
+  .abre{font-size:1.22rem;max-width:32ch;margin:0;color:var(--tinta-2);position:relative;z-index:2}
 
   .regua{border:0;border-top:1.5px solid var(--tinta);margin:66px 0 46px}
-  .colunas{display:grid;gap:40px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+  .colunas{display:grid;gap:52px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
   .col h2{
     font-family:"Space Mono",monospace;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
     color:var(--azul);margin:0 0 12px;font-weight:700;
@@ -72,21 +75,15 @@
     display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:center;
     margin:60px 0 0;padding:30px;border:1.5px solid var(--tinta);background:#e7dfd0;
   }
-  .tile{width:132px;height:132px;background:#0d2018;padding:12px}
+  .tile{width:132px;height:132px;background:#fff;border:1.5px solid var(--tinta);padding:10px}
   .tile svg{width:100%;height:100%;display:block}
   .objeto h3{font-family:Archivo,sans-serif;font-weight:800;font-size:1.3rem;margin:0 0 8px;letter-spacing:-.015em}
   .objeto p{margin:0 0 10px;font-size:1rem;color:var(--tinta-2)}
   .objeto p:last-child{margin:0}
-  .verif{
-    display:inline-block;font-family:"Space Mono",monospace;font-size:.8rem;
-    background:var(--azul);color:var(--papel);padding:.42em .7em;
-  }
   @media(max-width:760px){
     .objeto{grid-template-columns:1fr}
-    .tintas{top:-70px;right:-70px;width:320px;height:320px}
-    .tintas span{width:230px;height:230px}
-    .t1{right:40px;top:40px} .t2{right:6px;top:66px}
-    .t3{width:150px !important;height:150px !important;border-width:9px;right:130px;top:140px}
+    header{min-height:0;padding-top:52px}
+    .quadro{position:relative;top:0;right:0;width:210px;height:210px;margin:0 0 18px}
   }
 
   footer{
@@ -94,18 +91,31 @@
     font-family:"Space Mono",monospace;font-size:.76rem;color:var(--fraco);
     display:flex;flex-wrap:wrap;gap:8px 28px;letter-spacing:.04em;
   }
-  a{color:var(--azul);text-decoration:none;border-bottom:1.5px solid var(--laranja)}
-  a:hover{color:var(--laranja)}
-  a:focus-visible{outline:2.5px solid var(--laranja);outline-offset:3px}
+  a{color:var(--azul);text-decoration:none;border-bottom:1.5px solid var(--azul)}
+  a:hover{color:var(--tinta);border-bottom-color:var(--tinta)}
+  a:focus-visible{outline:2.5px solid var(--azul);outline-offset:3px}
 </style>
 </head>
 <body>
 <div class="folha">
 
   <header>
-    <div class="tintas"><span class="t1"></span><span class="t2"></span><span class="t3"></span></div>
+    <div class="quadro"><svg viewBox="0 0 200 200" aria-hidden="true">
+  <g transform="rotate(-5 100 100)">
+    <rect x="55" y="77" width="28" height="47" rx="4" fill="none" stroke="var(--neutra)" stroke-width="3.4"/>
+    <rect x="86" y="77" width="28" height="47" rx="4" fill="none" stroke="var(--neutra)" stroke-width="3.4"/>
+    <rect x="117" y="77" width="28" height="47" rx="4" fill="var(--neutra)"/>
+    <rect x="60" y="83" width="18" height="3.4" rx="1.7" fill="var(--neutra)"/>
+    <rect x="91" y="83" width="18" height="3.4" rx="1.7" fill="var(--neutra)"/>
+    <rect x="122" y="83" width="18" height="3.4" rx="1.7" fill="var(--papel)"/>
+    <rect x="60" y="93" width="18" height="7" rx="2" fill="var(--neutra)" opacity=".34"/>
+    <rect x="60" y="104" width="18" height="7" rx="2" fill="var(--neutra)" opacity=".34"/>
+    <rect x="91" y="93" width="18" height="7" rx="2" fill="var(--neutra)" opacity=".34"/>
+    <rect x="122" y="93" width="18" height="7" rx="2" fill="var(--papel)"/>
+    <rect x="122" y="104" width="18" height="7" rx="2" fill="var(--papel)" opacity=".45"/>
+  </g></svg></div>
     <p class="marca">crm.cr0x.org</p>
-    <h1>Um CRM inteiro, usado como <em>sala de aula</em>.</h1>
+    <h1>Um CRM inteiro, usado como <em>sala de aula<svg class="pincel" viewBox="0 0 320 26" preserveAspectRatio="none" aria-hidden="true"><path d="M3 15c48-7 96 4 143-2 46-6 96-9 172-4 2 0 2 9 0 9-70 6-124 2-170 8-48 6-98-3-145 3-3 0-3-14 0-14z"/></svg></em>.</h1>
     <p class="abre">Empresas, contactos, propostas, campanhas, apoio ao cliente e RGPD - tudo a funcionar, para se aprender a mexer sem medo de partir.</p>
   </header>
 
@@ -122,43 +132,37 @@
       <p>Um projeto independente de <a href="https://www.linkedin.com/in/ldvale/" target="_blank" rel="noopener">Diogo du Valle</a>, construído para as formações que dá.</p>
       <p>Sem fins comerciais, sem publicidade e sem contas para quem não anda numa turma.</p>
     </div>
-    <div class="col">
-      <h2>Porquê aqui</h2>
-      <p>Os badges vivem neste endereço, e não no da escola, para nunca se confundirem com um certificado dela.</p>
-      <p>Quem emite é quem forma. Está escrito em cada página, e é verificável.</p>
-    </div>
   </div>
 
   <div class="objeto">
-    <div class="tile"><svg viewBox="0 0 200 200" role="img" aria-label="Exemplo de badge">
+    <div class="tile"><svg viewBox="0 0 200 200" role="img" aria-label="Exemplo de badge"><rect width="200" height="200" rx="18" fill="#ffffff"/>
   <g transform="rotate(-5 100 100)">
-    <circle cx="100" cy="100" r="76" fill="none" stroke="#d4af37" stroke-width="7"/>
-    <circle cx="100" cy="100" r="64" fill="none" stroke="#d4af37" stroke-width="2.5"/>
+    <circle cx="100" cy="100" r="76" fill="none" stroke="#171412" stroke-width="7"/>
+    <circle cx="100" cy="100" r="64" fill="none" stroke="#171412" stroke-width="2.5"/>
     <path id="raobj" d="M100,100 m-51,0 a51,51 0 1,1 102,0 a51,51 0 1,1 -102,0" fill="none"/>
-    <text font-family="'JetBrains Mono',monospace" font-size="9.5" font-weight="600" fill="#d4af37" letter-spacing="1.5">
+    <text font-family="'JetBrains Mono',monospace" font-size="9.5" font-weight="600" fill="#171412" letter-spacing="1.5">
       <textPath href="#raobj" startOffset="25%" text-anchor="middle">FORMAÇÃO EM CRM</textPath>
     </text>
     <path id="rbobj" d="M100,100 m-50,0 a50,50 0 1,0 100,0 a50,50 0 1,0 -100,0" fill="none"/>
-    <text font-family="'JetBrains Mono',monospace" font-size="9.5" fill="#d4af37" letter-spacing="3">
+    <text font-family="'JetBrains Mono',monospace" font-size="9.5" fill="#171412" letter-spacing="3">
       <textPath href="#rbobj" startOffset="25%" text-anchor="middle">2026</textPath>
     </text>
-    <rect x="55" y="77" width="28" height="47" rx="4" fill="none" stroke="#d4af37" stroke-width="3.4"/>
-    <rect x="86" y="77" width="28" height="47" rx="4" fill="none" stroke="#d4af37" stroke-width="3.4"/>
-    <rect x="117" y="77" width="28" height="47" rx="4" fill="#d4af37"/>
-    <rect x="60" y="83" width="18" height="3.4" rx="1.7" fill="#d4af37"/>
-    <rect x="91" y="83" width="18" height="3.4" rx="1.7" fill="#d4af37"/>
-    <rect x="122" y="83" width="18" height="3.4" rx="1.7" fill="#0d2018"/>
-    <rect x="60" y="93" width="18" height="7" rx="2" fill="#d4af37" opacity=".34"/>
-    <rect x="60" y="104" width="18" height="7" rx="2" fill="#d4af37" opacity=".34"/>
-    <rect x="91" y="93" width="18" height="7" rx="2" fill="#d4af37" opacity=".34"/>
-    <rect x="122" y="93" width="18" height="7" rx="2" fill="#0d2018"/>
-    <rect x="122" y="104" width="18" height="7" rx="2" fill="#0d2018" opacity=".45"/>
+    <rect x="55" y="77" width="28" height="47" rx="4" fill="none" stroke="#171412" stroke-width="3.4"/>
+    <rect x="86" y="77" width="28" height="47" rx="4" fill="none" stroke="#171412" stroke-width="3.4"/>
+    <rect x="117" y="77" width="28" height="47" rx="4" fill="#171412"/>
+    <rect x="60" y="83" width="18" height="3.4" rx="1.7" fill="#171412"/>
+    <rect x="91" y="83" width="18" height="3.4" rx="1.7" fill="#171412"/>
+    <rect x="122" y="83" width="18" height="3.4" rx="1.7" fill="#ffffff"/>
+    <rect x="60" y="93" width="18" height="7" rx="2" fill="#171412" opacity=".34"/>
+    <rect x="60" y="104" width="18" height="7" rx="2" fill="#171412" opacity=".34"/>
+    <rect x="91" y="93" width="18" height="7" rx="2" fill="#171412" opacity=".34"/>
+    <rect x="122" y="93" width="18" height="7" rx="2" fill="#ffffff"/>
+    <rect x="122" y="104" width="18" height="7" rx="2" fill="#ffffff" opacity=".45"/>
   </g></svg></div>
     <div>
       <h3>Chegaste aqui por um badge?</h3>
       <p>Quer dizer que alguém concluiu um módulo de formação e quis mostrá-lo. Cada badge tem a sua página, com o nome, a data, a formação e quem a deu.</p>
       <p><strong>Não é uma certificação profissional</strong> nem substitui o certificado da entidade formadora. É o registo de que a pessoa esteve, fez e concluiu.</p>
-      <p style="margin-top:14px"><span class="verif">crm.cr0x.org/b/&lt;referência&gt;</span></p>
     </div>
   </div>
 
