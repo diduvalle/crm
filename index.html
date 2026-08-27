@@ -15,8 +15,9 @@
 <style>
   :root{
     --papel:#efe9dd;
-    --azul:#2b3a8f;
-    --laranja:#ff4b3e;
+    --azul:#0078bf;         /* Riso Blue */
+    --rosa:#ff48b0;         /* Riso Fluorescent Pink */
+    --laranja:#ff48b0;      /* alias, para nao mexer no resto */
     --tinta:#171412;
     --tinta-2:#4a423c;
     --fraco:#8a7f75;
@@ -37,10 +38,13 @@
   .folha{max-width:64rem;margin:0 auto;padding:0 28px 90px;position:relative;z-index:1}
 
   header{padding:74px 0 0;position:relative}
-  .tintas{position:absolute;inset:-40px -40px auto auto;width:520px;height:420px;pointer-events:none;overflow:hidden}
-  .tintas span{position:absolute;border-radius:50%;mix-blend-mode:multiply;opacity:.88}
-  .t1{width:330px;height:330px;background:var(--azul);right:0;top:0}
-  .t2{width:230px;height:230px;background:var(--laranja);right:180px;top:150px}
+  .tintas{position:absolute;top:-120px;right:-90px;width:560px;height:560px;pointer-events:none}
+  .tintas span{position:absolute;width:400px;height:400px;border-radius:50%;mix-blend-mode:multiply}
+  .t1{background:var(--azul);right:60px;top:80px}
+  .t2{background:var(--rosa);right:14px;top:126px}
+  /* o anel: a mesma circunferencia do carimbo, so que aqui a tinta e outra */
+  .t3{width:260px !important;height:260px !important;border:14px solid var(--azul);
+      background:none !important;right:210px;top:236px}
   .marca{
     font-family:"Space Mono",ui-monospace,monospace;font-size:.72rem;letter-spacing:.24em;
     text-transform:uppercase;color:var(--azul);margin:0 0 26px;position:relative;z-index:2;
@@ -48,9 +52,10 @@
   h1{
     font-family:Archivo,system-ui,sans-serif;font-weight:800;
     font-size:clamp(2.6rem,7.4vw,5rem);line-height:.94;letter-spacing:-.035em;
-    margin:0 0 26px;max-width:15ch;position:relative;z-index:2;text-wrap:balance;
+    margin:0 0 26px;max-width:14ch;position:relative;z-index:2;text-wrap:balance;
+    mix-blend-mode:multiply;
   }
-  h1 em{font-style:normal;color:var(--laranja)}
+  h1 em{font-style:normal;color:var(--azul)}
   .abre{font-size:1.22rem;max-width:34ch;margin:0;color:var(--tinta-2);position:relative;z-index:2}
 
   .regua{border:0;border-top:1.5px solid var(--tinta);margin:66px 0 46px}
@@ -76,7 +81,13 @@
     display:inline-block;font-family:"Space Mono",monospace;font-size:.8rem;
     background:var(--azul);color:var(--papel);padding:.42em .7em;
   }
-  @media(max-width:620px){ .objeto{grid-template-columns:1fr} .tintas{width:300px;height:280px} .t1{width:200px;height:200px} .t2{width:150px;height:150px;right:110px;top:100px} }
+  @media(max-width:760px){
+    .objeto{grid-template-columns:1fr}
+    .tintas{top:-70px;right:-70px;width:320px;height:320px}
+    .tintas span{width:230px;height:230px}
+    .t1{right:40px;top:40px} .t2{right:6px;top:66px}
+    .t3{width:150px !important;height:150px !important;border-width:9px;right:130px;top:140px}
+  }
 
   footer{
     margin-top:64px;padding-top:22px;border-top:1.5px solid var(--tinta);
@@ -92,7 +103,7 @@
 <div class="folha">
 
   <header>
-    <div class="tintas"><span class="t1"></span><span class="t2"></span></div>
+    <div class="tintas"><span class="t1"></span><span class="t2"></span><span class="t3"></span></div>
     <p class="marca">crm.cr0x.org</p>
     <h1>Um CRM inteiro, usado como <em>sala de aula</em>.</h1>
     <p class="abre">Empresas, contactos, propostas, campanhas, apoio ao cliente e RGPD - tudo a funcionar, para se aprender a mexer sem medo de partir.</p>
