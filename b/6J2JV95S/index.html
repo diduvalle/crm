@@ -46,6 +46,10 @@
   .rodape{margin-top:30px;color:var(--fraco);font-size:.87rem}
   .rodape a{color:var(--ouro)}
   code{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.86em;color:var(--texto-2)}
+  /* a ligacao do formador funciona mas nao se anuncia: sem cor propria,
+     sem sublinhado e sem estado de rato */
+  a.pessoa{color:inherit;text-decoration:none}
+  a.pessoa:focus-visible{outline:2px solid var(--ouro);outline-offset:2px;border-radius:3px}
   @media(max-width:520px){.topo svg{width:96px;height:96px}}
 </style>
 </head>
@@ -84,16 +88,17 @@
   </div>
 
   <dl>
-    <dt>Concluído</dt><dd>27/08/2026</dd>
-    <dt>Formação</dt><dd>Prática completa de um CRM: empresas e contactos, propostas e pipeline, campanhas, apoio ao cliente e conformidade com o RGPD.</dd>
+    <dt>Concluído</dt><dd>agosto de 2026</dd>
+    <dt>Formação</dt><dd>Administração de CRM &amp; RGPD</dd>
     
-    <dt>Formador</dt><dd>Diogo du Valle</dd>
-    <dt>Contexto</dt><dd>Selo de teste - será apagado</dd>
+    <dt>Formador</dt><dd><a class="pessoa" href="https://www.linkedin.com/in/ldvale/" target="_blank" rel="noopener">Diogo du Valle</a></dd>
+    <dt>Contexto</dt><dd>Turma 12023483 · IEFP</dd>
     <dt>Referência</dt><dd><code>6J2JV95S</code></dd>
   </dl>
 
   <div class="acoes">
     <a class="btn" href="https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME&amp;name=Forma%C3%A7%C3%A3o+pr%C3%A1tica+em+CRM&amp;organizationName=crm.cr0x.org&amp;issueYear=2026&amp;issueMonth=8&amp;certUrl=https%3A%2F%2Fcrm.cr0x.org%2Fb%2F6J2JV95S%2F&amp;certId=6J2JV95S" target="_blank" rel="noopener">Adicionar ao perfil do LinkedIn</a>
+    <a class="btn sec" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fcrm.cr0x.org%2Fb%2F6J2JV95S%2F" target="_blank" rel="noopener">Publicar no LinkedIn</a>
     <a class="btn sec" href="selo.png" download="selo-crm.png">Descarregar a imagem</a>
   </div>
 
