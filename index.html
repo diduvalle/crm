@@ -4,62 +4,91 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>CRM · formação prática</title>
-<meta name="description" content="Plataforma de formação prática em CRM.">
+<meta name="description" content="Um CRM completo usado como sala de aula. Quem conclui um módulo recebe um selo com página de verificação própria.">
+<meta name="theme-color" content="#0d2018">
+<meta property="og:title" content="Formação prática em CRM">
+<meta property="og:description" content="Um CRM completo usado como sala de aula.">
+<meta property="og:url" content="https://crm.cr0x.org/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
   :root{
-    --paper:#ffffff; --surface:#f1f5f2; --line:#d5ded8;
-    --ink:#141c18; --ink-2:#3d4a43; --muted:#6d7c74; --accent:#006b3c;
-  }
-  @media (prefers-color-scheme:dark){
-    :root:not([data-theme="light"]){
-      --paper:#0e1310; --surface:#161d19; --line:#2b352e;
-      --ink:#e6ece8; --ink-2:#b9c5be; --muted:#869890; --accent:#3fbe7c;
-    }
+    --fundo:#0d2018;
+    --ouro:#d4af37;
+    --texto:#e9eee9;
+    --texto-2:#a8b6ac;
+    --linha:#1e3a2b;
   }
   *{box-sizing:border-box}
+  html,body{height:100%}
   body{
-    margin:0;min-height:100vh;background:var(--paper);color:var(--ink);
-    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-    line-height:1.6;display:flex;align-items:center;justify-content:center;padding:32px;
+    margin:0;background:var(--fundo);color:var(--texto);
+    font-family:"Source Sans 3",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+    font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;
+    display:flex;align-items:center;justify-content:center;padding:40px 24px;
   }
-  main{max-width:34rem}
-  .selo{width:76px;height:76px;display:block;margin-bottom:26px}
-  h1{font-size:1.6rem;letter-spacing:-.01em;margin:0 0 12px;font-weight:700}
-  p{margin:0 0 14px;color:var(--ink-2)}
-  .nota{
-    margin-top:26px;padding-top:18px;border-top:1px solid var(--line);
-    color:var(--muted);font-size:.9rem;
+  main{max-width:38rem;width:100%}
+  .selo{display:block;margin:0 0 30px;width:112px;height:112px}
+  h1{
+    font-size:clamp(1.7rem,4.6vw,2.3rem);line-height:1.12;letter-spacing:-.015em;
+    margin:0 0 16px;font-weight:700;text-wrap:balance;
   }
-  a{color:var(--accent)}
+  p{margin:0 0 15px;color:var(--texto-2);max-width:52ch}
+  strong{color:var(--texto);font-weight:600}
+  .verif{
+    display:inline-block;margin-top:6px;
+    font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.82rem;
+    color:var(--ouro);border:1px solid var(--linha);border-radius:8px;padding:.5em .8em;
+  }
+  .rodape{
+    margin-top:34px;padding-top:20px;border-top:1px solid var(--linha);
+    color:#7d8f83;font-size:.88rem;
+  }
+  a{color:var(--ouro);text-decoration:none;border-bottom:1px solid rgba(212,175,55,.35)}
+  a:hover,a:focus-visible{border-bottom-color:var(--ouro)}
+  a:focus-visible{outline:2px solid var(--ouro);outline-offset:3px;border-radius:2px}
 </style>
 </head>
 <body>
 <main>
-  <svg class="selo" viewBox="0 0 200 200" role="img" aria-label="Selo de conclusão">
-    <rect width="200" height="200" rx="18" fill="#0f1a15"/>
-    <g transform="rotate(-5 100 100)">
-      <circle cx="100" cy="100" r="76" fill="none" stroke="#5fd39b" stroke-width="7"/>
-      <circle cx="100" cy="100" r="64" fill="none" stroke="#5fd39b" stroke-width="3.5"/>
-      <rect x="55" y="77" width="28" height="47" rx="4" fill="none" stroke="#5fd39b" stroke-width="3.4"/>
-      <rect x="86" y="77" width="28" height="47" rx="4" fill="none" stroke="#5fd39b" stroke-width="3.4"/>
-      <rect x="117" y="77" width="28" height="47" rx="4" fill="#5fd39b"/>
-      <rect x="60" y="83" width="18" height="3.4" rx="1.7" fill="#5fd39b"/>
-      <rect x="91" y="83" width="18" height="3.4" rx="1.7" fill="#5fd39b"/>
-      <rect x="122" y="83" width="18" height="3.4" rx="1.7" fill="#0f1a15"/>
-      <rect x="60" y="93" width="18" height="7" rx="2" fill="#5fd39b" opacity=".34"/>
-      <rect x="60" y="104" width="18" height="7" rx="2" fill="#5fd39b" opacity=".34"/>
-      <rect x="91" y="93" width="18" height="7" rx="2" fill="#5fd39b" opacity=".34"/>
-      <rect x="122" y="93" width="18" height="7" rx="2" fill="#0f1a15"/>
-      <rect x="122" y="104" width="18" height="7" rx="2" fill="#0f1a15" opacity=".45"/>
-    </g>
-  </svg>
+  <svg class="selo" viewBox="0 0 200 200" width="112" height="112" role="img" aria-label="Selo de conclusão da formação em CRM">
+  
+  <g transform="rotate(-5 100 100)">
+    <circle cx="100" cy="100" r="76" fill="none" stroke="#d4af37" stroke-width="7"/>
+    <circle cx="100" cy="100" r="64" fill="none" stroke="#d4af37" stroke-width="2.5"/>
+    <path id="ratop" d="M100,100 m-51,0 a51,51 0 1,1 102,0 a51,51 0 1,1 -102,0" fill="none"/>
+    <text font-family="'JetBrains Mono','SFMono-Regular',Consolas,monospace" font-size="9.5" font-weight="600" fill="#d4af37" letter-spacing="1.5">
+      <textPath href="#ratop" startOffset="25%" text-anchor="middle">FORMAÇÃO EM CRM</textPath>
+    </text>
+    <path id="rbtop" d="M100,100 m-50,0 a50,50 0 1,0 100,0 a50,50 0 1,0 -100,0" fill="none"/>
+    <text font-family="'JetBrains Mono','SFMono-Regular',Consolas,monospace" font-size="9.5" fill="#d4af37" letter-spacing="3">
+      <textPath href="#rbtop" startOffset="25%" text-anchor="middle">2026</textPath>
+    </text>
+    <rect x="55" y="77" width="28" height="47" rx="4" fill="none" stroke="#d4af37" stroke-width="3.4"/>
+    <rect x="86" y="77" width="28" height="47" rx="4" fill="none" stroke="#d4af37" stroke-width="3.4"/>
+    <rect x="117" y="77" width="28" height="47" rx="4" fill="#d4af37"/>
+    <rect x="60" y="83" width="18" height="3.4" rx="1.7" fill="#d4af37"/>
+    <rect x="91" y="83" width="18" height="3.4" rx="1.7" fill="#d4af37"/>
+    <rect x="122" y="83" width="18" height="3.4" rx="1.7" fill="#0d2018"/>
+    <rect x="60" y="93" width="18" height="7" rx="2" fill="#d4af37" opacity=".34"/>
+    <rect x="60" y="104" width="18" height="7" rx="2" fill="#d4af37" opacity=".34"/>
+    <rect x="91" y="93" width="18" height="7" rx="2" fill="#d4af37" opacity=".34"/>
+    <rect x="122" y="93" width="18" height="7" rx="2" fill="#0d2018"/>
+    <rect x="122" y="104" width="18" height="7" rx="2" fill="#0d2018" opacity=".45"/>
+  </g>
+</svg>
 
   <h1>Formação prática em CRM</h1>
-  <p>Um CRM completo, usado como sala de aula: empresas, contactos, propostas, campanhas, apoio ao cliente e conformidade com o RGPD, tudo num ambiente onde se pode experimentar sem partir nada.</p>
-  <p>Quem concluiu um módulo recebe um selo com uma página de verificação própria, em <strong>crm.cr0x.org/b/</strong>.</p>
 
-  <div class="nota">
-    Projeto pedagógico independente, sem fins comerciais.
+  <p>Um CRM completo usado como sala de aula: empresas, contactos, propostas, campanhas, apoio ao cliente e conformidade com o RGPD. Um sítio onde se pode experimentar sem partir nada.</p>
+
+  <p>Quem conclui um módulo recebe um <strong>selo com página de verificação própria</strong>, para partilhar onde quiser.</p>
+
+  <span class="verif">crm.cr0x.org/b/&lt;id&gt;</span>
+
+  <div class="rodape">
+    Projeto pedagógico independente, sem fins comerciais.<br>
     A edição anterior continua disponível em <a href="https://iefpcrm.cr0x.org">iefpcrm.cr0x.org</a>.
   </div>
 </main>
