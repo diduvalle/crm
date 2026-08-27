@@ -39,9 +39,35 @@
   /* o quadro do badge, em grande: o mesmo desenho, outra tinta */
   .quadro{
     position:absolute;top:74px;right:6px;width:470px;height:470px;
-    pointer-events:none;opacity:.92;
+    opacity:.92;cursor:pointer;
   }
-  .quadro svg{width:100%;height:100%;display:block}
+  .quadro > svg{width:100%;height:100%;display:block;transition:transform .18s ease}
+  .quadro:hover > svg{transform:rotate(-3deg) scale(1.03)}
+
+  /* ---------- o murro ----------
+     Um cartao a chegar a coluna Ganha e um murro. A banda desenhada tinha
+     razao: as coisas boas fazem barulho. */
+  .kapow{
+    position:absolute;left:-20%;top:-8%;width:58%;pointer-events:none;
+    opacity:0;transform:scale(.5) rotate(-24deg);transform-origin:60% 60%;
+  }
+  .quadro:hover .kapow{
+    opacity:1;animation:soca .42s cubic-bezier(.2,1.5,.4,1) forwards;
+  }
+  @keyframes soca{
+    0%   {opacity:0;transform:scale(.4) rotate(-26deg)}
+    55%  {opacity:1;transform:scale(1.12) rotate(-9deg)}
+    75%  {transform:scale(.96) rotate(-13deg)}
+    100% {opacity:1;transform:scale(1) rotate(-11deg)}
+  }
+  .kapow text{
+    font-family:Archivo,system-ui,sans-serif;font-weight:800;font-style:italic;
+    font-size:29px;letter-spacing:-.03em;
+  }
+  @media (prefers-reduced-motion:reduce){
+    .quadro:hover .kapow{animation:none;opacity:1;transform:scale(1) rotate(-11deg)}
+    .quadro:hover > svg{transform:none}
+  }
   .marca{
     font-family:"Space Mono",ui-monospace,monospace;font-size:.72rem;letter-spacing:.24em;
     text-transform:uppercase;color:var(--azul);margin:0 0 26px;position:relative;z-index:2;
@@ -75,7 +101,7 @@
     display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:center;
     margin:60px 0 0;padding:30px 0 0;background:none;
   }
-  .tile{width:132px;height:132px;background:#fff;border:1.5px solid var(--tinta);padding:10px}
+  .tile{width:132px;height:132px;background:none;border:1.5px solid var(--tinta);padding:10px}
   .tile svg{width:100%;height:100%;display:block}
   .objeto h3{font-family:Archivo,sans-serif;font-weight:800;font-size:1.3rem;margin:0 0 8px;letter-spacing:-.015em}
   .objeto p{margin:0 0 10px;font-size:1rem;color:var(--tinta-2)}
@@ -100,7 +126,8 @@
 <div class="folha">
 
   <header>
-    <div class="quadro"><svg viewBox="0 0 200 200" aria-hidden="true">
+    <div class="quadro">
+      <svg viewBox="0 0 200 200" aria-hidden="true">
   <g transform="rotate(-5 100 100)">
     <rect x="55" y="77" width="28" height="47" rx="4" fill="none" stroke="var(--neutra)" stroke-width="3.4"/>
     <rect x="86" y="77" width="28" height="47" rx="4" fill="none" stroke="var(--neutra)" stroke-width="3.4"/>
@@ -113,7 +140,13 @@
     <rect x="91" y="93" width="18" height="7" rx="2" fill="var(--neutra)" opacity=".34"/>
     <rect x="122" y="93" width="18" height="7" rx="2" fill="var(--papel)"/>
     <rect x="122" y="104" width="18" height="7" rx="2" fill="var(--papel)" opacity=".45"/>
-  </g></svg></div>
+  </g></svg>
+      <svg class="kapow" viewBox="0 0 240 160" aria-hidden="true">
+        <path d="M120 4l17 30 30-22-6 36 36-6-22 30 30 17-30 17 22 30-36-6 6 36-30-22-17 30-17-30-30 22 6-36-36 6 22-30L4 116l30-17-22-30 36 6-6-36 30 22z"
+              fill="#ff48b0" stroke="#171412" stroke-width="5" stroke-linejoin="round"/>
+        <text x="120" y="92" text-anchor="middle" fill="#171412">GANHA!</text>
+      </svg>
+    </div>
     <p class="marca">crm.cr0x.org</p>
     <h1>Um CRM inteiro, usado como <em>sala de aula<svg class="pincel" viewBox="0 0 340 30" preserveAspectRatio="none" aria-hidden="true"><path d="M2.5 17.5c10-3.6 22-5.6 36-6.4 26-1.6 52 1.2 78 2.2 30 1.2 60-0.6 90-2.4 28-1.7 55-3 82-1.1 18 1.3 33 4 47 8.4 3 0.9 3.4 6.6 0.4 7.4-14 3.6-29 4.6-45 4.2-30-0.8-59-4.2-89-4.6-32-0.4-63 2.4-95 3-26 0.5-51-0.6-75-4-10-1.4-19-3.4-27-6.2-3-1-3.1-5.5-2.4-6.5z"/></svg></em>.</h1>
     <p class="abre">Empresas, contactos, propostas, campanhas, apoio ao cliente e RGPD - tudo a funcionar, para se aprender a mexer sem medo de partir.</p>
@@ -124,18 +157,19 @@
   <div class="colunas">
     <div class="col">
       <h2>O que é</h2>
-      <p>Um CRM completo, escrito de raiz para ser <strong>praticado</strong> e não vendido. Cada pessoa trabalha na sua cópia: cria empresas, negocia propostas, responde a pedidos de titulares de dados, engana-se e recomeça.</p>
-      <p>Nada do que lá está é real. É essa a ideia.</p>
+      <p>Um CRM completo, escrito de raiz para ser <strong>praticado</strong>. Cada pessoa trabalha na sua cópia: cria empresas, negocia propostas, responde a pedidos de titulares de dados, engana-se e recomeça.</p>
+      <p>Nada do que lá está dentro é real - <strong>só a experiência de o usar</strong>.</p>
     </div>
     <div class="col">
-      <h2>Quem faz</h2>
-      <p>Um projeto independente de <a href="https://www.linkedin.com/in/ldvale/" target="_blank" rel="noopener">Diogo du Valle</a>, construído para as formações que dá.</p>
-      <p>Sem fins comerciais, sem publicidade e sem contas para quem não anda numa turma.</p>
+      <h2>Porque existe</h2>
+      <p>Nasceu do que faltava nos outros. Os CRM do mercado escondem metade atrás de um plano pago, enchem-se de coisas que ninguém pediu, e nenhum deixa uma pessoa partir tudo só para aprender.</p>
+      <p>Este é inteiro e sem publicidade, feito para se perceber como um CRM funciona <strong>por dentro</strong>.</p>
+      <p style="margin-top:16px">Criado por <a href="https://www.linkedin.com/in/ldvale/" target="_blank" rel="noopener">Diogo du Valle</a>.</p>
     </div>
   </div>
 
   <div class="objeto">
-    <div class="tile"><svg viewBox="0 0 200 200" role="img" aria-label="Exemplo de badge"><rect width="200" height="200" rx="18" fill="#ffffff"/>
+    <div class="tile"><svg viewBox="0 0 200 200" role="img" aria-label="Exemplo de badge"><rect width="200" height="200" rx="18" fill="#efe9dd"/>
   <g transform="rotate(-5 100 100)">
     <circle cx="100" cy="100" r="76" fill="none" stroke="#171412" stroke-width="7"/>
     <circle cx="100" cy="100" r="64" fill="none" stroke="#171412" stroke-width="2.5"/>
@@ -152,17 +186,19 @@
     <rect x="117" y="77" width="28" height="47" rx="4" fill="#171412"/>
     <rect x="60" y="83" width="18" height="3.4" rx="1.7" fill="#171412"/>
     <rect x="91" y="83" width="18" height="3.4" rx="1.7" fill="#171412"/>
-    <rect x="122" y="83" width="18" height="3.4" rx="1.7" fill="#ffffff"/>
+    <rect x="122" y="83" width="18" height="3.4" rx="1.7" fill="#efe9dd"/>
     <rect x="60" y="93" width="18" height="7" rx="2" fill="#171412" opacity=".34"/>
     <rect x="60" y="104" width="18" height="7" rx="2" fill="#171412" opacity=".34"/>
     <rect x="91" y="93" width="18" height="7" rx="2" fill="#171412" opacity=".34"/>
-    <rect x="122" y="93" width="18" height="7" rx="2" fill="#ffffff"/>
-    <rect x="122" y="104" width="18" height="7" rx="2" fill="#ffffff" opacity=".45"/>
+    <rect x="122" y="93" width="18" height="7" rx="2" fill="#efe9dd"/>
+    <rect x="122" y="104" width="18" height="7" rx="2" fill="#efe9dd" opacity=".45"/>
   </g></svg></div>
     <div>
       <h3>Chegaste aqui por um badge?</h3>
-      <p>Quer dizer que alguém concluiu um módulo de formação e quis mostrá-lo. Cada badge tem a sua página, com o nome, a data, a formação e quem a deu.</p>
-      <p><strong>Não é uma certificação profissional</strong> nem substitui o certificado da entidade formadora. É o registo de que a pessoa esteve, fez e concluiu.</p>
+      <p>Quer dizer que alguém concluiu um módulo de formação e quis mostrá-lo.<br>
+         Cada badge tem a sua página, com o nome, a data, a formação e quem a deu.</p>
+      <p><strong>Não é uma certificação profissional</strong> nem substitui o certificado da entidade formadora.<br>
+         É o registo de que a pessoa esteve, fez e concluiu.</p>
     </div>
   </div>
 
