@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
-  <rect width="200" height="200" rx="30" fill="#efe9dd"/>
-  <g transform="rotate(-5 100 100) translate(100 100) scale(1.62) translate(-100 -100)">
-    <rect x="55" y="77" width="28" height="47" rx="5" fill="none" stroke="#171412" stroke-width="5.2"/>
-    <rect x="86" y="77" width="28" height="47" rx="5" fill="none" stroke="#171412" stroke-width="5.2"/>
-    <rect x="117" y="77" width="28" height="47" rx="5" fill="#171412"/>
-    <rect x="61" y="84" width="16" height="4.6" rx="2.3" fill="#171412"/>
-    <rect x="92" y="84" width="16" height="4.6" rx="2.3" fill="#171412"/>
-    <rect x="123" y="84" width="16" height="4.6" rx="2.3" fill="#efe9dd"/>
-    <rect x="61" y="96" width="16" height="8" rx="2.6" fill="#171412" opacity=".34"/>
-    <rect x="92" y="96" width="16" height="8" rx="2.6" fill="#171412" opacity=".34"/>
-    <rect x="123" y="96" width="16" height="8" rx="2.6" fill="#efe9dd"/>
+  <rect width="200" height="200" rx="34" fill="#171412"/>
+  <g transform="rotate(-5 100 100)">
+    <rect x="30" y="52" width="44" height="96" rx="10" fill="none" stroke="#efe9dd" stroke-width="9"/>
+    <rect x="78" y="52" width="44" height="96" rx="10" fill="none" stroke="#efe9dd" stroke-width="9"/>
+    <rect x="126" y="52" width="44" height="96" rx="10" fill="#0078bf"/>
+    <rect x="39" y="66" width="26" height="8" rx="4" fill="#efe9dd"/>
+    <rect x="87" y="66" width="26" height="8" rx="4" fill="#efe9dd"/>
+    <rect x="135" y="66" width="26" height="8" rx="4" fill="#171412"/>
+    <rect x="39" y="86" width="26" height="13" rx="5" fill="#efe9dd" opacity=".5"/>
+    <rect x="87" y="86" width="26" height="13" rx="5" fill="#efe9dd" opacity=".5"/>
+    <rect x="135" y="86" width="26" height="13" rx="5" fill="#171412" opacity=".55"/>
   </g>
 </svg>
