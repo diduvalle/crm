@@ -807,3 +807,93 @@ figure.crm-video{
   aspect-ratio:auto!important; border:0; margin:0 0 1.4rem; padding:0;
 }
 figure.crm-video figcaption{ margin-top:.5rem }
+
+/* ===========================================================
+   ESCALA DE LEITURA
+   Em px e não em rem: o Material muda o html para 125% em
+   ecrãs largos, e com rem o manual crescia 25% consoante a
+   largura da janela. Um manual lê-se sempre ao mesmo tamanho.
+   =========================================================== */
+.md-typeset{ font-size:16px; line-height:1.68 }
+.md-typeset p,
+.md-typeset li,
+.md-typeset td,
+.md-typeset dd{ font-size:16px; line-height:1.68 }
+.md-typeset ul, .md-typeset ol{ margin:0 0 1em; padding-left:1.4em }
+.md-typeset li{ margin-bottom:.35em }
+.md-typeset li > ul, .md-typeset li > ol{ margin:.35em 0 .2em }
+
+.md-typeset h1{ font-size:31px; line-height:1.14; margin:0 0 .55em }
+.md-typeset h2{ font-size:22px; line-height:1.25; margin:2.1em 0 .7em }
+.md-typeset h3{ font-size:17.5px; line-height:1.35; margin:1.7em 0 .5em }
+.md-typeset h4{ font-size:16px; margin:1.4em 0 .4em }
+
+.md-typeset code{ font-size:14px }
+.md-typeset pre code{ font-size:13.5px; line-height:1.6 }
+.md-typeset table{ font-size:15px }
+.md-typeset .admonition, .md-typeset details{ font-size:15px }
+.md-typeset .admonition-title, .md-typeset summary{ font-size:15px }
+.md-typeset small, .md-typeset .md-footnotes{ font-size:14px }
+
+/* a navegação e o índice acompanham, um pouco abaixo do corpo */
+.md-nav__link{ font-size:14px; line-height:1.45 }
+.md-nav--secondary .md-nav__link{ font-size:13.5px }
+.md-header__title{ font-size:16px }
+.md-search__input{ font-size:15px }
+
+/* ===========================================================
+   O MENU LATERAL, EM PAPEL
+   Substitui o desenho de barra escura que vinha da app: um
+   bloco escuro ao lado de uma página de leitura rouba-lhe a
+   atenção o tempo todo, e com fundo claro o texto branco que
+   lá estava desaparecia.
+   =========================================================== */
+@media screen and (min-width: 76.25em) {
+  .md-sidebar--primary .md-sidebar__scrollwrap{
+    background:none !important; border-radius:0; box-shadow:none;
+    scrollbar-color:var(--pl-risco) transparent;
+  }
+  .md-sidebar--primary .md-sidebar__scrollwrap::-webkit-scrollbar-thumb{
+    background:var(--pl-risco) !important;
+  }
+  .md-sidebar--primary .md-nav__list{
+    background:none; border:0; border-radius:0; padding:0;
+  }
+
+  /* os títulos de grupo: mono pequeno, como as etiquetas da montra */
+  .md-sidebar--primary .md-nav__item--section > .md-nav__link,
+  .md-sidebar--primary .md-nav__title{
+    color:var(--pl-fraco) !important;
+    font-family:"Space Mono", ui-monospace, monospace !important;
+    font-size:11px !important; letter-spacing:.14em; text-transform:uppercase;
+    font-weight:700; background:none !important;
+  }
+
+  /* os itens */
+  .md-sidebar--primary .md-nav__link{
+    color:var(--pl-tinta-2) !important;
+    font-family:"Archivo", system-ui, sans-serif;
+    font-size:13.5px; line-height:1.4;
+    border-radius:7px; padding:6px 10px; background:none;
+  }
+  .md-sidebar--primary .md-nav__link:hover{
+    background:rgba(23,20,18,.05) !important; color:var(--pl-tinta) !important;
+  }
+  .md-sidebar--primary .md-nav__link--active,
+  .md-sidebar--primary .md-nav__item--active > .md-nav__link{
+    background:rgba(0,120,191,.09) !important; color:var(--pl-azul) !important;
+    font-weight:600;
+  }
+  /* o traço do item ativo, na cor da plataforma */
+  .md-sidebar--primary .md-nav__link--active::before,
+  .md-sidebar--primary .md-nav__item--active > .md-nav__link::before{
+    background:var(--pl-azul) !important;
+  }
+  .md-sidebar--primary .md-nav__link::after{ color:var(--pl-fraco) !important }
+}
+
+/* o índice da direita acompanha */
+.md-nav--secondary .md-nav__link{ color:var(--pl-tinta-2) }
+.md-nav--secondary .md-nav__link:hover{ color:var(--pl-azul) }
+.md-nav--secondary .md-nav__link--active{ color:var(--pl-azul); font-weight:600 }
+.md-nav--secondary .md-nav__title{ color:var(--pl-fraco) }
