@@ -97,7 +97,7 @@
   var COL = { logo: 'logo_url', legalNome: 'legal_nome', emailContacto: 'email_contacto',
               responsavelDados: 'responsavel_dados', remetenteNome: 'remetente_nome',
               emailResposta: 'email_resposta', seloEmissor: 'selo_emissor' };
-  var TCAMPOS = [['codigo', 'Número da turma'], ['nome', 'Nome da turma'], ['fnome', 'Nome do formador'],
+  var TCAMPOS = [['codigo', 'Código da turma'], ['nome', 'Nome da turma'], ['fnome', 'Nome do formador'],
                  ['fapelido', 'Apelido'], ['femail', 'Email'], ['user', 'Utilizador'], ['pass', 'Palavra-passe']];
 
   var escolas = [], sel = '', aba = 'pagina';
@@ -352,7 +352,7 @@
     var cx = $('#adTurma');
     var g = function (k) { var i = cx.querySelector('[data-tf="' + k + '"]'); return i ? i.value.trim() : ''; };
     var slug = (document.querySelector('[data-ef="slug"]') || {}).value || '';
-    if (!/^[0-9]{8}$/.test(g('codigo'))) { estado('o número da turma são 8 dígitos'); return; }
+    if (!/^[A-Za-z0-9][A-Za-z0-9._-]{1,23}$/.test(g('codigo'))) { estado('o código da turma tem 2 a 24 caracteres: letras, números, ponto ou hífen'); return; }
     if (!g('user') || !g('pass')) { estado('faltam as credenciais do formador'); return; }
     estado('a criar…');
     rpc('criar_turma_em', { p_token: tok(), p_slug: slug, p_codigo: g('codigo'), p_nome_turma: g('nome'),

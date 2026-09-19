@@ -551,7 +551,19 @@ body.present #presentExit{display:inline-flex;align-items:center;gap:6px;positio
    ========================================================================= */
 
 /* ---------- Multi-turma (ambientes isolados por ?t=nome) ---------- */
-function currentTurma(){ try{ const sp=new URLSearchParams(location.search); let raw=(sp.get('t')||'').replace(/\D/g,''); if(raw.length!==8){ for(const [k,v] of sp){ if(!v && /^\d{8}$/.test(k)){ raw=k; break; } } } return raw.length===8?raw:''; }catch(e){ return ''; } }
+/* O mesmo padrão que o servidor aceita. Tê-lo escrito nos dois sítios é
+   feio, mas tê-los diferentes seria pior: um a deixar entrar o que o outro
+   recusa é o tipo de desencontro que só aparece em produção. */
+const TURMA_RE = /^[A-Za-z0-9][A-Za-z0-9._-]{1,23}$/;
+function currentTurma(){
+  try{
+    const sp=new URLSearchParams(location.search);
+    let raw=(sp.get('t')||'').trim();
+    /* o atalho ?12023483 - uma chave sem valor - continua a servir */
+    if(!raw){ for(const [k,v] of sp){ if(!v && TURMA_RE.test(k)){ raw=k; break; } } }
+    return TURMA_RE.test(raw) ? raw : '';
+  }catch(e){ return ''; }
+}
 /* O espaço é a escola. Se o endereço não o trouxer, fica vazio e a app usa a
    marca neutra da plataforma - nunca se assume nenhuma escola por omissão. */
 /* Primeiro o caminho (/xpto), que é a forma boa. O ?e=xpto continua a
@@ -954,7 +966,7 @@ const I18N_EN = {
   'Esqueci-me da palavra-passe':'Forgot my password','Portal do Titular':'Data Subject Portal','trocar':'switch',
   'Criar nova turma':'Create a new class','Apenas formadores IEFP. Valide o seu email institucional.':'IEFP trainers only. Verify your institutional email.',
   'Email de formador IEFP *':'IEFP trainer email *','Nome *':'First name *','Apelido':'Surname',
-  'Número da turma - 8 dígitos *':'Class number - 8 digits *','Nome da turma (opcional)':'Class name (optional)',
+  'Número da turma *':'Class number *','Nome da turma (opcional)':'Class name (optional)',
   'Utilizador *':'Username *','Palavra-passe *':'Password *','Criar turma e entrar':'Create class and enter',
   '← Voltar ao início de sessão':'← Back to sign in','Suporte':'Support',
   'Recuperar palavra-passe':'Reset password','Para formadores. Use o seu código de recuperação.':'For trainers. Use your recovery code.',
@@ -1547,7 +1559,7 @@ function supaToken(){ const s=supaSession(); return s&&s.token||null; }
 const SUPA_ERR={
   SEM_LIGACAO:'Sem ligação ao servidor. Verifique a internet.',
   EMAIL_NAO_AUTORIZADO:'Esse email não é de um formador IEFP autorizado (forNNNN@formacao.iefp.pt).',
-  CODIGO_INVALIDO:'O número da turma tem de ter exatamente 8 dígitos.',
+  CODIGO_INVALIDO:'O código da turma tem entre 2 e 24 caracteres: letras, números, ponto ou hífen.',
   TURMA_JA_EXISTE:'Já existe uma turma com esse número.',
   TURMA_NAO_EXISTE:'Turma não encontrada. Confirme o link com o formador.',
   CREDENCIAIS_INVALIDAS:'Utilizador ou palavra-passe incorretos.',
@@ -1646,7 +1658,7 @@ function supaLogout(){ const t=supaToken(); if(t&&supa()) supaRpc('logout',{p_to
    Lista local (não-namespaced) que alimenta o seletor de Turma no login.
    Sem backend: só conhece as turmas que ESTE browser já visitou/criou. */
 const RECENT_TURMAS_KEY='iefp-turmas-recentes';
-function recentTurmas(){ try{ const a=JSON.parse(localStorage.getItem(RECENT_TURMAS_KEY)||'[]'); return Array.isArray(a)?a.filter(t=>t&&/^\d{8}$/.test(t.codigo)):[]; }catch(e){ return []; } }
+function recentTurmas(){ try{ const a=JSON.parse(localStorage.getItem(RECENT_TURMAS_KEY)||'[]'); return Array.isArray(a)?a.filter(t=>t&&TURMA_RE.test(t.codigo)):[]; }catch(e){ return []; } }
 function rememberTurma(codigo,nome){
   codigo=(codigo||'').replace(/\D/g,''); if(codigo.length!==8) return;
   try{
@@ -1834,7 +1846,7 @@ function espacoArquivar(el){
    Sete campos, e o uiPrompt desta app só aceita um - por isso o formulário
    abre dentro do próprio cartão, em vez de se inventar um diálogo novo. */
 const TURMA_CAMPOS = [
-  ['codigo','Número da turma (8 dígitos)'], ['nome','Nome da turma'],
+  ['codigo','Número da turma'], ['nome','Nome da turma'],
   ['fnome','Nome do formador'], ['fapelido','Apelido'],
   ['femail','Email do formador'], ['user','Utilizador'], ['pass','Password inicial'],
 ];
@@ -1859,7 +1871,7 @@ async function espacoTurmaCriar(el){
   if(!card||!box) return;
   const slug=(card.querySelector('[data-ef="slug"]')||{}).value||'';
   const g=k=>{ const i=box.querySelector('[data-tf="'+k+'"]'); return i?i.value.trim():''; };
-  if(!/^[0-9]{8}$/.test(g('codigo'))){ toast('Número inválido','A turma são 8 dígitos','warn'); return; }
+  if(!TURMA_RE.test(g('codigo'))){ toast('Código inválido','2 a 24 caracteres: letras, números, ponto ou hífen','warn'); return; }
   if(!g('user')||!g('pass')){ toast('Faltam credenciais','Utilizador e password são obrigatórios','warn'); return; }
   el.disabled=true;
   try{
@@ -8834,8 +8846,11 @@ function submitEnterTurma(){
   const raw=((f.querySelector('[name="codigo"]')||{}).value||'').trim();
   const low=raw.toLowerCase();
   if(low==='root'||low==='suporte'){ loginMode='root'; renderLogin(); return; }   // suporte
-  const d=raw.replace(/\D/g,'');
-  if(d.length!==8){ if(err) err.textContent='O número da turma tem de ter exatamente 8 dígitos.'; return; }
+  const d=raw;
+  if(!TURMA_RE.test(d)){
+    if(err) err.textContent='O código da turma tem entre 2 e 24 caracteres: letras, números, ponto ou hífen.';
+    return;
+  }
   const go=()=>{ location.href=location.pathname+'?t='+d; };
   const btn=f.querySelector('[data-act="enter-turma"]'); if(btn){ btn.disabled=true; btn.textContent='A verificar…'; }
   supaRpc('turma_existe',{p_codigo:d}).then(existe=>{
@@ -8915,7 +8930,7 @@ function renderLogin(){
       <form id="loginForm" onsubmit="return false">
         <div class="field"><label>Email de formador IEFP *</label><input name="email" type="email" autocomplete="email" placeholder="forNNNN@formacao.iefp.pt"></div>
         <div class="form-grid" style="gap:12px"><div class="field"><label>Nome *</label><input name="nome" placeholder="primeiro nome"></div><div class="field"><label>Apelido</label><input name="apelido" placeholder="apelido"></div></div>
-        <div class="field"><label>Número da turma - 8 dígitos *</label><input name="codigo" inputmode="numeric" placeholder="12345678" maxlength="8"></div>
+        <div class="field"><label>Número da turma *</label><input name="codigo" placeholder="12345678" maxlength="24"></div>
         <div class="field"><label>Nome da turma (opcional)</label><input name="nometurma" placeholder="ex.: CRM 2026 - Manhã"></div>
         <div class="form-grid" style="gap:12px"><div class="field"><label>Utilizador *</label><input name="username" autocomplete="username" placeholder="ex.: formador"></div><div class="field"><label>Palavra-passe *</label><input name="password" type="password" autocomplete="new-password" placeholder="••••••••"></div></div>
         <button type="button" class="btn login-btn" data-act="criarturma">Criar turma e entrar</button>
@@ -8980,7 +8995,7 @@ function submitCriarTurma(){
   const g=n=>(f.querySelector('[name="'+n+'"]')||{}).value||'';
   const p={codigo:g('codigo').replace(/\D/g,''),email:g('email').trim(),nome:g('nome').trim(),apelido:g('apelido').trim(),username:g('username').trim(),password:g('password'),nomeTurma:g('nometurma').trim()};
   if(!p.email||!p.nome||!p.username||!p.password){ if(err) err.textContent='Preencha email, nome, utilizador e palavra-passe.'; return; }
-  if(p.codigo.length!==8){ if(err) err.textContent='O número da turma tem de ter exatamente 8 dígitos.'; return; }
+  if(!TURMA_RE.test(p.codigo)){ if(err) err.textContent='O código da turma tem entre 2 e 24 caracteres: letras, números, ponto ou hífen.'; return; }
   const btn=f.querySelector('[data-act="criarturma"]'); if(btn){ btn.disabled=true; btn.textContent='A criar…'; }
   supaCriarTurma(p).then(data=>{
     try{ localStorage.setItem('crm-supa::'+p.codigo, JSON.stringify({token:data.token,user:data.user})); }catch(e){}
