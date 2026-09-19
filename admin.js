@@ -90,9 +90,8 @@
      A carga horária e o NIF estão cá porque são os dois que escapam sempre -
      o primeiro faz falta ao selo, o segundo ao aviso legal. */
   var GRUPOS = [
-    ['Identidade', [['nome', 'Nome da escola'], ['slug', 'Endereço'], ['logo', 'Logótipo (URL)'], ['cor', 'Cor principal', 'color']]],
-    ['Legal', [['legalNome', 'Designação legal'], ['nif', 'NIF'], ['morada', 'Morada'], ['emailContacto', 'Email de contacto'], ['responsavelDados', 'Responsável pelos dados']]],
-    ['Email', [['remetenteNome', 'Nome que aparece nos emails'], ['emailResposta', 'Responder para']]],
+    ['Identidade', [['nome', 'Nome da escola'], ['slug', 'Endereço'], ['logo', 'Logótipo'], ['cor', 'Cor principal', 'color']]],
+    ['Emails para a turma', [['remetenteNome', 'Nome que aparece nos emails']]],
     ['Formação', [['horas', 'Carga horária (por omissão)'], ['formador', 'Formador (por omissão)']]]
   ];
   var COL = { logo: 'logo_url', legalNome: 'legal_nome', emailContacto: 'email_contacto',
@@ -108,10 +107,9 @@
     return GRUPOS.map(function (g) {
       var nota = g[0] === 'Formação'
         ? '<p class="ad-nota">Valores de partida para as turmas desta escola. A carga horária e o formador variam de turma para turma - isto é só o que aparece preenchido à partida.</p>'
-        : g[0] === 'Email'
-        ? '<p class="ad-nota">Os emails saem sempre de <code>crm@cr0x.org</code> - o endereço de envio não se escolhe, ' +
-          'porque teria de ser verificado no serviço de envio escola a escola. Aqui define-se o <strong>nome</strong> que ' +
-          'aparece na caixa de entrada de quem recebe, e para onde vai a <strong>resposta</strong> se alguém carregar em Responder.</p>'
+        : g[0] === 'Emails para a turma'
+        ? '<p class="ad-nota">Saem sempre de <code>crm@cr0x.org</code>, e as respostas vêm para lá. O que muda por escola é só ' +
+          'o <strong>nome</strong> que aparece na caixa de entrada de quem recebe: <em>IEFP</em> em vez de <em>Escola XPTO</em>.</p>'
         : '';
       return '<p class="ad-grp">' + g[0] + '</p>' + nota + '<div class="ad-grid">' + g[1].map(function (c) {
         if (c[0] === 'logo') {
