@@ -231,7 +231,13 @@
     border-bottom:1px solid var(--ad-linha-2)}
   .ad-escolher select{max-width:430px}
   .ad-ficha{border-top:1px solid var(--ad-linha-2);padding-top:20px}
-  #adTurma .ad-grp:first-child{margin-top:24px}
+  /* o formulario da turma e' um painel que abre: distingue-se por ser
+     uma caixa, em vez de repetir o nome do botao que o abriu */
+  #adTurma.aberto{margin:22px 0 0;padding:20px;background:#f7f2e9;
+    border:1px solid var(--ad-linha);border-radius:10px}
+  #adTurma .ad-lin:first-child{margin-top:0}
+  #adTurma .ad-f input{background:#fff}
+  .ad-b.sec.on{background:var(--tinta);color:var(--ad-branco);border-color:var(--tinta)}
   .ad-lin{display:grid;gap:13px;margin-bottom:13px}
   .ad-lin .ad-f{margin-bottom:0}
   .ad-sub-grp{font:600 .66rem/1 var(--ad-sans);letter-spacing:.06em;color:var(--tinta-2);

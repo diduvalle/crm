@@ -346,8 +346,10 @@
      cifrado. Por isso fica escrito num bloco que não desaparece sozinho. */
   function formTurma() {
     var cx = $('#adTurma');
-    if (cx.innerHTML) { cx.innerHTML = ''; return; }
-    cx.innerHTML = '<p class="ad-grp">Nova turma</p>' +
+    var bt = document.querySelector('[data-ax="turma"]');
+    if (cx.innerHTML) { cx.innerHTML = ''; cx.classList.remove('aberto'); if (bt) bt.classList.remove('on'); return; }
+    cx.classList.add('aberto'); if (bt) bt.classList.add('on');
+    cx.innerHTML =
       TURMA_LINHAS.map(function (l) {
         return (l.titulo ? '<p class="ad-sub-grp">' + l.titulo + '</p>' : '') +
           '<div class="ad-lin" style="grid-template-columns:repeat(' + l.campos.length + ',1fr)">' +
