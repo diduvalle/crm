@@ -220,8 +220,29 @@ td .cell-sub{font-size:.78rem;color:var(--muted)}
 /* ---------- PORTAL DO TITULAR ---------- */
 .portal{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:32px 18px;background:linear-gradient(160deg,var(--g100),var(--bg) 55%)}
 #login{align-items:stretch;justify-content:stretch;padding:0;background:var(--surface);overflow:hidden}
-.login-bg{flex:1;min-height:100vh;position:relative;background:linear-gradient(115deg,rgba(23,20,18,.18),rgba(23,20,18,.40)),var(--login-bg,url('../background.png')) center/cover no-repeat,linear-gradient(150deg,var(--g800),var(--g600) 70%,var(--g400))}
-.login-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 50%,var(--surface) 100%)}
+.login-bg{flex:1;min-height:100vh;position:relative;overflow:hidden;
+  background:linear-gradient(115deg,rgba(23,20,18,.10),rgba(23,20,18,.34)),
+    var(--login-bg,none) center/cover no-repeat,
+    linear-gradient(155deg,var(--g900),var(--g700) 45%,var(--g500) 100%)}
+/* ---- a cena do quadro (o SVG esta no markup do ecra de entrada) ---- */
+.login-cena{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0}
+.lgVoa{animation:lgVoa 28s cubic-bezier(.45,.05,.35,1) infinite}
+@keyframes lgVoa{
+  0%,10%   {transform:translate(16px,204px);opacity:0}
+  14%      {transform:translate(16px,204px);opacity:1}
+  40%      {transform:translate(246px,290px);opacity:1}
+  46%,58%  {transform:translate(246px,290px);opacity:1}
+  84%      {transform:translate(476px,186px);opacity:1}
+  92%      {transform:translate(476px,186px);opacity:1}
+  97%,100% {transform:translate(476px,186px);opacity:0}
+}
+.lgPulsa{animation:lgPulsa 7.8s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
+@keyframes lgPulsa{0%,72%,100%{opacity:.18;r:3}82%{opacity:.7}}
+@media (prefers-reduced-motion:reduce){
+  .lgVoa,.lgPulsa{animation:none}
+  .lgVoa{transform:translate(246px,290px)}
+}
+.login-bg::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(100deg,transparent 50%,var(--surface) 100%)}
 .login-panel{width:min(480px,100%);display:flex;align-items:center;justify-content:center;padding:40px;background:var(--surface)}
 .login-card{width:100%;max-width:368px;animation:fade .35s ease}
 .login-brand{display:flex;align-items:center;gap:13px;margin-bottom:32px}
