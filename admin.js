@@ -93,7 +93,7 @@
     ['Identidade', [['nome', 'Nome da escola'], ['slug', 'Endereço'], ['logo', 'Logótipo (URL)'], ['cor', 'Cor principal', 'color']]],
     ['Legal', [['legalNome', 'Designação legal'], ['nif', 'NIF'], ['morada', 'Morada'], ['emailContacto', 'Email de contacto'], ['responsavelDados', 'Responsável pelos dados']]],
     ['Email', [['remetenteNome', 'Nome que aparece nos emails'], ['emailResposta', 'Responder para']]],
-    ['Formação', [['modulos', 'Módulos'], ['horas', 'Carga horária'], ['formador', 'Formador'], ['seloEmissor', 'Emissor do selo']]]
+    ['Formação', [['horas', 'Carga horária (por omissão)'], ['formador', 'Formador (por omissão)']]]
   ];
   var COL = { logo: 'logo_url', legalNome: 'legal_nome', emailContacto: 'email_contacto',
               responsavelDados: 'responsavel_dados', remetenteNome: 'remetente_nome',
@@ -106,7 +106,9 @@
   function fichaEscola(e) {
     var v = function (k) { var c = COL[k] || k; return e ? (e[c] == null ? '' : e[c]) : ''; };
     return GRUPOS.map(function (g) {
-      var nota = g[0] === 'Email'
+      var nota = g[0] === 'Formação'
+        ? '<p class="ad-nota">Valores de partida para as turmas desta escola. A carga horária e o formador variam de turma para turma - isto é só o que aparece preenchido à partida.</p>'
+        : g[0] === 'Email'
         ? '<p class="ad-nota">Os emails saem sempre de <code>crm@cr0x.org</code> - o endereço de envio não se escolhe, ' +
           'porque teria de ser verificado no serviço de envio escola a escola. Aqui define-se o <strong>nome</strong> que ' +
           'aparece na caixa de entrada de quem recebe, e para onde vai a <strong>resposta</strong> se alguém carregar em Responder.</p>'
@@ -186,8 +188,26 @@
   function logoMostrar(url) {
     var prev = document.querySelector('[data-logo-prev]');
     var campo = document.querySelector('[data-ef="logo"]');
+    var cx = document.querySelector('.ad-logo-dir');
     if (campo) campo.value = url || '';
     if (prev) prev.innerHTML = url ? '<img src="' + esc(url) + '" alt="">' : '<span>sem logótipo</span>';
+    if (!cx) return;
+    var ficheiro = /^data:/.test(url || '');
+    if (campo) campo.style.display = ficheiro ? 'none' : '';
+    var marca = cx.querySelector('.ad-logo-marca');
+    if (ficheiro) {
+      if (!marca) { marca = document.createElement('p'); marca.className = 'ad-logo-marca'; cx.insertBefore(marca, cx.firstChild); }
+      marca.textContent = 'Imagem carregada · ' + Math.round(url.length / 1024) + ' KB';
+    } else if (marca) { marca.remove(); }
+    var btns = cx.querySelector('.ad-logo-btns');
+    if (btns && !btns.querySelector('[data-ax="logo-tirar"]') && url) {
+      var t = document.createElement('button');
+      t.type = 'button'; t.className = 'ad-b sec peq';
+      t.setAttribute('data-ax', 'logo-tirar'); t.textContent = 'Remover';
+      btns.appendChild(t);
+    } else if (btns && !url) {
+      var v = btns.querySelector('[data-ax="logo-tirar"]'); if (v) v.remove();
+    }
   }
 
   function logoAceitar(fich) {
@@ -240,6 +260,8 @@
     Array.prototype.forEach.call(document.querySelectorAll('.ad-tab'), function (b) {
       b.classList.toggle('on', b.dataset.aba === aba);
     });
+    var esp = document.querySelector('[data-ax="espreitar"]');
+    if (esp) esp.style.display = aba === 'pagina' ? '' : 'none';
     var g = $('#adGuardar');
     if (g) g.style.display = (aba === 'pagina' || (aba === 'escolas' && sel)) ? '' : 'none';
     if (aba === 'pagina') {
@@ -257,6 +279,7 @@
     });
     /* colar um endereço à mão tem de mostrar o mesmo que carregar um
        ficheiro, senão parece que uma das duas vias não funciona */
+    if (c.querySelector('[data-ef="logo"]')) logoMostrar(c.querySelector('[data-ef="logo"]').value);
     var cf = c.querySelector('[data-logo-file]');
     if (cf) cf.addEventListener('change', function () { logoAceitar(this.files && this.files[0]); });
     var cl = c.querySelector('[data-ef="logo"]');
