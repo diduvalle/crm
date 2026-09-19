@@ -1,10 +1,13 @@
 /* ===========================================================
-   IEFP CRM - Manual · design system 1:1 com a app
+   IEFP CRM — Manual · design system 1:1 com a app
    Os tokens NÃO se copiam para aqui: vêm de estilo/tokens.css,
    que o CI copia para esta pasta antes de construir o manual.
    Mexer nas cores faz-se lá, e muda a app, o repositório e isto.
    =========================================================== */
 @import url("tokens.css");
+/* o Material carrega Newsreader e Space Mono pelo mkdocs.yml; o Archivo
+   dos titulos tem de vir a parte, e um @import so vale no topo. */
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&display=swap");
 
 /* --- Cor primária (verde IEFP) --- */
 [data-md-color-primary="custom"] {
@@ -26,37 +29,37 @@
    data-md-color-scheme; declarados só no :root, o modo escuro
    não os apanhava. */
 :root, body {
-  --iefp-g900:var(--g900); --iefp-g800:var(--g800); --iefp-g700:var(--g700);
-  --iefp-g600:var(--g600); --iefp-g400:var(--g400); --iefp-g300:var(--g300);
-  --iefp-g100:var(--g100); --iefp-g50:var(--g50);
-  --iefp-accent:var(--accent);
-  --iefp-bg:var(--bg); --iefp-surface:var(--surface);
-  --iefp-surface2:var(--surface2); --iefp-surface3:var(--surface3);
-  --iefp-border:var(--border); --iefp-text:var(--text);
-  --iefp-muted:var(--muted); --iefp-muted2:var(--muted2);
-  --iefp-shadow:var(--shadow); --iefp-shadow-lg:var(--shadow-lg);
-  --iefp-r:var(--r); --iefp-rl:var(--rl); --iefp-rs:var(--rs);
+  --crm-g900:var(--g900); --crm-g800:var(--g800); --crm-g700:var(--g700);
+  --crm-g600:var(--g600); --crm-g400:var(--g400); --crm-g300:var(--g300);
+  --crm-g100:var(--g100); --crm-g50:var(--g50);
+  --crm-accent:var(--accent);
+  --crm-bg:var(--bg); --crm-surface:var(--surface);
+  --crm-surface2:var(--surface2); --crm-surface3:var(--surface3);
+  --crm-border:var(--border); --crm-text:var(--text);
+  --crm-muted:var(--muted); --crm-muted2:var(--muted2);
+  --crm-shadow:var(--shadow); --crm-shadow-lg:var(--shadow-lg);
+  --crm-r:var(--r); --crm-rl:var(--rl); --crm-rs:var(--rs);
   --md-text-font: "Inter";
 }
 [data-md-color-scheme="slate"] {
   --md-primary-fg-color: var(--g600);
-  --md-default-bg-color: var(--iefp-bg);
-  --md-default-fg-color: var(--iefp-text);
+  --md-default-bg-color: var(--crm-bg);
+  --md-default-fg-color: var(--crm-text);
 }
 
 /* ===========================================================
    1. Canvas da app: fundo cinza-esverdeado + conteúdo em card
    =========================================================== */
-[data-md-color-scheme="default"] { --md-default-bg-color: var(--iefp-bg); }
-.md-main { background: var(--iefp-bg); }
+[data-md-color-scheme="default"] { --md-default-bg-color: var(--crm-bg); }
+.md-main { background: var(--crm-bg); }
 
 .md-content {
-  background: var(--iefp-surface);
-  border: 1px solid var(--iefp-border);
-  border-radius: var(--iefp-rl);
-  box-shadow: var(--iefp-shadow);
+  background: var(--crm-surface);
+  border: 1px solid var(--crm-border);
+  border-radius: var(--crm-rl);
+  box-shadow: var(--crm-shadow);
   margin: 1.1rem .4rem 2rem;
-  animation: iefp-fade .26s ease;
+  animation: crm-fade .26s ease;
 }
 .md-content__inner { padding: 1.1rem 1.6rem 1.4rem; margin: 0; }
 .md-content__inner::before { display: none; }
@@ -64,33 +67,33 @@
   .md-content { margin: .6rem .35rem 1.4rem; }
   .md-content__inner { padding: .9rem 1rem 1.2rem; }
 }
-@keyframes iefp-fade { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+@keyframes crm-fade { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
 
 /* Largura de leitura confortável */
 @media screen and (min-width: 76.25em) { .md-grid { max-width: 68rem; } }
 
 /* Scrollbars como na app */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-thumb { background: var(--iefp-border); border-radius: 20px; border: 2px solid var(--iefp-bg); }
-::-webkit-scrollbar-thumb:hover { background: var(--iefp-muted2); }
+::-webkit-scrollbar-thumb { background: var(--crm-border); border-radius: 20px; border: 2px solid var(--crm-bg); }
+::-webkit-scrollbar-thumb:hover { background: var(--crm-muted2); }
 ::selection { background: rgba(0,166,81,.22); }
 
 /* ===========================================================
    2. Header claro com blur (como o .header da app)
    =========================================================== */
 .md-header {
-  background: color-mix(in srgb, var(--iefp-surface) 86%, transparent);
+  background: color-mix(in srgb, var(--crm-surface) 86%, transparent);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  color: var(--iefp-text);
-  border-bottom: 1px solid var(--iefp-border);
+  color: var(--crm-text);
+  border-bottom: 1px solid var(--crm-border);
   box-shadow: none;
 }
 .md-header[data-md-state="shadow"],
 .md-header--shadow { box-shadow: 0 4px 14px rgba(0,60,33,.07); }
-.md-header__title { font-weight: 800; font-size: .85rem; color: var(--iefp-text); }
-.md-header__button { color: var(--iefp-text); }
-.md-header__button:hover { color: var(--iefp-g700); opacity: 1; }
+.md-header__title { font-weight: 800; font-size: .85rem; color: var(--crm-text); }
+.md-header__button { color: var(--crm-text); }
+.md-header__button:hover { color: var(--crm-g700); opacity: 1; }
 .md-header__button.md-logo { padding: .2rem; }
 .md-header__button.md-logo img { height: 34px; width: auto; }
 
@@ -105,18 +108,18 @@
 .md-header__inner > .md-search { margin-left: 9px; }
 
 /* Botão de tema (lua/sol) = .icon-btn da app (40×40, moldura, ícone cinza).
-   :not([hidden]) - o Material mantém o toggle INATIVO com [hidden]; só o ATIVO
+   :not([hidden]) — o Material mantém o toggle INATIVO com [hidden]; só o ATIVO
    é que deve mostrar-se (senão apareciam lua E sol ao mesmo tempo). */
 .md-header__option[data-md-component="palette"] > label.md-header__button.md-icon[hidden] { display: none; }
 .md-header__option[data-md-component="palette"] > label.md-header__button.md-icon:not([hidden]) {
   width: 40px; height: 40px; margin: 0; padding: 0; opacity: 1;
   display: inline-flex; align-items: center; justify-content: center;
-  border-radius: 10px; border: 1px solid var(--iefp-border);
-  background: var(--iefp-surface); color: var(--iefp-muted);
+  border-radius: 10px; border: 1px solid var(--crm-border);
+  background: var(--crm-surface); color: var(--crm-muted);
   transition: background .15s, border-color .15s, color .15s;
 }
 .md-header__option[data-md-component="palette"] > label.md-header__button.md-icon:not([hidden]):hover {
-  background: var(--iefp-surface2); border-color: var(--iefp-g300); color: var(--iefp-text);
+  background: var(--crm-surface2); border-color: var(--crm-g300); color: var(--crm-text);
 }
 .md-header__option[data-md-component="palette"] > label.md-header__button.md-icon svg { width: 18px; height: 18px; }
 
@@ -124,15 +127,15 @@
 .md-header .md-select > .md-header__button.md-icon {
   width: 40px; height: 40px; padding: 0; margin: 0; opacity: 1;
   display: inline-flex; align-items: center; justify-content: center;
-  border-radius: 10px; border: 1px solid var(--iefp-border);
-  background: var(--iefp-surface); color: var(--iefp-g700);
+  border-radius: 10px; border: 1px solid var(--crm-border);
+  background: var(--crm-surface); color: var(--crm-g700);
   font-weight: 800; font-size: .78rem; letter-spacing: .04em;
   transition: background .15s, border-color .15s, color .15s;
 }
 .md-header .md-select > .md-header__button.md-icon:hover {
-  background: var(--iefp-surface2); border-color: var(--iefp-g300); color: var(--iefp-g700);
+  background: var(--crm-surface2); border-color: var(--crm-g300); color: var(--crm-g700);
 }
-/* sem globo - igual ao botão PT/EN da app (só texto verde) */
+/* sem globo — igual ao botão PT/EN da app (só texto verde) */
 .md-header .md-select > .md-header__button.md-icon svg { display: none; }
 /* mostra o idioma ATUAL (como o toggle da app): PT nas páginas PT, EN nas EN */
 .md-header .md-select > .md-header__button.md-icon::after { content: "PT/EN"; font: inherit; color: inherit; }
@@ -140,47 +143,47 @@ html[lang^="pt"] .md-header .md-select > .md-header__button.md-icon::after { con
 html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { content: "EN"; }
 /* Dropdown de idiomas */
 .md-header .md-select__inner {
-  border-radius: 10px; box-shadow: var(--iefp-shadow-lg);
-  background: var(--iefp-surface); border: 1px solid var(--iefp-border); overflow: hidden;
+  border-radius: 10px; box-shadow: var(--crm-shadow-lg);
+  background: var(--crm-surface); border: 1px solid var(--crm-border); overflow: hidden;
 }
-.md-header .md-select__list { background: var(--iefp-surface); }
+.md-header .md-select__list { background: var(--crm-surface); }
 .md-header .md-select__link {
-  color: var(--iefp-text); font-size: .76rem; font-weight: 600;
+  color: var(--crm-text); font-size: .76rem; font-weight: 600;
 }
-.md-header .md-select__link:hover { background: var(--iefp-g50); color: var(--iefp-g700); }
+.md-header .md-select__link:hover { background: var(--crm-g50); color: var(--crm-g700); }
 
 /* Pesquisa do header = .search-inp da app */
 .md-search__form {
-  background: var(--iefp-surface2);
-  border: 1px solid var(--iefp-border);
-  border-radius: var(--iefp-rs);
+  background: var(--crm-surface2);
+  border: 1px solid var(--crm-border);
+  border-radius: var(--crm-rs);
   height: 2.5rem;
   box-shadow: none;
   transition: border .14s, box-shadow .14s;
 }
-.md-search__form:hover { background: var(--iefp-surface2); border-color: var(--iefp-g300); }
+.md-search__form:hover { background: var(--crm-surface2); border-color: var(--crm-g300); }
 [data-md-toggle="search"]:checked ~ .md-header .md-search__form {
-  background: var(--iefp-surface);
-  border-color: var(--iefp-g400);
+  background: var(--crm-surface);
+  border-color: var(--crm-g400);
   box-shadow: 0 0 0 3px rgba(0,166,81,.14);
-  border-radius: var(--iefp-rs) var(--iefp-rs) 0 0;
+  border-radius: var(--crm-rs) var(--crm-rs) 0 0;
 }
-.md-search__input { font-size: .74rem; color: var(--iefp-text); }
-.md-search__input::placeholder { color: var(--iefp-muted2); }
-.md-search__input + .md-search__icon { color: var(--iefp-muted); }
-.md-search__output { border-radius: 0 0 var(--iefp-rs) var(--iefp-rs); box-shadow: var(--iefp-shadow-lg); }
-.md-search-result__meta { background: var(--iefp-surface2); color: var(--iefp-muted); }
+.md-search__input { font-size: .74rem; color: var(--crm-text); }
+.md-search__input::placeholder { color: var(--crm-muted2); }
+.md-search__input + .md-search__icon { color: var(--crm-muted); }
+.md-search__output { border-radius: 0 0 var(--crm-rs) var(--crm-rs); box-shadow: var(--crm-shadow-lg); }
+.md-search-result__meta { background: var(--crm-surface2); color: var(--crm-muted); }
 
 /* ===========================================================
    3. Sidebar esquerda = painel verde-escuro da app
    =========================================================== */
 @media screen and (min-width: 76.25em) {
   .md-sidebar--primary .md-sidebar__scrollwrap {
-    background: linear-gradient(180deg, var(--iefp-g900), #04492c 60%, #033c24);
-    border-radius: var(--iefp-rl);
+    background: linear-gradient(180deg, var(--crm-g900), #04492c 60%, #033c24);
+    border-radius: var(--crm-rl);
     margin: 1.1rem 0 1.4rem .2rem;
     padding: .55rem .45rem;
-    box-shadow: var(--iefp-shadow);
+    box-shadow: var(--crm-shadow);
     scrollbar-color: rgba(255,255,255,.25) transparent;
   }
   .md-sidebar--primary .md-sidebar__scrollwrap::-webkit-scrollbar { width: 6px; }
@@ -195,12 +198,12 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
   }
   .md-sidebar--primary .md-nav__title .md-logo { display: none; }
 
-  /* O título "IEFP CRM - Manual" é redundante no desktop (já está no cabeçalho)
+  /* O título "IEFP CRM — Manual" é redundante no desktop (já está no cabeçalho)
      e, sendo sticky+transparente, arrastava por cima dos itens no scroll. */
   .md-sidebar--primary .md-nav--primary > .md-nav__title { display: none; }
 
   /* Itens de topo SEM filhos (Início, 7. FAQ, 8. Glossário) = mesmo estilo
-     de grupo das secções 1 - 6, para a navbar ficar uniforme. */
+     de grupo das secções 1–6, para a navbar ficar uniforme. */
   .md-sidebar--primary .md-nav--primary > .md-nav__list
     > .md-nav__item:not(.md-nav__item--nested):not(.md-nav__item--section)
     > .md-nav__link {
@@ -216,7 +219,7 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 
   /* Labels da navbar nunca cortados (sem ellipsis "...") */
   .md-sidebar--primary .md-nav__link .md-ellipsis { overflow: visible; text-overflow: clip; }
-  /* Títulos de grupo numa só linha - palavra longa ("FUNCIONALIDADES") não parte */
+  /* Títulos de grupo numa só linha — palavra longa ("FUNCIONALIDADES") não parte */
   .md-sidebar--primary .md-nav__item--section > .md-nav__link .md-ellipsis { white-space: nowrap; }
 
   /* Secções de topo COM página-índice (Funcionalidades, RGPD): o Material mete
@@ -267,7 +270,7 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
   }
   .md-sidebar--primary .md-nav__item:not(.md-nav__item--section) > .md-nav__link--active::before {
     content: ""; position: absolute; left: -0.45rem; top: 50%; transform: translateY(-50%);
-    width: 4px; height: 20px; background: var(--iefp-accent); border-radius: 0 4px 4px 0;
+    width: 4px; height: 20px; background: var(--crm-accent); border-radius: 0 4px 4px 0;
   }
   .md-sidebar--primary .md-nav__icon,
   .md-sidebar--primary .md-nav__link::after { color: rgba(255,255,255,.6); }
@@ -276,42 +279,42 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 /* TOC à direita */
 .md-nav--secondary .md-nav__title {
   font-size: .58rem; text-transform: uppercase; letter-spacing: .1em;
-  color: var(--iefp-muted); font-weight: 700; background: transparent; box-shadow: none;
+  color: var(--crm-muted); font-weight: 700; background: transparent; box-shadow: none;
 }
 .md-nav--secondary { font-size: .68rem; }
-.md-nav--secondary .md-nav__link { color: var(--iefp-muted); }
-.md-nav--secondary .md-nav__link:hover { color: var(--iefp-g600); }
-.md-nav--secondary .md-nav__link--active { color: var(--iefp-g700); font-weight: 700; }
+.md-nav--secondary .md-nav__link { color: var(--crm-muted); }
+.md-nav--secondary .md-nav__link:hover { color: var(--crm-g600); }
+.md-nav--secondary .md-nav__link--active { color: var(--crm-g700); font-weight: 700; }
 
 /* ===========================================================
    4. Tipografia (escala da app)
    =========================================================== */
-.md-typeset { font-size: .8rem; line-height: 1.7; color: var(--iefp-text); }
+.md-typeset { font-size: .8rem; line-height: 1.7; color: var(--crm-text); }
 .md-typeset p { margin: 0 0 1em; }
 .md-typeset ul, .md-typeset ol { margin-bottom: 1em; }
 .md-typeset li { margin-bottom: .3em; }
 
 .md-typeset h1 {
   font-size: 1.7rem; font-weight: 800; line-height: 1.15;
-  letter-spacing: -.02em; margin: 0 0 .6rem; color: var(--iefp-g900);
+  letter-spacing: -.02em; margin: 0 0 .6rem; color: var(--crm-g900);
 }
 .md-typeset h2 {
   font-size: 1.22rem; font-weight: 800; line-height: 1.25;
   letter-spacing: -.01em; margin: 2.2rem 0 .9rem;
-  padding-bottom: .3rem; border-bottom: 2px solid var(--iefp-g100);
-  color: var(--iefp-g800);
+  padding-bottom: .3rem; border-bottom: 2px solid var(--crm-g100);
+  color: var(--crm-g800);
 }
-.md-typeset h3 { font-size: .98rem; font-weight: 750; margin-top: 1.7rem; color: var(--iefp-text); }
+.md-typeset h3 { font-size: .98rem; font-weight: 750; margin-top: 1.7rem; color: var(--crm-text); }
 .md-typeset h4 { font-size: .85rem; font-weight: 700; }
 [data-md-color-scheme="slate"] .md-typeset h1 { color: #e7f3ec; }
-[data-md-color-scheme="slate"] .md-typeset h2 { color: var(--iefp-g600); border-bottom-color: rgba(0,166,81,.22); }
+[data-md-color-scheme="slate"] .md-typeset h2 { color: var(--crm-g600); border-bottom-color: rgba(0,166,81,.22); }
 
 /* Parágrafo de entrada */
-.md-typeset h1 + p { font-size: .92rem; line-height: 1.6; color: var(--iefp-muted); }
+.md-typeset h1 + p { font-size: .92rem; line-height: 1.6; color: var(--crm-muted); }
 
 /* Links */
-.md-typeset a { color: var(--iefp-g700); font-weight: 600; }
-.md-typeset a:hover { color: var(--iefp-g600); text-decoration: underline; text-underline-offset: 3px; }
+.md-typeset a { color: var(--crm-g700); font-weight: 600; }
+.md-typeset a:hover { color: var(--crm-g600); text-decoration: underline; text-underline-offset: 3px; }
 
 /* ===========================================================
    5. Cartões de menu (grid cards) = .card + .kpi da app
@@ -320,17 +323,17 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 .md-typeset .grid.cards > ul { gap: .8rem; }
 .md-typeset .grid.cards > ul > li,
 .md-typeset .grid > .card {
-  border: 1px solid var(--iefp-border);
-  border-radius: var(--iefp-rl);
+  border: 1px solid var(--crm-border);
+  border-radius: var(--crm-rl);
   padding: 1.15rem 1.2rem 1rem;
-  background: var(--iefp-surface);
-  box-shadow: var(--iefp-shadow);
+  background: var(--crm-surface);
+  box-shadow: var(--crm-shadow);
   transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
 .md-typeset .grid.cards > ul > li:hover,
 .md-typeset .grid > .card:hover {
   transform: translateY(-3px);
-  border-color: var(--iefp-g400);
+  border-color: var(--crm-g400);
   box-shadow: 0 16px 40px rgba(0,107,60,.16);
 }
 
@@ -339,84 +342,84 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
   display: inline-flex; box-sizing: border-box;
   width: 40px; height: 40px; padding: 9px;
   border-radius: 10px;
-  background: var(--iefp-g100); color: var(--iefp-g700);
+  background: var(--crm-g100); color: var(--crm-g700);
   margin: 0 0 .55rem; vertical-align: top;
   stroke-width: 2;
   transition: background .18s ease, color .18s ease;
 }
-.md-typeset .grid.cards > ul > li:hover svg.icon { background: var(--iefp-g600); color: #fff; }
+.md-typeset .grid.cards > ul > li:hover svg.icon { background: var(--crm-g600); color: #fff; }
 .md-typeset .grid.cards strong {
   display: block; font-size: .92rem; font-weight: 800;
-  color: var(--iefp-text); margin-bottom: .05rem;
+  color: var(--crm-text); margin-bottom: .05rem;
 }
-.md-typeset .grid.cards hr { margin: .6rem 0; border: 0; border-top: 1px solid var(--iefp-border); }
-.md-typeset .grid.cards p { font-size: .72rem; line-height: 1.55; color: var(--iefp-muted); }
+.md-typeset .grid.cards hr { margin: .6rem 0; border: 0; border-top: 1px solid var(--crm-border); }
+.md-typeset .grid.cards p { font-size: .72rem; line-height: 1.55; color: var(--crm-muted); }
 .md-typeset .grid.cards li > p:last-child > a {
   display: inline-flex; align-items: center; gap: .3rem;
-  font-weight: 700; font-size: .74rem; color: var(--iefp-g700);
+  font-weight: 700; font-size: .74rem; color: var(--crm-g700);
 }
-.md-typeset .grid.cards li > p:last-child > a:hover { color: var(--iefp-g600); text-decoration: none; gap: .5rem; }
+.md-typeset .grid.cards li > p:last-child > a:hover { color: var(--crm-g600); text-decoration: none; gap: .5rem; }
 
 /* ===========================================================
    6. Hero da homepage (gradiente da app)
    =========================================================== */
-.iefp-hero {
+.crm-hero {
   position: relative; overflow: hidden;
-  border-radius: var(--iefp-rl);
+  border-radius: var(--crm-rl);
   padding: 1.6rem 1.7rem 1.5rem;
   margin: .2rem 0 1.4rem;
-  background: linear-gradient(125deg, var(--iefp-g800), var(--iefp-g600) 55%, var(--iefp-g400));
+  background: linear-gradient(125deg, var(--crm-g800), var(--crm-g600) 55%, var(--crm-g400));
   color: #fff;
   box-shadow: 0 16px 40px rgba(0,107,60,.24);
 }
-.iefp-hero::after {
+.crm-hero::after {
   content: ""; position: absolute; right: -60px; top: -60px;
   width: 280px; height: 280px;
   background: radial-gradient(circle, rgba(255,255,255,.16), transparent 70%);
   pointer-events: none;
 }
-.md-typeset .iefp-hero h1 { color: #fff; margin: 0 0 .35rem; font-size: 1.65rem; }
-.md-typeset .iefp-hero p { color: rgba(255,255,255,.9); max-width: 48rem; margin: 0; font-size: .82rem; position: relative; }
-.iefp-hero-actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: 1rem; position: relative; }
-.md-typeset .iefp-hero-actions a {
+.md-typeset .crm-hero h1 { color: #fff; margin: 0 0 .35rem; font-size: 1.65rem; }
+.md-typeset .crm-hero p { color: rgba(255,255,255,.9); max-width: 48rem; margin: 0; font-size: .82rem; position: relative; }
+.crm-hero-actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: 1rem; position: relative; }
+.md-typeset .crm-hero-actions a {
   display: inline-flex; align-items: center; gap: 7px;
   padding: 9px 15px; border-radius: 10px; font-weight: 700; font-size: .74rem;
   text-decoration: none !important; transition: transform .08s, background .15s;
 }
-.md-typeset .iefp-hero-actions a:active { transform: translateY(1px); }
-.md-typeset .iefp-hero-actions .hb-solid { background: #fff; color: var(--iefp-g800); }
-.md-typeset .iefp-hero-actions .hb-solid:hover { background: #f0f0f0; color: var(--iefp-g900); }
-.md-typeset .iefp-hero-actions .hb-out {
+.md-typeset .crm-hero-actions a:active { transform: translateY(1px); }
+.md-typeset .crm-hero-actions .hb-solid { background: #fff; color: var(--crm-g800); }
+.md-typeset .crm-hero-actions .hb-solid:hover { background: #f0f0f0; color: var(--crm-g900); }
+.md-typeset .crm-hero-actions .hb-out {
   background: rgba(255,255,255,.16); color: #fff; border: 1px solid rgba(255,255,255,.45);
 }
-.md-typeset .iefp-hero-actions .hb-out:hover { background: rgba(255,255,255,.28); color: #fff; }
-.iefp-hero-actions svg {
+.md-typeset .crm-hero-actions .hb-out:hover { background: rgba(255,255,255,.28); color: #fff; }
+.crm-hero-actions svg {
   width: 16px; height: 16px; fill: none; stroke: currentColor;
   stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none;
 }
-/* Sem âncora ¶ (permalink) no título do hero - ali não é uma secção navegável */
-.md-typeset .iefp-hero .headerlink { display: none; }
+/* Sem âncora ¶ (permalink) no título do hero — ali não é uma secção navegável */
+.md-typeset .crm-hero .headerlink { display: none; }
 
 /* ===========================================================
    7. Admonitions = callouts da app
    =========================================================== */
 .md-typeset .admonition,
 .md-typeset details {
-  border: 1px solid var(--iefp-border);
+  border: 1px solid var(--crm-border);
   border-left-width: 4px;
-  border-radius: var(--iefp-r);
-  box-shadow: var(--iefp-shadow);
+  border-radius: var(--crm-r);
+  box-shadow: var(--crm-shadow);
   font-size: .74rem;
-  background: var(--iefp-surface);
+  background: var(--crm-surface);
 }
 .md-typeset .admonition-title,
 .md-typeset summary { font-weight: 700; padding-top: .5rem; padding-bottom: .5rem; }
 .md-typeset .admonition > :last-child { margin-bottom: .55rem; }
 
-.md-typeset :is(.admonition, details):is(.note, .info, .abstract) { border-left-color: var(--iefp-g600); }
-.md-typeset :is(.note, .info, .abstract) > :is(.admonition-title, summary) { background: var(--iefp-g50); }
-.md-typeset :is(.note, .info, .abstract) > :is(.admonition-title, summary)::before { background-color: var(--iefp-g700); }
-.md-typeset :is(.admonition, details).tip { border-left-color: var(--iefp-accent); }
+.md-typeset :is(.admonition, details):is(.note, .info, .abstract) { border-left-color: var(--crm-g600); }
+.md-typeset :is(.note, .info, .abstract) > :is(.admonition-title, summary) { background: var(--crm-g50); }
+.md-typeset :is(.note, .info, .abstract) > :is(.admonition-title, summary)::before { background-color: var(--crm-g700); }
+.md-typeset :is(.admonition, details).tip { border-left-color: var(--crm-accent); }
 .md-typeset .tip > :is(.admonition-title, summary) { background: rgba(122,193,67,.12); }
 .md-typeset :is(.admonition, details).warning { border-left-color: #d97706; }
 .md-typeset .warning > :is(.admonition-title, summary) { background: #fef3e2; }
@@ -426,57 +429,57 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
    8. Tabelas = .table-wrap da app (header discreto uppercase)
    =========================================================== */
 .md-typeset table:not([class]) {
-  border: 1px solid var(--iefp-border);
-  border-radius: var(--iefp-r); overflow: hidden;
-  box-shadow: var(--iefp-shadow);
+  border: 1px solid var(--crm-border);
+  border-radius: var(--crm-r); overflow: hidden;
+  box-shadow: var(--crm-shadow);
   font-size: .74rem;
-  background: var(--iefp-surface);
+  background: var(--crm-surface);
 }
 .md-typeset table:not([class]) th {
-  background: var(--iefp-surface2); color: var(--iefp-muted);
+  background: var(--crm-surface2); color: var(--crm-muted);
   font-size: .62rem; text-transform: uppercase; letter-spacing: .04em;
   font-weight: 700; border: 0; padding: .65em 1.1em;
 }
 .md-typeset table:not([class]) td {
-  border: 0; border-top: 1px solid var(--iefp-border); padding: .7em 1.1em;
+  border: 0; border-top: 1px solid var(--crm-border); padding: .7em 1.1em;
 }
 .md-typeset table:not([class]) tbody tr { transition: background .12s; }
-.md-typeset table:not([class]) tbody tr:hover { background: var(--iefp-surface2); }
+.md-typeset table:not([class]) tbody tr:hover { background: var(--crm-surface2); }
 
 /* ===========================================================
    9. Código
    =========================================================== */
 .md-typeset code {
-  background: var(--iefp-g50); color: var(--iefp-g800);
-  border: 1px solid var(--iefp-g100); border-radius: 6px;
+  background: var(--crm-g50); color: var(--crm-g800);
+  border: 1px solid var(--crm-g100); border-radius: 6px;
   padding: .1em .38em; font-size: .82em;
 }
 [data-md-color-scheme="slate"] .md-typeset code {
   background: rgba(0,166,81,.10); color: #8fe0b3; border-color: rgba(0,166,81,.2);
 }
-.md-typeset pre > code { border-radius: var(--iefp-r); padding: 1em 1.1em; border: 0; }
-.md-typeset .highlight { border-radius: var(--iefp-r); box-shadow: var(--iefp-shadow); }
+.md-typeset pre > code { border-radius: var(--crm-r); padding: 1em 1.1em; border: 0; }
+.md-typeset .highlight { border-radius: var(--crm-r); box-shadow: var(--crm-shadow); }
 
 /* Citações */
 .md-typeset blockquote {
-  border-left: 4px solid var(--iefp-g600); border-radius: 0 var(--iefp-rs) var(--iefp-rs) 0;
-  background: var(--iefp-g50); color: var(--iefp-muted);
+  border-left: 4px solid var(--crm-g600); border-radius: 0 var(--crm-rs) var(--crm-rs) 0;
+  background: var(--crm-g50); color: var(--crm-muted);
 }
 
 /* Imagens (screenshots) */
 .md-typeset img:not(.twemoji):not(.emojione) {
-  border-radius: var(--iefp-r);
-  border: 1px solid var(--iefp-border);
-  box-shadow: var(--iefp-shadow);
+  border-radius: var(--crm-r);
+  border: 1px solid var(--crm-border);
+  box-shadow: var(--crm-shadow);
 }
 
 /* Vídeos de demonstração (mesma moldura das imagens) */
-.md-typeset .iefp-video {
+.md-typeset .crm-video {
   width: 100%; height: auto; display: block;
-  aspect-ratio: 16 / 10;          /* reserva o espaço (1440×900) - evita o leitor colapsado */
-  border-radius: var(--iefp-r);
-  border: 1px solid var(--iefp-border);
-  box-shadow: var(--iefp-shadow);
+  aspect-ratio: 16 / 10;          /* reserva o espaço (1440×900) — evita o leitor colapsado */
+  border-radius: var(--crm-r);
+  border: 1px solid var(--crm-border);
+  box-shadow: var(--crm-shadow);
   background: #000;
 }
 
@@ -487,20 +490,20 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 }
 .md-typeset .md-button:active { transform: translateY(1px); }
 .md-typeset .md-button--primary {
-  background: var(--iefp-g600); border-color: var(--iefp-g600); color: #fff;
+  background: var(--crm-g600); border-color: var(--crm-g600); color: #fff;
   box-shadow: 0 2px 8px rgba(0,166,81,.28);
 }
-.md-typeset .md-button--primary:hover { background: var(--iefp-g700); border-color: var(--iefp-g700); }
+.md-typeset .md-button--primary:hover { background: var(--crm-g700); border-color: var(--crm-g700); }
 
 /* Botão "voltar ao topo" */
 .md-top {
-  background: var(--iefp-surface); color: var(--iefp-text);
-  border: 1px solid var(--iefp-border); box-shadow: var(--iefp-shadow);
+  background: var(--crm-surface); color: var(--crm-text);
+  border: 1px solid var(--crm-border); box-shadow: var(--crm-shadow);
 }
-.md-top:hover { background: var(--iefp-g600); color: #fff; }
+.md-top:hover { background: var(--crm-g600); color: #fff; }
 
 /* ===========================================================
-   10. Ícones de linha (SVG inline) - monocromáticos
+   10. Ícones de linha (SVG inline) — monocromáticos
    =========================================================== */
 .md-typeset .lucide svg,
 .md-typeset svg.icon {
@@ -511,7 +514,7 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 }
 
 /* Rodapé "meta" do Material */
-.md-footer { background: var(--iefp-g900); }
+.md-footer { background: var(--crm-g900); }
 .md-footer-meta { background: #04492c; }
 .md-footer__inner { padding-top: .6rem; padding-bottom: .6rem; }
 .md-footer__link { color: rgba(255,255,255,.85); }
@@ -533,33 +536,33 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 /* ===========================================================
    12. Rodapé de navegação consistente (override main.html)
    =========================================================== */
-.iefp-foot-sep { margin: 2.6em 0 1.2em; border: 0; border-top: 1px solid var(--iefp-border); }
-.iefp-foot { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: .9rem; }
-.iefp-foot-btn {
+.crm-foot-sep { margin: 2.6em 0 1.2em; border: 0; border-top: 1px solid var(--crm-border); }
+.crm-foot { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: .9rem; }
+.crm-foot-btn {
   display: inline-flex; align-items: center; gap: 7px;
-  padding: 9px 14px; border: 1px solid var(--iefp-border);
+  padding: 9px 14px; border: 1px solid var(--crm-border);
   border-radius: 10px; font-size: .72rem; font-weight: 700;
-  color: var(--iefp-text) !important; text-decoration: none !important;
-  background: var(--iefp-surface);
+  color: var(--crm-text) !important; text-decoration: none !important;
+  background: var(--crm-surface);
   transition: transform .08s, background .15s, border-color .15s, color .15s;
 }
-.iefp-foot-btn:active { transform: translateY(1px); }
-.iefp-foot-btn:hover { background: var(--iefp-surface2); border-color: var(--iefp-g300); color: var(--iefp-text) !important; }
-.iefp-foot-btn svg {
+.crm-foot-btn:active { transform: translateY(1px); }
+.crm-foot-btn:hover { background: var(--crm-surface2); border-color: var(--crm-g300); color: var(--crm-text) !important; }
+.crm-foot-btn svg {
   width: 17px; height: 17px; flex: none;
   fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
 }
 /* CTA = .btn da app (verde com glow) */
-.iefp-foot-cta {
-  background: var(--iefp-g600) !important; border-color: transparent !important;
+.crm-foot-cta {
+  background: var(--crm-g600) !important; border-color: transparent !important;
   color: #fff !important; box-shadow: 0 2px 8px rgba(0,166,81,.28);
 }
-.iefp-foot-cta:hover { background: var(--iefp-g700) !important; color: #fff !important; }
+.crm-foot-cta:hover { background: var(--crm-g700) !important; color: #fff !important; }
 
 /* Crédito no rodapé escuro = .made-by da app (mesmo look e ordem) */
 .md-copyright { color: rgba(255,255,255,.55); font-size: .72rem; font-weight: 600; }
 .md-copyright__highlight { color: rgba(255,255,255,.55); }
-.md-copyright .iefp-sep { opacity: .5; }
+.md-copyright .crm-sep { opacity: .5; }
 .md-copyright .made-by {
   display: inline-flex; align-items: center; gap: 6px; vertical-align: -2px;
   font-size: .72rem; font-weight: 600; color: rgba(255,255,255,.55);
@@ -577,11 +580,11 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
    =========================================================== */
 /* Foco visível por teclado (navegação acessível) */
 .md-typeset a:focus-visible,
-.iefp-foot-btn:focus-visible,
-.iefp-hero-actions a:focus-visible,
+.crm-foot-btn:focus-visible,
+.crm-hero-actions a:focus-visible,
 .md-copyright .made-by:focus-visible,
 .md-nav__link:focus-visible {
-  outline: 2px solid var(--iefp-g600);
+  outline: 2px solid var(--crm-g600);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -605,39 +608,39 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 @media screen and (max-width: 48em) { .md-typeset .video-gallery { grid-template-columns: 1fr; } }
 .md-typeset .video-gallery figure { margin: 0; }
 .md-typeset .video-gallery figcaption { margin-top: .45rem; }
-.md-typeset .video-gallery figcaption strong { color: var(--iefp-g900); font-weight: 800; font-size: .84rem; }
+.md-typeset .video-gallery figcaption strong { color: var(--crm-g900); font-weight: 800; font-size: .84rem; }
 [data-md-color-scheme="slate"] .md-typeset .video-gallery figcaption strong { color: #e7f3ec; }
-.md-typeset .video-gallery figcaption span { display: block; color: var(--iefp-muted); font-size: .72rem; margin-top: .1rem; }
+.md-typeset .video-gallery figcaption span { display: block; color: var(--crm-muted); font-size: .72rem; margin-top: .1rem; }
 
 /* ===========================================================
    15. Quiz / Autoavaliação
    =========================================================== */
 .quiz-bar {
   position: sticky; top: 3.2rem; z-index: 3;
-  background: var(--iefp-g800); color: #fff;
-  border-radius: var(--iefp-rs); padding: .55rem 1rem; margin: .4rem 0 1.1rem;
-  font-weight: 800; font-size: .8rem; box-shadow: var(--iefp-shadow);
+  background: var(--crm-g800); color: #fff;
+  border-radius: var(--crm-rs); padding: .55rem 1rem; margin: .4rem 0 1.1rem;
+  font-weight: 800; font-size: .8rem; box-shadow: var(--crm-shadow);
 }
 .md-typeset .quiz-q {
-  border: 1px solid var(--iefp-border); border-radius: var(--iefp-rl);
-  background: var(--iefp-surface); box-shadow: var(--iefp-shadow);
+  border: 1px solid var(--crm-border); border-radius: var(--crm-rl);
+  background: var(--crm-surface); box-shadow: var(--crm-shadow);
   padding: 1.1rem 1.2rem; margin: 0 0 1rem;
 }
-.md-typeset .quiz-q__title { font-weight: 800; color: var(--iefp-text); margin: 0 0 .7rem; font-size: .9rem; }
+.md-typeset .quiz-q__title { font-weight: 800; color: var(--crm-text); margin: 0 0 .7rem; font-size: .9rem; }
 .md-typeset .quiz-opt {
   display: block; width: 100%; text-align: left; font: inherit; cursor: pointer;
-  border: 1px solid var(--iefp-border); background: var(--iefp-surface2); color: var(--iefp-text);
+  border: 1px solid var(--crm-border); background: var(--crm-surface2); color: var(--crm-text);
   border-radius: 10px; padding: .6rem .85rem; margin: .4rem 0;
   transition: border-color .12s, background .12s;
 }
-.md-typeset .quiz-opt:hover:not(:disabled) { border-color: var(--iefp-g400); background: var(--iefp-g50); }
-.md-typeset .quiz-opt.correct { background: var(--iefp-g100); border-color: var(--iefp-g600); color: var(--iefp-g800); font-weight: 700; }
+.md-typeset .quiz-opt:hover:not(:disabled) { border-color: var(--crm-g400); background: var(--crm-g50); }
+.md-typeset .quiz-opt.correct { background: var(--crm-g100); border-color: var(--crm-g600); color: var(--crm-g800); font-weight: 700; }
 .md-typeset .quiz-opt.wrong { background: #fdecec; border-color: #dc2626; color: #b91c1c; }
 [data-md-color-scheme="slate"] .md-typeset .quiz-opt.wrong { background: #3a1d1d; color: #f8b4b4; }
 .md-typeset .quiz-opt:disabled { cursor: default; }
 .md-typeset .quiz-exp {
-  display: none; margin: .6rem 0 .2rem; font-size: .8rem; color: var(--iefp-muted);
-  border-left: 3px solid var(--iefp-g600); padding: .15rem 0 .15rem .7rem;
+  display: none; margin: .6rem 0 .2rem; font-size: .8rem; color: var(--crm-muted);
+  border-left: 3px solid var(--crm-g600); padding: .15rem 0 .15rem .7rem;
 }
 .md-typeset .quiz-exp.show { display: block; }
 .md-typeset .quiz-restart { margin-top: .4rem; }
@@ -657,3 +660,135 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 .vfachada-falta{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;
   border:1px dashed var(--md-default-fg-color--lightest);border-radius:8px;
   color:var(--md-default-fg-color--light);font-size:.85rem}
+
+/* ===========================================================
+   A IDENTIDADE DA PLATAFORMA
+   Isto vem depois do import dos tokens de propósito: os tokens
+   dão a cor da ESCOLA, que muda, e o manual é da plataforma.
+   =========================================================== */
+:root, body,
+[data-md-color-scheme="default"] {
+  --pl-papel:#efe9dd; --pl-papel-2:#f5f1e8; --pl-branco:#fdfbf7;
+  --pl-tinta:#171412; --pl-tinta-2:#4a423c; --pl-fraco:#8a7f75;
+  --pl-azul:#0078bf; --pl-azul-escuro:#005e95; --pl-risco:#ddd4c4;
+
+  --md-default-bg-color: var(--pl-papel);
+  --md-default-fg-color: var(--pl-tinta);
+  --md-default-fg-color--light: var(--pl-tinta-2);
+  --md-default-fg-color--lighter: var(--pl-fraco);
+  --md-default-fg-color--lightest: var(--pl-risco);
+  --md-typeset-color: var(--pl-tinta);
+  --md-typeset-a-color: var(--pl-azul);
+  --md-primary-fg-color: var(--pl-tinta);
+  --md-primary-bg-color: var(--pl-papel);
+  --md-accent-fg-color: var(--pl-azul);
+  --md-code-bg-color: #f0eade;
+  --md-code-fg-color: var(--pl-tinta);
+
+  /* os apelidos que o resto da folha usa passam a apontar cá */
+  --crm-bg: var(--pl-papel);
+  --crm-surface: var(--pl-branco);
+  --crm-surface2: var(--pl-papel-2);
+  --crm-surface3: #e9e2d4;
+  --crm-border: var(--pl-risco);
+  --crm-text: var(--pl-tinta);
+  --crm-muted: var(--pl-tinta-2);
+  --crm-muted2: var(--pl-fraco);
+  --crm-g900: var(--pl-tinta);
+  --crm-g800: var(--pl-azul-escuro);
+  --crm-g700: var(--pl-azul);
+  --crm-g600: var(--pl-azul);
+  --crm-g400: #479ed1;
+  --crm-g300: #8cc2e2;
+  --crm-g100: #e2eff8;
+  --crm-g50:  #f2f8fc;
+  --crm-accent: var(--pl-azul);
+
+  --md-text-font: "Newsreader";
+  --md-code-font: "Space Mono";
+}
+
+/* modo escuro: papel vira tinta, mas o azul mantém-se */
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color:#14110f; --md-default-fg-color:#ece5d8;
+  --md-typeset-color:#ece5d8; --md-typeset-a-color:#4aa8e0;
+  --md-code-bg-color:#1e1a17;
+  --crm-bg:#14110f; --crm-surface:#1b1714; --crm-surface2:#221d19;
+  --crm-surface3:#2b241f; --crm-border:#332b25;
+  --crm-text:#ece5d8; --crm-muted:#b9ada0; --crm-muted2:#8a7f75;
+  --crm-g700:#4aa8e0; --crm-g600:#4aa8e0; --crm-g100:#15293a; --crm-g50:#11202d;
+}
+
+/* ---- tipografia ---- */
+/* Archivo nos títulos: é a letra da montra, e um manual precisa de
+   títulos que se distingam do corpo à distância de um relance. */
+.md-typeset h1, .md-typeset h2, .md-typeset h3,
+.md-typeset h4, .md-nav__title, .md-header__title {
+  font-family:"Archivo", system-ui, sans-serif;
+  letter-spacing:-.022em;
+}
+.md-typeset h1{ font-weight:800; color:var(--pl-tinta); font-size:2.05rem; line-height:1.1 }
+.md-typeset h2{ font-weight:800; font-size:1.42rem; margin-top:2.4em;
+  padding-bottom:.3em; border-bottom:1.5px solid var(--pl-risco) }
+.md-typeset h3{ font-weight:700; font-size:1.12rem; margin-top:1.8em }
+.md-typeset{ font-size:.86rem; line-height:1.72 }
+.md-typeset p{ margin:0 0 1em }
+.md-typeset strong{ font-weight:600; color:var(--pl-tinta) }
+
+/* a navegação e as etiquetas em mono pequeno, como na montra */
+.md-nav__title, .md-nav--secondary .md-nav__title{
+  font-family:"Space Mono", ui-monospace, monospace;
+  font-size:.62rem; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--pl-fraco); font-weight:700;
+}
+.md-nav__link{ font-family:"Archivo", system-ui, sans-serif; font-size:.78rem }
+.md-typeset code{ font-family:"Space Mono", ui-monospace, monospace; font-size:.8em }
+
+/* ---- a barra lateral deixa de ser um bloco de cor ----
+   Tinha um gradiente verde herdado da app. Numa página de leitura, um
+   bloco escuro ao lado do texto rouba-lhe a atenção o tempo todo. */
+.md-sidebar--primary .md-nav{ background:none }
+.md-sidebar--primary{ background:none }
+.md-nav--primary > .md-nav__list{
+  background:var(--pl-branco); border:1px solid var(--pl-risco);
+  border-radius:12px; padding:14px 10px;
+}
+.md-nav__item--active > .md-nav__link{ color:var(--pl-azul); font-weight:600 }
+.md-nav__link:hover{ color:var(--pl-azul) }
+
+/* ---- o conteúdo: uma folha sobre o papel ---- */
+.md-content{
+  background:var(--pl-branco);
+  border:1px solid var(--pl-risco);
+  border-radius:14px;
+  box-shadow:0 1px 2px rgba(23,20,18,.04), 0 12px 32px -20px rgba(23,20,18,.2);
+}
+.md-main{ background:var(--pl-papel) }
+.md-header{ background:var(--pl-papel); color:var(--pl-tinta);
+  border-bottom:1px solid var(--pl-risco); box-shadow:none }
+.md-header__title{ font-weight:700; font-size:.92rem }
+.md-search__form{ background:var(--pl-branco); border:1px solid var(--pl-risco); border-radius:9px }
+.md-search__input::placeholder{ color:var(--pl-fraco) }
+.md-footer{ background:var(--pl-tinta) }
+.md-footer-meta{ background:#0f0d0b }
+
+/* ---- o hero da entrada ---- */
+.crm-hero h1{ margin-top:0 }
+.crm-hero-actions{ display:flex; gap:10px; flex-wrap:wrap; margin:1.6em 0 0 }
+.crm-hero-actions .hb-solid,
+.crm-hero-actions .hb-ghost{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:"Archivo",sans-serif; font-size:.82rem; font-weight:600;
+  padding:10px 18px; border-radius:9px; text-decoration:none; border:1.5px solid var(--pl-tinta);
+}
+.crm-hero-actions .hb-solid{ background:var(--pl-tinta); color:var(--pl-papel) }
+.crm-hero-actions .hb-ghost{ background:none; color:var(--pl-tinta) }
+.crm-hero-actions .hb-solid:hover{ background:var(--pl-azul); border-color:var(--pl-azul) }
+.crm-hero-actions .hb-ghost:hover{ background:var(--pl-tinta); color:var(--pl-papel) }
+/* um SVG sem tamanho ocupa o que houver: foi isto que pôs o ícone a
+   encher a página quando as classes do CSS deixaram de bater. */
+.crm-hero-actions svg{
+  width:16px; height:16px; flex:none; fill:none;
+  stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+}
+.md-typeset .crm-hero-actions a{ text-decoration:none }
