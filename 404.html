@@ -23,7 +23,7 @@
 <meta property="og:locale" content="pt_PT">
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="IEFP CRM - Plataforma de Formação">
+<meta name="twitter:title" content="CRM - Plataforma de Formação">
 <meta name="twitter:description" content="Plataforma pedagógica de CRM e Proteção de Dados (RGPD).">
 <meta name="twitter:image" content="https://crm.cr0x.org/og-image.png">
 <link rel="stylesheet" href="estilo/tokens.css">
@@ -545,7 +545,7 @@ body.present #presentExit{display:inline-flex;align-items:center;gap:6px;positio
 "use strict";
 (function(){
 /* =========================================================================
-   IEFP CRM v4 - aplicação pedagógica single-file
+   CRM - aplicação pedagógica single-file
    Módulos: Dashboard · Clientes(360) · Produtos · Propostas · Campanhas
             · Analytics · RGPD · Comunicação · Definições
    ========================================================================= */
@@ -964,8 +964,8 @@ const I18N_EN = {
   'Número da turma':'Class number','ou':'or','Sou formador - criar nova turma':"I'm a trainer - create a new class",
   'Recentes neste dispositivo':'Recent on this device','Inicie sessão na sua turma.':'Sign in to your class.',
   'Esqueci-me da palavra-passe':'Forgot my password','Portal do Titular':'Data Subject Portal','trocar':'switch',
-  'Criar nova turma':'Create a new class','Apenas formadores IEFP. Valide o seu email institucional.':'IEFP trainers only. Verify your institutional email.',
-  'Email de formador IEFP *':'IEFP trainer email *','Nome *':'First name *','Apelido':'Surname',
+  'Criar nova turma':'Create a new class',
+  'Email institucional *':'Institutional email *','Nome *':'First name *','Apelido':'Surname',
   'Número da turma *':'Class number *','Nome da turma (opcional)':'Class name (optional)',
   'Utilizador *':'Username *','Palavra-passe *':'Password *','Criar turma e entrar':'Create class and enter',
   '← Voltar ao início de sessão':'← Back to sign in','Suporte':'Support',
@@ -1165,7 +1165,7 @@ function demoData(){
     {id:'ev1',data:'2026-04-02',aberto:true,clicado:true,clienteId:'cl1',paraEmail:'joao@silvafilhos.pt',paraNome:'João Silva',assunto:'A sua proposta PROP-2026-001',templateId:'t1',anexo:{tipo:'proposta',propostaId:'p1',numero:'PROP-2026-001'},origem:'Manual',porUtilizador:'u2',estado:'Enviado'},
     {id:'ev2',data:'2026-04-05',aberto:true,clicado:false,clienteId:'cl1',paraEmail:'joao@silvafilhos.pt',paraNome:'João Silva',assunto:'Obrigado pela sua confiança',templateId:'t3',anexo:null,origem:'Automação',automacaoId:'au2',estado:'Enviado'},
     {id:'ev3',data:'2026-05-05',aberto:true,clicado:true,clienteId:'cl2',paraEmail:'marta@costaeventos.pt',paraNome:'Marta Costa',assunto:'A sua proposta PROP-2026-003',templateId:'t1',anexo:{tipo:'proposta',propostaId:'p3',numero:'PROP-2026-003'},origem:'Manual',porUtilizador:'u2',estado:'Enviado'},
-    {id:'ev4',data:'2026-05-21',aberto:false,clicado:false,clienteId:'cl6',paraEmail:'ana@rodriguesclinica.pt',paraNome:'Ana Rodrigues',assunto:'Bem-vindo(a) à IEFP CRM',templateId:'t4',anexo:null,origem:'Automação',automacaoId:'au1',estado:'Enviado'},
+    {id:'ev4',data:'2026-05-21',aberto:false,clicado:false,clienteId:'cl6',paraEmail:'ana@rodriguesclinica.pt',paraNome:'Ana Rodrigues',assunto:'Bem-vindo(a)',templateId:'t4',anexo:null,origem:'Automação',automacaoId:'au1',estado:'Enviado'},
   ];
   const casos = [
     {id:'cs1',numero:'CASO-2026-001',assunto:'Erro no cálculo de IVA regional (Madeira)',clienteId:'cl3',canal:'Email',prioridade:'Alta',estado:'Em curso',responsavelId:'u2',aberto:'2026-07-06',atualizado:'2026-07-08',mensagens:[{de:'cliente',autor:'Ricardo Nunes',texto:'As faturas estão a sair com IVA de 23% em vez dos 22% da Madeira.',data:'2026-07-06'},{de:'agente',autor:'Carlos Lopes',texto:'Obrigado pelo reporte. A verificar a configuração de taxas regionais da conta.',data:'2026-07-08'}]},
@@ -1240,7 +1240,7 @@ function load(){
   if(Array.isArray(state.settings.origens)&&!state.settings.origens.includes('Formulário')){ const io=state.settings.origens.indexOf('Outro'); if(io>=0) state.settings.origens.splice(io,0,'Formulário'); else state.settings.origens.push('Formulário'); }
   if(!Array.isArray(state.settings.funcoes)||!state.settings.funcoes.length) state.settings.funcoes=FUNCOES.filter(Boolean);
   if(!state.settings.emailjs||typeof state.settings.emailjs!=='object') state.settings.emailjs=Object.assign({},EMAILJS_DEFAULT);
-  if(state.settings.conviteAmbos==null) state.settings.conviteAmbos=true;   // comportamento atual: IEFP + pessoal
+  if(state.settings.conviteAmbos==null) state.settings.conviteAmbos=true;   // comportamento atual: institucional + pessoal
   if(state.settings.emailPlano==null) state.settings.emailPlano=200;      // teto do plano (EmailJS -> Account)
   if(state.settings.emailDiaCiclo==null) state.settings.emailDiaCiclo=4;  // o ciclo repoe neste dia, nao no dia 1
   if(state.settings.emailjs && !state.settings.emailjs.serviceId && !state.settings.emailjs.templateId && !state.settings.emailjs.publicKey) state.settings.emailjs=Object.assign({},EMAILJS_DEFAULT);
@@ -1558,7 +1558,7 @@ function setSupaSession(s){ try{ s?localStorage.setItem(SUPA_TOKEN_KEY,JSON.stri
 function supaToken(){ const s=supaSession(); return s&&s.token||null; }
 const SUPA_ERR={
   SEM_LIGACAO:'Sem ligação ao servidor. Verifique a internet.',
-  EMAIL_NAO_AUTORIZADO:'Esse email não é de um formador IEFP autorizado (forNNNN@formacao.iefp.pt).',
+  EMAIL_NAO_AUTORIZADO:'Esse email não está autorizado a criar turmas.',
   CODIGO_INVALIDO:'O código da turma tem entre 2 e 24 caracteres: letras, números, ponto ou hífen.',
   TURMA_JA_EXISTE:'Já existe uma turma com esse número.',
   TURMA_NAO_EXISTE:'Turma não encontrada. Confirme o link com o formador.',
@@ -2016,7 +2016,7 @@ views.dashboard = () => {
   return `
   <div class="hero">
     <div>
-      <h3 style="display:flex;align-items:center">Bem-vindo ao IEFP CRM <span style="color:#fff">${infoTip('crm')}</span></h3>
+      <h3 style="display:flex;align-items:center">Bem-vindo ao ${esc(brandName())} <span style="color:#fff">${infoTip('crm')}</span></h3>
       ${linhaDeHoje()}
       <p class="hero-sub">Plataforma pedagógica de CRM e RGPD - vendas, marketing, analytics e conformidade num só lugar.</p>
       <div class="hero-actions">
@@ -4783,16 +4783,18 @@ function genFormandoPwd(email,nome,apelido,username){
   return num+fmdInitials(nome,apelido); }
 function emailNum(email){ const l=String(email||'').split('@')[0]; return /^\d{4,}$/.test(l)?l:''; }
 function inviteLoginURL(){ try{ return location.origin+location.pathname+(TURMA?('?t='+TURMA):''); }catch(e){ return 'https://crm.cr0x.org/'+(TURMA?('?t='+TURMA):''); } }
-const INVITE_DEFAULT={cor:'#006B3C',mostrarLogo:true,
-  assunto:'Bem-vindo(a) ao IEFP CRM',
+const INVITE_DEFAULT={cor:'',mostrarLogo:true,
+  assunto:'Bem-vindo(a)',
   saudacao:'Olá {{nome}}, bem-vindo(a)!',
-  corpo:'Foste adicionado(a) à turma {{turma}} da plataforma pedagógica IEFP CRM.\n\nOs teus dados de acesso:\n\nUtilizador:  {{username}}\nPalavra-passe:  {{password}}\n\nExplora a plataforma à vontade - tens a tua própria sandbox e em caso de dúvida, o manual online está sempre a um clique:\n\nhttps://crm.cr0x.org/manual/',
+  corpo:'Foste adicionado(a) à turma {{turma}} da plataforma {{escola}}.\n\nOs teus dados de acesso:\n\nUtilizador:  {{username}}\nPalavra-passe:  {{password}}\n\nExplora a plataforma à vontade - tens a tua própria sandbox e em caso de dúvida, o manual online está sempre a um clique:\n\nhttps://crm.cr0x.org/manual/',
   botaoTexto:'Entrar na plataforma',botaoLink:'{{login}}',
-  assinatura:'Bom trabalho!\nIEFP CRM\n{{formador}}\n{{emaildoformador}}'};
-function inviteTpl(){ const t=Object.assign({},INVITE_DEFAULT,state.settings.inviteTemplate||{}); const fi=(typeof formInv==='function')?formInv():{}; return Object.keys(fi).length?Object.assign(t,fi):t; }
-function inviteMerge(s,ctx){ return String(s||'').replace(/\{\{(nome|username|password|turma|login|formador|emaildoformador)\}\}/g,(m,k)=>ctx[k]!=null?ctx[k]:m); }
+  assinatura:'Bom trabalho!\n{{escola}}\n{{formador}}\n{{emaildoformador}}'};
+function inviteTpl(){ const t=Object.assign({},INVITE_DEFAULT,state.settings.inviteTemplate||{});
+  /* sem cor escolhida, o email veste a da escola em vez de um verde fixo */
+  if(!t.cor){ const b=brandCfg(); t.cor=(b.cor&&/^#?[0-9a-fA-F]{3,6}$/.test(b.cor))?(b.cor[0]==='#'?b.cor:'#'+b.cor):'#0078bf'; } const fi=(typeof formInv==='function')?formInv():{}; return Object.keys(fi).length?Object.assign(t,fi):t; }
+function inviteMerge(s,ctx){ return String(s||'').replace(/\{\{(nome|username|password|turma|login|formador|emaildoformador|escola)\}\}/g,(m,k)=>ctx[k]!=null?ctx[k]:m); }
 function buildInviteTpl(f,pwd){ const u=currentUser()||{}; const forNome=((u.nome||'')+' '+(u.apelido||'')).trim();
-  const ctx={nome:((f.nome||'')+' '+(f.apelido||'')).trim()||f.username||'',username:f.username||'',password:pwd||'',turma:TURMA||'',login:inviteLoginURL(),formador:forNome,emaildoformador:u.email||''};
+  const ctx={nome:((f.nome||'')+' '+(f.apelido||'')).trim()||f.username||'',username:f.username||'',password:pwd||'',turma:TURMA||'',login:inviteLoginURL(),formador:forNome,emaildoformador:u.email||'',escola:brandName()};
   const t=inviteTpl(),out=Object.assign({},t); ['assunto','saudacao','corpo','botaoLink','assinatura'].forEach(k=>out[k]=inviteMerge(t[k],ctx)); return out; }
 function inviteBodyText(t){ const parts=[t.saudacao,t.corpo]; if(t.botaoTexto&&t.botaoLink) parts.push(t.botaoTexto+':\n'+t.botaoLink); if(t.assinatura) parts.push(t.assinatura); return parts.filter(Boolean).join('\n\n'); }
 function sendInvite(f,pwd){ if(!realSendOn()) return Promise.resolve({sent:false,reason:'emailjs'});
@@ -5294,7 +5296,7 @@ function renderPublicProposta(token){
     const adj=!!r.adjudicada_em;
     box.innerHTML=`<div style="width:100%;max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:14px;padding:20px 16px 44px">
       <div style="display:flex;align-items:center;gap:12px">
-        <div class="brand-logo" style="width:42px;height:42px;flex:0 0 auto"><img src="IEFPnormal.png" alt=""></div>
+        <div class="brand-logo" style="width:42px;height:42px;flex:0 0 auto"><img src="/favicon.svg" alt=""></div>
         <div style="min-width:0"><strong style="font-size:1rem">${esc(r.entidade||'Proposta comercial')}</strong><div class="muted" style="font-size:.8rem">Proposta ${esc(r.numero||'')}${r.cliente?' · '+esc(r.cliente):''}</div></div>
       </div>
       <div style="background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-md)"><iframe id="pubFrame" title="Proposta" style="width:100%;height:78vh;border:0;display:block;background:#eef2f0"></iframe></div>
@@ -6398,7 +6400,7 @@ views.definicoes = () => {
       <div class="field"><label>Template ID ${ic('lock',12)}</label><input value="${esc(s.emailjs.templateId)}" readonly title="Fixo - não editável" style="background:var(--surface3);color:var(--muted);cursor:not-allowed"></div>
       <div class="field"><label>Public Key ${ic('lock',12)}</label><input value="${esc(s.emailjs.publicKey)}" readonly title="Fixo - não editável" style="background:var(--surface3);color:var(--muted);cursor:not-allowed"></div>
       <div class="field"><label>Modo de envio</label><label style="cursor:pointer;display:flex;align-items:center;gap:8px;padding-top:9px"><input type="checkbox" data-ejs="ativo" ${s.emailjs.ativo?'checked':''} style="width:15px;height:15px;accent-color:var(--g600)">Ativar envio real</label></div>
-      <div class="field"><label>Convite e reposição de password</label><select data-ejs="conviteAmbos"><option value="1" ${s.conviteAmbos!==false?'selected':''}>Email do IEFP + pessoal (2 envios por pessoa)</option><option value="0" ${s.conviteAmbos===false?'selected':''}>Só o email do IEFP (1 envio por pessoa)</option></select><span class="hint">Cada endereço conta como um envio no plano. Com ${(state.equipa||[]).filter(u=>u.papel==='Formando').length||0} formando(s), a diferença é ${custoConvites()} vs ${Math.round(custoConvites()/(s.conviteAmbos!==false?2:1))} envios.</span></div>
+      <div class="field"><label>Convite e reposição de password</label><select data-ejs="conviteAmbos"><option value="1" ${s.conviteAmbos!==false?'selected':''}>Institucional + pessoal (2 envios por pessoa)</option><option value="0" ${s.conviteAmbos===false?'selected':''}>Só o institucional (1 envio por pessoa)</option></select><span class="hint">Cada endereço conta como um envio no plano. Com ${(state.equipa||[]).filter(u=>u.papel==='Formando').length||0} formando(s), a diferença é ${custoConvites()} vs ${Math.round(custoConvites()/(s.conviteAmbos!==false?2:1))} envios.</span></div>
     </div>
     <div class="toolbar" style="margin-top:8px;align-items:center"><button class="btn" data-act="save-emailjs">Guardar configuração</button>${emailjsActive()?'<span class="pill green">Modo real ATIVO</span>':'<span class="pill grey">Simulado</span>'}</div>
     <div class="divider" style="margin:18px 0"></div>
@@ -8933,7 +8935,7 @@ function renderLogin(){
     body=`<h2 class="login-h">Criar nova turma</h2>
       <p class="login-sub">As turmas são criadas pela administração da plataforma.</p>
       <form id="loginForm" onsubmit="return false">
-        <div class="field"><label>Email de formador IEFP *</label><input name="email" type="email" autocomplete="email" placeholder="forNNNN@formacao.iefp.pt"></div>
+        <div class="field"><label>Email institucional *</label><input name="email" type="email" autocomplete="email" placeholder="forNNNN@formacao.iefp.pt"></div>
         <div class="form-grid" style="gap:12px"><div class="field"><label>Nome *</label><input name="nome" placeholder="primeiro nome"></div><div class="field"><label>Apelido</label><input name="apelido" placeholder="apelido"></div></div>
         <div class="field"><label>Número da turma *</label><input name="codigo" placeholder="12345678" maxlength="24"></div>
         <div class="field"><label>Nome da turma (opcional)</label><input name="nometurma" placeholder="ex.: CRM 2026 - Manhã"></div>
@@ -9190,7 +9192,7 @@ function blocksFromLegacy(t){
   if(t.rodape)bs.push({id:uid('b'),type:'texto',conteudo:t.rodape,alinhamento:'center',tamanho:'.78rem'});
   return bs;
 }
-function logoSrc(){ return document.querySelector('.brand-logo img')?.src||'IEFPnormal.png'; }
+function logoSrc(){ return document.querySelector('.brand-logo img')?.src||'/favicon.svg'; }
 function blockHTML(b,p,cor){
   const nl=x=>esc(mergeTags(x,p)).replace(/\n/g,'<br>');
   switch(b.type){
