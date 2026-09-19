@@ -92,7 +92,7 @@
   var GRUPOS = [
     ['Identidade', [['nome', 'Nome da escola'], ['slug', 'Endereço'], ['logo', 'Logótipo (URL)'], ['cor', 'Cor principal', 'color']]],
     ['Legal', [['legalNome', 'Designação legal'], ['nif', 'NIF'], ['morada', 'Morada'], ['emailContacto', 'Email de contacto'], ['responsavelDados', 'Responsável pelos dados']]],
-    ['Email', [['remetenteNome', 'Nome do remetente'], ['emailResposta', 'Email de resposta']]],
+    ['Email', [['remetenteNome', 'Nome que aparece nos emails'], ['emailResposta', 'Responder para']]],
     ['Formação', [['modulos', 'Módulos'], ['horas', 'Carga horária'], ['formador', 'Formador'], ['seloEmissor', 'Emissor do selo']]]
   ];
   var COL = { logo: 'logo_url', legalNome: 'legal_nome', emailContacto: 'email_contacto',
@@ -106,7 +106,27 @@
   function fichaEscola(e) {
     var v = function (k) { var c = COL[k] || k; return e ? (e[c] == null ? '' : e[c]) : ''; };
     return GRUPOS.map(function (g) {
-      return '<p class="ad-grp">' + g[0] + '</p><div class="ad-grid">' + g[1].map(function (c) {
+      var nota = g[0] === 'Email'
+        ? '<p class="ad-nota">Os emails saem sempre de <code>crm@cr0x.org</code> - o endereço de envio não se escolhe, ' +
+          'porque teria de ser verificado no serviço de envio escola a escola. Aqui define-se o <strong>nome</strong> que ' +
+          'aparece na caixa de entrada de quem recebe, e para onde vai a <strong>resposta</strong> se alguém carregar em Responder.</p>'
+        : '';
+      return '<p class="ad-grp">' + g[0] + '</p>' + nota + '<div class="ad-grid">' + g[1].map(function (c) {
+        if (c[0] === 'logo') {
+          var url = v('logo');
+          return '<label class="ad-f ad-logo"><span>' + c[1] + '</span>' +
+            '<div class="ad-logo-cx">' +
+              '<div class="ad-logo-prev" data-logo-prev>' + (url ? '<img src="' + esc(url) + '" alt="">' : '<span>sem logótipo</span>') + '</div>' +
+              '<div class="ad-logo-dir">' +
+                '<input data-ef="logo" type="text" value="' + esc(url) + '" placeholder="endereço da imagem, ou carrega um ficheiro" spellcheck="false">' +
+                '<div class="ad-logo-btns">' +
+                  '<button type="button" class="ad-b sec peq" data-ax="logo-escolher">Carregar do computador</button>' +
+                  (url ? '<button type="button" class="ad-b sec peq" data-ax="logo-tirar">Remover</button>' : '') +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+            '<input type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" data-logo-file hidden></label>';
+        }
         if (c[2] === 'color') {
           var cor = v(c[0]) || '#0078bf';
           return '<label class="ad-f ad-cor"><span>' + c[1] + '</span><div class="ad-cor-par">' +
@@ -124,6 +144,64 @@
            '<button class="ad-b sec" data-ax="arquivar">' + (e.arquivado ? 'Reativar' : 'Arquivar') + '</button>' +
            '<a class="ad-b sec" href="/' + esc(e.slug) + '" target="_blank" rel="noopener">Abrir /' + esc(e.slug) + ' &nearr;</a>' : '') +
     '</div><div id="adTurma"></div>';
+  }
+
+  var LOGO_MAX_LADO = 320;      /* aparece a 48px; isto chega para ecrãs densos */
+  var LOGO_MAX_BYTES = 180 * 1024;
+
+  /* Reduz no browser antes de subir. Sem isto, uma fotografia de 4 MB
+     arrastada para aqui ia inteira para a base e voltava em cada abertura
+     de página de quem abrisse a escola. */
+  function reduzirImagem(ficheiro) {
+    return new Promise(function (ok, falha) {
+      if (ficheiro.type === 'image/svg+xml') {
+        /* vetorial: não há nada a reduzir, e redesenhá-lo perdia a nitidez */
+        var rs = new FileReader();
+        rs.onload = function () { ok(rs.result); };
+        rs.onerror = function () { falha(new Error('não consegui ler o ficheiro')); };
+        return rs.readAsDataURL(ficheiro);
+      }
+      var r = new FileReader();
+      r.onload = function () {
+        var img = new Image();
+        img.onload = function () {
+          var e = Math.min(1, LOGO_MAX_LADO / Math.max(img.width, img.height));
+          var w = Math.max(1, Math.round(img.width * e)), h = Math.max(1, Math.round(img.height * e));
+          var cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+          var cd = cv.getContext('2d');
+          cd.imageSmoothingQuality = 'high';
+          cd.drawImage(img, 0, 0, w, h);
+          /* PNG para não perder a transparência, que quase todos os
+             logótipos têm e sem a qual ficam num quadrado branco */
+          ok(cv.toDataURL('image/png'));
+        };
+        img.onerror = function () { falha(new Error('isso não parece uma imagem')); };
+        img.src = r.result;
+      };
+      r.onerror = function () { falha(new Error('não consegui ler o ficheiro')); };
+      r.readAsDataURL(ficheiro);
+    });
+  }
+
+  function logoMostrar(url) {
+    var prev = document.querySelector('[data-logo-prev]');
+    var campo = document.querySelector('[data-ef="logo"]');
+    if (campo) campo.value = url || '';
+    if (prev) prev.innerHTML = url ? '<img src="' + esc(url) + '" alt="">' : '<span>sem logótipo</span>';
+  }
+
+  function logoAceitar(fich) {
+    if (!fich) return;
+    estado('a preparar a imagem…');
+    reduzirImagem(fich).then(function (url) {
+      if (url.length > LOGO_MAX_BYTES) { estado('a imagem ficou grande demais; tenta uma mais simples'); return; }
+      logoMostrar(url);
+      estado('logótipo pronto - falta Guardar');
+    }).catch(function (e) { estado(e.message); });
+  }
+  function logoEscolher() {
+    var f = document.querySelector('[data-logo-file]');
+    if (f) { f.value = ''; f.click(); }
   }
 
   function corpoEscolas() {
@@ -176,6 +254,15 @@
       tx.addEventListener('input', function () {
         if (/^#[0-9a-fA-F]{6}$/.test(tx.value.trim())) am.value = tx.value.trim();
       });
+    });
+    /* colar um endereço à mão tem de mostrar o mesmo que carregar um
+       ficheiro, senão parece que uma das duas vias não funciona */
+    var cf = c.querySelector('[data-logo-file]');
+    if (cf) cf.addEventListener('change', function () { logoAceitar(this.files && this.files[0]); });
+    var cl = c.querySelector('[data-ef="logo"]');
+    if (cl) cl.addEventListener('input', function () {
+      var prev = document.querySelector('[data-logo-prev]');
+      if (prev) prev.innerHTML = this.value ? '<img src="' + esc(this.value) + '" alt="">' : '<span>sem logótipo</span>';
     });
     var s = $('#adSel');
     if (s) s.addEventListener('change', function () { sel = this.value; pintar(); });
@@ -293,6 +380,8 @@
       if (ax === 'fechar') fechar();
       else if (ax === 'guardar') guardar();
       else if (ax === 'entrar') entrar();
+      else if (ax === 'logo-escolher') logoEscolher();
+      else if (ax === 'logo-tirar') { logoMostrar(''); estado('logótipo removido - falta Guardar'); }
       else if (ax === 'turma') formTurma();
       else if (ax === 'turma-criar') criarTurma();
       else if (ax === 'arquivar') {
