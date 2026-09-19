@@ -129,74 +129,64 @@
   a:hover{color:var(--tinta);border-bottom-color:var(--tinta)}
   a:focus-visible{outline:2.5px solid var(--azul);outline-offset:3px}
 
-  /* ---------- o editor, atras do #admin ----------
-     Vive na propria pagina para se escrever a ver o resultado, em vez de
-     escrever as cegas noutro sitio. Nao aparece a mais ninguem: sem a
-     ancora nem sequer e construido. */
-  #ed{
-    position:fixed;top:0;right:0;bottom:0;width:min(430px,92vw);z-index:50;
-    background:#fffdf8;border-left:1.5px solid var(--tinta);
-    display:flex;flex-direction:column;font-family:"Space Mono",monospace;
-    box-shadow:-18px 0 50px -30px rgba(0,0,0,.5);
-  }
-  #ed header{padding:16px 18px;border-bottom:1.5px solid var(--tinta);min-height:0}
-  #ed h2{font-family:Archivo,sans-serif;font-size:1.05rem;margin:0;font-weight:800}
-  #ed .sub{font-size:.68rem;color:var(--fraco);letter-spacing:.06em;margin-top:3px}
-  #ed .corpo{flex:1;overflow:auto;padding:16px 18px}
-  #ed label{display:block;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--azul);margin:16px 0 5px}
-  #ed label:first-child{margin-top:0}
-  #ed textarea,#ed input{
-    width:100%;font:inherit;font-size:.8rem;line-height:1.5;padding:8px 10px;
-    border:1.5px solid #cfc6b6;background:#fff;color:var(--tinta);border-radius:0;
-  }
-  #ed textarea{min-height:78px;resize:vertical}
-  #ed textarea:focus,#ed input:focus{outline:2px solid var(--azul);outline-offset:-2px;border-color:var(--azul)}
-  #ed .pe{padding:14px 18px;border-top:1.5px solid var(--tinta);display:flex;gap:10px;align-items:center}
-  #ed button{
-    font:inherit;font-size:.78rem;font-weight:700;padding:.6em 1em;cursor:pointer;
-    border:1.5px solid var(--tinta);background:var(--tinta);color:#fffdf8;
-  }
-  #ed button.sec{background:none;color:var(--tinta)}
-  #ed .estado{font-size:.68rem;color:var(--fraco);margin-left:auto}
-  #ed .dica{font-size:.66rem;color:var(--fraco);line-height:1.5;margin:14px 0 0}
-  body.editando .folha{margin-right:min(430px,92vw)}
-  @media(max-width:860px){ body.editando .folha{margin-right:0} #ed{width:100%} }
+  /* ---------- a janela de administração, atrás do #admin ----------
+     Uma janela ao centro com separadores, em vez das duas caixas que
+     antes disputavam o ecrã. Nada disto é construído sem a âncora. */
+  #adJanela{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;
+    padding:24px;transition:opacity .12s}
+  #adJanela.espreita{opacity:.08;pointer-events:none}
+  .ad-fundo{position:absolute;inset:0;background:rgba(23,20,18,.42);backdrop-filter:blur(2px)}
+  .ad-cx{position:relative;width:min(860px,100%);max-height:min(860px,92vh);display:flex;flex-direction:column;
+    background:var(--papel);border:1.5px solid var(--tinta);box-shadow:0 24px 60px -20px rgba(23,20,18,.5)}
 
-  /* ---------- painel das escolas (#admin, ver escolas.js) ---------- */
-  .ad-h2{font-family:Archivo,sans-serif;font-weight:800;font-size:1.6rem;letter-spacing:-.02em;margin:0 0 6px}
-  .ad-sub{font-size:.95rem;color:var(--tinta-2);margin:0 0 18px;max-width:58ch}
-  .ad-esc-lista{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
-  .ad-chip{font:inherit;font-size:.86rem;padding:7px 13px;border:1.5px solid var(--tinta);
-    background:none;color:var(--tinta);border-radius:999px;cursor:pointer;display:flex;gap:7px;align-items:baseline}
-  .ad-chip em{font-style:normal;font-family:"Space Mono",monospace;font-size:.72rem;color:var(--fraco)}
-  .ad-chip:hover{background:var(--tinta);color:var(--papel)}
-  .ad-chip:hover em{color:var(--papel)}
-  .ad-chip.on{background:var(--tinta);color:var(--papel)}
-  .ad-chip.on em{color:var(--papel)}
-  .ad-chip.off{opacity:.5;border-style:dashed}
-  .ad-chip.novo{border-style:dashed;color:var(--azul);border-color:var(--azul)}
-  .ad-chip.novo:hover{background:var(--azul);color:#fff}
-  .ad-ficha{border:1.5px solid var(--tinta);padding:20px;background:rgba(255,255,255,.4)}
-  .ad-grp{font-family:"Space Mono",monospace;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
-    color:var(--azul);margin:18px 0 8px;font-weight:700}
+  .ad-top{display:flex;align-items:stretch;border-bottom:1.5px solid var(--tinta);flex:none}
+  .ad-tabs{display:flex;flex:1}
+  .ad-tab{font:inherit;font-size:.82rem;font-weight:600;letter-spacing:.02em;padding:13px 22px;border:0;
+    border-right:1.5px solid var(--tinta);background:none;color:var(--fraco);cursor:pointer}
+  .ad-tab:hover{color:var(--tinta)}
+  .ad-tab.on{background:var(--tinta);color:var(--papel)}
+  .ad-x{font:inherit;font-size:1.5rem;line-height:1;width:48px;border:0;background:none;
+    color:var(--fraco);cursor:pointer}
+  .ad-x:hover{color:var(--tinta)}
+
+  .ad-corpo{flex:1;overflow:auto;padding:20px 22px}
+  .ad-grp{font-family:"Space Mono",monospace;font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--azul);margin:20px 0 9px;font-weight:700}
   .ad-grp:first-child{margin-top:0}
-  .ad-grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
-  .ad-f{display:flex;flex-direction:column;gap:3px}
-  .ad-f span{font-size:.76rem;color:var(--tinta-2)}
-  .ad-f input{font:inherit;font-size:.9rem;padding:7px 9px;border:1.5px solid var(--risco);
-    background:#fff;color:var(--tinta);border-radius:3px;min-width:0}
-  .ad-f input:focus{outline:none;border-color:var(--azul)}
-  .ad-acts{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap;align-items:center}
-  .ad-btn{font:inherit;font-size:.86rem;font-weight:600;padding:8px 16px;border:1.5px solid var(--tinta);
-    background:var(--tinta);color:var(--papel);cursor:pointer;border-radius:3px;text-decoration:none;display:inline-block}
-  .ad-btn.sec{background:none;color:var(--tinta)}
-  .ad-btn.sec:hover{background:var(--tinta);color:var(--papel)}
-  .ad-turma{margin-top:4px}
-  .ad-ok{margin-top:14px;padding:14px;border-left:3px solid var(--azul);background:rgba(0,120,191,.07)}
-  .ad-ok p{margin:6px 0;font-size:.88rem}
-  .ad-ok code{display:block;font-family:"Space Mono",monospace;font-size:1.05rem;font-weight:700;
-    padding:8px 10px;background:#fff;border:1px solid var(--risco);margin:6px 0;word-break:break-all}
+  .ad-grid{display:grid;gap:11px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+  .ad-f{display:flex;flex-direction:column;gap:4px;margin-bottom:11px}
+  .ad-f span{font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;color:var(--fraco);font-weight:600}
+  .ad-f input,.ad-f textarea,.ad-f select{font:inherit;font-size:.9rem;padding:8px 10px;
+    border:1.5px solid var(--risco);background:#fff;color:var(--tinta);border-radius:3px;width:100%;min-width:0}
+  .ad-f textarea{min-height:76px;resize:vertical;line-height:1.5}
+  .ad-f input:focus,.ad-f textarea:focus,.ad-f select:focus{outline:2px solid var(--azul);outline-offset:-2px;border-color:var(--azul)}
+  .ad-grid .ad-f{margin-bottom:0}
+  .ad-escolher{max-width:420px;margin:0 0 18px;position:sticky;top:-20px;z-index:2;
+    background:var(--papel);padding:12px 0 10px;box-shadow:0 10px 12px -10px var(--papel)}
+  .ad-ficha{border-top:1.5px solid var(--risco);padding-top:18px}
+  .ad-linha{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:16px}
+  .ad-vazio{font-size:.92rem;color:var(--tinta-2);line-height:1.7;margin:6px 0}
+  .ad-dica{font-size:.72rem;color:var(--fraco);line-height:1.6;margin:16px 0 0}
+
+  .ad-pe{flex:none;padding:14px 22px;border-top:1.5px solid var(--tinta);display:flex;gap:10px;align-items:center}
+  .ad-b{font:inherit;font-size:.85rem;font-weight:600;padding:9px 18px;border:1.5px solid var(--tinta);
+    background:var(--tinta);color:var(--papel);cursor:pointer;border-radius:3px;text-decoration:none;
+    display:inline-block;line-height:1.2}
+  .ad-b.sec{background:none;color:var(--tinta)}
+  .ad-b.sec:hover{background:var(--tinta);color:var(--papel)}
+  .ad-estado{font-size:.72rem;color:var(--fraco);margin-left:auto;text-align:right}
+
+  .ad-ok{margin-top:16px;padding:15px;border-left:3px solid var(--azul);background:rgba(0,120,191,.07)}
+  .ad-ok p{margin:7px 0;font-size:.88rem}
+  .ad-ok code{display:block;font-family:"Space Mono",monospace;font-size:1.06rem;font-weight:700;
+    padding:9px 11px;background:#fff;border:1px solid var(--risco);margin:7px 0;word-break:break-all}
+
+  @media(max-width:700px){
+    #adJanela{padding:0}
+    .ad-cx{max-height:100vh;height:100vh;border:0}
+    .ad-tab{padding:13px 16px;font-size:.78rem}
+  }
+
   .ad-aviso{margin:0 0 -10px;padding:11px 15px;border-left:3px solid var(--azul);
     background:rgba(0,120,191,.08);font-size:.92rem}
 </style>
@@ -293,6 +283,5 @@
 </div>
 
 <script src="/admin.js" defer></script>
-<script src="/escolas.js" defer></script>
 </body>
 </html>

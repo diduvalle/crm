@@ -1,12 +1,21 @@
-/* ================== TEXTOS DO SERVIDOR, E O EDITOR ==================
-   A página nasce com os textos escritos no próprio ficheiro. Se o servidor
-   tiver outros, substitui - e se não responder, fica o que cá está. Nunca
-   há página vazia, que é a diferença entre isto e ir buscar tudo lá fora.
+/* ================== A JANELA DE ADMINISTRAÇÃO ==================
+   Havia dois painéis a disputar o ecrã: os textos numa gaveta à direita e
+   as escolas empurradas para o fundo da página. Duas caixas para a mesma
+   pessoa, ao mesmo tempo, sem relação visível entre elas.
 
-   O editor só existe com #admin no endereço. Sem isso, nem é construído.
-   Gravar exige a palavra-passe de administração, a mesma do Repo.
-   ==================================================================== */
+   Passa a ser uma janela ao centro com separadores. A regra é simples: uma
+   coisa de cada vez, e o que está aberto é o que o botão Guardar guarda.
+
+   O que se perdia ao pôr a janela ao centro era a pré-visualização - os
+   textos escrevem-se AO VIVO na página por baixo, e uma janela centrada
+   tapa-a. Daí o botão Espreitar: enquanto está premido a janela desvanece
+   e vê-se o resultado. Sem isso, escrever às cegas.
+
+   Só existe com #admin no endereço. Sem isso, nada disto é construído.
+   ================================================================ */
 (function () {
+  'use strict';
+
   var API = 'https://qgfzbyhfyqvmmmdiqycu.supabase.co/rest/v1/rpc/';
   var KEY = 'sb_publishable_atlEEoeN4-CWY8mD7KQNsw_m1cXjdIE';
   var CHAVE = 'landing';
@@ -24,38 +33,30 @@
       });
     });
   }
-
+  function tok() { try { return sessionStorage.getItem(TOK) || ''; } catch (e) { return ''; } }
   function esc(t) {
     return String(t == null ? '' : t)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
+  function $(s) { return document.querySelector(s); }
 
+  /* ---------------- os textos da página ---------------- */
   /* Marcação mínima, de propósito: uma linha em branco separa parágrafos,
      uma quebra simples é uma quebra, e **assim** fica destacado. Não aceita
      HTML - o texto é escapado antes de qualquer coisa. */
   function paraHTML(t) {
     return String(t || '').trim().split(/\n\s*\n/).map(function (p) {
-      return '<p>' + esc(p)
-        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-        .replace(/\n/g, '<br>') + '</p>';
+      return '<p>' + esc(p).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>') + '</p>';
     }).join('');
   }
-
   function deHTML(el) {
     return Array.prototype.map.call(el.querySelectorAll('p'), function (p) {
-      var h = p.innerHTML
-        .replace(/<br\s*\/?>/gi, '\n')
-        .replace(/<strong>(.*?)<\/strong>/gi, '**$1**');
-      var d = document.createElement('div');
-      d.innerHTML = h;
-      return d.textContent.trim();
+      var h = p.innerHTML.replace(/<br\s*\/?>/gi, '\n').replace(/<strong>(.*?)<\/strong>/gi, '**$1**');
+      var d = document.createElement('div'); d.innerHTML = h;
+      return d.textContent;
     }).join('\n\n');
   }
-
-  function campos() {
-    return Array.prototype.slice.call(document.querySelectorAll('[data-txt]'));
-  }
-
+  function campos() { return Array.prototype.slice.call(document.querySelectorAll('[data-txt]')); }
   function aplicar(d) {
     if (!d) return;
     campos().forEach(function (el) {
@@ -65,103 +66,259 @@
       else el.textContent = d[k];
     });
   }
-
-  function ler() {
+  function lerTextos() {
     var o = {};
     campos().forEach(function (el) {
-      o[el.getAttribute('data-txt')] =
-        el.hasAttribute('data-bloco') ? deHTML(el) : el.textContent.trim();
+      o[el.getAttribute('data-txt')] = el.hasAttribute('data-bloco') ? deHTML(el) : el.textContent.trim();
     });
     return o;
   }
 
+  /* os textos do servidor entram mesmo sem #admin: é a página normal */
   rpc('site_ler', { p_chave: CHAVE }).then(aplicar).catch(function () {});
 
-  if (location.hash !== '#admin') return;
-
-  var rot = {
+  var ROT = {
     titulo: 'Título', destaque: 'Palavra destacada', abre: 'Abertura',
     c1_rot: 'Rótulo da 1.ª coluna', c1_txt: '1.ª coluna',
     c2_rot: 'Rótulo da 2.ª coluna', c2_txt: '2.ª coluna',
     b_tit: 'Título do bloco do badge', b_txt: 'Bloco do badge'
   };
 
-  function estado(t) {
-    var e = document.getElementById('ed_e');
-    if (e) e.textContent = t || '';
+  /* ---------------- as escolas ---------------- */
+  /* A ordem dos grupos é a ordem de quem cria uma escola: primeiro o que se
+     vê, depois o que a lei obriga, depois o email, depois a formação.
+     A carga horária e o NIF estão cá porque são os dois que escapam sempre -
+     o primeiro faz falta ao selo, o segundo ao aviso legal. */
+  var GRUPOS = [
+    ['Identidade', [['nome', 'Nome da escola'], ['slug', 'Endereço'], ['logo', 'Logótipo (URL)'], ['cor', 'Cor principal', 'color']]],
+    ['Legal', [['legalNome', 'Designação legal'], ['nif', 'NIF'], ['morada', 'Morada'], ['emailContacto', 'Email de contacto'], ['responsavelDados', 'Responsável pelos dados']]],
+    ['Email', [['remetenteNome', 'Nome do remetente'], ['emailResposta', 'Email de resposta']]],
+    ['Formação', [['modulos', 'Módulos'], ['horas', 'Carga horária'], ['formador', 'Formador'], ['seloEmissor', 'Emissor do selo']]]
+  ];
+  var COL = { logo: 'logo_url', legalNome: 'legal_nome', emailContacto: 'email_contacto',
+              responsavelDados: 'responsavel_dados', remetenteNome: 'remetente_nome',
+              emailResposta: 'email_resposta', seloEmissor: 'selo_emissor' };
+  var TCAMPOS = [['codigo', 'Número da turma'], ['nome', 'Nome da turma'], ['fnome', 'Nome do formador'],
+                 ['fapelido', 'Apelido'], ['femail', 'Email'], ['user', 'Utilizador'], ['pass', 'Palavra-passe']];
+
+  var escolas = [], sel = '', aba = 'pagina';
+
+  function fichaEscola(e) {
+    var v = function (k) { var c = COL[k] || k; return e ? (e[c] == null ? '' : e[c]) : ''; };
+    return GRUPOS.map(function (g) {
+      return '<p class="ad-grp">' + g[0] + '</p><div class="ad-grid">' + g[1].map(function (c) {
+        return '<label class="ad-f"><span>' + c[1] + '</span><input data-ef="' + c[0] +
+          '" type="' + (c[2] || 'text') + '" value="' + esc(v(c[0])) + '"' +
+          (c[0] === 'slug' ? ' placeholder="xpto"' : '') + '></label>';
+      }).join('') + '</div>';
+    }).join('') +
+    '<div class="ad-linha">' +
+      (e ? '<button class="ad-b sec" data-ax="turma">Nova turma</button>' +
+           '<button class="ad-b sec" data-ax="arquivar">' + (e.arquivado ? 'Reativar' : 'Arquivar') + '</button>' +
+           '<a class="ad-b sec" href="/' + esc(e.slug) + '" target="_blank" rel="noopener">Abrir /' + esc(e.slug) + ' &nearr;</a>' : '') +
+    '</div><div id="adTurma"></div>';
   }
+
+  function corpoEscolas() {
+    if (!tok()) return '<p class="ad-vazio">Para ver e criar escolas é preciso entrar.<br>' +
+      '<button class="ad-b" data-ax="entrar">Entrar</button></p>';
+    var e = sel && sel !== 'nova' ? escolas.filter(function (x) { return x.id === sel; })[0] : null;
+    return '<label class="ad-f ad-escolher"><span>Escola</span><select id="adSel">' +
+      '<option value="">escolher…</option>' +
+      escolas.map(function (x) {
+        return '<option value="' + esc(x.id) + '"' + (sel === x.id ? ' selected' : '') + '>' +
+          esc(x.nome) + '  /' + esc(x.slug) + (x.arquivado ? '  (arquivada)' : '') + '</option>';
+      }).join('') +
+      '<option value="nova"' + (sel === 'nova' ? ' selected' : '') + '>+ Nova escola</option>' +
+      '</select></label>' +
+      (sel ? '<div class="ad-ficha">' + fichaEscola(e) + '</div>'
+           : '<p class="ad-vazio">' + (escolas.length ? 'Escolhe uma escola acima, ou cria uma nova.'
+                                                      : 'Ainda não há escolas. Escolhe <em>+ Nova escola</em>.') + '</p>');
+  }
+
+  function corpoPagina() {
+    var d = lerTextos();
+    return Object.keys(ROT).map(function (k) {
+      var alvo = document.querySelector('[data-txt="' + k + '"]');
+      var multi = alvo && alvo.hasAttribute('data-bloco');
+      return '<label class="ad-f"><span>' + ROT[k] + '</span>' + (multi
+        ? '<textarea data-tx="' + k + '" rows="4">' + esc(d[k]) + '</textarea>'
+        : '<input data-tx="' + k + '" value="' + esc(d[k]) + '">') + '</label>';
+    }).join('') +
+    '<p class="ad-dica">Uma linha em branco começa um parágrafo novo. Uma quebra simples fica quebra. ' +
+    '<strong>**assim**</strong> fica destacado. O que escreves aparece já na página - usa <em>Espreitar</em> para ver.</p>';
+  }
+
+  function pintar() {
+    var c = $('#adCorpo'); if (!c) return;
+    c.innerHTML = aba === 'pagina' ? corpoPagina() : corpoEscolas();
+    Array.prototype.forEach.call(document.querySelectorAll('.ad-tab'), function (b) {
+      b.classList.toggle('on', b.dataset.aba === aba);
+    });
+    var g = $('#adGuardar');
+    if (g) g.style.display = (aba === 'pagina' || (aba === 'escolas' && sel)) ? '' : 'none';
+    if (aba === 'pagina') {
+      Array.prototype.forEach.call(c.querySelectorAll('[data-tx]'), function (i) {
+        i.addEventListener('input', function () { var o = {}; o[this.dataset.tx] = this.value; aplicar(o); });
+      });
+    }
+    var s = $('#adSel');
+    if (s) s.addEventListener('change', function () { sel = this.value; pintar(); });
+  }
+
+  function estado(t) { var e = $('#adEstado'); if (e) e.textContent = t || ''; }
 
   function entrar(depois) {
     var p = prompt('Palavra-passe de administração');
     if (!p) return;
     estado('a entrar…');
-    rpc('login_root', { p_password: p })
-      .then(function (d) {
-        sessionStorage.setItem(TOK, d.token);
-        /* as escolas vivem noutro ficheiro e partilham esta sessao */
-        try{ window.dispatchEvent(new Event("crm-root-entrou")); }catch(e){}
-        estado('sessão aberta');
-        if (depois) depois();
-      })
-      .catch(function () { estado('palavra-passe errada'); });
+    rpc('login_root', { p_password: p }).then(function (d) {
+      try { sessionStorage.setItem(TOK, d.token); } catch (e) {}
+      estado('sessão aberta');
+      carregarEscolas();
+      if (depois) depois();
+    }).catch(function () { estado('palavra-passe errada'); });
+  }
+
+  function carregarEscolas() {
+    if (!tok()) { pintar(); return; }
+    rpc('espacos_listar', { p_token: tok() })
+      .then(function (d) { escolas = d || []; pintar(); })
+      .catch(function () { escolas = []; pintar(); });
   }
 
   function guardar() {
-    var t = sessionStorage.getItem(TOK);
-    if (!t) return entrar(guardar);
+    if (!tok()) return entrar(guardar);
+    if (aba === 'pagina') {
+      estado('a guardar…');
+      return rpc('site_guardar', { p_token: tok(), p_chave: CHAVE, p_dados: lerTextos() })
+        .then(function () { estado('guardado às ' + new Date().toTimeString().slice(0, 5)); })
+        .catch(function (e) {
+          if (String(e.message).indexOf('SEM_PERMISSAO') >= 0) { try { sessionStorage.removeItem(TOK); } catch (x) {} return entrar(guardar); }
+          estado('não guardou: ' + e.message);
+        });
+    }
+    guardarEscola();
+  }
+
+  function lerFicha(extra) {
+    var d = {};
+    Array.prototype.forEach.call(document.querySelectorAll('[data-ef]'), function (i) { d[i.dataset.ef] = i.value.trim(); });
+    Object.keys(extra || {}).forEach(function (k) { d[k] = extra[k]; });
+    return d;
+  }
+  function guardarEscola(extra) {
+    var d = lerFicha(extra);
+    if (!d.slug) { estado('falta o endereço'); return; }
     estado('a guardar…');
-    rpc('site_guardar', { p_token: t, p_chave: CHAVE, p_dados: ler() })
-      .then(function () {
-        estado('guardado às ' + new Date().toTimeString().slice(0, 5));
+    rpc('espaco_guardar', { p_token: tok(), p_id: (sel && sel !== 'nova') ? sel : null, p_dados: d })
+      .then(function (r) { sel = r && r.id; estado('guardado'); carregarEscolas(); })
+      .catch(function (e) { estado('não guardou: ' + e.message); });
+  }
+
+  /* O código de recuperação aparece uma vez só: na base fica o resumo
+     cifrado. Por isso fica escrito num bloco que não desaparece sozinho. */
+  function formTurma() {
+    var cx = $('#adTurma');
+    if (cx.innerHTML) { cx.innerHTML = ''; return; }
+    cx.innerHTML = '<p class="ad-grp">Nova turma</p><div class="ad-grid">' +
+      TCAMPOS.map(function (c) { return '<label class="ad-f"><span>' + c[1] + '</span><input data-tf="' + c[0] + '"></label>'; }).join('') +
+      '</div><div class="ad-linha"><button class="ad-b" data-ax="turma-criar">Criar turma</button></div>';
+  }
+  function criarTurma() {
+    var cx = $('#adTurma');
+    var g = function (k) { var i = cx.querySelector('[data-tf="' + k + '"]'); return i ? i.value.trim() : ''; };
+    var slug = (document.querySelector('[data-ef="slug"]') || {}).value || '';
+    if (!/^[0-9]{8}$/.test(g('codigo'))) { estado('o número da turma são 8 dígitos'); return; }
+    if (!g('user') || !g('pass')) { estado('faltam as credenciais do formador'); return; }
+    estado('a criar…');
+    rpc('criar_turma_em', { p_token: tok(), p_slug: slug, p_codigo: g('codigo'), p_nome_turma: g('nome'),
+      p_nome: g('fnome'), p_apelido: g('fapelido'), p_email: g('femail'), p_username: g('user'), p_password: g('pass') })
+      .then(function (d) {
+        estado('turma criada');
+        cx.innerHTML = '<div class="ad-ok"><strong>Turma ' + esc(g('codigo')) + ' criada em /' + esc(slug) + '</strong>' +
+          '<p>Código de recuperação do formador:</p><code>' + esc((d && d.recovery) || '-') + '</code>' +
+          '<p>Guarde-o agora: não volta a ser mostrado.</p></div>';
       })
-      .catch(function (e) {
-        if (String(e.message).indexOf('SEM_PERMISSAO') >= 0) {
-          sessionStorage.removeItem(TOK);
-          return entrar(guardar);
-        }
-        estado('não guardou: ' + e.message);
-      });
+      .catch(function (e) { estado('não criou: ' + e.message); });
   }
 
+  /* ---------------- a janela ---------------- */
   function montar() {
-    var d = ler();
-    var painel = document.createElement('aside');
-    painel.id = 'ed';
-    var linhas = Object.keys(rot).map(function (k) {
-      var alvo = document.querySelector('[data-txt="' + k + '"]');
-      var multi = alvo && alvo.hasAttribute('data-bloco');
-      return '<label for="f_' + k + '">' + rot[k] + '</label>' + (multi
-        ? '<textarea id="f_' + k + '">' + esc(d[k]) + '</textarea>'
-        : '<input id="f_' + k + '" value="' + esc(d[k]).replace(/"/g, '&quot;') + '">');
-    }).join('');
+    if ($('#adJanela')) return;
+    var w = document.createElement('div');
+    w.id = 'adJanela';
+    w.innerHTML =
+      '<div class="ad-fundo" data-ax="fechar"></div>' +
+      '<div class="ad-cx" role="dialog" aria-label="Administração">' +
+        '<div class="ad-top">' +
+          '<div class="ad-tabs">' +
+            '<button class="ad-tab on" data-aba="pagina">Página</button>' +
+            '<button class="ad-tab" data-aba="escolas">Escolas</button>' +
+          '</div>' +
+          '<button class="ad-x" data-ax="fechar" aria-label="Fechar">&times;</button>' +
+        '</div>' +
+        '<div class="ad-corpo" id="adCorpo"></div>' +
+        '<div class="ad-pe">' +
+          '<button class="ad-b" id="adGuardar" data-ax="guardar">Guardar</button>' +
+          '<button class="ad-b sec" data-ax="espreitar">Espreitar</button>' +
+          '<span class="ad-estado" id="adEstado"></span>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(w);
+    pintar();
+    if (tok()) carregarEscolas();
 
-    painel.innerHTML =
-      '<header><h2>Textos da página</h2>' +
-      '<div class="sub">o que escreves aparece já aqui ao lado</div></header>' +
-      '<div class="corpo">' + linhas +
-      '<p class="dica">Uma linha em branco começa um parágrafo novo. ' +
-      'Uma quebra simples fica quebra. <strong>**assim**</strong> fica destacado.</p></div>' +
-      '<div class="pe"><button id="ed_g">Guardar</button>' +
-      '<button class="sec" id="ed_x">Fechar</button>' +
-      '<span class="estado" id="ed_e"></span></div>';
-
-    document.body.appendChild(painel);
-    document.body.classList.add('editando');
-
-    Object.keys(rot).forEach(function (k) {
-      document.getElementById('f_' + k).addEventListener('input', function () {
-        var o = {};
-        o[k] = this.value;
-        aplicar(o);
-      });
+    w.addEventListener('click', function (ev) {
+      var t = ev.target.closest('[data-aba]');
+      if (t) { aba = t.dataset.aba; pintar(); if (aba === 'escolas') carregarEscolas(); return; }
+      var b = ev.target.closest('[data-ax]'); if (!b) return;
+      var ax = b.dataset.ax;
+      if (ax === 'fechar') fechar();
+      else if (ax === 'guardar') guardar();
+      else if (ax === 'entrar') entrar();
+      else if (ax === 'turma') formTurma();
+      else if (ax === 'turma-criar') criarTurma();
+      else if (ax === 'arquivar') {
+        var e = escolas.filter(function (x) { return x.id === sel; })[0];
+        guardarEscola({ arquivado: !(e && e.arquivado) });
+      }
     });
-    document.getElementById('ed_x').addEventListener('click', function () {
-      painel.remove();
-      document.body.classList.remove('editando');
-      history.replaceState(null, '', location.pathname);
-    });
-    document.getElementById('ed_g').addEventListener('click', guardar);
+
+    /* Espreitar: enquanto está premido, a janela desvanece. É a troca por
+       ter posto tudo ao centro - os textos escrevem-se ao vivo por baixo. */
+    var esp = w.querySelector('[data-ax="espreitar"]');
+    ['mousedown', 'touchstart'].forEach(function (e) { esp.addEventListener(e, function () { w.classList.add('espreita'); }); });
+    ['mouseup', 'mouseleave', 'touchend'].forEach(function (e) { esp.addEventListener(e, function () { w.classList.remove('espreita'); }); });
+
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && $('#adJanela')) fechar(); });
   }
 
-  montar();
+  function fechar() {
+    var w = $('#adJanela'); if (w) w.remove();
+    history.replaceState(null, '', location.pathname);
+  }
+
+  /* quem chegou de um endereço que não é escola nenhuma: dizer-lhe porquê,
+     em vez de o deixar a pensar que o link estava errado */
+  function avisoDesconhecido() {
+    try {
+      var q = new URLSearchParams(location.search).get('desconhecido');
+      if (!q) return;
+      var d = document.createElement('div');
+      d.className = 'ad-aviso';
+      d.textContent = 'Não existe nenhuma escola em /' + q + '.';
+      var alvo = document.querySelector('.folha') || document.body;
+      alvo.insertBefore(d, alvo.firstChild);
+      history.replaceState(null, '', location.pathname);
+    } catch (e) {}
+  }
+
+  function arrancar() {
+    avisoDesconhecido();
+    if (location.hash === '#admin') montar();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', arrancar);
+  else arrancar();
+  window.addEventListener('hashchange', function () { if (location.hash === '#admin') montar(); });
 })();
