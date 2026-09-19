@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="pt" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Repositório - CRM</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="../favicon.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../estilo/tokens.css">
+<link rel="stylesheet" href="../estilo/componentes.css">
+<style>
+/* Só o que é do repositório. O resto vem de estilo/ (partilhado com a app). */
+.nav-link{background:none;border:0;width:100%;text-align:left;font:inherit}
+.profile .sair{margin-left:auto;flex:none;width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);color:#fff;cursor:pointer}
+.profile .sair:hover{background:rgba(255,255,255,.2)}
+.profile .sair svg{width:16px;height:16px}
+.nav-search svg{width:16px;height:16px;flex:none}
+.made-by svg{width:14px;height:14px;flex:none}
+.app.nav-collapsed .profile .sair{margin-left:0}
+.grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+tr.clickable{cursor:pointer}
+.tag{align-self:flex-start}
+td .tag{align-self:auto}
+.hidden{display:none!important}
+@media(max-width:860px){
+  .app{grid-template-columns:1fr}
+  .sidebar{position:static;height:auto;flex-direction:row;align-items:center;gap:10px;overflow-x:auto}
+  .nav{flex-direction:row}
+  .nav-group,.nav-foot,.brand-txt,.nav-search{display:none}
+  .nav-link.active::before{display:none}
+}
+
+/* CARTÃO DE TURMA */
+.tc{display:flex;flex-direction:column;gap:10px;padding:20px}
+.tc h3{font-size:1.05rem;font-weight:800}
+.tc-meta{display:flex;flex-wrap:wrap;gap:6px}
+.tc-drive{display:flex;align-items:center;gap:7px;font-size:.82rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tc-drive svg{flex:none;width:16px;height:16px}
+.tc-drive.falta{color:var(--warn)}
+.tc-foot{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:14px;border-top:1px solid var(--border)}
+/* o dourado do badge: so existe aqui, nao entra no sistema de estilos */
+.btn-ouro{background:#d4af37;border-color:#d4af37;color:#16240f}
+.btn-ouro:hover{background:#c8a42d;border-color:#c8a42d}
+.tc-foot .btn{margin-left:auto}
+
+/* CABEÇALHO DE SECÇÃO COM VOLTAR */
+.voltar{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:700;color:var(--muted);background:none;border:0;cursor:pointer;padding:4px 0;margin-bottom:6px}
+.voltar:hover{color:var(--g700)}
+.voltar svg{width:16px;height:16px}
+
+/* EDITOR DE TEXTO RICO */
+.rt-toolbar{display:flex;flex-wrap:wrap;gap:5px;align-items:center;padding:7px 8px;border:1px solid var(--border);border-bottom:0;border-radius:10px 10px 0 0;background:var(--surface2)}
+.rt-tb{height:30px;min-width:30px;padding:0 8px;display:inline-grid;place-items:center;border:1px solid var(--border);border-radius:7px;background:var(--surface);color:var(--text);cursor:pointer;font-size:.92rem;font-weight:700}
+.rt-tb:hover{border-color:var(--g400);background:var(--g50);color:var(--g700)}
+.rt-tb svg{width:15px;height:15px}
+.rt-sep{width:1px;height:20px;background:var(--border);margin:0 2px}
+.rt-editor{min-height:120px;max-height:260px;overflow-y:auto;border:1px solid var(--border);border-radius:0 0 10px 10px;padding:12px 14px;background:var(--surface2);color:var(--text);outline:none;font-size:.9rem}
+.rt-editor:focus{border-color:var(--g400);box-shadow:0 0 0 3px rgba(0,166,81,.14);background:var(--surface)}
+.rt-editor:empty:before{content:attr(data-placeholder);color:var(--muted2)}
+.rt-editor p{margin:0 0 9px}
+.rt-editor ul,.rt-editor ol{margin:0 0 9px 20px}
+.rt-editor a{color:var(--g700);text-decoration:underline}
+
+/* MARCADORES */
+.vars{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.var-chip{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:.72rem;font-weight:700;background:var(--surface3);color:var(--muted);border:1px solid var(--border);cursor:pointer;font-family:ui-monospace,monospace}
+.var-chip:hover{border-color:var(--g400);color:var(--g700);background:var(--g50)}
+
+/* AVISO RGPD */
+.nota-rgpd{display:flex;gap:9px;align-items:flex-start;padding:11px 13px;border-radius:10px;background:var(--warn-bg);color:var(--warn);font-size:.78rem;font-weight:600;line-height:1.45}
+.nota-rgpd svg{flex:none;width:16px;height:16px;margin-top:1px}
+
+/* SECÇÃO RECOLHÍVEL */
+.fold{border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.fold>summary{padding:11px 14px;background:var(--surface2);cursor:pointer;font-weight:700;font-size:.86rem;list-style:none;display:flex;align-items:center;gap:8px}
+.fold>summary::-webkit-details-marker{display:none}
+.fold>summary::before{content:"";width:8px;height:8px;border-right:2px solid var(--muted2);border-bottom:2px solid var(--muted2);transform:rotate(-45deg);transition:transform .18s;margin-left:2px}
+.fold[open]>summary::before{transform:rotate(45deg)}
+.fold>summary .sub{font-weight:500;color:var(--muted);font-size:.78rem;margin-left:auto}
+.fold-body{padding:16px;display:flex;flex-direction:column;gap:14px;border-top:1px solid var(--border)}
+
+/* PRÉ-VISUALIZAÇÃO DO EMAIL */
+.preview{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--surface2)}
+.preview-head{background:linear-gradient(135deg,var(--g800),var(--g600));color:#fff;padding:14px 18px;font-weight:800;font-size:.92rem}
+.preview-body{padding:18px}
+.preview-body .pv-title{font-weight:700;font-size:1rem;margin:0 0 10px}
+.preview-body .pv-text{color:var(--muted);font-size:.88rem;min-height:40px}
+.preview-body .pv-text p{margin:0 0 9px}
+.preview-body .pv-text ul,.preview-body .pv-text ol{margin:0 0 9px 20px}
+.preview-body .pv-text a{color:var(--g700);text-decoration:underline}
+.preview-body .pv-saud{font-size:.88rem}
+.pv-btn{display:inline-block;margin-top:16px;background:var(--g800);color:#fff;padding:10px 20px;border-radius:8px;font-weight:700;font-size:.85rem}
+
+/* o empty state é um "herói": ícone maior, mas com tamanho fixo */
+.empty svg{width:34px;height:34px;flex:none}
+
+/* LISTA DE TURMAS DO CRM (adicionar) */
+.crm-lista{display:flex;flex-direction:column;gap:8px;max-height:50vh;overflow:auto}
+.crm-row{display:flex;align-items:center;gap:12px;padding:11px 13px;border:1px solid var(--border);border-radius:10px;background:var(--surface);cursor:pointer}
+.crm-row:hover{border-color:var(--g400)}
+.crm-row input[type=radio]{flex:none;width:18px;height:18px;margin:0;accent-color:var(--g600)}
+.crm-row .crm-info{flex:1;min-width:0}
+.crm-row .crm-info strong{display:block;font-size:.9rem}
+.crm-row .crm-info span{font-size:.78rem;color:var(--muted)}
+
+/* o partilhado só define .field .hint; aqui usamos notas soltas (prévia, avisos) */
+.hint{font-size:.74rem;color:var(--muted);font-weight:500}
+/* o cabeçalho do modal é flex: sem isto o botão de atualizar era espremido */
+.modal-head .icon-btn{flex:none}
+
+/* botão de copiar o link pessoal de um formando (dashboard) */
+.lnk-copy{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;vertical-align:middle;margin-left:7px;padding:0}
+.lnk-copy:hover{border-color:var(--g400);color:var(--g700);background:var(--g50)}
+.lnk-copy svg{width:13px;height:13px}
+</style>
+</head>
+<body>
+
+<!-- ENTRADA -->
+<div class="portal" id="login">
+  <div class="login-bg"></div>
+  <div class="login-panel">
+    <div class="login-card">
+      <div class="login-brand">
+        <div class="brand-logo"><img src="../favicon.svg" alt=""></div>
+        <div><h1>Repositório</h1><p>Acesso aos materiais das turmas</p></div>
+      </div>
+      <h2 class="login-h">Entrar</h2>
+      <p class="login-sub">Ferramenta privada. Entra com a tua palavra-passe de gestor.</p>
+      <form id="loginForm">
+        <div class="field"><label for="fPass">Palavra-passe</label>
+          <input id="fPass" type="password" autocomplete="current-password" required></div>
+        <button class="btn login-btn" id="btnLogin">Entrar</button>
+        <p class="login-err" id="loginErr"></p>
+      </form>
+      <p class="login-credit">Só tu vês esta ferramenta. Os formandos recebem apenas o link por email.</p>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app hidden" id="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-logo"><img src="../favicon.svg" alt=""></div>
+      <div class="brand-txt"><h1>Repositório</h1><p>Materiais das turmas</p></div>
+    </div>
+    <div class="nav-search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="pesquisa" type="search" placeholder="Pesquisar…" autocomplete="off" aria-label="Pesquisar">
+    </div>
+    <nav class="nav">
+      <div class="nav-group">Gestão</div>
+      <button class="nav-link active" data-view="turmas"></button>
+    </nav>
+    <div class="nav-foot">
+      <div class="profile">
+        <div class="avatar">DV</div>
+        <div class="profile-txt"><strong>Gestor</strong><span>Acesso privado</span></div>
+        <button class="sair" id="btnSair" title="Sair">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        </button>
+      </div>
+      <a class="made-by" href="../">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span>Voltar à app</span>
+      </a>
+      <a class="legal-link" href="https://crm.cr0x.org/manual/aviso-legal/" target="_blank" rel="noopener">Aviso legal</a>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="header">
+      <div class="header-l">
+        <button class="icon-btn" id="btnRecolher" title="Recolher menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M9 3v18M3 3h18v18H3z"/></svg>
+        </button>
+        <div><h2 id="hTitulo">Turmas</h2><div class="breadcrumb" id="hSub"></div></div>
+      </div>
+      <div class="header-r">
+        <button class="icon-btn" id="btnTema" title="Tema claro/escuro"></button>
+        <button class="btn" id="btnPrimario"></button>
+      </div>
+    </header>
+    <div class="content">
+      <section class="view active" id="vTurmas"></section>
+      <section class="view" id="vSessoes"></section>
+      <section class="view" id="vSelos"></section>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toasts"></div>
+
+<script>
+'use strict';
+const SUPA_URL='https://qgfzbyhfyqvmmmdiqycu.supabase.co';
+const SUPA_KEY='sb_publishable_atlEEoeN4-CWY8mD7KQNsw_m1cXjdIE';
+const CHAVE='crm-repo-root', TEMA='crm-repo-tema';
+const LINK_TURMA='https://crm.cr0x.org/repo/';
+const MARCADORES=['{nome}','{titulo}','{turma}','{modulo}'];
+
+const I={
+  pasta:'M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z',
+  mail:'M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l9 6 9-6',
+  gente:'M16 19v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M9.5 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6M21 19v-2a4 4 0 0 0-3-3.9',
+  link:'M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1',
+  mais:'M12 5v14M5 12h14',
+  lapis:'M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16zM14 6l4 4',
+  lixo:'M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13',
+  olho:'M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6',
+  lista:'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01',
+  copiar:'M9 9h11a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V10a1 1 0 0 1 1-1zM5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1',
+  refrescar:'M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15',
+  seta:'M19 12H5M12 19l-7-7 7-7',
+  cog:'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z',
+  sol:'M12 4V2M12 22v-2M4 12H2M22 12h-2M5.6 5.6 4.2 4.2M19.8 19.8l-1.4-1.4M5.6 18.4l-1.4 1.4M19.8 4.2l-1.4 1.4M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0',
+  lua:'M21 13a8 8 0 1 1-10-10 6 6 0 0 0 10 10',
+  ok:'M20 6 9 17l-5-5',
+  alerta:'M12 9v4m0 4h.01M10.3 3.9 2.4 17.5A2 2 0 0 0 4.1 20.5h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0'
+};
+// width/height por omissão: sem isto, um SVG sem regra de CSS renderiza
+// gigante. Onde há regra (.btn svg, .nav-link svg…) o CSS ganha à mesma.
+const ic=(n,c='')=>`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="${c}"><path d="${I[n]}"/></svg>`;
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const $=s=>document.querySelector(s);
+const dt=s=>s?new Date(s).toLocaleString('pt-PT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+
+let sessao=null, geridas=[], sessoes=[], turmaAtual=null;
+
+/* ---------- Tema ---------- */
+function aplicarTema(t){
+  document.documentElement.dataset.theme=t;
+  localStorage.setItem(TEMA,t);
+  $('#btnTema').innerHTML=ic(t==='dark'?'sol':'lua');
+}
+$('#btnTema').addEventListener('click',()=>
+  aplicarTema(document.documentElement.dataset.theme==='dark'?'light':'dark'));
+
+/* ---------- Supabase ---------- */
+async function rpc(nome,args){
+  const r=await fetch(`${SUPA_URL}/rest/v1/rpc/${nome}`,{
+    method:'POST',
+    headers:{apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify(args||{})
+  });
+  const d=await r.json().catch(()=>null);
+  if(!r.ok){
+    const bruto=(d&&(d.message||d.hint))||'ERRO';
+    const m=bruto.match(/SEM_PERMISSAO|NAO_ENCONTRADO|DADOS_EM_FALTA|CREDENCIAIS_INVALIDAS|TURMA_NAO_EXISTE|JA_ENVIADA/);
+    throw new Error(m?m[0]:bruto);
+  }
+  return d;
+}
+async function edge(nome,body){
+  const r=await fetch(`${SUPA_URL}/functions/v1/${nome}`,{
+    method:'POST',
+    headers:{apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify(body)
+  });
+  return r.json().catch(()=>({ok:false,erro:'RESPOSTA_INVALIDA'}));
+}
+const ERROS={
+  SEM_PERMISSAO:'A sessão expirou ou a palavra-passe mudou. Entra outra vez.',
+  CREDENCIAIS_INVALIDAS:'Palavra-passe errada.',
+  TURMA_NAO_EXISTE:'Essa turma não existe no CRM.',
+  DADOS_EM_FALTA:'Falta preencher campos obrigatórios.',
+  NAO_ENCONTRADO:'Já não existe.',
+  JA_ENVIADA:'Esta sessão já foi enviada - já não se edita.',
+  SEM_RESEND:'O envio de email não está configurado no servidor.'
+};
+function toast(msg,tipo){
+  const t=document.createElement('div');
+  t.className='toast'+(tipo?' '+tipo:'');
+  t.innerHTML=`${ic(tipo==='err'||tipo==='warn'?'alerta':'ok')}<div><strong>${esc(ERROS[msg]||msg)}</strong></div>`;
+  $('#toasts').appendChild(t);
+  setTimeout(()=>t.remove(),4600);
+}
+function tratar(e){
+  const m=e&&e.message||String(e);
+  toast(m,'err');
+  if(m==='SEM_PERMISSAO') sair();
+}
+
+/* ---------- Entrada ---------- */
+$('#loginForm').addEventListener('submit',async ev=>{
+  ev.preventDefault();
+  const b=$('#btnLogin'); b.disabled=true; b.textContent='A entrar...'; $('#loginErr').textContent='';
+  try{
+    const d=await rpc('login_root',{p_password:$('#fPass').value});
+    sessao={token:d.token};
+    localStorage.setItem(CHAVE,JSON.stringify(sessao));
+    await arrancar();
+  }catch(e){
+    const m=e&&e.message||String(e);
+    $('#loginErr').textContent=ERROS[m]||m;
+  }
+  b.disabled=false; b.textContent='Entrar';
+});
+function sair(){
+  if(sessao) rpc('logout_root',{p_token:sessao.token}).catch(()=>{});
+  sessao=null; turmaAtual=null; localStorage.removeItem(CHAVE);
+  $('#app').classList.add('hidden'); $('#login').classList.remove('hidden');
+  $('#fPass').value='';
+}
+$('#btnSair').addEventListener('click',sair);
+
+/* ---------- Navegação ---------- */
+$('#btnRecolher').addEventListener('click',()=>$('#app').classList.toggle('nav-collapsed'));
+$('#pesquisa').addEventListener('input',filtrar);
+function filtrar(){
+  const q=($('#pesquisa').value||'').trim().toLowerCase();
+  const vista=document.querySelector('.view.active');
+  if(!vista) return;
+  vista.querySelectorAll('.tc, tbody tr').forEach(el=>{
+    el.style.display=(!q||el.textContent.toLowerCase().includes(q))?'':'none';
+  });
+}
+$('#btnPrimario').addEventListener('click',()=>{
+  if(turmaAtual) modalSessao(turmaAtual,null);
+  else modalAdicionarTurma();
+});
+
+// Item de navegação "Turmas" (é o único): dá-lhe ícone, texto e função de
+// voltar à lista. Estava vazio no HTML, por isso não se percebia o que era.
+(function(){
+  const b=$('.nav-link[data-view="turmas"]');
+  b.innerHTML=ic('gente')+'<span class="lbl">Turmas</span>';
+  b.addEventListener('click',mostrarTurmas);
+})();
+
+function mostrarTurmas(){
+  turmaAtual=null;
+  $('#vSessoes').classList.remove('active'); $('#vSelos').classList.remove('active');
+  $('#vTurmas').classList.add('active');
+  $('#hTitulo').textContent='Turmas'; $('#hSub').textContent='As turmas que geres aqui';
+  $('#btnPrimario').innerHTML=ic('mais')+'Adicionar turma';
+  $('#pesquisa').value='';
+  carregarTurmas().then(filtrar);
+}
+function abrirTurma(t){
+  turmaAtual=t;
+  $('#vTurmas').classList.remove('active'); $('#vSessoes').classList.add('active');
+  $('#hTitulo').textContent=t.nome||('Turma '+t.codigo);
+  $('#hSub').textContent='Turma '+t.codigo+' · '+t.n_formandos+' formandos';
+  $('#btnPrimario').innerHTML=ic('mais')+'Nova sessão';
+  $('#pesquisa').value='';
+  carregarSessoes(t).then(filtrar);
+}
+
+async function arrancar(){
+  $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
+  mostrarTurmas();
+}
+
+/* ---------- Turmas ---------- */
+async function carregarTurmas(){
+  try{ geridas=await rpc('repo_geridas',{p_token:sessao.token}); }
+  catch(e){ return tratar(e); }
+
+  $('#vTurmas').innerHTML = !geridas.length
+    ? `<div class="empty">${ic('gente')}<strong>Ainda não geres nenhuma turma</strong>
+        <span>Carrega em "Adicionar turma" para espelhar uma turma do CRM.</span></div>`
+    : `<div class="grid">${geridas.map(t=>`
+        <article class="card tc">
+          <div class="tc-meta"><span class="tag">Turma ${esc(t.codigo)}</span>
+            ${t.n_sessoes?`<span class="pill grey">${t.n_sessoes} sess${t.n_sessoes==1?'ão':'ões'}</span>`:''}</div>
+          <h3>${esc(t.nome)||'<span class="muted">Sem nome</span>'}</h3>
+          <div class="tc-drive ${t.drive_url?'':'falta'}">${ic('pasta')}${t.drive_url?esc(t.drive_url.replace(/^https?:\/\//,'').slice(0,42)):'Falta a pasta do Drive'}</div>
+          <div class="muted" style="font-size:.8rem">${t.n_formandos} formandos · último envio: ${t.ultimo_envio?dt(t.ultimo_envio):'nunca'}</div>
+          <div class="tc-foot">
+            <button class="btn-sec btn-sm" data-cfg="${t.id}">${ic('cog')}Definições</button>
+            <button class="btn btn-sm btn-ouro" data-selos="${t.id}">Badges</button>
+            <button class="btn btn-sm" data-abrir="${t.id}">Abrir</button>
+          </div>
+        </article>`).join('')}</div>`;
+
+  document.querySelectorAll('[data-abrir]').forEach(b=>b.addEventListener('click',
+    ()=>abrirTurma(geridas.find(t=>t.id===b.dataset.abrir))));
+  document.querySelectorAll('[data-cfg]').forEach(b=>b.addEventListener('click',
+    ()=>modalTurma(geridas.find(t=>t.id===b.dataset.cfg))));
+  document.querySelectorAll('[data-selos]').forEach(b=>b.addEventListener('click',
+    ()=>abrirSelos(geridas.find(t=>t.id===b.dataset.selos))));
+}
+
+function abrirModal(html){
+  const f=document.createElement('div'); f.className='modal-back open'; f.innerHTML=html;
+  f.addEventListener('click',e=>{ if(e.target===f) f.remove(); });
+  document.addEventListener('keydown',function esc(e){
+    if(e.key==='Escape'){ f.remove(); document.removeEventListener('keydown',esc); }
+  });
+  document.body.appendChild(f);
+  f.querySelectorAll('[data-fechar]').forEach(b=>b.addEventListener('click',()=>f.remove()));
+  return f;
+}
+function uiConfirm({titulo='Confirmar',texto='',ok='Confirmar',perigo=false}){
+  return new Promise(res=>{
+    const f=abrirModal(`<div class="modal" style="width:min(460px,100%)">
+      <div class="modal-head"><div><h3>${esc(titulo)}</h3></div></div>
+      <div class="modal-body"><div style="font-size:.92rem">${texto}</div></div>
+      <div class="modal-foot"><span></span>
+        <div style="display:flex;gap:10px">
+          <button class="btn-sec" data-nao>Cancelar</button>
+          <button class="${perigo?'btn-danger':'btn'}" data-sim>${esc(ok)}</button>
+        </div></div></div>`);
+    const fecha=v=>{ f.remove(); res(v); };
+    f.querySelector('[data-sim]').addEventListener('click',()=>fecha(true));
+    f.querySelector('[data-nao]').addEventListener('click',()=>fecha(false));
+    const obs=new MutationObserver(()=>{ if(!document.body.contains(f)){ obs.disconnect(); res(false); } });
+    obs.observe(document.body,{childList:true});
+  });
+}
+
+/* Adicionar turma: escolher do CRM + pasta do Drive */
+async function modalAdicionarTurma(){
+  let crm=[];
+  try{ crm=await rpc('repo_turmas_crm',{p_token:sessao.token}); }
+  catch(e){ return tratar(e); }
+  const disp=crm.filter(t=>!t.gerida);
+
+  const f=abrirModal(`<div class="modal">
+    <div class="modal-head"><div><h3>Adicionar turma</h3>
+      <div class="sub">Escolhe uma turma do CRM e indica a pasta do Drive.</div></div></div>
+    <div class="modal-body">
+      <div class="field"><label>Pasta do Google Drive (a tua, pessoal)</label>
+        <input id="aDrive" placeholder="https://drive.google.com/drive/folders/...">
+        <span class="hint">É para aqui que os links dos formandos vão levar.</span></div>
+      <div class="field"><label>Turma</label>
+        ${disp.length?`<div class="crm-lista">${disp.map(t=>`
+          <label class="crm-row">
+            <input type="radio" name="crmT" value="${esc(t.codigo)}">
+            <div class="crm-info"><strong>${esc(t.nome)||('Turma '+esc(t.codigo))}</strong>
+              <span>${esc(t.codigo)} · ${t.n_formandos} formandos</span></div>
+          </label>`).join('')}</div>`
+        :`<div class="empty" style="padding:20px">${ic('gente')}<span>Todas as turmas do CRM já estão adicionadas.</span></div>`}</div>
+    </div>
+    <div class="modal-foot"><span></span>
+      <div style="display:flex;gap:10px">
+        <button class="btn-sec" data-fechar>Cancelar</button>
+        <button class="btn" id="aAdicionar" ${disp.length?'':'disabled'}>Adicionar</button>
+      </div></div></div>`);
+
+  f.querySelector('#aAdicionar')?.addEventListener('click',async()=>{
+    const sel=f.querySelector('input[name="crmT"]:checked');
+    if(!sel) return toast('Escolhe uma turma.','err');
+    try{
+      await rpc('repo_turma_adicionar',{p_token:sessao.token,p_codigo:sel.value,p_drive_url:f.querySelector('#aDrive').value.trim()});
+      f.remove(); toast('Turma adicionada.'); carregarTurmas();
+    }catch(e){ tratar(e); }
+  });
+}
+
+/* Definições da turma: pasta + textos por omissão do email */
+function modalTurma(t){
+  const f=abrirModal(`<div class="modal wide">
+    <div class="modal-head"><div><h3>Definições - Turma ${esc(t.codigo)}</h3>
+      <div class="sub">A pasta do Drive e os textos que cada sessão nova herda.</div></div></div>
+    <div class="modal-body">
+      <div class="field"><label>Pasta do Google Drive</label>
+        <input id="tDrive" value="${esc(t.drive_url||'')}" placeholder="https://drive.google.com/drive/folders/..."></div>
+      <div class="field"><label>Módulos / UFCD desta turma</label>
+        <input id="tModulos" value="${esc(t.modulos||'')}" placeholder="10868, 10870">
+        <span class="hint">Separados por vírgula. Aparecem como opção ao criar cada sessão, para distinguir os UFCD.</span></div>
+      <div class="vars"><span class="hint" style="margin-right:2px">Marcadores:</span>
+        ${MARCADORES.map(v=>`<button type="button" class="var-chip" data-var="${v}">${v}</button>`).join('')}</div>
+      <div class="form-grid">
+        <div class="field full"><label>Assunto</label><input id="tAssunto" value="${esc(t.def_assunto||'')}"></div>
+        <div class="field full"><label>Cabeçalho (faixa verde)</label><input id="tCabecalho" value="${esc(t.def_cabecalho||'')}"></div>
+        <div class="field"><label>Saudação</label><input id="tSaudacao" value="${esc(t.def_saudacao||'')}"></div>
+        <div class="field"><label>Texto do botão</label><input id="tBotao" value="${esc(t.def_botao||'')}"></div>
+        <div class="field full"><label>Rodapé</label><textarea id="tRodape" style="min-height:60px">${esc(t.def_rodape||'')}</textarea></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-danger btn-sm" id="tRemover">${ic('lixo')}Remover turma</button>
+      <div style="display:flex;gap:10px">
+        <button class="btn-sec" data-fechar>Cancelar</button>
+        <button class="btn" id="tGuardar">Guardar</button>
+      </div></div></div>`);
+
+  f.querySelectorAll('[data-var]').forEach(b=>b.addEventListener('click',()=>{
+    navigator.clipboard?.writeText(b.dataset.var); toast(`Marcador ${b.dataset.var} copiado.`);
+  }));
+  f.querySelector('#tGuardar').addEventListener('click',async()=>{
+    try{
+      await rpc('repo_turma_guardar',{p_token:sessao.token,p_id:t.id,
+        p_drive_url:f.querySelector('#tDrive').value.trim(),
+        p_assunto:f.querySelector('#tAssunto').value.trim(),
+        p_cabecalho:f.querySelector('#tCabecalho').value.trim(),
+        p_saudacao:f.querySelector('#tSaudacao').value.trim(),
+        p_botao:f.querySelector('#tBotao').value.trim(),
+        p_rodape:f.querySelector('#tRodape').value.trim(),
+        p_modulos:f.querySelector('#tModulos').value.trim()});
+      f.remove(); toast('Definições guardadas.'); carregarTurmas();
+    }catch(e){ tratar(e); }
+  });
+  f.querySelector('#tRemover').addEventListener('click',async()=>{
+    const ok=await uiConfirm({titulo:`Remover a turma ${t.codigo}?`,perigo:true,ok:'Remover',
+      texto:'As sessões e os registos de acesso vão com ela. Não afeta a turma no CRM.'});
+    if(!ok) return;
+    try{ await rpc('repo_turma_remover',{p_token:sessao.token,p_id:t.id});
+      f.remove(); toast('Turma removida.'); carregarTurmas(); }catch(e){ tratar(e); }
+  });
+}
+
+/* ---------- Sessões ---------- */
+async function carregarSessoes(t){
+  try{ sessoes=await rpc('repo_sessoes_listar',{p_token:sessao.token,p_repo_turma_id:t.id}); }
+  catch(e){ return tratar(e); }
+
+  const estado=s=>{
+    if(!s.enviado_em) return '<span class="pill amber">Rascunho</span>';
+    if((s.enviados||0)<(s.destinatarios||0)) return `<span class="pill amber">Parcial · ${s.enviados}/${s.destinatarios}</span>`;
+    return `<span class="pill grey">Enviada · ${dt(s.enviado_em)}</span>`;
+  };
+  const topo=`<button class="voltar" id="voltarTurmas">${ic('seta')}Todas as turmas</button>
+    <div class="section-head" style="margin-bottom:16px">
+      <div><h3>${esc(t.nome||('Turma '+t.codigo))}</h3>
+        <div class="sub">${t.drive_url?'Pasta: '+esc(t.drive_url.replace(/^https?:\/\//,'').slice(0,50)):'<span style="color:var(--warn)">Falta a pasta do Drive - define em Definições</span>'}</div></div>
+      <button class="chip" id="copiarLink">${ic('link')} Copiar link da turma</button>
+    </div>`;
+
+  $('#vSessoes').innerHTML = topo + (!sessoes.length
+    ? `<div class="empty">${ic('mail')}<strong>Ainda não há sessões</strong>
+        <span>Carrega em "Nova sessão" para avisar a turma de que a pasta tem material novo.</span></div>`
+    : `<div class="table-wrap"><table><thead><tr>
+        <th>Sessão</th><th>Estado</th><th>Abriram</th><th></th>
+      </tr></thead><tbody>${sessoes.map(s=>{
+        const pct=s.destinatarios?Math.round(s.abriram/s.destinatarios*100):0;
+        const cor=!s.abriram?'grey':pct>=70?'green':'amber';
+        return `<tr class="clickable" data-ver="${s.id}">
+          <td><div class="cell-main">${s.modulo?`<span class="tag" style="margin-right:7px">${esc(s.modulo)}</span>`:''}${esc(s.titulo)}</div><div class="cell-sub">${s.criado_em?dt(s.criado_em):''}</div></td>
+          <td>${estado(s)}</td>
+          <td>${s.enviado_em?`<span class="pill ${cor}">${s.abriram}/${s.destinatarios} · ${pct}%</span>`:'<span class="muted">-</span>'}</td>
+          <td class="t-right muted">${s.enviado_em?ic('olho'):ic('lapis')}</td>
+        </tr>`;}).join('')}</tbody></table></div>`);
+
+  $('#voltarTurmas').addEventListener('click',mostrarTurmas);
+  $('#copiarLink').addEventListener('click',()=>{
+    navigator.clipboard?.writeText(LINK_TURMA);
+    toast('Link copiado. Os formandos recebem-no por email, personalizado.');
+  });
+  document.querySelectorAll('[data-ver]').forEach(r=>r.addEventListener('click',()=>{
+    const s=sessoes.find(x=>x.id===r.dataset.ver);
+    if(!s.enviado_em) modalSessao(t,s); else modalEstado(s);
+  }));
+}
+
+/* ================== SELOS ==================
+   O mesmo mecanismo das sessões, com uma diferença: cada pessoa vai para um
+   destino diferente - o seu selo. Vive numa "sessão" chamada "Selo de
+   conclusão", criada sozinha na primeira vez que se abre este ecrã.
+
+   O botão envia a UMA pessoa de cada vez, de propósito: são poucos, e assim
+   vê-se o que aconteceu a cada um antes de avançar para o seguinte. ====== */
+let selosSess=null, selosEmail=null;
+
+async function abrirSelos(t){
+  turmaAtual=t; selosSess=null;
+  $('#vTurmas').classList.remove('active');
+  $('#vSessoes').classList.remove('active');
+  $('#vSelos').classList.add('active');
+  $('#hTitulo').textContent='Badges · '+(t.nome||('Turma '+t.codigo));
+  $('#hSub').textContent='Turma '+t.codigo+' · '+t.n_formandos+' formandos';
+  $('#btnPrimario').innerHTML=ic('mais')+'Adicionar turma';
+  $('#pesquisa').value='';
+  $('#vSelos').innerHTML='<div class="empty"><strong>A preparar…</strong></div>';
+  try{
+    const p=await rpc('repo_selos_preparar',{p_token:sessao.token,p_repo_turma_id:t.id});
+    selosSess=p&&p.sessao_id; selosEmail=p||null;
+  }catch(e){ return tratar(e); }
+  carregarSelos(t);
+}
+
+async function carregarSelos(t){
+  let lista;
+  try{ lista=await rpc('repo_selos',{p_token:sessao.token,p_repo_turma_id:t.id}); }
+  catch(e){ return tratar(e); }
+
+  const semDestino=lista.filter(x=>!x.destino).length;
+  const topo=`<button class="voltar" id="voltarTurmas2">${ic('seta')}Todas as turmas</button>
+    <div class="section-head" style="margin-bottom:16px">
+      <div><h3>Badges de conclusão</h3>
+        <div class="sub">Cada formando recebe o link do seu badge em crm.cr0x.org.${
+          semDestino?` <span style="color:var(--warn)">${semDestino} ainda sem badge gerado.</span>`:''}</div></div>
+      <button class="chip" id="verEmailBadge">${ic('mail')} Texto do email</button>
+    </div>`;
+
+  $('#vSelos').innerHTML = topo + (!lista.length
+    ? `<div class="empty">${ic('gente')}<strong>Sem formandos com email</strong>
+        <span>Os badges enviam-se para o email pessoal de cada formando.</span></div>`
+    : `<div class="table-wrap"><table><thead><tr>
+        <th>Formando</th><th>Badge</th><th>Estado</th><th>Abriu</th><th></th>
+      </tr></thead><tbody>${lista.map(x=>{
+        const curto=x.destino?esc(String(x.destino).replace(/^https?:\/\/crm\.cr0x\.org\/b\//,'').replace(/\/$/,'')):'';
+        return `<tr>
+          <td><div class="cell-main">${esc(x.nome)}</div><div class="cell-sub">${esc(x.email||'sem email')}</div></td>
+          <td>${x.destino
+              ? `<a href="${esc(x.destino)}" target="_blank" rel="noopener" class="chip">${curto}</a>`
+              : '<span class="muted">por gerar</span>'}</td>
+          <td>${x.bloqueado
+              ? '<span class="pill red">Não aprovado</span>'
+              : x.erro
+              ? `<span class="pill red" title="${esc(x.erro)}">Erro</span>`
+              : x.enviado_em ? `<span class="pill green">Enviado · ${dt(x.enviado_em)}</span>`
+                             : '<span class="pill amber">Por enviar</span>'}</td>
+          <td>${x.cliques ? `<span class="pill grey">${x.cliques}×</span>` : '<span class="muted">-</span>'}</td>
+          <td class="t-right" style="white-space:nowrap">${x.bloqueado
+              ? `<button class="btn-sec btn-sm" data-destrancar="${x.acesso_id}">Destrancar</button>`
+              : `${x.destino
+                  ? (x.enviado_em && !x.erro
+                      ? `<button class="btn-sec btn-sm" data-reenviar="${x.acesso_id}">Reenviar</button>`
+                      : `<button class="btn btn-sm" data-enviar="${x.acesso_id}">Enviar</button>`)
+                  : ''}
+                 ${x.enviado_em ? '' : `<button class="btn-danger btn-sm" data-trancar="${x.acesso_id}" title="Não aprovado - tranca o envio">Não aprovado</button>`}`}</td>
+        </tr>`;}).join('')}</tbody></table></div>`);
+
+  $('#voltarTurmas2').addEventListener('click',mostrarTurmas);
+  document.querySelectorAll('[data-enviar]').forEach(b=>b.addEventListener('click',
+    ()=>enviarSelo(t,b.dataset.enviar,b)));
+  document.querySelectorAll('[data-reenviar]').forEach(b=>b.addEventListener('click',
+    ()=>reenviarSelo(t,b.dataset.reenviar,b)));
+  document.querySelectorAll('[data-trancar]').forEach(b=>b.addEventListener('click',
+    ()=>trancarSelo(t,b.dataset.trancar,true)));
+  document.querySelectorAll('[data-destrancar]').forEach(b=>b.addEventListener('click',
+    ()=>trancarSelo(t,b.dataset.destrancar,false)));
+  const vb=$('#verEmailBadge');
+  if(vb) vb.addEventListener('click',()=>modalEmailBadge(t));
+}
+
+async function enviarSelo(t,acessoId,btn){
+  btn.disabled=true; btn.textContent='A enviar…';
+  const r=await edge('repo-enviar',{token:sessao.token,sessao_id:selosSess,acesso_id:acessoId});
+  if(r&&r.ok){ toast('Badge enviado.'); }
+  else { toast('Não foi possível enviar: '+((r&&(r.erro||r.detalhe))||'erro'),'err'); }
+  carregarSelos(t);
+}
+
+/* O texto do email dos badges edita-se aqui. As sessoes ja se editavam e os
+   badges nao - e este e o texto que a turma toda vai ler. A pre-visualizacao
+   acompanha enquanto se escreve, para nao ser preciso gravar para ver. */
+function modalEmailBadge(t){
+  if(!selosEmail) return toast('Ainda não sei o texto do email.','warn');
+  const v=selosEmail;
+  const f=abrirModal(`<div class="modal" style="width:min(720px,100%)">
+    <div class="modal-head"><div><h3>Texto do email</h3>
+      <div class="sub">O que os formandos recebem com o link do badge.</div></div></div>
+    <div class="modal-body">
+      <div class="grid2">
+        <div class="field full"><label>Assunto</label><input id="bAssunto" value="${esc(v.assunto||'')}"></div>
+        <div class="field full"><label>Cabeçalho (faixa verde)</label><input id="bCabecalho" value="${esc(v.cabecalho||'')}"></div>
+        <div class="field"><label>Saudação</label><input id="bSaudacao" value="${esc(v.saudacao||'')}"></div>
+        <div class="field"><label>Botão</label><input id="bBotao" value="${esc(v.botao||'')}"></div>
+        <div class="field full"><label>Título</label><input id="bTitulo" value="${esc(v.titulo||'')}"></div>
+        <div class="field full"><label>Mensagem</label><textarea id="bTexto" style="min-height:70px">${esc(v.texto||'')}</textarea></div>
+        <div class="field full"><label>Rodapé</label><textarea id="bRodape" style="min-height:60px">${esc(v.rodape||'')}</textarea></div>
+      </div>
+      <span class="hint">Podes usar <strong>{nome}</strong> - é substituído pelo nome de cada formando.</span>
+      <div class="field" style="margin-top:14px"><label>Pré-visualização</label>
+        <div class="preview">
+          <div class="preview-head" id="bvHead"></div>
+          <div class="preview-body">
+            <p class="pv-saud" id="bvSaudacao" style="margin:0 0 10px"></p>
+            <p class="pv-title" id="bvTitulo"></p>
+            <div class="pv-text" id="bvTexto" style="white-space:pre-wrap"></div>
+            <span class="pv-btn" id="bvBotao"></span>
+            <p class="hint" id="bvRodape" style="margin-top:14px;white-space:pre-wrap"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot"><span></span>
+      <div style="display:flex;gap:10px">
+        <button class="btn-sec" data-fechar>Cancelar</button>
+        <button class="btn" id="bGuardar">Guardar</button>
+      </div>
+    </div>
+  </div>`);
+
+  const q=x=>f.querySelector(x);
+  const nomeFalso='<span class="muted">[nome do formando]</span>';
+  const pinta=()=>{
+    const sub=x=>esc(x||'').replace(/{nome}/g,nomeFalso);
+    q('#bvHead').innerHTML=sub(q('#bCabecalho').value);
+    q('#bvSaudacao').innerHTML=sub(q('#bSaudacao').value);
+    q('#bvTitulo').textContent=q('#bTitulo').value;
+    q('#bvTexto').textContent=q('#bTexto').value;
+    q('#bvBotao').textContent=q('#bBotao').value||'Ver o meu badge';
+    q('#bvRodape').innerHTML=sub(q('#bRodape').value);
+  };
+  ['#bAssunto','#bCabecalho','#bSaudacao','#bBotao','#bTitulo','#bTexto','#bRodape']
+    .forEach(x=>q(x).addEventListener('input',pinta));
+  pinta();
+
+  q('#bGuardar').addEventListener('click',async()=>{
+    const novo={assunto:q('#bAssunto').value.trim(),cabecalho:q('#bCabecalho').value.trim(),
+      saudacao:q('#bSaudacao').value.trim(),titulo:q('#bTitulo').value.trim(),
+      texto:q('#bTexto').value,botao:q('#bBotao').value.trim(),rodape:q('#bRodape').value.trim()};
+    try{
+      await rpc('repo_selos_email',{p_token:sessao.token,p_repo_turma_id:t.id,
+        p_assunto:novo.assunto,p_cabecalho:novo.cabecalho,p_saudacao:novo.saudacao,
+        p_titulo:novo.titulo,p_texto:novo.texto,p_botao:novo.botao,p_rodape:novo.rodape});
+    }catch(e){ return tratar(e); }
+    Object.assign(selosEmail,novo);
+    f.remove(); toast('Texto guardado.');
+  });
+}
+
+/* Trancar vive no servidor, nao no ecra: um nao aprovado nunca entra num
+   envio, mesmo que alguem carregue no botao errado noutra altura. */
+async function trancarSelo(t,acessoId,bloquear){
+  if(bloquear && !(await uiConfirm({titulo:'Não aprovado?',
+      texto:'Fica trancado e não recebe o badge. Podes destrancar depois.',
+      ok:'Trancar',perigo:true}))) return;
+  try{ await rpc('repo_selo_bloquear',{p_token:sessao.token,p_acesso_id:acessoId,p_bloqueado:bloquear}); }
+  catch(e){ return tratar(e); }
+  toast(bloquear?'Trancado - não recebe o badge.':'Destrancado.');
+  carregarSelos(t);
+}
+
+async function reenviarSelo(t,acessoId,btn){
+  if(!(await uiConfirm({titulo:'Enviar outra vez?',
+        texto:'A pessoa vai receber o mesmo email com o mesmo link.',ok:'Enviar'}))) return;
+  try{ await rpc('repo_selo_reabrir',{p_token:sessao.token,p_acesso_id:acessoId}); }
+  catch(e){ return tratar(e); }
+  enviarSelo(t,acessoId,btn);
+}
+
+/* Nova sessão / editar rascunho */
+function modalSessao(t,sess){
+  if(!t.drive_url && !sess){
+    return uiConfirm({titulo:'Falta a pasta do Drive',ok:'Ir a Definições',
+      texto:'Esta turma ainda não tem pasta do Drive. Define-a primeiro, para o link ter para onde apontar.'})
+      .then(v=>{ if(v) modalTurma(t); });
+  }
+  const vals=sess||{assunto:t.def_assunto,cabecalho:t.def_cabecalho,saudacao:t.def_saudacao,botao:t.def_botao,rodape:t.def_rodape};
+  const mods=(t.modulos||'').split(',').map(x=>x.trim()).filter(Boolean);
+  const f=abrirModal(`<div class="modal wide">
+    <div class="modal-head"><div><h3>${sess?'Editar rascunho':'Nova sessão'} - Turma ${esc(t.codigo)}</h3>
+      <div class="sub">Adiciona o ficheiro à pasta do Drive; aqui escreves o aviso. Nada é enviado sem confirmares.</div></div></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field"><label>Título da sessão</label>
+          <input id="pTitulo" value="${esc(sess?.titulo||'')}" placeholder="Sessão 03 - novos materiais"></div>
+        <div class="field"><label>Módulo / UFCD</label>
+          <input id="pModulo" list="modlist" value="${esc(sess?.modulo||'')}" placeholder="${mods.length?'ex: '+esc(mods[0]):'ex: 10868'}">
+          <datalist id="modlist">${mods.map(m=>`<option value="${esc(m)}">`).join('')}</datalist>
+          <span class="hint">Distingue sessões com o mesmo número noutro UFCD. ${mods.length?'':'Define a lista em Definições da turma.'}</span></div>
+      </div>
+      <div class="field"><label>Mensagem</label>
+        <div class="rt-toolbar">
+          <button type="button" class="rt-tb" data-cmd="bold" title="Negrito"><b>B</b></button>
+          <button type="button" class="rt-tb" data-cmd="italic" title="Itálico"><i>I</i></button>
+          <span class="rt-sep"></span>
+          <button type="button" class="rt-tb" data-cmd="insertUnorderedList" title="Lista">${ic('lista')}</button>
+          <button type="button" class="rt-tb" data-cmd="insertOrderedList" title="Lista numerada">1.</button>
+          <span class="rt-sep"></span>
+          <button type="button" class="rt-tb" id="rtLink" title="Inserir ligação">${ic('link')}</button>
+          <button type="button" class="rt-tb" data-cmd="removeFormat" title="Limpar formatação">Tx</button>
+        </div>
+        <div class="rt-editor" id="pTexto" contenteditable="true" data-placeholder="A pasta da turma tem os materiais da sessão de hoje..."></div>
+      </div>
+      <div class="field"><label>Link do material</label>
+        <input id="pLink" value="${esc(sess?sess.link:(t.drive_url||''))}" placeholder="https://drive.google.com/...">
+        <span class="hint">Por omissão, a pasta do Drive da turma. Podes apontar a um ficheiro específico.</span></div>
+
+      <details class="fold">
+        <summary>Texto do email<span class="sub">assunto, cabeçalho, saudação, botão e rodapé</span></summary>
+        <div class="fold-body">
+          <div class="vars"><span class="hint" style="margin-right:2px">Marcadores (clica para copiar):</span>
+            ${MARCADORES.map(v=>`<button type="button" class="var-chip" data-var="${v}">${v}</button>`).join('')}</div>
+          <div class="form-grid">
+            <div class="field full"><label>Assunto</label><input id="pAssunto" value="${esc(vals.assunto||'')}"></div>
+            <div class="field full"><label>Cabeçalho (faixa verde)</label><input id="pCabecalho" value="${esc(vals.cabecalho||'')}"></div>
+            <div class="field"><label>Saudação</label><input id="pSaudacao" value="${esc(vals.saudacao||'')}"></div>
+            <div class="field"><label>Texto do botão</label><input id="pBotao" value="${esc(vals.botao||'')}"></div>
+            <div class="field full"><label>Rodapé</label><textarea id="pRodape" style="min-height:70px">${esc(vals.rodape||'')}</textarea></div>
+          </div>
+          <div class="nota-rgpd">${ic('alerta')}<span>O rodapé avisa o formando de que a abertura fica registada. Se o apagares, o registo passa a ser silencioso.</span></div>
+          <span class="hint">O que escreveres aqui fica guardado como omissão da turma.</span>
+        </div>
+      </details>
+
+      <div class="field"><label>Pré-visualização do email</label>
+        <div class="preview">
+          <div class="preview-head" id="pvHead"></div>
+          <div class="preview-body">
+            <p class="pv-saud" id="pvSaudacao" style="margin:0 0 10px"></p>
+            <p class="pv-title" id="pvTitulo">(sem título)</p>
+            <div class="pv-text" id="pvTexto"></div>
+            <span class="pv-btn" id="pvBotao">Aceder à pasta</span>
+            <p class="hint" id="pvRodape" style="margin-top:14px"></p>
+          </div>
+        </div>
+        <span class="hint" id="pvAssunto"></span>
+      </div>
+    </div>
+    <div class="modal-foot"><span></span>
+      <div style="display:flex;gap:10px">
+        <button class="btn-sec" data-fechar>Cancelar</button>
+        <button class="btn" id="pGuardar">${ic('ok')}${sess?'Guardar alterações':'Guardar rascunho'}</button>
+      </div></div></div>`);
+
+  const q=s=>f.querySelector(s);
+  const t2=q('#pTitulo'), x=q('#pTexto');
+  if(sess) x.innerHTML=sess.texto||'';
+
+  f.querySelectorAll('.rt-tb[data-cmd]').forEach(b=>b.addEventListener('mousedown',e=>{
+    e.preventDefault(); document.execCommand(b.dataset.cmd,false,null); x.focus(); sinc();
+  }));
+  q('#rtLink').addEventListener('mousedown',e=>{
+    e.preventDefault(); const u=prompt('Endereço da ligação:','https://');
+    if(u) document.execCommand('createLink',false,u); x.focus(); sinc();
+  });
+  x.addEventListener('paste',e=>{
+    e.preventDefault();
+    document.execCommand('insertText',false,(e.clipboardData||window.clipboardData).getData('text'));
+  });
+  f.querySelectorAll('[data-var]').forEach(b=>b.addEventListener('click',()=>{
+    navigator.clipboard?.writeText(b.dataset.var); toast(`Marcador ${b.dataset.var} copiado.`);
+  }));
+
+  const subst=s=>esc(s||'')
+    .replace(/\{nome\}/g,'<span class="muted">[nome do formando]</span>')
+    .replace(/\{titulo\}/g,esc(t2.value.trim()||'(sem título)'))
+    .replace(/\{turma\}/g,esc(t.codigo))
+    .replace(/\{modulo\}/g,esc(q('#pModulo').value.trim()));
+  function sinc(){
+    q('#pvHead').innerHTML=subst(q('#pCabecalho').value);
+    q('#pvSaudacao').innerHTML=subst(q('#pSaudacao').value);
+    q('#pvTitulo').textContent=t2.value.trim()||'(sem título)';
+    q('#pvTexto').innerHTML=x.innerHTML.trim()||'<span class="muted">(a tua mensagem aparece aqui)</span>';
+    q('#pvBotao').textContent=q('#pBotao').value.trim()||'Aceder à pasta';
+    q('#pvRodape').innerHTML=subst(q('#pRodape').value);
+    q('#pvAssunto').innerHTML='Assunto: '+subst(q('#pAssunto').value);
+  }
+  ['#pTitulo','#pModulo','#pAssunto','#pCabecalho','#pSaudacao','#pBotao','#pRodape'].forEach(s=>q(s).addEventListener('input',sinc));
+  x.addEventListener('input',sinc); sinc();
+
+  q('#pGuardar').addEventListener('click',async e=>{
+    const b=e.currentTarget;
+    const titulo=t2.value.trim(), link=q('#pLink').value.trim();
+    if(!titulo||!link) return toast('Falta o título ou o link.','err');
+    b.disabled=true; b.textContent='A guardar...';
+    const campos={p_token:sessao.token,p_titulo:titulo,p_texto:x.innerHTML.trim(),p_link:link,
+      p_modulo:q('#pModulo').value.trim(),
+      p_assunto:q('#pAssunto').value.trim(),p_cabecalho:q('#pCabecalho').value.trim(),
+      p_saudacao:q('#pSaudacao').value.trim(),p_botao:q('#pBotao').value.trim(),p_rodape:q('#pRodape').value.trim()};
+    try{
+      if(sess){
+        await rpc('repo_sessao_editar',{...campos,p_id:sess.id});
+        f.remove(); carregarSessoes(t);
+        confirmarEnvio(sess.id, sess.destinatarios, 0);
+      }else{
+        const p=await rpc('repo_sessao_publicar',{...campos,p_repo_turma_id:t.id});
+        f.remove(); carregarSessoes(t);
+        if(!p.destinatarios) return toast('Guardado, mas nenhum formando desta turma tem email.','warn');
+        confirmarEnvio(p.id, p.destinatarios, p.sem_email);
+      }
+    }catch(err){ tratar(err); b.disabled=false; b.innerHTML=ic('ok')+(sess?'Guardar alterações':'Guardar rascunho'); }
+  });
+}
+
+async function confirmarEnvio(sessId, dest, sem){
+  const ok=await uiConfirm({titulo:'Enviar o aviso agora?',ok:'Enviar agora',
+    texto:`O email vai para <strong>${dest} formando(s)</strong>.`
+      +(sem?`<br>${sem} sem email ficam de fora.`:'')
+      +`<br><br><span class="hint">Se preferires, fica em rascunho - editas e envias depois.</span>`});
+  if(!ok){ toast('Ficou em rascunho. Envias quando quiseres.','warn'); return; }
+  const r=await edge('repo-enviar',{token:sessao.token,sessao_id:sessId});
+  if(turmaAtual) carregarSessoes(turmaAtual);
+  if(!r.ok) return toast(r.erro||'O envio falhou. A sessão ficou guardada.','err');
+  if(r.falhados) return toast(`Enviado a ${r.enviados}, falhou em ${r.falhados}.`,'warn');
+  if(!r.enviados) return toast('Nada por enviar - já estavam todos avisados.','warn');
+  toast(`Enviado a ${r.enviados} formando(s).`);
+}
+
+/* Dashboard de uma sessão enviada */
+async function modalEstado(s){
+  let linhas=[];
+  try{ linhas=await rpc('repo_sessao_estado',{p_token:sessao.token,p_sessao_id:s.id}); }
+  catch(e){ return tratar(e); }
+
+  const pendentes=linhas.filter(l=>!l.enviado_em&&l.email).length;
+  const naoAbriram=linhas.filter(l=>l.enviado_em&&!l.primeiro_clique).length;
+  const emailLinha=l=>{
+    if(!l.email) return '<span class="muted">sem email</span>';
+    const e2=l.email2&&l.email2!==l.email?` · ${esc(l.email2)} <span class="muted">(institucional)</span>`:'';
+    return `${esc(l.email)}${e2}`;
+  };
+
+  const f=abrirModal(`<div class="modal wide">
+    <div class="modal-head">
+      <div><h3>${s.modulo?`<span class="tag" style="vertical-align:middle;margin-right:8px">UFCD ${esc(s.modulo)}</span>`:''}${esc(s.titulo)}</h3>
+        <div class="sub">${s.enviados||0} enviado(s) · ${s.abriram} de ${s.destinatarios} já abriram</div></div>
+      <button class="icon-btn" id="eRefrescar" title="Atualizar - ver se há aberturas novas">${ic('refrescar')}</button>
+    </div>
+    <div class="modal-body">
+      ${pendentes>0?`<div class="nota-rgpd" style="background:var(--info-bg);color:var(--info)">${ic('mail')}<span>${pendentes} por enviar. Usa "Enviar pendentes".</span></div>`:''}
+      <div class="table-wrap"><table>
+        <thead><tr><th>Formando</th><th>Estado</th><th>Abriu</th><th class="t-right">Vezes</th></tr></thead>
+        <tbody>${linhas.map(l=>`<tr>
+          <td><div class="cell-main">${esc(l.nome)}${l.envio_token?`<button class="lnk-copy" data-link="${SUPA_URL}/functions/v1/r?t=${l.envio_token}" title="Copiar o link pessoal deste formando">${ic('copiar')}</button>`:''}</div><div class="cell-sub">${emailLinha(l)}</div></td>
+          <td>${l.erro?`<span class="pill red" title="${esc(l.erro)}">falhou</span>`
+               :l.enviado_em?'<span class="pill grey">enviado</span>'
+               :l.email?'<span class="pill amber">por enviar</span>':'<span class="pill grey">sem email</span>'}</td>
+          <td>${l.primeiro_clique?`<span class="pill green">${dt(l.primeiro_clique)}</span>`:'<span class="muted">ainda não</span>'}</td>
+          <td class="t-right">${l.cliques||''}</td></tr>`).join('')}</tbody>
+      </table></div>
+    </div>
+    <div class="modal-foot">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-danger btn-sm" id="ePagar">${ic('lixo')}Apagar</button>
+        ${s.abriram>0?`<button class="btn-sec btn-sm" id="eRepor">${ic('seta')}Repor contador</button>`:''}
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn-sec" id="eVer">${ic('olho')}Ver email</button>
+        <a class="btn-sec" href="${esc(s.link)}" target="_blank" rel="noopener">${ic('link')}Abrir o link</a>
+        ${pendentes>0?`<button class="btn" id="eEnviar">${ic('mail')}Enviar ${pendentes} pendente(s)</button>`
+          :naoAbriram>0?`<button class="btn" id="eReenviar">${ic('mail')}Reenviar a quem não abriu (${naoAbriram})</button>`
+          :'<button class="btn-sec" data-fechar>Fechar</button>'}
+      </div></div></div>`);
+
+  // Atualizar: rebusca a sessão (contadores) e reabre o dashboard com dados frescos.
+  f.querySelector('#eRefrescar').addEventListener('click',async e=>{
+    const b=e.currentTarget; b.disabled=true;
+    try{
+      if(turmaAtual){
+        const lista=await rpc('repo_sessoes_listar',{p_token:sessao.token,p_repo_turma_id:turmaAtual.id});
+        sessoes=lista;
+        const nova=lista.find(x=>x.id===s.id);
+        f.remove();
+        carregarSessoes(turmaAtual);
+        if(nova) modalEstado(nova);
+      }
+    }catch(err){ tratar(err); b.disabled=false; }
+  });
+  f.querySelectorAll('.lnk-copy').forEach(b=>b.addEventListener('click',()=>{
+    navigator.clipboard?.writeText(b.dataset.link);
+    toast('Link do formando copiado. Cuidado: se o abrires tu, conta como se fosse ele.');
+  }));
+  f.querySelector('#eVer').addEventListener('click',()=>modalEmail(s));
+  f.querySelector('#eEnviar')?.addEventListener('click',async e=>{
+    const b=e.currentTarget;
+    if(!await uiConfirm({titulo:'Enviar agora?',ok:'Enviar',texto:`Vai para os <strong>${pendentes}</strong> por avisar.`})) return;
+    b.disabled=true; b.textContent='A enviar...';
+    const r=await edge('repo-enviar',{token:sessao.token,sessao_id:s.id});
+    f.remove(); if(turmaAtual) carregarSessoes(turmaAtual);
+    if(!r.ok) return toast(r.erro||'Falhou.','err');
+    toast(`Enviado a ${r.enviados} formando(s).`);
+  });
+  f.querySelector('#eReenviar')?.addEventListener('click',async e=>{
+    const b=e.currentTarget;
+    if(!await uiConfirm({titulo:'Reenviar?',ok:'Reenviar',texto:`Volta a sair para os <strong>${naoAbriram}</strong> que não abriram. Quem já abriu não recebe nada.`})) return;
+    b.disabled=true; b.textContent='A reenviar...';
+    try{
+      await rpc('repo_reabrir_nao_abriram',{p_token:sessao.token,p_sessao_id:s.id});
+      const r=await edge('repo-enviar',{token:sessao.token,sessao_id:s.id});
+      f.remove(); if(turmaAtual) carregarSessoes(turmaAtual);
+      if(!r.ok) return toast(r.erro||'Falhou.','err');
+      toast(`Reenviado a ${r.enviados} formando(s).`);
+    }catch(err){ tratar(err); }
+  });
+  f.querySelector('#eRepor')?.addEventListener('click',async()=>{
+    if(!await uiConfirm({titulo:'Repor o contador de aberturas?',ok:'Repor',
+      texto:'Limpa as aberturas registadas até agora (útil se foram scanners de email a inflá-las). A sessão e os links mantêm-se; a partir daqui só contam as aberturas reais.'})) return;
+    try{ await rpc('repo_sessao_repor',{p_token:sessao.token,p_sessao_id:s.id});
+      f.remove(); toast('Contador reposto. Só contam as aberturas reais a partir de agora.'); if(turmaAtual) carregarSessoes(turmaAtual); }catch(e){ tratar(e); }
+  });
+  f.querySelector('#ePagar').addEventListener('click',async()=>{
+    if(!await uiConfirm({titulo:'Apagar esta sessão?',perigo:true,ok:'Apagar',texto:'Os registos de quem abriu vão com ela.'})) return;
+    try{ await rpc('repo_sessao_remover',{p_token:sessao.token,p_id:s.id});
+      f.remove(); toast('Sessão apagada.'); if(turmaAtual) carregarSessoes(turmaAtual); }catch(e){ tratar(e); }
+  });
+}
+
+/* Reler o email como foi enviado */
+function modalEmail(s){
+  const subst=x=>esc(x||'')
+    .replace(/\{nome\}/g,'<span class="muted">[nome do formando]</span>')
+    .replace(/\{titulo\}/g,esc(s.titulo))
+    .replace(/\{turma\}/g,esc(turmaAtual?turmaAtual.codigo:''));
+  abrirModal(`<div class="modal">
+    <div class="modal-head"><div><h3>Email enviado</h3><div class="sub">Assunto: ${subst(s.assunto)}</div></div></div>
+    <div class="modal-body">
+      <div class="preview">
+        <div class="preview-head">${subst(s.cabecalho)}</div>
+        <div class="preview-body">
+          <p class="pv-saud" style="margin:0 0 10px">${subst(s.saudacao)}</p>
+          <p class="pv-title">${esc(s.titulo)}</p>
+          <div class="pv-text">${s.texto||'<span class="muted">(sem mensagem)</span>'}</div>
+          <span class="pv-btn">${esc(s.botao)||'Aceder à pasta'}</span>
+          <p class="hint" style="margin-top:14px">${subst(s.rodape)}</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot"><span></span><button class="btn" data-fechar>Fechar</button></div>
+  </div>`);
+}
+
+/* ---------- Arranque ---------- */
+aplicarTema(localStorage.getItem(TEMA)||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+try{ sessao=JSON.parse(localStorage.getItem(CHAVE)||'null'); }catch(e){}
+if(sessao&&sessao.token) arrancar().catch(sair);
+</script>
+</body>
+</html>

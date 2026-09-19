@@ -1,0 +1,1 @@
+Coloque aqui as bases por turma: <nome-da-turma>.json (ex.: turma-2024.json). A app carrega-a quando o URL tem ?t=turma-2024

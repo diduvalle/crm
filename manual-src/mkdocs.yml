@@ -1,0 +1,213 @@
+site_name: CRM - Manual
+site_url: https://crm.cr0x.org/manual/
+site_description: Manual da plataforma CRM - guia para formadores e formandos das UFCD 10868 e 10870.
+site_author: Diogo du Valle
+copyright: >
+  CRM · Plataforma de Formação<span class="crm-sep"> · </span><a class="made-by" href="https://www.linkedin.com/in/ldvale/" target="_blank" rel="noopener" title="LinkedIn - Diogo du Valle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg><span>Created by Diogo du Valle</span></a>
+
+docs_dir: docs
+site_dir: ../manual
+
+theme:
+  name: material
+  custom_dir: overrides
+  language: pt-BR
+  logo: assets/logo.png
+  favicon: assets/favicon.png
+  font:
+    text: Inter
+    code: JetBrains Mono
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.indexes
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tooltips
+    - toc.follow
+  palette:
+    # Modo claro POR DEFEITO (independente do sistema)
+    - scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: crm/moon
+        name: Mudar para modo escuro
+    - scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: crm/sun
+        name: Mudar para modo claro
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - assets/js/quiz.js
+  - assets/js/analytics.js
+  - assets/js/video.js
+
+# IMPORTANTE: site bilingue (PT por defeito + /en/). Qualquer alteração ao
+# conteúdo tem de ser feita NOS DOIS idiomas: foo.md (PT) e foo.en.md (EN).
+plugins:
+  - search
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: true
+      reconfigure_material: true
+      reconfigure_search: true
+      languages:
+        - locale: pt
+          name: Português
+          default: true
+          build: true
+        - locale: en
+          name: English
+          build: true
+          site_name: "CRM - Manual"
+          site_description: "Manual of the CRM platform - guide for trainers and trainees (UFCD 10868 and 10870)."
+          nav_translations:
+            "Início": "Home"
+            "Vídeos": "Videos"
+            "Autoavaliação": "Self-assessment"
+            "1. Primeiros passos": "1. Getting started"
+            "1.1 Sou Formador": "1.1 I'm a Trainer"
+            "1.2 Sou Formando": "1.2 I'm a Trainee"
+            "2. Tutoriais guiados": "2. Guided tutorials"
+            "2.1 Do zero à 1.ª proposta": "2.1 From zero to your first proposal"
+            "2.2 Montar a turma (10 min)": "2.2 Set up your class (10 min)"
+            "3. Para o Formador": "3. For the Trainer"
+            "3.1 Gerir a turma": "3.1 Manage the class"
+            "3.1.1 Importar (Excel)": "3.1.1 Import (Excel)"
+            "3.1.2 Adicionar à mão": "3.1.2 Add manually"
+            "3.1.3 Repor palavra-passe": "3.1.3 Reset password"
+            "3.1.4 Remover formando": "3.1.4 Remove trainee"
+            "3.2 Entrega & validação": "3.2 Submission & validation"
+            "3.3 Email & Marca": "3.3 Email & Branding"
+            "4. Para o Formando": "4. For the Trainee"
+            "4.1 Trabalhar no CRM": "4.1 Working in the CRM"
+            "4.2 Submeter o trabalho": "4.2 Submit your work"
+            "4.3 Recuperar a password": "4.3 Recover your password"
+            "5. Funcionalidades": "5. Features"
+            "5.0 Visão geral": "5.0 Overview"
+            "5.1 Dashboard & Agenda": "5.1 Dashboard & Calendar"
+            "5.2 Empresas & Contactos": "5.2 Companies & Contacts"
+            "5.3 Produtos": "5.3 Products"
+            "5.4 Propostas": "5.4 Proposals"
+            "5.4.1 Criar a proposta": "5.4.1 Create the proposal"
+            "5.4.2 Linhas & catálogo": "5.4.2 Lines & catalogue"
+            "5.4.3 Pipeline (Kanban)": "5.4.3 Pipeline (Kanban)"
+            "5.4.4 Exportar PDF": "5.4.4 Export PDF"
+            "5.4.5 Enviar por email": "5.4.5 Send by email"
+            "5.4.6 Motivo de perda": "5.4.6 Loss reason"
+            "5.4.7 Motivo do ganho": "5.4.7 Win reason"
+            "5.4.8 Aprovação de propostas": "5.4.8 Proposal approval"
+            "5.5 Serviço ao cliente": "5.5 Customer service"
+            "5.6 Retenção & churn": "5.6 Retention & churn"
+            "5.7 Modelos de Proposta": "5.7 Proposal Templates"
+            "5.8 Campanhas & Email": "5.8 Campaigns & Email"
+            "5.9 Analytics": "5.9 Analytics"
+            "5.10 Modelos de decisão": "5.10 Decision models"
+            "5.11 Alertas": "5.11 Alerts"
+            "5.12 Definições": "5.12 Settings"
+            "5.13 Pulso (assistente)": "5.13 Pulso (assistant)"
+            "6. RGPD & Pedagogia": "6. GDPR & Pedagogy"
+            "6.1 Consentimentos": "6.1 Consents"
+            "6.2 Pedidos (DSAR)": "6.2 Requests (DSAR)"
+            "6.3 RoPA": "6.3 RoPA"
+            "6.4 Violações de dados": "6.4 Data breaches"
+            "6.5 Portal do Titular": "6.5 Data Subject Portal"
+            "7. FAQ": "7. FAQ"
+            "8. Glossário": "8. Glossary"
+            "9. Aviso legal": "9. Legal notice"
+  - glightbox:
+      touchNavigation: true
+      loop: false
+      effect: zoom
+      zoomable: true
+      draggable: true
+      auto_caption: true
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - footnotes
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: octicons/globe-16
+      link: https://crm.cr0x.org
+      name: Abrir a plataforma
+
+nav:
+  - Início: index.md
+  - Vídeos: videos.md
+  - Autoavaliação: quiz.md
+  - 1. Primeiros passos:
+      - 1.1 Sou Formador: primeiros-passos/formador.md
+      - 1.2 Sou Formando: primeiros-passos/formando.md
+  - 2. Tutoriais guiados:
+      - 2.1 Do zero à 1.ª proposta: tutoriais/primeira-proposta.md
+      - 2.2 Montar a turma (10 min): tutoriais/montar-turma.md
+  - 3. Para o Formador:
+      - 3.1 Gerir a turma:
+          - formador/gerir-turma/index.md
+          - 3.1.1 Importar (Excel): formador/gerir-turma/importar.md
+          - 3.1.2 Adicionar à mão: formador/gerir-turma/adicionar.md
+          - 3.1.3 Repor palavra-passe: formador/gerir-turma/repor-password.md
+          - 3.1.4 Remover formando: formador/gerir-turma/remover.md
+      - 3.2 Entrega & validação: formador/entregas.md
+      - 3.3 Email & Marca: formador/email-marca.md
+  - 4. Para o Formando:
+      - 4.1 Trabalhar no CRM: formando/trabalhar.md
+      - 4.2 Submeter o trabalho: formando/submeter.md
+      - 4.3 Recuperar a password: formando/recuperar.md
+  - 5. Funcionalidades:
+      - 5.0 Visão geral: modulos/index.md
+      - 5.1 Dashboard & Agenda: modulos/dashboard-agenda.md
+      - 5.2 Empresas & Contactos: modulos/empresas-contactos.md
+      - 5.3 Produtos: modulos/produtos.md
+      - 5.4 Propostas:
+          - modulos/propostas/index.md
+          - 5.4.1 Criar a proposta: modulos/propostas/criar.md
+          - 5.4.2 Linhas & catálogo: modulos/propostas/linhas.md
+          - 5.4.3 Pipeline (Kanban): modulos/propostas/pipeline.md
+          - 5.4.4 Exportar PDF: modulos/propostas/pdf.md
+          - 5.4.5 Enviar por email: modulos/propostas/email.md
+          - 5.4.6 Motivo de perda: modulos/propostas/perda.md
+          - 5.4.7 Motivo do ganho: modulos/propostas/ganho.md
+          - 5.4.8 Aprovação de propostas: modulos/propostas/aprovacao.md
+      - 5.5 Serviço ao cliente: modulos/casos.md
+      - 5.6 Retenção & churn: modulos/retencao.md
+      - 5.7 Modelos de Proposta: modulos/modelos.md
+      - 5.8 Campanhas & Email: modulos/campanhas-email.md
+      - 5.9 Analytics: modulos/analytics.md
+      - 5.10 Modelos de decisão: modulos/decisao.md
+      - 5.11 Alertas: modulos/alertas.md
+      - 5.12 Definições: modulos/definicoes.md
+      - 5.13 Pulso (assistente): modulos/assistente.md
+  - 6. RGPD & Pedagogia:
+      - rgpd/index.md
+      - 6.1 Consentimentos: rgpd/consentimentos.md
+      - 6.2 Pedidos (DSAR): rgpd/pedidos.md
+      - 6.3 RoPA: rgpd/ropa.md
+      - 6.4 Violações de dados: rgpd/violacoes.md
+      - 6.5 Portal do Titular: rgpd/portal.md
+  - 7. FAQ: faq.md
+  - 8. Glossário: glossario.md
+  - 9. Aviso legal: aviso-legal.md

@@ -1,0 +1,33 @@
+/* =====================================================================
+   IEFP CRM - TOKENS
+   Fonte única das cores, sombras, raios e tipografia.
+   Consumido por: index.html (app), repo/index.html, manual (extra.css).
+   Mexer aqui muda as três. Não copiar estes valores para lado nenhum.
+   ===================================================================== */
+:root{
+  --g900:#004d7a;--g800:#005e95;--g700:#006cac;--g600:#0078bf;--g400:#479ed1;--g300:#8cc2e2;
+  --g100:#e0eff7;--g50:#f2f8fc;
+  --accent:#3393cc;
+  --bg:#eef2f0;--surface:#ffffff;--surface2:#f5f9f6;--surface3:#eef4f0;
+  --border:#dbe6df;--text:#15302a;--muted:#5f746b;--muted2:#86978d;
+  --danger:#dc2626;--danger-bg:#fdecec;--warn:#d97706;--warn-bg:#fef3e2;--info:#2563eb;--info-bg:#eaf1fe;--ok:#0f9d58;
+  --shadow:0 1px 2px rgba(0,60,33,.04),0 4px 14px rgba(0,60,33,.06);
+  --shadow-md:0 2px 4px rgba(0,60,33,.06),0 10px 26px -10px rgba(0,60,33,.14);
+  --shadow-lg:0 18px 48px rgba(0,60,33,.16);
+  --shadow-primary:inset 0 1px 0 rgba(255,255,255,.22),0 6px 16px -5px rgba(0,107,60,.5),0 2px 4px -1px rgba(0,90,50,.32);
+  --r:12px;--rl:18px;--rs:9px;--sidebar:268px;--header:64px;
+  --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,system-ui,sans-serif;
+}
+/* [data-theme] é como as apps marcam o tema; [data-md-color-scheme] é como o
+   MkDocs Material o marca (no <body>). Os dois apontam aos mesmos valores. */
+[data-theme="dark"],
+[data-md-color-scheme="slate"]{
+  --bg:#0d1411;--surface:#141d18;--surface2:#19241e;--surface3:#1f2c24;
+  --border:#26392f;--text:#e7f3ec;--muted:#9fb6a9;--muted2:#6f8377;
+  --danger:#f87171;--danger-bg:#3a1d1d;--warn:#fbbf24;--warn-bg:#3a2c12;--info:#93b4fb;--info-bg:#1c2740;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.35);
+  --shadow-md:0 2px 4px rgba(0,0,0,.4),0 10px 26px -10px rgba(0,0,0,.5);
+  --shadow-lg:0 24px 60px rgba(0,0,0,.55);
+  --shadow-primary:inset 0 1px 0 rgba(255,255,255,.1),0 6px 18px -5px rgba(0,40,22,.7),0 2px 4px -1px rgba(0,0,0,.4);
+  --g100:#16271d;--g50:#13201a;
+}

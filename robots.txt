@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://iefpcrm.cr0x.org/manual/sitemap.xml

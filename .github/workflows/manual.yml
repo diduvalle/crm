@@ -1,0 +1,52 @@
+name: Build manual
+
+# Constrói o site do manual (MkDocs Material) na nuvem e publica o
+# resultado em /manual, servido por GitHub Pages em crm.cr0x.org/manual.
+# Não é preciso Python na máquina local - só editar markdown em manual-src/ e fazer push.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "manual-src/**"
+      - "estilo/tokens.css"
+      - ".github/workflows/manual.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Instalar MkDocs Material + i18n
+        run: pip install "mkdocs-material>=9.5" "mkdocs-static-i18n>=1.2" "mkdocs-glightbox>=0.4"
+
+      # Fonte única do visual: os tokens vivem em estilo/tokens.css e o
+      # extra.css importa-os. O MkDocs só copia o que está dentro de docs/,
+      # por isso trazemo-los para cá antes de construir. Este ficheiro é
+      # gerado, não se commita (ver .gitignore).
+      - name: Trazer os tokens partilhados para o manual
+        run: cp estilo/tokens.css manual-src/docs/stylesheets/tokens.css
+
+      - name: Construir o manual (-> /manual)
+        run: mkdocs build --strict --config-file manual-src/mkdocs.yml
+
+      - name: Publicar /manual no repositório
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add manual
+          if git diff --staged --quiet; then
+            echo "Sem alterações no manual."
+          else
+            git commit -m "build: manual [skip ci]"
+            git push
+          fi
