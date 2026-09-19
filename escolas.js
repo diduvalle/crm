@@ -86,14 +86,26 @@
 
   function carregar() {
     var t = token();
-    if (!t) { 
+    if (!t) {
       var box = document.getElementById('adEscolas');
-      if (box) box.innerHTML = '<p class="ad-sub">Entre como administrador acima para ver e criar escolas.</p>';
+      if (box) box.innerHTML = '<p class="ad-sub">Para ver e criar escolas, entre como administrador.</p>' +
+        '<button class="ad-btn" data-entrar="1">Entrar</button>';
       return;
     }
     rpc('espacos_listar', { p_token: t })
       .then(function (d) { escolas = d || []; pintar(); })
       .catch(function () { escolas = []; pintar(); });
+  }
+
+  function entrar() {
+    var p = prompt('Palavra-passe de administração');
+    if (!p) return;
+    rpc('login_root', { p_password: p })
+      .then(function (d) {
+        try{ sessionStorage.setItem(TOK, d.token); }catch(x){}
+        carregar();
+      })
+      .catch(function () { alert('Palavra-passe errada.'); });
   }
 
   function ler(ficha) {
@@ -144,6 +156,7 @@
 
   function ligar() {
     document.addEventListener('click', function (ev) {
+      if (ev.target.closest && ev.target.closest('[data-entrar]')) { entrar(); return; }
       var chip = ev.target.closest && ev.target.closest('[data-abrir]');
       if (chip) { aberta = chip.dataset.abrir; pintar(); return; }
       var b = ev.target.closest && ev.target.closest('[data-ax]');
