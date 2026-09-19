@@ -897,3 +897,16 @@ figure.crm-video figcaption{ margin-top:.5rem }
 .md-nav--secondary .md-nav__link:hover{ color:var(--pl-azul) }
 .md-nav--secondary .md-nav__link--active{ color:var(--pl-azul); font-weight:600 }
 .md-nav--secondary .md-nav__title{ color:var(--pl-fraco) }
+
+/* ---- dois acertos finais ----
+   O primeiro paragrafo e o lead da pagina, e o Material da-lhe corpo
+   maior. E boa ideia, so estava exagerada: 18.4 ao lado de um corpo de 16
+   le-se como inconsistencia e nao como enfase. 17 chega.
+
+   E o menu ficava a 11.2px porque uma regra do tema ganhava a minha: aqui
+   a especificidade sobe, em vez de se atirar !important a esmo. */
+.md-typeset h1 + p{ font-size:17px; line-height:1.6; color:var(--pl-tinta-2) }
+@media screen and (min-width:76.25em){
+  .md-sidebar--primary .md-nav .md-nav__list .md-nav__link{ font-size:13.5px }
+  .md-sidebar--primary .md-nav .md-nav__item--section > .md-nav__link{ font-size:11px }
+}
