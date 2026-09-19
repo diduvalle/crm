@@ -1,0 +1,675 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    <url>
+        <loc>https://crm.cr0x.org/manual/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/aviso-legal/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/aviso-legal/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/aviso-legal/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/faq/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/faq/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/faq/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/glossario/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/glossario/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/glossario/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/quiz/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/quiz/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/quiz/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/videos/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/videos/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/videos/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/formador/email-marca/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/formador/email-marca/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/formador/email-marca/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/formador/entregas/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/formador/entregas/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/formador/entregas/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/formador/gerir-turma/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/formador/gerir-turma/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/formador/gerir-turma/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/formador/gerir-turma/adicionar/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/formador/gerir-turma/adicionar/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/formador/gerir-turma/adicionar/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/formador/gerir-turma/importar/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/formador/gerir-turma/importar/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/formador/gerir-turma/importar/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/formador/gerir-turma/remover/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/formador/gerir-turma/remover/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/formador/gerir-turma/remover/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/formador/gerir-turma/repor-password/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/formador/gerir-turma/repor-password/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/formador/gerir-turma/repor-password/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/formando/recuperar/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/formando/recuperar/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/formando/recuperar/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/formando/submeter/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/formando/submeter/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/formando/submeter/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/formando/trabalhar/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/formando/trabalhar/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/formando/trabalhar/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/alertas/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/alertas/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/alertas/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/analytics/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/analytics/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/analytics/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/assistente/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/assistente/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/assistente/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/campanhas-email/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/campanhas-email/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/campanhas-email/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/casos/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/casos/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/casos/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/dashboard-agenda/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/dashboard-agenda/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/dashboard-agenda/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/decisao/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/decisao/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/decisao/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/definicoes/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/definicoes/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/definicoes/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/empresas-contactos/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/empresas-contactos/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/empresas-contactos/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/modelos/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/modelos/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/modelos/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/produtos/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/produtos/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/produtos/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/retencao/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/retencao/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/retencao/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/propostas/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/propostas/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/propostas/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/propostas/aprovacao/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/propostas/aprovacao/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/propostas/aprovacao/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/propostas/criar/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/propostas/criar/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/propostas/criar/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/propostas/email/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/propostas/email/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/propostas/email/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/propostas/ganho/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/propostas/ganho/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/propostas/ganho/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/propostas/linhas/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/propostas/linhas/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/propostas/linhas/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/propostas/pdf/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/propostas/pdf/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/propostas/pdf/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/propostas/perda/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/propostas/perda/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/propostas/perda/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/modulos/propostas/pipeline/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/propostas/pipeline/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/propostas/pipeline/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/primeiros-passos/formador/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/primeiros-passos/formador/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/primeiros-passos/formador/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/primeiros-passos/formando/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/primeiros-passos/formando/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/primeiros-passos/formando/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/rgpd/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/rgpd/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/rgpd/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/rgpd/consentimentos/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/rgpd/consentimentos/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/rgpd/consentimentos/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/rgpd/pedidos/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/rgpd/pedidos/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/rgpd/pedidos/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/rgpd/portal/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/rgpd/portal/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/rgpd/portal/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/rgpd/ropa/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/rgpd/ropa/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/rgpd/ropa/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/rgpd/violacoes/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/rgpd/violacoes/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/rgpd/violacoes/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/tutoriais/montar-turma/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/tutoriais/montar-turma/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/tutoriais/montar-turma/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/tutoriais/primeira-proposta/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/tutoriais/primeira-proposta/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/tutoriais/primeira-proposta/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/aviso-legal/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/aviso-legal/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/aviso-legal/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/faq/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/faq/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/faq/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/glossario/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/glossario/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/glossario/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/quiz/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/quiz/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/quiz/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/videos/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/videos/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/videos/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/formador/email-marca/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/formador/email-marca/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/formador/email-marca/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/formador/entregas/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/formador/entregas/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/formador/entregas/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/formador/gerir-turma/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/formador/gerir-turma/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/formador/gerir-turma/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/formador/gerir-turma/adicionar/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/formador/gerir-turma/adicionar/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/formador/gerir-turma/adicionar/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/formador/gerir-turma/importar/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/formador/gerir-turma/importar/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/formador/gerir-turma/importar/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/formador/gerir-turma/remover/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/formador/gerir-turma/remover/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/formador/gerir-turma/remover/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/formador/gerir-turma/repor-password/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/formador/gerir-turma/repor-password/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/formador/gerir-turma/repor-password/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/formando/recuperar/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/formando/recuperar/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/formando/recuperar/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/formando/submeter/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/formando/submeter/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/formando/submeter/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/formando/trabalhar/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/formando/trabalhar/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/formando/trabalhar/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/alertas/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/alertas/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/alertas/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/analytics/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/analytics/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/analytics/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/assistente/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/assistente/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/assistente/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/campanhas-email/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/campanhas-email/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/campanhas-email/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/casos/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/casos/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/casos/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/dashboard-agenda/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/dashboard-agenda/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/dashboard-agenda/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/decisao/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/decisao/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/decisao/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/definicoes/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/definicoes/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/definicoes/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/empresas-contactos/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/empresas-contactos/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/empresas-contactos/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/modelos/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/modelos/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/modelos/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/produtos/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/produtos/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/produtos/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/retencao/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/retencao/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/retencao/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/propostas/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/propostas/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/propostas/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/propostas/aprovacao/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/propostas/aprovacao/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/propostas/aprovacao/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/propostas/criar/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/propostas/criar/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/propostas/criar/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/propostas/email/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/propostas/email/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/propostas/email/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/propostas/ganho/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/propostas/ganho/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/propostas/ganho/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/propostas/linhas/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/propostas/linhas/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/propostas/linhas/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/propostas/pdf/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/propostas/pdf/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/propostas/pdf/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/propostas/perda/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/propostas/perda/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/propostas/perda/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/modulos/propostas/pipeline/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/modulos/propostas/pipeline/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/modulos/propostas/pipeline/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/primeiros-passos/formador/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/primeiros-passos/formador/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/primeiros-passos/formador/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/primeiros-passos/formando/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/primeiros-passos/formando/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/primeiros-passos/formando/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/rgpd/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/rgpd/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/rgpd/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/rgpd/consentimentos/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/rgpd/consentimentos/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/rgpd/consentimentos/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/rgpd/pedidos/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/rgpd/pedidos/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/rgpd/pedidos/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/rgpd/portal/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/rgpd/portal/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/rgpd/portal/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/rgpd/ropa/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/rgpd/ropa/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/rgpd/ropa/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/rgpd/violacoes/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/rgpd/violacoes/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/rgpd/violacoes/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/tutoriais/montar-turma/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/tutoriais/montar-turma/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/tutoriais/montar-turma/"/>
+    </url>
+    <url>
+        <loc>https://crm.cr0x.org/manual/en/tutoriais/primeira-proposta/</loc>
+        <lastmod>2026-09-19</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://crm.cr0x.org/manual/en/tutoriais/primeira-proposta/"/>
+        <xhtml:link rel="alternate" hreflang="pt" href="https://crm.cr0x.org/manual/tutoriais/primeira-proposta/"/>
+    </url>
+</urlset>

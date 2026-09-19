@@ -1,0 +1,3036 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Manual of the CRM platform - guide for trainers and trainees (UFCD 10868 and 10870).">
+      
+      
+        <meta name="author" content="Diogo du Valle">
+      
+      
+        <link rel="canonical" href="https://crm.cr0x.org/manual/en/modulos/assistente/">
+      
+      
+        <link rel="prev" href="../definicoes/">
+      
+      
+        <link rel="next" href="../../rgpd/">
+      
+      
+        
+          <link rel="alternate" href="../../../modulos/assistente/" hreflang="pt">
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>5.13 Pulso (assistant) - CRM - Manual</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link rel="apple-touch-icon" href="/manual/assets/apple-touch-icon.png">
+  <meta name="theme-color" content="#006B3C">
+  
+  
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="CRM - Manual">
+  <meta property="og:title" content="5.13 Pulso (assistant) · CRM - Manual">
+  <meta property="og:description" content="Manual of the CRM platform - guide for trainers and trainees (UFCD 10868 and 10870).">
+  <meta property="og:url" content="https://crm.cr0x.org/manual/en/modulos/assistente/">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:image" content="https://crm.cr0x.org/manual/assets/og-image.png">
+  <meta property="og:image:secure_url" content="https://crm.cr0x.org/manual/assets/og-image.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="CRM - Manual">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="5.13 Pulso (assistant) · CRM - Manual">
+  <meta name="twitter:description" content="Manual of the CRM platform - guide for trainers and trainees (UFCD 10868 and 10870).">
+  <meta name="twitter:image" content="https://crm.cr0x.org/manual/assets/og-image.png">
+
+  <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pulso" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../" title="CRM - Manual" class="md-header__button md-logo" aria-label="CRM - Manual" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CRM - Manual
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              5.13 Pulso (assistant)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom" aria-label="Mudar para modo escuro" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo escuro" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom" aria-label="Mudar para modo claro" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Mudar para modo claro" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../modulos/assistente/" hreflang="pt" class="md-select__link">
+              Português
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="CRM - Manual" class="md-nav__button md-logo" aria-label="CRM - Manual" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    CRM - Manual
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../videos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Videos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quiz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-assessment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Getting started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    1. Getting started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../primeiros-passos/formador/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.1 I'm a Trainer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../primeiros-passos/formando/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1.2 I'm a Trainee
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Guided tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    2. Guided tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutoriais/primeira-proposta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.1 From zero to your first proposal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutoriais/montar-turma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2.2 Set up your class (10 min)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6">
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. For the Trainer
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3. For the Trainer
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_1">
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../formador/gerir-turma/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.1 Manage the class
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6_1" id="__nav_6_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    3.1 Manage the class
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../formador/gerir-turma/importar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.1.1 Import (Excel)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../formador/gerir-turma/adicionar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.1.2 Add manually
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../formador/gerir-turma/repor-password/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.1.3 Reset password
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../formador/gerir-turma/remover/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.1.4 Remove trainee
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../formador/entregas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.2 Submission &amp; validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../formador/email-marca/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3.3 Email &amp; Branding
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7">
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. For the Trainee
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    4. For the Trainee
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../formando/trabalhar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.1 Working in the CRM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../formando/submeter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.2 Submit your work
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../formando/recuperar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4.3 Recover your password
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked="">
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Features
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    5. Features
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard-agenda/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.1 Dashboard &amp; Calendar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../empresas-contactos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.2 Companies &amp; Contacts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../produtos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.3 Products
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8_5">
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../propostas/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.4 Proposals
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8_5" id="__nav_8_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    5.4 Proposals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../propostas/criar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.4.1 Create the proposal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../propostas/linhas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.4.2 Lines &amp; catalogue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../propostas/pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.4.3 Pipeline (Kanban)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../propostas/pdf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.4.4 Export PDF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../propostas/email/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.4.5 Send by email
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../propostas/perda/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.4.6 Loss reason
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../propostas/ganho/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.4.7 Win reason
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../propostas/aprovacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.4.8 Proposal approval
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../casos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.5 Customer service
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../retencao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.6 Retention &amp; churn
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modelos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.7 Proposal Templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../campanhas-email/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.8 Campaigns &amp; Email
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analytics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.9 Analytics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.10 Decision models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../alertas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.11 Alerts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../definicoes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.12 Settings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.13 Pulso (assistant)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5.13 Pulso (assistant)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#why-it-is-called-pulso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why it is called Pulso
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-first-thing-it-says" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The first thing it says
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#three-things-not-two" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three things, not two
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Three things, not two">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#numbers-and-how-to" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numbers and how-to
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-what-is-covered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How-to - what is covered
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The glossary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-it-does-not-know-suggest-do-not-retreat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When it does not know: suggest, do not retreat
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="When it does not know: suggest, do not retreat">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-confidence-threshold" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The confidence threshold
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-it-can-answer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it can answer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What it can answer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#yours-not-everyones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Yours, not everyone's
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#asking-about-a-customer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Asking about a customer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-three-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The three rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-it-could-not-answer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it could not answer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-sets-it-apart-from-the-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What sets it apart from the Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9">
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../rgpd/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. GDPR &amp; Pedagogy
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    6. GDPR &amp; Pedagogy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rgpd/consentimentos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6.1 Consents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rgpd/pedidos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6.2 Requests (DSAR)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rgpd/ropa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6.3 RoPA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rgpd/violacoes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6.4 Data breaches
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rgpd/portal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6.5 Data Subject Portal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossario/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../aviso-legal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. Legal notice
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#why-it-is-called-pulso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why it is called Pulso
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-first-thing-it-says" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The first thing it says
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#three-things-not-two" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three things, not two
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Three things, not two">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#numbers-and-how-to" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numbers and how-to
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-to-what-is-covered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How-to - what is covered
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The glossary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-it-does-not-know-suggest-do-not-retreat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When it does not know: suggest, do not retreat
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="When it does not know: suggest, do not retreat">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-confidence-threshold" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The confidence threshold
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-it-can-answer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it can answer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What it can answer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#yours-not-everyones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Yours, not everyone's
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#asking-about-a-customer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Asking about a customer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-three-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The three rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-it-could-not-answer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it could not answer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-sets-it-apart-from-the-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What sets it apart from the Dashboard
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+                  
+
+
+
+<h1 id="pulso">Pulso<a class="headerlink" href="#pulso" title="Permanent link">¶</a></h1>
+<p>The green bubble in the bottom-right corner, present in <strong>every module</strong>. Type a question about your data and it answers with the number - and with the button that opens the real view.</p>
+<h2 id="why-it-is-called-pulso">Why it is called Pulso<a class="headerlink" href="#why-it-is-called-pulso" title="Permanent link">¶</a></h2>
+<p>From the Portuguese <strong>"tomar o pulso ao negócio"</strong> - to take the business's pulse: a quick number on how things stand, with no opinion in between.</p>
+<p>It is a <strong>tool</strong>'s name, not a person's, and that is deliberate. Almost every chatbot is called Iris, Sophia or Nova: they want you to talk to them as if they were someone. Here the aim is the opposite - a human name would undo in three letters what the opening message builds.</p>
+<h2 id="the-first-thing-it-says">The first thing it says<a class="headerlink" href="#the-first-thing-it-says" title="Permanent link">¶</a></h2>
+<blockquote>
+<p><strong>I am not artificial intelligence.</strong> Pulso answers with fixed rules over this sandbox's data. It changes nothing.</p>
+</blockquote>
+<p>This is not modesty, nor a legal notice buried in a footer: it is the <strong>first message</strong> shown, before any question. And if you ask it directly <em>"are you an AI?"</em> - or <em>"why are you called Pulso?"</em> - it has its own answer:</p>
+<blockquote>
+<p>I am a set of fixed rules: I recognise a few phrases and fetch the number from your data. I do not learn, I do not invent and I write nothing that is not already here.</p>
+<p>If I were AI, <strong>Article 50 of the AI Act</strong> would require the same declaration - the difference is that then I could be confidently wrong.</p>
+</blockquote>
+<div class="admonition info">
+<p class="admonition-title">Why this is here</p>
+<p><strong>Article 50</strong> of Regulation (EU) 2024/1689 (<em>AI Act</em>) requires that anyone interacting with an AI system <strong>knows they are talking to a machine</strong>. A booking chatbot on a website is the textbook case of <strong>limited risk</strong>: it is neither prohibited nor subject to a conformity assessment - <strong>transparency</strong> is enough.</p>
+<p>Pulso <strong>is not</strong> an AI system, so Article 50 does not even apply to it. It declares itself anyway, for two reasons: because an assistant that let itself be mistaken for AI would teach the exact opposite of what the course says, and because the obligation is easier to grasp when you see it met than when you read it in a statute.</p>
+</div>
+<h2 id="three-things-not-two">Three things, not two<a class="headerlink" href="#three-things-not-two" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Example</th>
+<th>What you get</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Numbers</strong></td>
+<td><em>"how many proposals are open"</em></td>
+<td>the value, the list, and the button that opens the view</td>
+</tr>
+<tr>
+<td><strong>How-to</strong></td>
+<td><em>"how do I create a proposal"</em></td>
+<td>the steps, the module button and the button that opens <strong>the right manual page</strong></td>
+</tr>
+<tr>
+<td><strong>What is</strong></td>
+<td><em>"what is MRR"</em></td>
+<td>the definition, in two lines</td>
+</tr>
+</tbody>
+</table>
+<p>Each kind carries its own badge, so there is no doubt about what you are reading.</p>
+<h3 id="numbers-and-how-to">Numbers and how-to<a class="headerlink" href="#numbers-and-how-to" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Example</th>
+<th>What you get</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Numbers</strong></td>
+<td><em>"how many proposals are open"</em></td>
+<td>the value, the list, and the button that opens the view</td>
+</tr>
+<tr>
+<td><strong>How-to</strong></td>
+<td><em>"how do I create a proposal"</em></td>
+<td>the steps in two lines, the module button and the button that opens <strong>the right manual page</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Instruction answers carry the <strong>How to</strong> badge, so there is no doubt about what you are reading.</p>
+<div class="admonition tip">
+<p class="admonition-title">Why this exists</p>
+<p>The manual has 96 pages. Someone halfway through a proposal will not search an index - they will ask the trainer. Pulso answers right there, and the button opens the right page instead of the manual's front door.</p>
+<p>The answers are <strong>hand-written</strong>, like everything else here: Pulso does not summarise the manual, nor read it. It <strong>points</strong> at it.</p>
+</div>
+<h3 id="how-to-what-is-covered">How-to - what is covered<a class="headerlink" href="#how-to-what-is-covered" title="Permanent link">¶</a></h3>
+<p>Twenty-two questions, across the whole journey:</p>
+<ul>
+<li><strong>Records</strong> - create a company, a contact, a product</li>
+<li><strong>Proposals</strong> - create, add catalogue lines, export PDF, send (online proposal), move status on the Kanban</li>
+<li><strong>Templates</strong> - the proposal builder, email templates and tags</li>
+<li><strong>Marketing</strong> - campaigns and automations</li>
+<li><strong>GDPR</strong> - record a consent, answer a data subject request</li>
+<li><strong>Data</strong> - CSV import, sample generator, merging duplicates, custom fields</li>
+<li><strong>Settings</strong> - brand and appearance, sales targets</li>
+<li><strong>Learner</strong> - submit your work, recover your password</li>
+</ul>
+<p>If you write <em>"how…"</em> and it does not recognise the phrase, it still sends you to the <strong>manual</strong> instead of shrugging. An out-of-scope question - <em>"what is the capital of Australia"</em> - still gets only <em>"I don't know"</em>: the manual is not an excuse.</p>
+<div class="admonition note">
+<p class="admonition-title">Write freely</p>
+<p>You do not have to get the verb right. The matching trims verb endings on both sides, so different conjugations land on the same answer.</p>
+</div>
+<hr>
+<h3 id="the-glossary">The glossary<a class="headerlink" href="#the-glossary" title="Permanent link">¶</a></h3>
+<p><strong>32 terms</strong> - MRR, ARR, TCV, churn, CAC, LTV, RFM, SLA, NPS, CSAT, MQL, SQL, RoPA, DSAR, legal basis, minimisation, lead score, loyalty, persona, nurturing... - plus three comparisons people always confuse:</p>
+<ul>
+<li><strong>segment vs loyalty tier</strong></li>
+<li><strong>company vs contact</strong></li>
+<li><strong>NPS vs CSAT</strong></li>
+</ul>
+<p>Type the term with <em>"what is"</em>, <em>"what does X mean"</em> or <em>"explain"</em>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Why this beats the manual glossary</p>
+<p>It does not replace the <a href="../../glossario/">Glossary</a> - it answers <strong>without interrupting</strong>. These questions come up mid-task, and leaving to go looking is what makes people give up.</p>
+<p>The definitions are written to <strong>stick</strong>, not merely to be correct: MRR on a €40/month contract is <em>€40, not €480</em>; a 5%/month churn <em>loses half the base in a year</em>; breaching an SLA <em>is not a delay, it is a broken promise</em>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">The bare term gives the number, not the definition</p>
+<p>Typing <strong><code>pipeline</code></strong> gives you the <strong>value</strong> of your pipeline. Typing <strong><code>what is the pipeline</code></strong> gives you the definition.</p>
+<p>That is deliberate: mid-work, someone typing the name of a thing wants its number. Terms that compete with no data question - <em>MRR</em>, <em>CAC</em>, <em>SLA</em> - answer anyway when typed on their own.</p>
+</div>
+<hr>
+<h2 id="when-it-does-not-know-suggest-do-not-retreat">When it does not know: suggest, do not retreat<a class="headerlink" href="#when-it-does-not-know-suggest-do-not-retreat" title="Permanent link">¶</a></h2>
+<p>If the question is not recognised, Pulso shows the <strong>closest questions</strong> to what you typed, clickable:</p>
+<blockquote>
+<p>I don't know how to answer that - I only recognise the phrases I was programmed for.
+<strong>Did you mean one of these?</strong>
+<code>What is MRR?</code></p>
+</blockquote>
+<p>It is called <strong><em>fall-forward</em></strong>, and it is the unanimous recommendation in assistant-design literature: a bare <em>"I don't know"</em> leaves the person exactly where they were; showing the nearest match gives them a way on.</p>
+<p>After a <strong>definition</strong>, it also shows <em>"Next:"</em> with neighbouring terms.</p>
+<h3 id="the-confidence-threshold">The confidence threshold<a class="headerlink" href="#the-confidence-threshold" title="Permanent link">¶</a></h3>
+<p>Pulso only answers when the match <strong>explains the question</strong>, not when it merely coincides with one word of it.</p>
+<div class="admonition warning">
+<p class="admonition-title">The defect this fixed</p>
+<p>There used to be no threshold at all: any coincidence won. The question <em>"show me last month's proposals from the sales team"</em> got an answer about <strong>user groups</strong> - because the word <em>team</em> was in it.</p>
+<p>Answering confidently from a coincidence is the <strong>one defect this assistant cannot have</strong>, because it is exactly what people criticise in real AI. It now measures <strong>coverage</strong>: how much of the question the match explains. <em>"Team"</em> in a 57-character sentence explains 10% of it - that is not an answer, it is a coincidence.</p>
+<p>Worth showing the class next to an LLM: one says <em>"I don't know, did you mean this?"</em>; the other invents a plausible answer to the same question.</p>
+</div>
+<hr>
+<h2 id="what-it-can-answer">What it can answer<a class="headerlink" href="#what-it-can-answer" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Example questions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Proposals</strong></td>
+<td><em>"how many proposals are open"</em> · <em>"how much did I sell this month"</em> · <em>"what is my conversion rate"</em> · <em>"which proposals are expiring"</em></td>
+</tr>
+<tr>
+<td><strong>Analysis</strong></td>
+<td><em>"why do we lose deals"</em> · <em>"why do we win"</em></td>
+</tr>
+<tr>
+<td><strong>Companies</strong></td>
+<td><em>"how many companies do I have"</em> · <em>"which companies have no proposal yet"</em> · <em>"who are the best customers"</em></td>
+</tr>
+<tr>
+<td><strong>Calendar</strong></td>
+<td><em>"what do I have today"</em> · <em>"do I have overdue tasks"</em></td>
+</tr>
+<tr>
+<td><strong>Service</strong></td>
+<td><em>"how are the support cases"</em> · <em>"any cases past SLA"</em></td>
+</tr>
+<tr>
+<td><strong>GDPR</strong></td>
+<td><em>"any data subject requests pending"</em></td>
+</tr>
+<tr>
+<td><strong>Retention</strong></td>
+<td><em>"any contracts at risk"</em></td>
+</tr>
+</tbody>
+</table>
+<p>Below the conversation there are <strong>clickable suggestions</strong> - the questions it is guaranteed to recognise, with the ones for the <strong>module you are in</strong> first. If you are starting out, start there.</p>
+<div class="admonition tip">
+<p class="admonition-title">Ctrl+K</p>
+<p>Opens and closes Pulso from anywhere. <code>Escape</code> closes it too.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">The suggestions get out of the way</p>
+<p>They stay <strong>open at the start of the conversation</strong> - which is when nobody knows what can be asked - and <strong>collapse as soon as you ask your first question</strong>, because from then on the space belongs to the conversation.</p>
+<p>One click on <strong>Suggestions</strong>, always visible, brings them back. In practice the conversation area goes from 212 px to 390 px after the first question.</p>
+</div>
+<h3 id="yours-not-everyones">Yours, not everyone's<a class="headerlink" href="#yours-not-everyones" title="Permanent link">¶</a></h3>
+<p>Writing <strong>"my"</strong> or <strong>"I"</strong> narrows the answer to your user:</p>
+<ul>
+<li><em>"open proposals"</em> → all of them in the base.</li>
+<li><em>"my open proposals"</em> → only the ones you <strong><a href="../empresas-contactos/#owner">own</a></strong>.</li>
+</ul>
+<p>The same applies to <em>"how much did I sell this month"</em>, which compares against your <strong><a href="../definicoes/#sales-targets">individual quota</a></strong> instead of the team target.</p>
+<h2 id="asking-about-a-customer">Asking about a customer<a class="headerlink" href="#asking-about-a-customer" title="Permanent link">¶</a></h2>
+<p>Type a company name and you get the thirty-second summary - what you want to know <strong>before you call</strong>:</p>
+<blockquote>
+<p><strong>Silva &amp; Filhos, Lda. · E001.</strong>
+⚠ Before you call: <strong>1 support case still open</strong>.
+Stage Customer · Gold · lead score 87
+1 won proposal · 8236,08 €
+1 contact: João Silva
+Last activity: Email sent · 24/08/2026</p>
+</blockquote>
+<p>The <strong>warning</strong> line only shows when something would spoil the call: open support cases, a cancellation request in progress, or contacts with no active consent.</p>
+<p>It works with the full name (<em>"how is Silva &amp; Filhos doing?"</em>) and with the first word (<em>"has Silva paid?"</em>).</p>
+<div class="admonition note">
+<p class="admonition-title">Two safeguards worth discussing</p>
+<p>The short form is only accepted if the sentence is <strong>short</strong> and <strong>no other company</strong> starts with the same word. With two <em>Silvas</em>, it would rather not answer than answer about the wrong one.</p>
+<p>And <em>"how do I create a proposal for Silva"</em> returns the <strong>how-to</strong>, not the record: when an instruction question matches exactly, it beats the name.</p>
+<p>Same principle as always: between staying quiet and being right by luck, it stays quiet.</p>
+</div>
+<hr>
+<h2 id="the-three-rules">The three rules<a class="headerlink" href="#the-three-rules" title="Permanent link">¶</a></h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio"><input id="__tabbed_1_2" name="__tabbed_1" type="radio"><input id="__tabbed_1_3" name="__tabbed_1" type="radio"><div class="tabbed-labels"><label for="__tabbed_1_1">It never invents</label><label for="__tabbed_1_2">It only reads</label><label for="__tabbed_1_3">It respects permissions</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p>If it does not recognise the question, it says so - and says <strong>why</strong>: <em>"I only recognise the phrases I was programmed for"</em>. It does not guess, does not return an approximate number and does not change the subject.</p>
+<p>This is deliberate. An assistant that always answers something is friendlier and far more dangerous: a wrong number delivered with confidence enters decisions without anyone questioning it.</p>
+</div>
+<div class="tabbed-block">
+<p>It <strong>changes no record whatsoever</strong>. It does not create, delete or move statuses. At most it opens the right view - every answer ends in a button (<em>See proposals</em>, <em>See calendar</em>) that takes you to the module with the filter already applied.</p>
+<p>That makes it a <strong>navigation shortcut</strong>, not a parallel truth: the number it states and the number on screen come from the same place - and the text it gives is the text in the manual.</p>
+<p><strong>The only thing it writes</strong> is the log of questions it could not answer (see above) - and it says that it does.</p>
+</div>
+<div class="tabbed-block">
+<p>It only answers about modules you <strong>can access</strong>. If your user group cannot see the Helpdesk, asking about cases returns <em>"I don't know how to answer that"</em> - and the suggestion does not even appear in the list.</p>
+</div>
+</div>
+</div>
+<h2 id="what-it-could-not-answer">What it could not answer<a class="headerlink" href="#what-it-could-not-answer" title="Permanent link">¶</a></h2>
+<p>Whenever Pulso does not recognise a question, it keeps it. You see it in two places:</p>
+<ul>
+<li><strong>Settings → Unanswered questions to Pulso</strong> - your own log, with a <strong>clear</strong> button.</li>
+<li><strong>In the submission</strong>, for the trainer: the assessment sheet shows what each learner tried to ask without success.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">For the trainer: the cheapest signal the app gives</p>
+<p>What people <strong>try</strong> to ask is what they did not understand. If half the class writes <em>"how do I make a quote"</em>, the problem is not Pulso - it is that nobody connected <strong>quote</strong> to <strong>proposal</strong>. That is vocabulary to fix in the next session, and there is no other way to find it.</p>
+<p>It is also the list of what Pulso is missing, written by the people using it rather than guessed by whoever programmed it.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Logging without saying so would be the opposite of what this app teaches</p>
+<p>So Pulso <strong>declares the log</strong> in its opening message, before the first question - including that it is visible in the submission.</p>
+<p>It is worth pausing here with the class: it is free text written by an identified person, stored and shown to a third party. This is not a hard GDPR case - it is a <strong>mundane</strong> one, the kind that slips through every day in real products. The difference between getting it right and getting it wrong was one sentence.</p>
+</div>
+<hr>
+<h2 id="what-sets-it-apart-from-the-dashboard">What sets it apart from the Dashboard<a class="headerlink" href="#what-sets-it-apart-from-the-dashboard" title="Permanent link">¶</a></h2>
+<p>At first glance it is redundant: <em>"how many open proposals"</em> is already on the Dashboard. The difference lies in the questions that have <strong>no screen</strong>:</p>
+<ul>
+<li><em>"which companies have no proposal yet"</em> - it exists nowhere in the app; it is the cross between the company list and the proposal list.</li>
+<li><em>"do I have overdue tasks"</em> - the Calendar shows the calendar, not the list of what is past due.</li>
+</ul>
+<p>The Dashboard shows the numbers <strong>somebody decided to show</strong>. A CRM always has more useful combinations than it has screens to hold them.</p>
+<div class="admonition note">
+<p class="admonition-title">Pedagogy (UFCD 10868 · 10870)</p>
+<p>It is worth using this assistant as a three-part exercise:</p>
+<ol>
+<li><strong>Ask it questions it cannot answer.</strong> It is the fastest way to see that an assistant only reaches as far as the <strong>data</strong> reaches - and that the limit is almost always in the record keeping, not in the engine.</li>
+<li><strong>Compare it with a real chatbot.</strong> An LLM would answer <em>"what is the capital of Australia"</em>; this one will not. It would also invent a sales figure if the data were missing - and this one will not. Discuss which of the two behaviours you want in a CRM.</li>
+<li><strong>Connect it to the AI Act.</strong> If this assistant were swapped for one with AI behind it, what would change? It would become <strong>limited risk</strong> (Art. 50); it would still have to declare itself; and <strong><a href="../../glossario/">AI literacy</a></strong> (Art. 4, in force since February 2025) would require whoever operates it to understand its limits.</li>
+</ol>
+</div>
+<h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">¶</a></h2>
+<div class="grid cards">
+<ul>
+<li>
+<p><svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"></path></svg> <strong>Dashboard &amp; Calendar</strong></p>
+<hr>
+<p>Where the numbers it fetches actually live.</p>
+<p><a href="../dashboard-agenda/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"></path></svg></span> Open</a></p>
+</li>
+<li>
+<p><svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> <strong>GDPR</strong></p>
+<hr>
+<p>The other regulation the same conversation triggers.</p>
+<p><a href="../../rgpd/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"></path></svg></span> Open</a></p>
+</li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+  
+  
+  <hr class="crm-foot-sep">
+  <nav class="crm-foot" aria-label="Support navigation">
+    <a class="crm-foot-btn" href="/manual/en/">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><path d="M9 22V12h6v10"></path></svg>
+      <span>Home</span>
+    </a>
+    <a class="crm-foot-btn" href="/manual/en/faq/">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"></path></svg>
+      <span>FAQ</span>
+    </a>
+    <a class="crm-foot-btn" href="/manual/en/glossario/">
+      <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+      <span>Glossary</span>
+    </a>
+    <a class="crm-foot-btn" href="/manual/en/aviso-legal/">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg>
+      <span>Legal notice</span>
+    </a>
+    <a class="crm-foot-btn crm-foot-cta" href="https://crm.cr0x.org" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"></path></svg>
+      <span>Open the platform</span>
+    </a>
+  </nav>
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href="../definicoes/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 5.12 Settings">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                5.12 Settings
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../rgpd/" class="md-footer__link md-footer__link--next" aria-label="Next: GDPR &amp;amp; Pedagogy">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                GDPR &amp; Pedagogy
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"></path></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      CRM · Plataforma de Formação<span class="crm-sep"> · </span><a class="made-by" href="https://www.linkedin.com/in/ldvale/" target="_blank" rel="noopener" title="LinkedIn - Diogo du Valle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg><span>Created by Diogo du Valle</span></a>
+
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://crm.cr0x.org" target="_blank" rel="noopener" title="Abrir a plataforma" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0M5.78 8.75a9.64 9.64 0 0 0 1.363 4.177q.383.64.857 1.215c.245-.296.551-.705.857-1.215A9.64 9.64 0 0 0 10.22 8.75Zm4.44-1.5a9.64 9.64 0 0 0-1.363-4.177c-.307-.51-.612-.919-.857-1.215a10 10 0 0 0-.857 1.215A9.64 9.64 0 0 0 5.78 7.25Zm-5.944 1.5H1.543a6.51 6.51 0 0 0 4.666 5.5q-.184-.271-.352-.552c-.715-1.192-1.437-2.874-1.581-4.948m-2.733-1.5h2.733c.144-2.074.866-3.756 1.58-4.948q.18-.295.353-.552a6.51 6.51 0 0 0-4.666 5.5m10.181 1.5c-.144 2.074-.866 3.756-1.58 4.948q-.18.296-.353.552a6.51 6.51 0 0 0 4.666-5.5Zm2.733-1.5a6.51 6.51 0 0 0-4.666-5.5q.184.272.353.552c.714 1.192 1.436 2.874 1.58 4.948Z"></path></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "navigation.indexes", "navigation.footer", "search.suggest", "search.highlight", "content.code.copy", "content.tooltips", "toc.follow"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/js/quiz.js"></script>
+      
+        <script src="../../../assets/js/analytics.js"></script>
+      
+        <script src="../../../assets/js/video.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
