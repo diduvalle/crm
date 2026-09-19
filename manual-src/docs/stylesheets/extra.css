@@ -339,44 +339,10 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 }
 .md-typeset .grid.cards li > p:last-child > a:hover { color: var(--crm-g600); text-decoration: none; gap: .5rem; }
 
-/* ===========================================================
-   6. Hero da homepage (gradiente da app)
-   =========================================================== */
-.crm-hero {
-  position: relative; overflow: hidden;
-  border-radius: var(--crm-rl);
-  padding: 1.6rem 1.7rem 1.5rem;
-  margin: .2rem 0 1.4rem;
-  background: linear-gradient(125deg, var(--crm-g800), var(--crm-g600) 55%, var(--crm-g400));
-  color: #fff;
-  box-shadow: 0 16px 40px rgba(0,107,60,.24);
-}
-.crm-hero::after {
-  content: ""; position: absolute; right: -60px; top: -60px;
-  width: 280px; height: 280px;
-  background: radial-gradient(circle, rgba(255,255,255,.16), transparent 70%);
-  pointer-events: none;
-}
-.md-typeset .crm-hero h1 { color: #fff; margin: 0 0 .35rem; font-size: 1.65rem; }
-.md-typeset .crm-hero p { color: rgba(255,255,255,.9); max-width: 48rem; margin: 0; font-size: .82rem; position: relative; }
-.crm-hero-actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: 1rem; position: relative; }
-.md-typeset .crm-hero-actions a {
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 9px 15px; border-radius: 10px; font-weight: 700; font-size: .74rem;
-  text-decoration: none !important; transition: transform .08s, background .15s;
-}
-.md-typeset .crm-hero-actions a:active { transform: translateY(1px); }
-.md-typeset .crm-hero-actions .hb-solid { background: #fff; color: var(--crm-g800); }
-.md-typeset .crm-hero-actions .hb-solid:hover { background: #f0f0f0; color: var(--crm-g900); }
-.md-typeset .crm-hero-actions .hb-out {
-  background: rgba(255,255,255,.16); color: #fff; border: 1px solid rgba(255,255,255,.45);
-}
-.md-typeset .crm-hero-actions .hb-out:hover { background: rgba(255,255,255,.28); color: #fff; }
-.crm-hero-actions svg {
-  width: 16px; height: 16px; fill: none; stroke: currentColor;
-  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none;
-}
-/* Sem âncora ¶ (permalink) no título do hero - ali não é uma secção navegável */
+/* o heroi da homepage em papel: o desenho de gradiente escuro que
+   estava aqui deixou de ter fundo, mas os botoes continuaram brancos -
+   texto branco sobre papel, ou seja um botao fantasma. O bloco sai; o
+   desenho em papel esta mais abaixo na folha. */
 .md-typeset .crm-hero .headerlink { display: none; }
 
 /* ===========================================================
@@ -756,14 +722,17 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 .crm-hero h1{ margin-top:0 }
 .crm-hero-actions{ display:flex; gap:10px; flex-wrap:wrap; margin:1.6em 0 0 }
 .crm-hero-actions .hb-solid,
+.crm-hero-actions .hb-out,
 .crm-hero-actions .hb-ghost{
   display:inline-flex; align-items:center; gap:8px;
   font-family:"Archivo",sans-serif; font-size:.82rem; font-weight:600;
   padding:10px 18px; border-radius:9px; text-decoration:none; border:1.5px solid var(--pl-tinta);
 }
 .crm-hero-actions .hb-solid{ background:var(--pl-tinta); color:var(--pl-papel) }
+.crm-hero-actions .hb-out,
 .crm-hero-actions .hb-ghost{ background:none; color:var(--pl-tinta) }
 .crm-hero-actions .hb-solid:hover{ background:var(--pl-azul); border-color:var(--pl-azul) }
+.crm-hero-actions .hb-out:hover,
 .crm-hero-actions .hb-ghost:hover{ background:var(--pl-tinta); color:var(--pl-papel) }
 /* um SVG sem tamanho ocupa o que houver: foi isto que pôs o ícone a
    encher a página quando as classes do CSS deixaram de bater. */
