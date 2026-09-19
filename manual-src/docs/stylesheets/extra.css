@@ -972,3 +972,14 @@ figure.crm-video figcaption{ margin-top:.5rem }
 /* a navegacao anterior/seguinte tambem vinha do tamanho do corpo */
 .md-footer__title{ font-size:15px; line-height:1.4 }
 .md-footer__direction{ font-size:11px; opacity:.6 }
+
+/* o botão flutuante "voltar ao topo" ficou de fora das regras de controlo
+   e herdou a serif do corpo do texto - num botão não se lê */
+.md-top{
+  font-family:"Archivo", system-ui, sans-serif !important;
+  font-size:13px; font-weight:600; letter-spacing:.01em;
+  background:var(--pl-papel-2); color:var(--pl-tinta);
+  border:1px solid var(--pl-risco); border-radius:999px;
+  box-shadow:0 6px 18px rgba(23,20,18,.10);
+}
+.md-top:hover{ background:var(--pl-papel); color:var(--pl-azul) }
