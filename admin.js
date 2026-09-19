@@ -97,8 +97,11 @@
   var COL = { logo: 'logo_url', legalNome: 'legal_nome', emailContacto: 'email_contacto',
               responsavelDados: 'responsavel_dados', remetenteNome: 'remetente_nome',
               emailResposta: 'email_resposta', seloEmissor: 'selo_emissor' };
-  var TCAMPOS = [['codigo', 'Código da turma'], ['nome', 'Nome da turma'], ['fnome', 'Nome do formador'],
-                 ['fapelido', 'Apelido'], ['femail', 'Email'], ['user', 'Utilizador'], ['pass', 'Palavra-passe']];
+  var TURMA_LINHAS = [
+    { campos: [['codigo', 'Código da turma'], ['nome', 'Nome da turma']] },
+    { titulo: 'Formador', campos: [['fnome', 'Nome'], ['fapelido', 'Apelido'], ['femail', 'Email']] },
+    { campos: [['user', 'Utilizador'], ['pass', 'Palavra-passe']] }
+  ];
 
   var escolas = [], sel = '', aba = 'pagina';
 
@@ -344,9 +347,16 @@
   function formTurma() {
     var cx = $('#adTurma');
     if (cx.innerHTML) { cx.innerHTML = ''; return; }
-    cx.innerHTML = '<p class="ad-grp">Nova turma</p><div class="ad-grid">' +
-      TCAMPOS.map(function (c) { return '<label class="ad-f"><span>' + c[1] + '</span><input data-tf="' + c[0] + '"></label>'; }).join('') +
-      '</div><div class="ad-linha"><button class="ad-b" data-ax="turma-criar">Criar turma</button></div>';
+    cx.innerHTML = '<p class="ad-grp">Nova turma</p>' +
+      TURMA_LINHAS.map(function (l) {
+        return (l.titulo ? '<p class="ad-sub-grp">' + l.titulo + '</p>' : '') +
+          '<div class="ad-lin" style="grid-template-columns:repeat(' + l.campos.length + ',1fr)">' +
+          l.campos.map(function (c) {
+            return '<label class="ad-f"><span>' + c[1] + '</span><input data-tf="' + c[0] + '"' +
+              (c[0] === 'pass' ? ' type="text" spellcheck="false"' : '') + '></label>';
+          }).join('') + '</div>';
+      }).join('') +
+      '<div class="ad-linha"><button class="ad-b" data-ax="turma-criar">Criar turma</button></div>';
   }
   function criarTurma() {
     var cx = $('#adTurma');
