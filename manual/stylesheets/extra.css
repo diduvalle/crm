@@ -1,5 +1,5 @@
 /* ===========================================================
-   IEFP CRM — Manual · design system 1:1 com a app
+   IEFP CRM - Manual · design system 1:1 com a app
    Os tokens NÃO se copiam para aqui: vêm de estilo/tokens.css,
    que o CI copia para esta pasta antes de construir o manual.
    Mexer nas cores faz-se lá, e muda a app, o repositório e isto.
@@ -108,7 +108,7 @@
 .md-header__inner > .md-search { margin-left: 9px; }
 
 /* Botão de tema (lua/sol) = .icon-btn da app (40×40, moldura, ícone cinza).
-   :not([hidden]) — o Material mantém o toggle INATIVO com [hidden]; só o ATIVO
+   :not([hidden]) - o Material mantém o toggle INATIVO com [hidden]; só o ATIVO
    é que deve mostrar-se (senão apareciam lua E sol ao mesmo tempo). */
 .md-header__option[data-md-component="palette"] > label.md-header__button.md-icon[hidden] { display: none; }
 .md-header__option[data-md-component="palette"] > label.md-header__button.md-icon:not([hidden]) {
@@ -135,7 +135,7 @@
 .md-header .md-select > .md-header__button.md-icon:hover {
   background: var(--crm-surface2); border-color: var(--crm-g300); color: var(--crm-g700);
 }
-/* sem globo — igual ao botão PT/EN da app (só texto verde) */
+/* sem globo - igual ao botão PT/EN da app (só texto verde) */
 .md-header .md-select > .md-header__button.md-icon svg { display: none; }
 /* mostra o idioma ATUAL (como o toggle da app): PT nas páginas PT, EN nas EN */
 .md-header .md-select > .md-header__button.md-icon::after { content: "PT/EN"; font: inherit; color: inherit; }
@@ -198,12 +198,12 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
   }
   .md-sidebar--primary .md-nav__title .md-logo { display: none; }
 
-  /* O título "IEFP CRM — Manual" é redundante no desktop (já está no cabeçalho)
+  /* O título "IEFP CRM - Manual" é redundante no desktop (já está no cabeçalho)
      e, sendo sticky+transparente, arrastava por cima dos itens no scroll. */
   .md-sidebar--primary .md-nav--primary > .md-nav__title { display: none; }
 
   /* Itens de topo SEM filhos (Início, 7. FAQ, 8. Glossário) = mesmo estilo
-     de grupo das secções 1–6, para a navbar ficar uniforme. */
+     de grupo das secções 1 - 6, para a navbar ficar uniforme. */
   .md-sidebar--primary .md-nav--primary > .md-nav__list
     > .md-nav__item:not(.md-nav__item--nested):not(.md-nav__item--section)
     > .md-nav__link {
@@ -219,7 +219,7 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 
   /* Labels da navbar nunca cortados (sem ellipsis "...") */
   .md-sidebar--primary .md-nav__link .md-ellipsis { overflow: visible; text-overflow: clip; }
-  /* Títulos de grupo numa só linha — palavra longa ("FUNCIONALIDADES") não parte */
+  /* Títulos de grupo numa só linha - palavra longa ("FUNCIONALIDADES") não parte */
   .md-sidebar--primary .md-nav__item--section > .md-nav__link .md-ellipsis { white-space: nowrap; }
 
   /* Secções de topo COM página-índice (Funcionalidades, RGPD): o Material mete
@@ -397,7 +397,7 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
   width: 16px; height: 16px; fill: none; stroke: currentColor;
   stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none;
 }
-/* Sem âncora ¶ (permalink) no título do hero — ali não é uma secção navegável */
+/* Sem âncora ¶ (permalink) no título do hero - ali não é uma secção navegável */
 .md-typeset .crm-hero .headerlink { display: none; }
 
 /* ===========================================================
@@ -476,7 +476,7 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 /* Vídeos de demonstração (mesma moldura das imagens) */
 .md-typeset .crm-video {
   width: 100%; height: auto; display: block;
-  aspect-ratio: 16 / 10;          /* reserva o espaço (1440×900) — evita o leitor colapsado */
+  aspect-ratio: 16 / 10;          /* reserva o espaço (1440×900) - evita o leitor colapsado */
   border-radius: var(--crm-r);
   border: 1px solid var(--crm-border);
   box-shadow: var(--crm-shadow);
@@ -503,7 +503,7 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 .md-top:hover { background: var(--crm-g600); color: #fff; }
 
 /* ===========================================================
-   10. Ícones de linha (SVG inline) — monocromáticos
+   10. Ícones de linha (SVG inline) - monocromáticos
    =========================================================== */
 .md-typeset .lucide svg,
 .md-typeset svg.icon {
@@ -792,3 +792,18 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
   stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
 }
 .md-typeset .crm-hero-actions a{ text-decoration:none }
+
+/* ---- correcoes de heranca ----
+   O hero tinha um gradiente da cor da app, e o .crm-video tinha fundo
+   preto e altura de leitor de video - mas agora e' um <figure> vazio que
+   a fachada preenche, e sem isto aparecia um bloco preto de 1360px. */
+.md-typeset .crm-hero{
+  background:none!important; color:var(--pl-tinta)!important;
+  border:0; box-shadow:none; padding:0; margin:0 0 2rem;
+}
+.md-typeset .crm-hero h1,.md-typeset .crm-hero p{ color:inherit }
+figure.crm-video{
+  background:none!important; height:auto!important; min-height:0!important;
+  aspect-ratio:auto!important; border:0; margin:0 0 1.4rem; padding:0;
+}
+figure.crm-video figcaption{ margin-top:.5rem }
