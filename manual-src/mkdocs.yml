@@ -1,9 +1,9 @@
-site_name: CRM — Manual
+site_name: CRM - Manual
 site_url: https://crm.cr0x.org/manual/
-site_description: Manual da plataforma CRM — guia para formadores e formandos das UFCD 10868 e 10870.
+site_description: Manual da plataforma CRM - guia para formadores e formandos das UFCD 10868 e 10870.
 site_author: Diogo du Valle
 copyright: >
-  CRM · Plataforma de Formação<span class="crm-sep"> · </span><a class="made-by" href="https://www.linkedin.com/in/ldvale/" target="_blank" rel="noopener" title="LinkedIn — Diogo du Valle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg><span>Created by Diogo du Valle</span></a>
+  CRM · Plataforma de Formação<span class="crm-sep"> · </span><a class="made-by" href="https://www.linkedin.com/in/ldvale/" target="_blank" rel="noopener" title="LinkedIn - Diogo du Valle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg><span>Created by Diogo du Valle</span></a>
 
 docs_dir: docs
 site_dir: ../manual
@@ -68,8 +68,8 @@ plugins:
         - locale: en
           name: English
           build: true
-          site_name: "CRM — Manual"
-          site_description: "Manual of the CRM platform — guide for trainers and trainees (UFCD 10868 and 10870)."
+          site_name: "CRM - Manual"
+          site_description: "Manual of the CRM platform - guide for trainers and trainees (UFCD 10868 and 10870)."
           nav_translations:
             "Início": "Home"
             "Vídeos": "Videos"
