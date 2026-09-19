@@ -6254,9 +6254,11 @@ function secBrand(s){ return `<div class="card card-pad">
     <div class="section-head" style="margin-bottom:14px"><div><h3>Marca & Aparência <span class="pill grey" style="font-size:.66rem;vertical-align:middle">Sandbox</span></h3><div class="sub">Personalize nome, cor, logótipo e fundo do login. ${isAdmin()?'Para replicar o CRM noutras utilizações (white-label).':'Fica só no seu navegador - personalize a sua empresa fictícia.'}</div></div></div>
     <div class="form-grid">
       <div class="field"><label>Nome do CRM</label><input data-brand="nome" value="${esc(s.brand.nome||'')}" placeholder="CRM"></div>
-      <div class="field"><label>Cor principal</label><div style="display:flex;gap:10px;align-items:center"><input type="color" data-brand="cor" value="${esc(s.brand.cor||'#006B3C')}" style="width:48px;height:38px;padding:2px;border:1px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer"><span class="muted" style="font-size:.8rem">${s.brand.cor?esc(s.brand.cor):'cor da plataforma (predefinido)'}</span></div></div>
+      <div class="field"><label>Cor principal</label><div style="display:flex;gap:10px;align-items:center"><input type="color" data-brand="cor" value="${esc(brandCorEfetiva().cor)}" style="width:48px;height:38px;padding:2px;border:1px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer"><span class="muted" style="font-size:.8rem">${esc(brandCorNota())}</span></div></div>
       <div class="field"><label>Logótipo</label><div style="display:flex;gap:10px;align-items:center"><div class="brand-logo" style="width:44px;height:44px"><img src="${esc(logoURL())}" alt="" onerror="this.style.opacity=0"></div><label class="btn-sec btn-sm" style="cursor:pointer;margin:0">${ic('image',15)} Carregar<input type="file" accept="image/*" data-brandimg="logo" style="display:none"></label>${s.brand.logo?`<button class="btn-ghost btn-sm" data-act="brand-clear" data-k="logo">Repor</button>`:''}</div></div>
-      <div class="field"><label>Imagem de fundo do login</label><div style="display:flex;gap:10px;align-items:center"><label class="btn-sec btn-sm" style="cursor:pointer;margin:0">${ic('image',15)} Carregar<input type="file" accept="image/*" data-brandimg="loginBg" style="display:none"></label>${s.brand.loginBg?`<span class="pill green">definida</span><button class="btn-ghost btn-sm" data-act="brand-clear" data-k="loginBg">Repor</button>`:'<span class="muted" style="font-size:.8rem">usa background.png</span>'}</div></div>
+      <div class="field"><label>Imagem de fundo do login</label><div style="display:flex;gap:10px;align-items:center"><label class="btn-sec btn-sm" style="cursor:pointer;margin:0">${ic('image',15)} Carregar<input type="file" accept="image/*" data-brandimg="loginBg" style="display:none"></label>${s.brand.loginBg
+        ? `<span class="pill green">definida</span><button class="btn-sec btn-sm" data-act="brand-clear" data-k="loginBg">Repor predefinido</button>`
+        : `<button class="btn-sec btn-sm" disabled style="opacity:.45;cursor:default">Repor predefinido</button><span class="muted" style="font-size:.8rem">o quadro animado, na cor da marca</span>`}</div></div>
     </div>
     <div class="toolbar" style="margin-top:10px"><button class="btn" data-act="save-brand">Aplicar marca</button><button class="btn-sec" data-act="brand-reset">Repor predefinição</button></div>
   </div>`; }
@@ -6386,9 +6388,11 @@ views.definicoes = () => {
     <div class="section-head" style="margin-bottom:14px"><div><h3>Marca & Aparência <span class="pill grey" style="font-size:.66rem;vertical-align:middle">Admin</span></h3><div class="sub">Personalize nome, cor, logótipo e fundo do login - para replicar o CRM noutras utilizações (white-label).</div></div></div>
     <div class="form-grid">
       <div class="field"><label>Nome do CRM</label><input data-brand="nome" value="${esc(s.brand.nome||'')}" placeholder="CRM"></div>
-      <div class="field"><label>Cor principal</label><div style="display:flex;gap:10px;align-items:center"><input type="color" data-brand="cor" value="${esc(s.brand.cor||'#006B3C')}" style="width:48px;height:38px;padding:2px;border:1px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer"><span class="muted" style="font-size:.8rem">${s.brand.cor?esc(s.brand.cor):'cor da plataforma (predefinido)'}</span></div></div>
+      <div class="field"><label>Cor principal</label><div style="display:flex;gap:10px;align-items:center"><input type="color" data-brand="cor" value="${esc(brandCorEfetiva().cor)}" style="width:48px;height:38px;padding:2px;border:1px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer"><span class="muted" style="font-size:.8rem">${esc(brandCorNota())}</span></div></div>
       <div class="field"><label>Logótipo</label><div style="display:flex;gap:10px;align-items:center"><div class="brand-logo" style="width:44px;height:44px"><img src="${esc(logoURL())}" alt="" onerror="this.style.opacity=0"></div><label class="btn-sec btn-sm" style="cursor:pointer;margin:0">${ic('image',15)} Carregar<input type="file" accept="image/*" data-brandimg="logo" style="display:none"></label>${s.brand.logo?`<button class="btn-ghost btn-sm" data-act="brand-clear" data-k="logo">Repor</button>`:''}</div></div>
-      <div class="field"><label>Imagem de fundo do login</label><div style="display:flex;gap:10px;align-items:center"><label class="btn-sec btn-sm" style="cursor:pointer;margin:0">${ic('image',15)} Carregar<input type="file" accept="image/*" data-brandimg="loginBg" style="display:none"></label>${s.brand.loginBg?`<span class="pill green">definida</span><button class="btn-ghost btn-sm" data-act="brand-clear" data-k="loginBg">Repor</button>`:'<span class="muted" style="font-size:.8rem">usa background.png</span>'}</div></div>
+      <div class="field"><label>Imagem de fundo do login</label><div style="display:flex;gap:10px;align-items:center"><label class="btn-sec btn-sm" style="cursor:pointer;margin:0">${ic('image',15)} Carregar<input type="file" accept="image/*" data-brandimg="loginBg" style="display:none"></label>${s.brand.loginBg
+        ? `<span class="pill green">definida</span><button class="btn-sec btn-sm" data-act="brand-clear" data-k="loginBg">Repor predefinido</button>`
+        : `<button class="btn-sec btn-sm" disabled style="opacity:.45;cursor:default">Repor predefinido</button><span class="muted" style="font-size:.8rem">o quadro animado, na cor da marca</span>`}</div></div>
     </div>
     <div class="toolbar" style="margin-top:10px"><button class="btn" data-act="save-brand">Aplicar marca</button><button class="btn-sec" data-act="brand-reset">Repor predefinição</button></div>
     <div class="callout info" style="margin-top:14px">${ic('alert',16)}<div class="ctxt">Fica guardado nas definições - ao <strong>Exportar JSON</strong> a marca viaja com os dados. Replicas o CRM para outra entidade só com export/import + trocar nome/cor/logótipo. As cores derivam automaticamente uma paleta a partir da cor principal.</div></div>
@@ -7654,6 +7658,21 @@ function brandCfg(){
 /* Os valores de recurso são da PLATAFORMA, não de uma escola: é isto que
    impede o nome de uma instituição de reaparecer por omissão. */
 function brandName(){ const b=brandCfg(); return (b.nome&&b.nome.trim())||'CRM'; }
+/* A cor que a app está MESMO a usar, e de onde ela vem. O campo das
+   Definições mostrava o que estava guardado no browser, e por isso ficava
+   vazio quando a cor vinha da escola - enquanto a app ia toda pintada. */
+function brandCorEfetiva(){
+  const b = brandCfg();
+  if (b.cor) return { cor: b.cor[0]==='#' ? b.cor : '#'+b.cor,
+                      fonte: (ESPACO && ESPACO.cor) ? 'escola' : 'local' };
+  return { cor: '#0078bf', fonte: 'plataforma' };
+}
+function brandCorNota(){
+  const e = brandCorEfetiva();
+  if (e.fonte === 'escola')     return e.cor + ' - definida em ' + (ESPACO.nome || 'escola');
+  if (e.fonte === 'local')      return e.cor;
+  return 'cor da plataforma (predefinido)';
+}
 function logoURL(){ const b=brandCfg(); return b.logo||'favicon.svg'; }
 /* sem imagem por omissão: o fundo passa a ser o gradiente da marca, que
    já existia como último recurso e nunca se via. Uma escola que queira uma
