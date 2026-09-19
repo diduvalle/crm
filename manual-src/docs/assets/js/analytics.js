@@ -1,5 +1,5 @@
 /* Analítica de primeira-parte do manual IEFP CRM.
-   Sem cookies, sem dados pessoais, sem terceiros - regista só a visita
+   Sem cookies, sem dados pessoais, sem terceiros — regista só a visita
    (página, idioma, dispositivo, host de origem) e os "play" dos vídeos.
    Falha em silêncio se a tabela ainda não existir / sem rede. */
 (function () {
