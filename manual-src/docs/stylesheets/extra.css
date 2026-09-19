@@ -175,116 +175,95 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 .md-search-result__meta { background: var(--crm-surface2); color: var(--crm-muted); }
 
 /* ===========================================================
-   3. Sidebar esquerda = painel verde-escuro da app
+   3. MENU LATERAL, EM PAPEL
+   Aqui vivia o desenho de barra escura herdado da app: gradiente
+   verde e texto branco. Num manual de fundo claro isso apagava as
+   letras - foi assim que os titulos de seccao ficaram brancos sobre
+   creme. Sobrepor regras deixava sempre metade do desenho de pe,
+   por isso o bloco foi refeito, nao tapado.
    =========================================================== */
 @media screen and (min-width: 76.25em) {
-  .md-sidebar--primary .md-sidebar__scrollwrap {
-    background: linear-gradient(180deg, var(--crm-g900), #04492c 60%, #033c24);
-    border-radius: var(--crm-rl);
-    margin: 1.1rem 0 1.4rem .2rem;
-    padding: .55rem .45rem;
-    box-shadow: var(--crm-shadow);
-    scrollbar-color: rgba(255,255,255,.25) transparent;
+  .md-sidebar--primary .md-sidebar__scrollwrap{
+    background:none; border-radius:0; box-shadow:none; padding:.2rem .2rem 0 0;
+    margin:1.1rem 0 1.4rem 0; scrollbar-color:var(--pl-risco) transparent;
   }
-  .md-sidebar--primary .md-sidebar__scrollwrap::-webkit-scrollbar { width: 6px; }
-  .md-sidebar--primary .md-sidebar__scrollwrap::-webkit-scrollbar-thumb { background: rgba(255,255,255,.18); border: 0; }
+  .md-sidebar--primary .md-sidebar__scrollwrap::-webkit-scrollbar{ width:6px }
+  .md-sidebar--primary .md-sidebar__scrollwrap::-webkit-scrollbar-thumb{ background:var(--pl-risco); border:0 }
 
-  /* Grupos (1. Primeiros passos, …) = .nav-group da app */
+  /* o titulo do manual ja esta no cabecalho */
+  .md-sidebar--primary .md-nav--primary > .md-nav__title{ display:none }
+  .md-sidebar--primary .md-nav__title .md-logo{ display:none }
+
+  /* TITULOS DE SECCAO - tres formas no Material, todas com a mesma cara:
+     seccao simples, seccao com pagina-indice (<a> dentro do contentor)
+     e item de topo sem filhos. Era a segunda que estava a branco. */
   .md-sidebar--primary .md-nav__item--section > .md-nav__link,
-  .md-sidebar--primary .md-nav__title {
-    font-size: .56rem; text-transform: uppercase; letter-spacing: .06em;
-    color: rgba(255,255,255,.5) !important; font-weight: 700;
-    padding: .6rem .55rem .15rem; background: transparent; box-shadow: none;
-  }
-  .md-sidebar--primary .md-nav__title .md-logo { display: none; }
-
-  /* O título "IEFP CRM - Manual" é redundante no desktop (já está no cabeçalho)
-     e, sendo sticky+transparente, arrastava por cima dos itens no scroll. */
-  .md-sidebar--primary .md-nav--primary > .md-nav__title { display: none; }
-
-  /* Itens de topo SEM filhos (Início, 7. FAQ, 8. Glossário) = mesmo estilo
-     de grupo das secções 1 - 6, para a navbar ficar uniforme. */
+  .md-sidebar--primary .md-nav__item--section > .md-nav__container > a.md-nav__link,
   .md-sidebar--primary .md-nav--primary > .md-nav__list
-    > .md-nav__item:not(.md-nav__item--nested):not(.md-nav__item--section)
-    > .md-nav__link {
-    font-size: .56rem; text-transform: uppercase; letter-spacing: .06em;
-    font-weight: 700; color: rgba(255,255,255,.5);
-    padding: .6rem .55rem .15rem;
+    > .md-nav__item:not(.md-nav__item--nested):not(.md-nav__item--section) > .md-nav__link,
+  .md-sidebar--primary .md-nav__title{
+    color:var(--pl-tinta) !important;
+    font-family:"Archivo", system-ui, sans-serif;
+    font-size:11.5px; letter-spacing:.09em; text-transform:uppercase; font-weight:800;
+    padding:.75rem .5rem .2rem; margin:0; background:none !important;
+    box-shadow:none; border-radius:0;
   }
+  .md-sidebar--primary .md-nav__item--section > .md-nav__link:hover,
+  .md-sidebar--primary .md-nav__item--section > .md-nav__container > a.md-nav__link:hover,
   .md-sidebar--primary .md-nav--primary > .md-nav__list
-    > .md-nav__item:not(.md-nav__item--nested):not(.md-nav__item--section)
-    > .md-nav__link:hover {
-    background: transparent; color: rgba(255,255,255,.82);
+    > .md-nav__item:not(.md-nav__item--nested):not(.md-nav__item--section) > .md-nav__link:hover{
+    background:none !important; color:var(--pl-azul-escuro) !important;
   }
 
-  /* Labels da navbar nunca cortados (sem ellipsis "...") */
-  .md-sidebar--primary .md-nav__link .md-ellipsis { overflow: visible; text-overflow: clip; }
-  /* Títulos de grupo numa só linha - palavra longa ("FUNCIONALIDADES") não parte */
-  .md-sidebar--primary .md-nav__item--section > .md-nav__link .md-ellipsis { white-space: nowrap; }
+  /* o rotulo nunca cortado, e a palavra longa numa so linha */
+  .md-sidebar--primary .md-nav__link .md-ellipsis{ overflow:visible; text-overflow:clip }
+  .md-sidebar--primary .md-nav__item--section > .md-nav__link .md-ellipsis{ white-space:nowrap }
 
-  /* Secções de topo COM página-índice (Funcionalidades, RGPD): o Material mete
-     um <a> dentro do contentor → padding a dobrar (ficavam mais altas).
-     Tira o padding do contentor e dá ao link-índice o MESMO estilo de grupo. */
-  .md-sidebar--primary .md-nav__item--section > .md-nav__container { padding: 0; align-items: center; }
-  .md-sidebar--primary .md-nav__item--section > .md-nav__container > a.md-nav__link {
-    font-size: .56rem; text-transform: uppercase; letter-spacing: .06em; font-weight: 700;
-    color: rgba(255,255,255,.5) !important;
-    padding: .6rem .55rem .15rem; margin: 0; border-radius: 0;
-  }
-  .md-sidebar--primary .md-nav__item--section > .md-nav__container > a.md-nav__link:hover {
-    background: transparent; color: rgba(255,255,255,.82) !important;
-  }
-  /* o chevron do contentor de topo é redundante (secções já expandidas) */
-  .md-sidebar--primary .md-nav__item--section > .md-nav__container > label.md-nav__link { display: none; }
-
-  /* Contentores de índice ANINHADOS (3.1 Gerir a turma, 5.4 Propostas):
-     tirar o padding do contentor p/ o <a> interno alinhar com os irmãos
-     e não somar altura (evita a linha órfã e a altura a mais). */
-  .md-sidebar--primary .md-nav__link.md-nav__container { padding: 0; }
+  /* contentores: tirar o padding a dobrar que o <a> interno provoca */
+  .md-sidebar--primary .md-nav__item--section > .md-nav__container{ padding:0; align-items:center }
+  .md-sidebar--primary .md-nav__item--section > .md-nav__container > label.md-nav__link{ display:none }
+  .md-sidebar--primary .md-nav__link.md-nav__container{ padding:0 }
   .md-sidebar--primary .md-nav__item--nested:not(.md-nav__item--section)
-    > .md-nav__container > a.md-nav__link { flex: 1 1 auto; }
-
-  /* Indentar o 3.º nível (sub-itens de 3.1, 5.4…) com guia subtil */
-  .md-sidebar--primary .md-nav__item--nested:not(.md-nav__item--section)
-    > .md-nav > .md-nav__list {
-    margin-left: .55rem; padding-left: .4rem;
-    border-left: 1px solid rgba(255,255,255,.14);
+    > .md-nav__container > a.md-nav__link{ flex:1 1 auto }
+  .md-sidebar--primary .md-nav__item--nested:not(.md-nav__item--section) > .md-nav > .md-nav__list{
+    margin-left:.5rem; padding-left:.45rem; border-left:1px solid var(--pl-risco);
   }
 
-  /* Links = .nav-link da app */
-  .md-sidebar--primary .md-nav__link {
-    color: rgba(255,255,255,.85);
-    border-radius: 10px;
-    padding: .34rem .55rem;
-    margin: 1px 0;
-    font-weight: 600;
-    font-size: .7rem;
-    position: relative;
-    transition: background .14s, color .14s;
+  /* OS ITENS */
+  .md-sidebar--primary .md-nav__link{
+    color:var(--pl-tinta-2);
+    font-family:"Archivo", system-ui, sans-serif;
+    font-size:13.5px; line-height:1.45; font-weight:500;
+    border-radius:7px; padding:.3rem .5rem; margin:1px 0;
+    position:relative; background:none;
+    transition:background .14s, color .14s;
   }
-  .md-sidebar--primary .md-nav__link:hover { background: rgba(255,255,255,.1); color: #fff; }
-  .md-sidebar--primary .md-nav__link--active,
-  .md-sidebar--primary .md-nav__link[aria-current="page"] {
-    background: rgba(255,255,255,.16); color: #fff; font-weight: 700;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+  .md-sidebar--primary .md-nav__link:hover{
+    background:rgba(23,20,18,.055); color:var(--pl-tinta);
   }
-  .md-sidebar--primary .md-nav__item:not(.md-nav__item--section) > .md-nav__link--active::before {
-    content: ""; position: absolute; left: -0.45rem; top: 50%; transform: translateY(-50%);
-    width: 4px; height: 20px; background: var(--crm-accent); border-radius: 0 4px 4px 0;
+  .md-sidebar--primary .md-nav__item:not(.md-nav__item--section) > .md-nav__link--active,
+  .md-sidebar--primary .md-nav__item:not(.md-nav__item--section) > .md-nav__link[aria-current="page"],
+  .md-sidebar--primary .md-nav__item:not(.md-nav__item--section) > .md-nav__container > a.md-nav__link--active{
+    background:rgba(0,120,191,.08); color:var(--pl-azul-escuro); font-weight:700; box-shadow:none;
+  }
+  .md-sidebar--primary .md-nav__item:not(.md-nav__item--section) > .md-nav__link--active::before{
+    content:""; position:absolute; left:-.4rem; top:50%; transform:translateY(-50%);
+    width:3px; height:18px; background:var(--pl-azul); border-radius:0 3px 3px 0;
   }
   .md-sidebar--primary .md-nav__icon,
-  .md-sidebar--primary .md-nav__link::after { color: rgba(255,255,255,.6); }
+  .md-sidebar--primary .md-nav__link::after{ color:var(--pl-fraco) }
 }
 
-/* TOC à direita */
-.md-nav--secondary .md-nav__title {
-  font-size: .58rem; text-transform: uppercase; letter-spacing: .1em;
-  color: var(--crm-muted); font-weight: 700; background: transparent; box-shadow: none;
+/* o indice da direita acompanha */
+.md-nav--secondary .md-nav__title{
+  font-family:"Archivo", system-ui, sans-serif;
+  font-size:11.5px; text-transform:uppercase; letter-spacing:.09em;
+  color:var(--pl-tinta); font-weight:800; background:none; box-shadow:none;
 }
-.md-nav--secondary { font-size: .68rem; }
-.md-nav--secondary .md-nav__link { color: var(--crm-muted); }
-.md-nav--secondary .md-nav__link:hover { color: var(--crm-g600); }
-.md-nav--secondary .md-nav__link--active { color: var(--crm-g700); font-weight: 700; }
+.md-nav--secondary{ font-size:13px }
+.md-nav--secondary .md-nav__link{ color:var(--pl-tinta-2) }
+.md-nav--secondary .md-nav__link:hover{ color:var(--pl-azul-escuro) }
+.md-nav--secondary .md-nav__link--active{ color:var(--pl-azul-escuro); font-weight:700 }
 
 /* ===========================================================
    4. Tipografia (escala da app)
@@ -670,7 +649,8 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 [data-md-color-scheme="default"] {
   --pl-papel:#efe9dd; --pl-papel-2:#f5f1e8; --pl-branco:#fdfbf7;
   --pl-tinta:#171412; --pl-tinta-2:#4a423c; --pl-fraco:#8a7f75;
-  --pl-azul:#0078bf; --pl-azul-escuro:#005e95; --pl-risco:#ddd4c4;
+  --pl-azul:#0078bf;
+  --pl-azul-escuro:#005e95;   /* o mesmo azul, escurecido ate passar 4.5:1 em texto pequeno */ --pl-risco:#ddd4c4;
 
   --md-default-bg-color: var(--pl-papel);
   --md-default-fg-color: var(--pl-tinta);
@@ -841,62 +821,6 @@ figure.crm-video figcaption{ margin-top:.5rem }
 .md-header__title{ font-size:16px }
 .md-search__input{ font-size:15px }
 
-/* ===========================================================
-   O MENU LATERAL, EM PAPEL
-   Substitui o desenho de barra escura que vinha da app: um
-   bloco escuro ao lado de uma página de leitura rouba-lhe a
-   atenção o tempo todo, e com fundo claro o texto branco que
-   lá estava desaparecia.
-   =========================================================== */
-@media screen and (min-width: 76.25em) {
-  .md-sidebar--primary .md-sidebar__scrollwrap{
-    background:none !important; border-radius:0; box-shadow:none;
-    scrollbar-color:var(--pl-risco) transparent;
-  }
-  .md-sidebar--primary .md-sidebar__scrollwrap::-webkit-scrollbar-thumb{
-    background:var(--pl-risco) !important;
-  }
-  .md-sidebar--primary .md-nav__list{
-    background:none; border:0; border-radius:0; padding:0;
-  }
-
-  /* os títulos de grupo: mono pequeno, como as etiquetas da montra */
-  .md-sidebar--primary .md-nav__item--section > .md-nav__link,
-  .md-sidebar--primary .md-nav__title{
-    color:var(--pl-fraco) !important;
-    font-family:"Space Mono", ui-monospace, monospace !important;
-    font-size:11px !important; letter-spacing:.14em; text-transform:uppercase;
-    font-weight:700; background:none !important;
-  }
-
-  /* os itens */
-  .md-sidebar--primary .md-nav__link{
-    color:var(--pl-tinta-2) !important;
-    font-family:"Archivo", system-ui, sans-serif;
-    font-size:13.5px; line-height:1.4;
-    border-radius:7px; padding:6px 10px; background:none;
-  }
-  .md-sidebar--primary .md-nav__link:hover{
-    background:rgba(23,20,18,.05) !important; color:var(--pl-tinta) !important;
-  }
-  .md-sidebar--primary .md-nav__link--active,
-  .md-sidebar--primary .md-nav__item--active > .md-nav__link{
-    background:rgba(0,120,191,.09) !important; color:var(--pl-azul) !important;
-    font-weight:600;
-  }
-  /* o traço do item ativo, na cor da plataforma */
-  .md-sidebar--primary .md-nav__link--active::before,
-  .md-sidebar--primary .md-nav__item--active > .md-nav__link::before{
-    background:var(--pl-azul) !important;
-  }
-  .md-sidebar--primary .md-nav__link::after{ color:var(--pl-fraco) !important }
-}
-
-/* o índice da direita acompanha */
-.md-nav--secondary .md-nav__link{ color:var(--pl-tinta-2) }
-.md-nav--secondary .md-nav__link:hover{ color:var(--pl-azul) }
-.md-nav--secondary .md-nav__link--active{ color:var(--pl-azul); font-weight:600 }
-.md-nav--secondary .md-nav__title{ color:var(--pl-fraco) }
 
 /* ---- dois acertos finais ----
    O primeiro paragrafo e o lead da pagina, e o Material da-lhe corpo
