@@ -98,6 +98,8 @@
     rpc('login_root', { p_password: p })
       .then(function (d) {
         sessionStorage.setItem(TOK, d.token);
+        /* as escolas vivem noutro ficheiro e partilham esta sessao */
+        try{ window.dispatchEvent(new Event("crm-root-entrou")); }catch(e){}
         estado('sessão aberta');
         if (depois) depois();
       })

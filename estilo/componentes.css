@@ -1,5 +1,5 @@
 /* =====================================================================
-   IEFP CRM - COMPONENTES
+   IEFP CRM — COMPONENTES
    Base, shell (barra lateral + cabeçalho) e os componentes partilhados
    pela app e pelo repositório: botões, cartões, tabelas, pills, campos,
    estado vazio, modais, toasts e o ecrã de entrada.
@@ -268,9 +268,9 @@ td .cell-sub{font-size:.78rem;color:var(--muted)}
    CALENDÁRIO (date picker próprio)
    O calendário nativo do browser NÃO é estilável (é UI do browser, fora
    da página). Quem quiser o nosso carrega o JS do picker, que marca
-   <html class="dp-on"> - só aí o nativo é escondido. Sem essa marca,
+   <html class="dp-on"> — só aí o nativo é escondido. Sem essa marca,
    nada muda (o repo e o manual não são afetados).
-   Namespace .dp-* - tudo aditivo, não altera nenhuma regra existente.
+   Namespace .dp-* — tudo aditivo, não altera nenhuma regra existente.
    ===================================================================== */
 html.dp-on input[type="date"]::-webkit-calendar-picker-indicator{display:none;-webkit-appearance:none}
 html.dp-on input[type="date"]{
