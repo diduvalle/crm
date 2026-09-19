@@ -107,6 +107,13 @@
     var v = function (k) { var c = COL[k] || k; return e ? (e[c] == null ? '' : e[c]) : ''; };
     return GRUPOS.map(function (g) {
       return '<p class="ad-grp">' + g[0] + '</p><div class="ad-grid">' + g[1].map(function (c) {
+        if (c[2] === 'color') {
+          var cor = v(c[0]) || '#0078bf';
+          return '<label class="ad-f ad-cor"><span>' + c[1] + '</span><div class="ad-cor-par">' +
+            '<input data-cor-amostra type="color" value="' + esc(cor) + '">' +
+            '<input data-ef="' + c[0] + '" type="text" value="' + esc(v(c[0])) + '" placeholder="#0078bf" spellcheck="false">' +
+            '</div></label>';
+        }
         return '<label class="ad-f"><span>' + c[1] + '</span><input data-ef="' + c[0] +
           '" type="' + (c[2] || 'text') + '" value="' + esc(v(c[0])) + '"' +
           (c[0] === 'slug' ? ' placeholder="xpto"' : '') + '></label>';
@@ -162,6 +169,14 @@
         i.addEventListener('input', function () { var o = {}; o[this.dataset.tx] = this.value; aplicar(o); });
       });
     }
+    /* a amostra e o texto do hex espelham-se um no outro */
+    Array.prototype.forEach.call(c.querySelectorAll('.ad-cor-par'), function (par) {
+      var am = par.querySelector('[data-cor-amostra]'), tx = par.querySelector('[data-ef]');
+      am.addEventListener('input', function () { tx.value = am.value; });
+      tx.addEventListener('input', function () {
+        if (/^#[0-9a-fA-F]{6}$/.test(tx.value.trim())) am.value = tx.value.trim();
+      });
+    });
     var s = $('#adSel');
     if (s) s.addEventListener('change', function () { sel = this.value; pintar(); });
   }
@@ -252,6 +267,7 @@
       '<div class="ad-fundo" data-ax="fechar"></div>' +
       '<div class="ad-cx" role="dialog" aria-label="Administração">' +
         '<div class="ad-top">' +
+          '<span class="ad-titulo">Administração</span>' +
           '<div class="ad-tabs">' +
             '<button class="ad-tab on" data-aba="pagina">Página</button>' +
             '<button class="ad-tab" data-aba="escolas">Escolas</button>' +
