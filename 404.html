@@ -589,13 +589,13 @@ let ESPACO = null;          /* preenchido pelo servidor; null = marca neutra */
 const TURMA = currentTurma();
 const TURMA_SFX = TURMA ? ('::'+TURMA) : '';
 /* ================== A SANDBOX E DE CADA UM ==================
-   A chave era 'iefp-crm-v4::<turma>' - com a TURMA mas SEM o utilizador. Num
+   A chave era 'crm-v1::<turma>' - com a TURMA mas SEM o utilizador. Num
    navegador partilhado, todos os que entrassem na mesma turma escreviam e liam
    o MESMO sitio: bastava um formador entrar com a conta de um formando para
    ajudar, e ao voltar a si proprio continuava a ver o trabalho dele. Terminar
    sessao nao resolvia, porque a chave nao mudava.
 
-   Passa a 'iefp-crm-v4::<turma>::<utilizador>'. Como o utilizador so se sabe
+   Passa a 'crm-v1::<turma>::<utilizador>'. Como o utilizador so se sabe
    depois do login, isto tem de ser uma FUNCAO e nao uma constante - e o estado
    em memoria tem de ser recarregado sempre que a sessao muda. ================== */
 const STORE_BASE = 'crm-v1'+TURMA_SFX;
@@ -1102,8 +1102,8 @@ function demoData(){
     {id:'cp3',nome:'Webinar RGPD para empresas',canal:'Email',segmento:'Todos',estado:'Concluída',inicio:'2026-03-01',fim:'2026-03-31',enviados:300,abertos:151,cliques:73},
   ];
   const utilizadores = [
-    {id:'u1',nome:'Diogo',apelido:'du Valle',email:'diogovale.iefp@gmail.com',username:'admin',password:hashPwd('admin'),papel:'Administrador',estado:'Ativo',avatar:'perfil.png',protegido:true,linkedin:'https://www.linkedin.com/in/ldvale/'},
-    {id:'u2',nome:'Carlos',apelido:'Lopes',email:'carlos.lopes@iefp.pt',username:'carlos',password:hashPwd('crm123'),papel:'Formador',estado:'Ativo'},
+    {id:'u1',nome:'Diogo',apelido:'du Valle',email:'formador@exemplo.pt',username:'admin',password:hashPwd('admin'),papel:'Administrador',estado:'Ativo',avatar:'perfil.png',protegido:true,linkedin:'https://www.linkedin.com/in/ldvale/'},
+    {id:'u2',nome:'Carlos',apelido:'Lopes',email:'carlos.lopes@exemplo.pt',username:'carlos',password:hashPwd('crm123'),papel:'Formador',estado:'Ativo'},
     {id:'u3',nome:'Rita',apelido:'Sousa',email:'rita.sousa@exemplo.pt',username:'rita',password:hashPwd('rgpd123'),papel:'Formador',estado:'Ativo'},
     {id:'u4',nome:'Tiago',apelido:'Pereira',email:'tiago.pereira@exemplo.pt',username:'tiago',password:hashPwd('aluno123'),papel:'Formando',estado:'Ativo'},
   ];
@@ -1245,7 +1245,7 @@ function load(){
   if(state.settings.emailDiaCiclo==null) state.settings.emailDiaCiclo=4;  // o ciclo repoe neste dia, nao no dia 1
   if(state.settings.emailjs && !state.settings.emailjs.serviceId && !state.settings.emailjs.templateId && !state.settings.emailjs.publicKey) state.settings.emailjs=Object.assign({},EMAILJS_DEFAULT);
   { const _a=(state.settings.emailjs&&typeof state.settings.emailjs.ativo==='boolean')?state.settings.emailjs.ativo:true; state.settings.emailjs=Object.assign({},EMAILJS_DEFAULT,{ativo:_a}); }  // chaves SEMPRE fixas; só o modo é por-turma
-  if(state.settings.email==='geral@iefpcrm.pt') state.settings.email='iefpcrm@cr0x.org';  // reply-to: placeholder antigo → email real
+    // reply-to: placeholder antigo → email real
   { const adm=state.utilizadores.find(u=>u.id==='u1'); if(adm && adm.apelido==='Vale') adm.apelido='du Valle'; }
   Object.values(state.roles||{}).forEach(r=>{ if(r&&Array.isArray(r.modules)&&!r.modules.includes('email')&&(r.gestor||r.modules.includes('campanhas'))) r.modules.push('email'); });
   // --- Empresas & Contactos (modelo Account/Contact) - migração additiva ---
@@ -1647,7 +1647,7 @@ async function supaLogin(username,password){
   carregarEquipa();
   return data.user;
 }
-// Criar turma (gate de email IEFP) - devolve {token,turma,user}
+// Criar turma - nesta app so o root cria, pela criar_turma_em (sem gate de email)
 async function supaCriarTurma(p){
   const data=await supaRpc('criar_turma',{p_codigo:p.codigo,p_email:p.email,p_username:p.username,p_password:p.password,p_nome:p.nome,p_apelido:p.apelido||'',p_nome_turma:p.nomeTurma||null});
   return data;
@@ -1657,7 +1657,7 @@ function supaLogout(){ const t=supaToken(); if(t&&supa()) supaRpc('logout',{p_to
 /* ---------- Registo de turmas RECENTES neste dispositivo ----------
    Lista local (não-namespaced) que alimenta o seletor de Turma no login.
    Sem backend: só conhece as turmas que ESTE browser já visitou/criou. */
-const RECENT_TURMAS_KEY='iefp-turmas-recentes';
+const RECENT_TURMAS_KEY='crm-turmas-recentes';
 function recentTurmas(){ try{ const a=JSON.parse(localStorage.getItem(RECENT_TURMAS_KEY)||'[]'); return Array.isArray(a)?a.filter(t=>t&&TURMA_RE.test(t.codigo)):[]; }catch(e){ return []; } }
 function rememberTurma(codigo,nome){
   codigo=(codigo||'').replace(/\D/g,''); if(codigo.length!==8) return;
@@ -5512,7 +5512,7 @@ function turmaUsersCardHTML(){
     <form id="rosterAddForm" onsubmit="return false" class="form-grid" style="margin-bottom:18px">
       <div class="field"><label>Nome *</label><input name="nome" placeholder="primeiro nome"></div>
       <div class="field"><label>Apelido</label><input name="apelido"></div>
-      <div class="field"><label>Email institucional</label><input name="email" type="email" placeholder="nº@formacao.iefp.pt"></div>
+      <div class="field"><label>Email institucional</label><input name="email" type="email" placeholder="email institucional"></div>
       <div class="field"><label>Email pessoal <span class="muted" style="font-weight:500;font-size:.78rem">(opcional)</span></label><input name="email2" type="email" placeholder="o convite vai para os dois"></div>
       <div class="field"><label>Utilizador (auto se vazio)</label><input name="username" placeholder="auto: 1.ª letra do nome + apelido (ex.: dvale)"></div>
       <div class="field"><label>Palavra-passe (auto se vazia)</label><input name="password" type="text" placeholder="vazio → nº do email + iniciais (ex.: 1234567BR)"></div>
@@ -7291,7 +7291,7 @@ function printAnalyticsReport(){
 /* ---------- import/export ---------- */
 function exportJSON(){
   const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='iefp-crm-backup.json'; a.click(); URL.revokeObjectURL(a.href);
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='crm-backup.json'; a.click(); URL.revokeObjectURL(a.href);
   toast('Exportado','Backup JSON descarregado');
 }
 function importJSON(file){
@@ -7399,7 +7399,7 @@ function sendSubmitWork(){
       const fromName=(`${(u.nome||'').trim()} ${(u.apelido||'').trim()}`.trim()||u.username||'Formando')+' ('+brandName()+')';
       sendViaEmailJS({toEmail:to,toName:'Formador',subject,message:body,fromName,replyTo:u.email||''}).catch(()=>{});
       /* cópia para o próprio: o comprovativo é dele, não do formador.
-         email2 é o pessoal; se não houver, vai para o do IEFP. */
+         email2 é o pessoal; se não houver, vai para o institucional. */
       const meu=(u.email2||'').trim()||(u.email||'').trim();
       if(/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(meu)){
         const corpo=`Confirmação da sua entrega ${res.enviados}/${res.limite}.\n\n`+
@@ -7553,7 +7553,7 @@ let anData=null, anDays=14;
 function anFlag(cc){ return /^[A-Z]{2}$/.test(cc)? cc.replace(/./g,c=>String.fromCodePoint(0x1F1E6+c.charCodeAt(0)-65)) : '🏳️'; }
 function anCountryName(cc){ try{ return new Intl.DisplayNames([getLang()==='en'?'en':'pt'],{type:'region'}).of(cc)||cc; }catch(e){ return cc; } }
 function anWorldMap(paises){
-  const W=window.IEFP_WORLD;
+  const W=window.CRM_WORLD;
   if(!W){ return '<div class="muted" style="padding:6px 2px">Mapa indisponível.</div>'; }
   const byCC={}; let unknown=0;
   (paises||[]).forEach(p=>{ const cc=W.tz[p.tz]; if(cc){ byCC[cc]=(byCC[cc]||0)+p.n; } else { unknown+=p.n; } });
@@ -8902,7 +8902,7 @@ function renderLogin(){
       <p class="login-sub">Esqueceu o utilizador ou o código? Receba-os no email do formador.</p>
       <div class="login-turma-line">${ic('building',14)} Turma <strong>${esc(TURMA)}</strong></div>
       <form id="loginForm" onsubmit="return false">
-        <div class="field"><label>Email do formador</label><input name="email" type="email" autocomplete="email" placeholder="forXXXX@formacao.iefp.pt"></div>
+        <div class="field"><label>Email do formador</label><input name="email" type="email" autocomplete="email" placeholder="email institucional"></div>
         <button type="button" class="btn login-btn" data-act="dorecover-email">Enviar instruções</button>
       </form>
       <div id="loginErr" class="login-err"></div>
@@ -8935,7 +8935,7 @@ function renderLogin(){
     body=`<h2 class="login-h">Criar nova turma</h2>
       <p class="login-sub">As turmas são criadas pela administração da plataforma.</p>
       <form id="loginForm" onsubmit="return false">
-        <div class="field"><label>Email institucional *</label><input name="email" type="email" autocomplete="email" placeholder="forNNNN@formacao.iefp.pt"></div>
+        <div class="field"><label>Email institucional *</label><input name="email" type="email" autocomplete="email" placeholder="email institucional"></div>
         <div class="form-grid" style="gap:12px"><div class="field"><label>Nome *</label><input name="nome" placeholder="primeiro nome"></div><div class="field"><label>Apelido</label><input name="apelido" placeholder="apelido"></div></div>
         <div class="field"><label>Número da turma *</label><input name="codigo" placeholder="12345678" maxlength="24"></div>
         <div class="field"><label>Nome da turma (opcional)</label><input name="nometurma" placeholder="ex.: CRM 2026 - Manhã"></div>
