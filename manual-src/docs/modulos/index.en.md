@@ -1,6 +1,6 @@
 # Features
 
-IEFP CRM covers the entire cycle of a real CRM. Access each menu through the cards below - each one has its own page with a detailed **step by step**.
+CRM covers the entire cycle of a real CRM. Access each menu through the cards below - each one has its own page with a detailed **step by step**.
 
 <div class="grid cards" markdown>
 

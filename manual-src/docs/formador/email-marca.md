@@ -11,12 +11,12 @@ A plataforma pode enviar emails **a sério** (propostas, avisos de entrega) ou e
 - **Enviar teste** envia um email real para confirmares.
 
 !!! info "Identidade dos emails"
-    Os emails saem com o nome **IEFP CRM** e as respostas vão para o email da entidade. O endereço visível do remetente é o configurado na conta de email da plataforma.
+    Os emails saem com o nome **CRM** e as respostas vão para o email da entidade. O endereço visível do remetente é o configurado na conta de email da plataforma.
 
 ## Marca & Aparência (white-label)
 
 Permite replicar o CRM para outra entidade:
 
 - **Nome**, **cor principal** (deriva automaticamente toda a paleta), **logótipo** e **fundo do login**.
-- **Aplicar marca** recolore a app ao vivo; **Repor IEFP** volta ao verde original.
+- **Aplicar marca** recolore a app ao vivo; **Repor predefinição** volta ao verde original.
 - A marca **viaja no Export JSON** - replicas o ambiente noutra utilização só com import + trocar nome/cor/logo.

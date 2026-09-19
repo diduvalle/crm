@@ -59,4 +59,4 @@ It only appears when the browser is **genuinely** empty. If you already have wor
     You're in **your** *sandbox*. Create, edit and delete freely - nothing affects your colleagues. To restore the sample data, there's a button in **Settings → Data & backup**.
 
 !!! tip "Learning tooltips"
-    Notice the **ⓘ** icons next to various titles - they explain the concept and point to the relevant UFCD slides.
+    Notice the **ⓘ** icons next to various titles - they explain the concept and point to the relevant slides.

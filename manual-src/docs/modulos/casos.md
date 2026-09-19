@@ -1,6 +1,6 @@
 # Serviço ao cliente (Casos)
 
-O módulo **Casos** gere os pedidos de apoio dos clientes de ponta a ponta: registo, conversa, prazos (SLA) e satisfação (CSAT/NPS). Cobre a UFCD 10866 - gestão de vendas e serviços ao cliente.
+O módulo **Casos** gere os pedidos de apoio dos clientes de ponta a ponta: registo, conversa, prazos (SLA) e satisfação (CSAT/NPS). Cobre a gestão de vendas e o serviço a clientes.
 
 <figure class="crm-video" data-video="casos" data-poster="/manual/assets/screens/casos.png"></figure>
 

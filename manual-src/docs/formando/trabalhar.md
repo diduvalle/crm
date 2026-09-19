@@ -59,4 +59,4 @@ Só aparece quando o navegador está **mesmo** vazio. Se já lá tens trabalho, 
     Estás na **tua** *sandbox*. Cria, edita e apaga à vontade - nada afeta os colegas. Para repor os dados de exemplo, há um botão em **Definições → Dados & backup**.
 
 !!! tip "Balões pedagógicos"
-    Repara nos ícones **ⓘ** junto a vários títulos - explicam o conceito e indicam a página dos slides das UFCD.
+    Repara nos ícones **ⓘ** junto a vários títulos - explicam o conceito e indicam a página dos slides.

@@ -2,7 +2,7 @@
 
 | Termo | Significado |
 |---|---|
-| **Turma** | Ambiente isolado, identificado por um número de 8 dígitos (`?t=12345678`). |
+| **Turma** | Ambiente isolado, identificado por um código (`?t=123A`). |
 | **Sandbox** | A cópia do CRM de cada formando, guardada no próprio computador. |
 | **Administrador** | O formador que cria a turma; gere acessos, entregas e definições. |
 | **Formando** | Utilizador que trabalha na sua *sandbox* e submete o trabalho. |

@@ -4,7 +4,7 @@
     **Formando:** pede ao formador para a repor (*Gerir a turma*). **Formador:** usa o **código de recuperação** que recebeste ao criar a turma.
 
 ??? question "Escrevi o número da turma e diz que não existe."
-    Confirma o número (8 dígitos) com o formador. Se a turma existir, entras; senão, a app avisa para evitar enganos.
+    Confirma o código da turma com o formador. Se a turma existir, entras; senão, a app avisa para evitar enganos.
 
 ??? question "Os meus dados desaparecem se fechar o browser?"
     Não. A tua *sandbox* fica guardada **no teu computador** (neste browser). Mudar de computador ou limpar os dados do browser apaga-a - por isso submete o trabalho quando estiver pronto.

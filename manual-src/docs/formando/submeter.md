@@ -39,7 +39,7 @@ Por baixo vem o **resumo do que foi entregue** (quantas empresas, contactos, pro
 
 ### Recebes um email
 
-Vai uma cópia para o teu **email pessoal** (ou, se não houver, para o do IEFP), com o resumo e o número da entrega. É o teu comprovativo.
+Vai uma cópia para o teu **email pessoal** (ou, se não houver, para o institucional), com o resumo e o número da entrega. É o teu comprovativo.
 
 !!! warning "Se o email não chegar, a entrega continua válida"
     O que conta é o **registo no servidor**, feito no momento em que a confirmação aparece no ecrã. O email é só aviso - pode ficar preso no spam, ou o serviço de envio pode falhar, e nada disso desfaz a entrega.

@@ -39,7 +39,7 @@ Underneath comes the **summary of what was submitted** (how many companies, cont
 
 ### You get an email
 
-A copy goes to your **personal email** (or, failing that, your IEFP one), with the summary and the submission number. It is your receipt.
+A copy goes to your **personal email** (or, failing that, your institutional one), with the summary and the submission number. It is your receipt.
 
 !!! warning "If the email does not arrive, the submission is still valid"
     What counts is the **record on the server**, made the moment the confirmation appears on screen. The email is only a notice - it can land in spam, or the sending service can fail, and none of that undoes the submission.

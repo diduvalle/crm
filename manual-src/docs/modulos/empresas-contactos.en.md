@@ -170,7 +170,7 @@ Both **Contacts** and **Products** have **Import** + **Template**:
 !!! tip "Generate sample data"
     In **Settings → Sample data generator** you can quickly create realistic companies, contacts and proposals (valid PT names/NIF) to practice without starting from scratch.
 
-!!! note "Pedagogy (UFCD 10868)"
+!!! note "Pedagogy"
     You practice modeling the data of a real CRM (entity vs person), **data quality** (NIF/NIPC validation), **segmentation**, **loyalty** and **lead management** (Lead → Customer lifecycle, *lead scoring*, qualification) - the basis of customer analysis.
 
 ## Related

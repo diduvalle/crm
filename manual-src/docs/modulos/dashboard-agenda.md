@@ -25,7 +25,7 @@ Cada número é uma **ligação** para o sítio respetivo. O que já passou do p
 - **KPIs** do período: receita ganha, ticket médio, pipeline, novos clientes.
     - Com a **comparação** ativa, cada KPI mostra **▲▼ X% vs período anterior**.
     - Valores financeiros podem aparecer com 🔒 conforme o papel.
-- **Receita ganha por mês** - gráfico de barras (só propostas *Ganha*), com a **leitura** por baixo: *"Melhor mês: abril, com 8.236,08 €. Em agosto ainda não há receita registada, e faltam 6 dias."* O gráfico mostra; a frase conclui - que é o que a UFCD 10868 pede. Com um mês só, não aparece: não há comparação a fazer.
+- **Receita ganha por mês** - gráfico de barras (só propostas *Ganha*), com a **leitura** por baixo: *"Melhor mês: abril, com 8.236,08 €. Em agosto ainda não há receita registada, e faltam 6 dias."* O gráfico mostra; a frase conclui - que é o que uma boa análise pede. Com um mês só, não aparece: não há comparação a fazer.
 - **De onde vêm os leads** - donut das empresas por canal de aquisição, com atalho para o **ROI por canal** no Analytics, onde vive a análise a sério (conversão e valor gerado por canal).
 - **Pipeline por estado** - distribuição das propostas (donut/barras).
 - **Propostas recentes** - últimos movimentos; clica para abrir.

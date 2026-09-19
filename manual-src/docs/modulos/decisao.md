@@ -1,6 +1,6 @@
 # Modelos de decisão
 
-O ecrã **Decisão** transforma os dados do CRM em apoio à decisão: o que fazer a seguir, simulação de cenários, quem são os melhores clientes e quanto vais faturar. Cobre a UFCD 10869 - CRM, modelos de análise à decisão.
+O ecrã **Decisão** transforma os dados do CRM em apoio à decisão: o que fazer a seguir, simulação de cenários, quem são os melhores clientes e quanto vais faturar. Cobre os modelos de análise à decisão.
 
 <figure class="crm-video" data-video="decisao" data-poster="/manual/assets/screens/decisao.png"></figure>
 

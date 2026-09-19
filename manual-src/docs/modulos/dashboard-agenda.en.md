@@ -25,7 +25,7 @@ Every number is a **link** to the right place. Anything past its deadline is und
 - **KPIs** for the period: revenue won, average ticket, pipeline, new customers.
     - With **comparison** enabled, each KPI shows **▲▼ X% vs previous period**.
     - Financial values may appear with 🔒 depending on the role.
-- **Won revenue per month** - bar chart (only *Won* proposals), with the **reading** underneath: *"Best month: April, with €8,236.08. August has no revenue recorded yet, and 6 days are left."* The chart shows; the sentence concludes - which is what UFCD 10868 asks for. With a single month it does not appear: there is no comparison to make.
+- **Won revenue per month** - bar chart (only *Won* proposals), with the **reading** underneath: *"Best month: April, with €8,236.08. August has no revenue recorded yet, and 6 days are left."* The chart shows; the sentence concludes - which is what good analysis asks for. With a single month it does not appear: there is no comparison to make.
 - **Where leads come from** - a donut of companies by acquisition channel, with a shortcut to **ROI by channel** in Analytics, where the real analysis lives (conversion and value generated per channel).
 - **Pipeline by status** - distribution of proposals (donut/bars).
 - **Recent proposals** - latest activity; click to open.

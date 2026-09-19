@@ -15,7 +15,7 @@ A via mais rápida para uma turma inteira.
     |---|---|---|
     | `nome` | ✅ | Primeiro nome |
     | `apelido` | ✅ | |
-    | `email` | ✅ | Email **IEFP** do formando (o principal; gera o utilizador e a palavra-passe) |
+    | `email` | ✅ | Email **institucional** do formando (o principal; gera o utilizador e a palavra-passe) |
     | `email_pessoal` | - | Email pessoal (opcional) - o **convite vai para os dois** |
     | `username` | - | O login. **Deixa vazio** e a app gera-o: **1.ª letra do nome + apelido**, em minúsculas e sem acentos (Diogo Vale → `dvale`). O Modelo já traz a fórmula que o preenche sozinho. Se dois derem o mesmo, a app desambigua (`jferreira`, `jferreira2`) |
     | `password` | - | Pode ficar vazia → usa a *palavra-passe inicial* |

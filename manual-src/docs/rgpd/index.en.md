@@ -1,6 +1,6 @@
 # GDPR & Pedagogy
 
-The **GDPR** module is the core of the UFCD **10870 - CRM Administration** (data protection). Everything respects the **date filter** and there is a **printable compliance report**.
+The **GDPR** module is the core of data protection (data protection). Everything respects the **date filter** and there is a **printable compliance report**.
 
 <figure class="crm-video" data-video="rgpd" data-poster="/manual/assets/screens/rgpd.png"></figure>
 
@@ -47,12 +47,12 @@ The **GDPR** module is the core of the UFCD **10870 - CRM Administration** (data
 
 </div>
 
-## Link to the UFCD
+## What is practised where
 
-| UFCD | Where it is practised |
+| Area | Where it is practised |
 |---|---|
-| **10868 - CRM Analytics** | Dashboard, Analytics, Campaigns, segmentation, funnel, CAC/LTV |
-| **10870 - CRM Administration** | GDPR (consents, DSAR, RoPA, breaches), users and permissions |
+| **Analytics e campanhas** | Dashboard, Analytics, Campaigns, segmentation, funnel, CAC/LTV |
+| **Data protection and access** | GDPR (consents, DSAR, RoPA, breaches), users and permissions |
 
 !!! info "Learning tooltips"
     Throughout the app, the **ⓘ** icon brings up the definition of the concept (consent, data subject, breach, RoPA…) and the **reference to the slide page**.

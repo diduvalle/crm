@@ -2,21 +2,21 @@
 
 In just a few minutes you have your class up and running. There are **three steps**.
 
-## 1. Create the class
+## 1. Receive the class
 
-1. Open **[iefpcrm.cr0x.org](https://iefpcrm.cr0x.org)**.
-2. On the home screen, click **“I’m a trainer - create a new class”**.
-3. Fill in:
-    - **IEFP trainer email** (`forNNNN@formacao.iefp.pt`) - this is what authorizes the creation.
-    - **First name** and **surname**.
-    - **Class number** (8 digits) and, optionally, a **name** for the class.
-    - Your **username** and **password**.
-4. Click **Create class and enter**.
+The class is created by the **platform administration**, not by you. You receive:
 
-!!! warning "Save the recovery code"
-    Right after you create the class a **recovery code** appears (e.g. `A1B2-C3D4-E5F6`), shown **only once**. It is how you recover your password if you forget it. **Write it down somewhere safe.**
+- your **school's address** (for example `crm.cr0x.org/school`);
+- the **class code**;
+- your **username** and **password**;
+- a **recovery code**.
 
-You automatically become the **Administrator** of your class - only you, no one else.
+Open the address, enter the class code and sign in with your credentials.
+
+!!! warning "Keep the recovery code"
+    The **recovery code** (e.g. `A1B2-C3D4-E5F6`) is shown **only once**, to whoever created the class. It is how you recover your password if you forget it. **Write it down somewhere safe.**
+
+You are the **Administrator** of your class - you and no one else.
 
 ## 2. Add the trainees
 
@@ -32,7 +32,7 @@ Inside the class, go to **Settings → Class trainees**. You have two ways:
 Share the **link with the number** with the class:
 
 ```
-https://iefpcrm.cr0x.org/?t=12345678
+https://crm.cr0x.org/?t=12345678
 ```
 
 Each trainee opens the link and signs in with **their own username and password**.

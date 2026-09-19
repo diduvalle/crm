@@ -18,12 +18,12 @@ Dados usados em propostas e comunicações: **nome da entidade**, **NIF/NIPC**, 
 Cria rapidamente **empresas, contactos e propostas** realistas (PT) - acrescenta aos dados existentes.
 
 ### Marca & Aparência
-*White-label*: **nome**, **cor principal** (deriva a paleta), **logótipo**, **fundo do login**. **Aplicar** / **Repor IEFP**. → [Email & Marca](../formador/email-marca.md).
+*White-label*: **nome**, **cor principal** (deriva a paleta), **logótipo**, **fundo do login**. **Aplicar** / **Repor predefinição**. → [Email & Marca](../formador/email-marca.md).
 
 ### Envio de email real (EmailJS) *(Admin)*
 As **chaves** estão **fixas** (🔒); geres só o **modo** (real/simulado) + **Enviar teste**. → [Email & Marca](../formador/email-marca.md).
 
-**Convite e reposição de password** - escolhes se o email vai para o **endereço do IEFP + o pessoal** (2 envios por pessoa) ou **só para o do IEFP** (1 envio). Cada endereço conta como um envio no plano: numa turma de 13, é a diferença entre **26** e **13** envios de cada vez que convidas a turma.
+**Convite e reposição de password** - escolhes se o email vai para o **endereço institucional + o pessoal** (2 envios por pessoa) ou **só para o institucional** (1 envio). Cada endereço conta como um envio no plano: numa turma de 13, é a diferença entre **26** e **13** envios de cada vez que convidas a turma.
 
 **Consumo do plano** - o botão **Consultar consumo** vai ao **histórico real do EmailJS** e mostra quantos envios já foram feitos **neste ciclo**, a barra de progresso (laranja aos 70%, vermelha aos 90%) e a data em que repõe. Em **Teto e dia do ciclo** escreves os dois valores do teu plano no formato `200/4` (200 envios, repõe dia 4) - o painel do EmailJS diz *"Resets on…"*.
 

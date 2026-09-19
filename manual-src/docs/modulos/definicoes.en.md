@@ -18,12 +18,12 @@ Data used in proposals and communications: **entity name**, **NIF/NIPC**, **phon
 Quickly creates realistic **companies, contacts and proposals** (PT) - adds to the existing data.
 
 ### Brand & Appearance
-*White-label*: **name**, **primary color** (derives the palette), **logo**, **login background**. **Apply** / **Reset IEFP**. → [Email & Brand](../formador/email-marca.md).
+*White-label*: **name**, **primary color** (derives the palette), **logo**, **login background**. **Apply** / **Reset to default**. → [Email & Brand](../formador/email-marca.md).
 
 ### Real email sending (EmailJS) *(Admin)*
 The **keys** are **fixed** (🔒); you only manage the **mode** (real/simulated) + **Send test**. → [Email & Brand](../formador/email-marca.md).
 
-**Invitations and password resets** - you choose whether the email goes to the **IEFP address + the personal one** (2 sends per person) or **only the IEFP one** (1 send). Each address counts as one send against your plan: in a class of 13, that is the difference between **26** and **13** sends every time you invite the class.
+**Invitations and password resets** - you choose whether the email goes to the **institutional address + the personal one** (2 sends per person) or **only the institutional one** (1 send). Each address counts as one send against your plan: in a class of 13, that is the difference between **26** and **13** sends every time you invite the class.
 
 **Plan usage** - the **Check usage** button reads the **real EmailJS history** and shows how many sends were made **in this cycle**, a progress bar (amber at 70%, red at 90%) and the reset date. Under **Cap and cycle day** you enter both values from your plan as `200/4` (200 sends, resets on the 4th) - the EmailJS dashboard states *"Resets on…"*.
 

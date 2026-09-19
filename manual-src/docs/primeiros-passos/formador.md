@@ -2,21 +2,21 @@
 
 Em poucos minutos tens a tua turma a funcionar. São **três passos**.
 
-## 1. Criar a turma
+## 1. Receber a turma
 
-1. Abre **[iefpcrm.cr0x.org](https://iefpcrm.cr0x.org)**.
-2. No ecrã inicial, clica em **“Sou formador - criar nova turma”**.
-3. Preenche:
-    - **Email de formador IEFP** (`forNNNN@formacao.iefp.pt`) - é o que autoriza a criação.
-    - **Nome** e **apelido**.
-    - **Número da turma** (8 dígitos) e, opcional, um **nome** para a turma.
-    - O teu **utilizador** e **palavra-passe**.
-4. Clica **Criar turma e entrar**.
+A turma é criada pela **administração da plataforma**, não por ti. Recebes:
+
+- o **endereço da tua escola** (por exemplo `crm.cr0x.org/escola`);
+- o **código da turma**;
+- o teu **utilizador** e **palavra-passe**;
+- um **código de recuperação**.
+
+Abre o endereço, indica o código da turma e entra com as tuas credenciais.
 
 !!! warning "Guarda o código de recuperação"
-    Logo após criar a turma aparece um **código de recuperação** (ex.: `A1B2-C3D4-E5F6`), mostrado **uma única vez**. É a forma de recuperares a tua palavra-passe se a esqueceres. **Anota-o num local seguro.**
+    O **código de recuperação** (ex.: `A1B2-C3D4-E5F6`) é mostrado **uma única vez**, a quem criou a turma. É a forma de recuperares a palavra-passe se a esqueceres. **Anota-o num local seguro.**
 
-Ficas automaticamente como **Administrador** da tua turma - só tu, mais ninguém.
+Ficas como **Administrador** da tua turma - só tu, mais ninguém.
 
 ## 2. Adicionar os formandos
 
@@ -32,7 +32,7 @@ Dentro da turma, vai a **Definições → Formandos da turma**. Tens duas vias:
 Partilha com a turma o **link com o número**:
 
 ```
-https://iefpcrm.cr0x.org/?t=12345678
+https://crm.cr0x.org/?t=12345678
 ```
 
 Cada formando abre o link e entra com o **seu utilizador e palavra-passe**.

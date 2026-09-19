@@ -21,7 +21,7 @@ Isto não é modéstia nem um aviso legal escondido no rodapé: é a **primeira 
 !!! info "Porque é que isto está aqui"
     O **artigo 50.º** do Regulamento (UE) 2024/1689 (*AI Act*) obriga a que quem interage com um sistema de IA **saiba que está a falar com uma máquina**. Um chatbot de reservas num site é o exemplo clássico de **risco limitado**: não está proibido nem exige avaliação de conformidade - basta a **transparência**.
 
-    O Pulso **não é** um sistema de IA, e por isso o artigo 50.º nem se lhe aplica. Declara-o na mesma, por duas razões: porque um assistente que se deixasse confundir com IA ensinaria exatamente o contrário do que a UFCD diz, e porque é mais fácil perceber a obrigação a vê-la cumprida do que a lê-la num diploma.
+    O Pulso **não é** um sistema de IA, e por isso o artigo 50.º nem se lhe aplica. Declara-o na mesma, por duas razões: porque um assistente que se deixasse confundir com IA ensinaria exatamente o contrário do que se ensina, e porque é mais fácil perceber a obrigação a vê-la cumprida do que a lê-la num diploma.
 
 ## Três coisas, não duas
 
@@ -216,7 +216,7 @@ Sempre que o Pulso não reconhece uma pergunta, guarda-a. Vê-se em dois sítios
 
 O Dashboard mostra os números que **alguém decidiu mostrar**. Um CRM tem sempre mais combinações úteis do que ecrãs para as arrumar.
 
-!!! note "Pedagogia (UFCD 10868 · 10870)"
+!!! note "Nota pedagógica"
     Vale a pena usar este assistente como exercício em três tempos:
 
     1. **Fazer-lhe perguntas que ele não sabe responder.** É a forma mais rápida de perceber que um assistente só chega onde os **dados** chegam - e que a limitação está quase sempre no registo, não no motor.

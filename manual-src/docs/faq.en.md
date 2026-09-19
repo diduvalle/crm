@@ -4,7 +4,7 @@
     **Trainee:** ask the trainer to reset it (*Manage the class*). **Trainer:** use the **recovery code** you received when you created the class.
 
 ??? question "I entered the class number and it says it doesn't exist."
-    Confirm the number (8 digits) with the trainer. If the class exists, you get in; otherwise, the app warns you to avoid mistakes.
+    Check the class code with your trainer. If the class exists, you get in; otherwise, the app warns you to avoid mistakes.
 
 ??? question "Does my data disappear if I close the browser?"
     No. Your *sandbox* is saved **on your computer** (in this browser). Switching computers or clearing the browser data deletes it - so submit your work when it is ready.

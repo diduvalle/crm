@@ -1,6 +1,6 @@
 # Decision models
 
-The **Decision** screen turns CRM data into decision support: what to do next, scenario simulation, who your best customers are and how much you will bill. It covers UFCD 10869 - CRM, decision analysis models.
+The **Decision** screen turns CRM data into decision support: what to do next, scenario simulation, who your best customers are and how much you will bill. It covers decision analysis models.
 
 <figure class="crm-video" data-video="decisao" data-poster="/manual/assets/screens/decisao.png"></figure>
 

@@ -1,6 +1,6 @@
 # Funcionalidades
 
-O IEFP CRM cobre todo o ciclo de um CRM real. Acede a cada menu pelos cartões abaixo - cada um tem a sua página com **passo a passo** detalhado.
+O CRM cobre todo o ciclo de um CRM real. Acede a cada menu pelos cartões abaixo - cada um tem a sua página com **passo a passo** detalhado.
 
 <div class="grid cards" markdown>
 

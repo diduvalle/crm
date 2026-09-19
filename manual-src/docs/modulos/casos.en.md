@@ -1,6 +1,6 @@
 # Customer service (Cases)
 
-The **Cases** module handles customer support requests end to end: logging, conversation, deadlines (SLA) and satisfaction (CSAT/NPS). It covers UFCD 10866 - sales management and customer service.
+The **Cases** module handles customer support requests end to end: logging, conversation, deadlines (SLA) and satisfaction (CSAT/NPS). It covers sales management and customer service.
 
 <figure class="crm-video" data-video="casos" data-poster="/manual/assets/screens/casos.png"></figure>
 

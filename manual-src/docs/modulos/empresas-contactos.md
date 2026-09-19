@@ -170,7 +170,7 @@ Tanto em **Contactos** como em **Produtos** há **Importar** + **Modelo**:
 !!! tip "Gerar dados de exemplo"
     Em **Definições → Gerador de dados de exemplo** crias rapidamente empresas, contactos e propostas realistas (nomes/NIF PT válidos) para praticares sem partir de zero.
 
-!!! note "Pedagogia (UFCD 10868)"
+!!! note "Pedagogia"
     Praticas a modelação de dados de um CRM real (entidade vs pessoa), a **qualidade de dados** (validação de NIF/NIPC), a **segmentação**, o **loyalty** e a **gestão de leads** (ciclo de vida Lead → Cliente, *lead scoring*, qualificação) - base da análise de clientes.
 
 ## Relacionado

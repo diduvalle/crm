@@ -4,8 +4,7 @@
 
 ## Trademark and logo
 
-- "**IEFP**", "**Instituto do Emprego e Formação Profissional**" and its **logo** are property of **IEFP, I.P.** (the Portuguese public employment and vocational training institute). They are used here only in an **educational and identifying context**, to frame the material within the training units above.
-- This project is **not official** and has **no affiliation, sponsorship or endorsement** from IEFP, I.P. It does not represent the Institute's position and is not an official service.
+- This project is **not official** and has **no affiliation, sponsorship or endorsement** from any training organisation. It does not represent the position's position and is not an official service.
 
 ## Content and data
 
@@ -21,7 +20,7 @@ When a trainee **signs in to a class**, an account exists. From then on we store
 | What | What for |
 |---|---|
 | Username, first and last name | Identifying who signs in and showing the name in the app |
-| IEFP email and, if given, personal email | Sending the invitation, the submission receipt and password recovery |
+| Institutional email and, if given, personal email | Sending the invitation, the submission receipt and password recovery |
 | Password | Stored **hashed** (*bcrypt*); it is not readable, not even by us |
 | **Profile photo, email signature, phone and job title** | Filling in the profile and the email signature. They follow the account, so they are not lost when changing computer |
 | Backup of the work | One copy, replaced each time, so work is not lost |
@@ -39,7 +38,7 @@ When a trainee **signs in to a class**, an account exists. From then on we store
 ## Rights and contact
 
 - Rights over trademarks, logos and other identified elements belong to their respective owners.
-- If **IEFP, I.P.** (or any rights holder) considers that any element should be **changed or removed**, it will be handled promptly. Contact: **geral@crm.cr0x.org**.
+- If any rights holder considers that any element should be **changed or removed**, it will be handled promptly. Contact: **geral@crm.cr0x.org**.
 
 !!! note "Note"
     This notice is intended to clarify the educational, unofficial nature of the project and **does not constitute legal advice**.

@@ -11,12 +11,12 @@ The platform can send emails **for real** (proposals, submission notices) or in 
 - **Send test** sends a real email so you can confirm.
 
 !!! info "Email identity"
-    Emails go out under the name **IEFP CRM** and replies go to the entity's email. The visible sender address is the one configured in the platform's email account.
+    Emails go out under the name **CRM** and replies go to the entity's email. The visible sender address is the one configured in the platform's email account.
 
 ## Branding & Appearance (white-label)
 
 Lets you replicate the CRM for another entity:
 
 - **Name**, **primary colour** (automatically derives the whole palette), **logo** and **login background**.
-- **Apply branding** recolours the app live; **Reset to IEFP** returns to the original green.
+- **Apply branding** recolours the app live; **Reset to default** returns to the original green.
 - The branding **travels in the JSON Export** - you replicate the environment in another use just with import + changing name/colour/logo.

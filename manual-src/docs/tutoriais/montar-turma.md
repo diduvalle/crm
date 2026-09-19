@@ -5,15 +5,15 @@
 
 ## Antes de começar
 
-- [x] Tens o teu **email institucional IEFP** (`forNNNN@formacao.iefp.pt`).
+- [x] Tens o teu **email institucional**.
 - [x] Tens a **lista de formandos** (nome, apelido, email).
 
 ---
 
 ## Passo 1 · Criar a turma
 
-1. Abre **[iefpcrm.cr0x.org](https://iefpcrm.cr0x.org)** → **“Sou formador - criar nova turma”**.
-2. Preenche email IEFP, nome, **número da turma (8 dígitos)**, utilizador e palavra-passe → **Criar turma e entrar**.
+1. Abre o **endereço da tua escola** (ex.: `crm.cr0x.org/escola`).
+2. Indica o **código da turma** que te deram e entra com o teu utilizador e palavra-passe.
 
 !!! warning "Guarda o código de recuperação"
     Aparece **uma vez** - anota-o. É a tua forma de recuperar a palavra-passe.
@@ -53,7 +53,7 @@
 Envia à turma o link com o número:
 
 ```
-https://iefpcrm.cr0x.org/?t=12345678
+https://crm.cr0x.org/?t=12345678
 ```
 
 Cada formando entra com o **seu utilizador e palavra-passe**.

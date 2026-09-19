@@ -5,15 +5,15 @@
 
 ## Before you start
 
-- [x] You have your **IEFP institutional email** (`forNNNN@formacao.iefp.pt`).
+- [x] You have your **institutional email**.
 - [x] You have the **list of trainees** (first name, surname, email).
 
 ---
 
 ## Step 1 · Create the class
 
-1. Open **[iefpcrm.cr0x.org](https://iefpcrm.cr0x.org)** → **“I’m a trainer - create a new class”**.
-2. Fill in IEFP email, name, **class number (8 digits)**, username and password → **Create class and enter**.
+1. Open your **school's address** (e.g. `crm.cr0x.org/school`).
+2. Enter the **class code** you were given and sign in with your username and password.
 
 !!! warning "Save the recovery code"
     It appears **once** - write it down. It is your way to recover the password.
@@ -53,7 +53,7 @@
 Send the class the link with the number:
 
 ```
-https://iefpcrm.cr0x.org/?t=12345678
+https://crm.cr0x.org/?t=12345678
 ```
 
 Each trainee enters with **their own username and password**.

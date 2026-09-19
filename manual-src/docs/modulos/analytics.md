@@ -1,10 +1,10 @@
 # Analytics
 
-O módulo de **KPIs & Dashboards** - o foco da UFCD **10868**. Tudo respeita o **filtro temporal** e permite **comparar com o período anterior**.
+O módulo de **KPIs & Dashboards** - o foco deste módulo. Tudo respeita o **filtro temporal** e permite **comparar com o período anterior**.
 
 <figure class="crm-video" data-video="analytics" data-poster="/manual/assets/screens/analytics.png"></figure>
 
-*Funil de vendas, conversão, ticket médio, churn e top empresas (UFCD 10868).*
+*Funil de vendas, conversão, ticket médio, churn e top empresas.*
 
 ## Filtro e comparação
 

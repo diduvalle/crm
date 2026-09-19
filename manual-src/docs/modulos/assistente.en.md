@@ -216,7 +216,7 @@ At first glance it is redundant: *"how many open proposals"* is already on the D
 
 The Dashboard shows the numbers **somebody decided to show**. A CRM always has more useful combinations than it has screens to hold them.
 
-!!! note "Pedagogy (UFCD 10868 · 10870)"
+!!! note "Teaching note"
     It is worth using this assistant as a three-part exercise:
 
     1. **Ask it questions it cannot answer.** It is the fastest way to see that an assistant only reaches as far as the **data** reaches - and that the limit is almost always in the record keeping, not in the engine.

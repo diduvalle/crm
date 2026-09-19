@@ -15,7 +15,7 @@ The fastest route for a whole class.
     |---|---|---|
     | `nome` | ✅ | First name |
     | `apelido` | ✅ | |
-    | `email` | ✅ | The trainee's **IEFP** email (the primary one; derives username and password) |
+    | `email` | ✅ | The trainee's **institutional** email (the primary one; derives username and password) |
     | `email_pessoal` | - | Personal email (optional) - the **invite goes to both** |
     | `username` | - | The login. **Leave it empty** and the app generates it: **first letter of the first name + surname**, lowercase and unaccented (Diogo Vale → `dvale`). The template already carries the formula that fills it in. If two people collide, the app disambiguates (`jferreira`, `jferreira2`) |
     | `password` | - | Can be left empty → uses the *initial password* |

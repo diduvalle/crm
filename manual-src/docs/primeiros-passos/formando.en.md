@@ -6,7 +6,7 @@ Welcome! Here are the essentials to get you started.
 
 1. Open the **link your trainer gave you** (it has the class number):
    ```
-   https://iefpcrm.cr0x.org/?t=12345678
+   https://crm.cr0x.org/?t=12345678
    ```
 2. Type your **username** and your **password**.
 3. Click **Enter**.

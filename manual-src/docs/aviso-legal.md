@@ -1,11 +1,10 @@
 # Aviso legal
 
-O **CRM** é um projeto **pedagógico, independente e sem fins lucrativos**, criado por **Diogo du Valle** como ferramenta de apoio à formação nas UFCD **10868 - CRM Analytics** e **10870 - Administração de CRM**.
+O **CRM** é um projeto **pedagógico, independente e sem fins lucrativos**, criado por **Diogo du Valle** como ferramenta de apoio à formação.
 
 ## Marca e logótipo
 
-- "**IEFP**", "**Instituto do Emprego e Formação Profissional**" e o respetivo **logótipo** são propriedade do **IEFP, I.P.**. São aqui utilizados apenas em **contexto educativo e identificativo**, para enquadrar o material nas UFCD acima referidas.
-- Este projeto **não é oficial** e **não tem qualquer afiliação, patrocínio ou aprovação** por parte do IEFP, I.P. Não representa a posição do Instituto nem constitui um serviço oficial.
+- Este projeto **não é oficial** e **não tem qualquer afiliação, patrocínio ou aprovação** por parte de nenhuma entidade formadora nem constitui um serviço oficial.
 
 ## Conteúdo e dados
 
@@ -21,7 +20,7 @@ Quando um formando **inicia sessão numa turma**, passa a existir uma conta. Aí
 | O quê | Para quê |
 |---|---|
 | Utilizador, nome, apelido | Identificar quem entra e mostrar o nome na aplicação |
-| Email do IEFP e, se for indicado, email pessoal | Enviar o convite, o comprovativo de entrega e a recuperação de palavra-passe |
+| Email institucional e, se for indicado, email pessoal | Enviar o convite, o comprovativo de entrega e a recuperação de palavra-passe |
 | Palavra-passe | Guardada **cifrada** (*bcrypt*); não é legível, nem por nós |
 | **Fotografia de perfil, assinatura de email, telefone e cargo** | Preencher o perfil e a assinatura dos emails. Seguem a conta, para não se perderem ao mudar de computador |
 | Cópia de segurança do trabalho | Uma cópia, substituída de cada vez, para não se perder o trabalho |
@@ -39,7 +38,7 @@ Quando um formando **inicia sessão numa turma**, passa a existir uma conta. Aí
 ## Direitos e contacto
 
 - Os direitos sobre marcas, logótipos e demais elementos identificados pertencem aos respetivos titulares.
-- Se o **IEFP, I.P.** (ou qualquer titular de direitos) entender que algum elemento deve ser **alterado ou removido**, será atendido prontamente. Contacto: **geral@crm.cr0x.org**.
+- Se qualquer titular de direitos entender que algum elemento deve ser **alterado ou removido**, será atendido prontamente. Contacto: **geral@crm.cr0x.org**.
 
 !!! note "Nota"
     Este aviso destina-se a esclarecer a natureza pedagógica e não-oficial do projeto e **não constitui aconselhamento jurídico**.

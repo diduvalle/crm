@@ -6,7 +6,7 @@ Bem-vindo! Aqui está o essencial para começares.
 
 1. Abre o **link que o formador te deu** (tem o número da turma):
    ```
-   https://iefpcrm.cr0x.org/?t=12345678
+   https://crm.cr0x.org/?t=12345678
    ```
 2. Escreve o teu **utilizador** e a tua **palavra-passe**.
 3. Clica **Entrar**.

@@ -1,6 +1,6 @@
 # Autoavaliação
 
-Põe à prova os conceitos das UFCD **10868 - CRM Analytics** e **10870 - Administração de CRM**. Escolhe uma resposta em cada pergunta - a correção e a explicação aparecem de imediato.
+Põe à prova os conceitos. Escolhe uma resposta em cada pergunta - a correção e a explicação aparecem de imediato.
 
 <div id="quiz" class="quiz"></div>
 
@@ -8,7 +8,7 @@ Põe à prova os conceitos das UFCD **10868 - CRM Analytics** e **10870 - Admini
 window.QUIZ = [
   { q: "O que mede a taxa de conversão num pipeline de vendas?",
     opts: ["O número total de clientes", "A percentagem de oportunidades que avançam de etapa ou que são ganhas", "O valor médio das propostas", "O número de emails enviados"],
-    correct: 1, exp: "A conversão mede a proporção de oportunidades que progridem ou fecham no funil - central na UFCD 10868." },
+    correct: 1, exp: "A conversão mede a proporção de oportunidades que progridem ou fecham no funil - central na análise de vendas." },
   { q: "O que é o ticket médio?",
     opts: ["O custo de adquirir um cliente", "O valor médio por proposta ou venda", "O tempo médio de resposta", "O número de produtos no catálogo"],
     correct: 1, exp: "Ticket médio = receita total a dividir pelo número de vendas." },
