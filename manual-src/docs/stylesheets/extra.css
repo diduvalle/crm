@@ -657,7 +657,7 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
   display:flex;align-items:center;justify-content:center;transition:transform .15s}
 .vfachada-nota{margin:6px 0 0;font-size:.72rem;line-height:1.45;color:var(--md-default-fg-color--light)}
 .vfachada-frame{width:100%;aspect-ratio:16/9;border:0;border-radius:8px;display:block}
-.vfachada-falta{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;
+.vfachada-falta{min-height:72px;display:flex;align-items:center;justify-content:center;
   border:1px dashed var(--md-default-fg-color--lightest);border-radius:8px;
   color:var(--md-default-fg-color--light);font-size:.85rem}
 

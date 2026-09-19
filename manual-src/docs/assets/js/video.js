@@ -36,6 +36,7 @@
   function montar(fig) {
     var chave = fig.getAttribute('data-video');
     if (!chave) return;
+    if (fig.querySelector('.vfachada')) return;   /* ja montada */
     var t = TXT[lingua(fig)];
     var id = IDS[chave];
     var legenda = fig.querySelector('figcaption');
