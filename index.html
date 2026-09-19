@@ -24,10 +24,11 @@
   :root{
     --papel:#efe9dd;
     --azul:#0078bf;
+    --azul-escuro:#005e95;  /* o mesmo azul, para texto pequeno: o claro so da 3.9:1 */
     --tinta:#171412;
     --tinta-2:#4a423c;
     --neutra:#2a2622;      /* a tinta do quadro */
-    --fraco:#8a7f75;
+    --fraco:#6f655c;       /* escurecido de #8a7f75, que so dava 3.2:1 sobre papel */
   }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
@@ -78,7 +79,7 @@
   }
   .marca{
     font-family:"Space Mono",ui-monospace,monospace;font-size:.72rem;letter-spacing:.24em;
-    text-transform:uppercase;color:var(--azul);margin:0 0 26px;position:relative;z-index:2;
+    text-transform:uppercase;color:var(--azul-escuro);margin:0 0 26px;position:relative;z-index:2;
   }
   h1{
     font-family:Archivo,system-ui,sans-serif;font-weight:800;
@@ -99,7 +100,7 @@
   .colunas{display:grid;gap:52px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
   .col h2{
     font-family:"Space Mono",monospace;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
-    color:var(--azul);margin:0 0 12px;font-weight:700;
+    color:var(--azul-escuro);margin:0 0 12px;font-weight:700;
   }
   .col p{margin:0 0 12px;font-size:1rem;color:var(--tinta-2)}
   .col p:last-child{margin-bottom:0}
@@ -125,7 +126,7 @@
     font-family:"Space Mono",monospace;font-size:.76rem;color:var(--fraco);
     display:flex;flex-wrap:wrap;gap:8px 28px;letter-spacing:.04em;
   }
-  a{color:var(--azul);text-decoration:none;border-bottom:1.5px solid var(--azul)}
+  a{color:var(--azul-escuro);text-decoration:none;border-bottom:1.5px solid var(--azul)}
   a:hover{color:var(--tinta);border-bottom-color:var(--tinta)}
   a:focus-visible{outline:2.5px solid var(--azul);outline-offset:3px}
 
