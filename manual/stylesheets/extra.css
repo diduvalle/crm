@@ -860,6 +860,10 @@ figure.crm-video figcaption{ margin-top:.5rem }
   color:rgba(255,255,255,.72);
 }
 .md-copyright .made-by:hover,
+/* o "Made with Material for MkDocs" vem colado ao credito: sem
+   separador as duas frases leem-se como uma so, confusa. */
+.md-copyright .made-by::after{ content:" · "; opacity:.5 }
+.md-copyright .made-by:hover,
 .md-copyright .made-by:hover span,
 .md-footer-meta a:hover{ color:#fff }
 .md-copyright .made-by svg{ width:13px; height:13px }
