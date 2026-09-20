@@ -154,6 +154,9 @@ extra:
     - icon: octicons/globe-16
       link: https://crm.cr0x.org
       name: Abrir a plataforma
+    - icon: octicons/book-16
+      link: https://crm.cr0x.org/marca/
+      name: Manual de marca (PDF)
 
 nav:
   - Início: index.md
