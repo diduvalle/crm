@@ -92,9 +92,10 @@
   var GRUPOS = [
     ['Identidade', [['nome', 'Nome da escola'], ['slug', 'Endereço'], ['logo', 'Logótipo'], ['cor', 'Cor principal', 'color']]],
     ['Emails para a turma', [['remetenteNome', 'Nome que aparece nos emails']]],
-    ['Formação', [['horas', 'Carga horária (por omissão)'], ['formador', 'Formador (por omissão)']]]
+    ['Formação', [['horas', 'Carga horária (por omissão)'], ['formador', 'Formador (por omissão)'],
+      ['refsCurso', 'Mostrar as referências ao curso dentro da app', 'checkbox']]]
   ];
-  var COL = { logo: 'logo_url', legalNome: 'legal_nome', emailContacto: 'email_contacto',
+  var COL = { logo: 'logo_url', legalNome: 'legal_nome', emailContacto: 'email_contacto', refsCurso: 'refs_curso',
               responsavelDados: 'responsavel_dados', remetenteNome: 'remetente_nome',
               emailResposta: 'email_resposta', seloEmissor: 'selo_emissor' };
   var TURMA_LINHAS = [
@@ -109,7 +110,8 @@
     var v = function (k) { var c = COL[k] || k; return e ? (e[c] == null ? '' : e[c]) : ''; };
     return GRUPOS.map(function (g) {
       var nota = g[0] === 'Formação'
-        ? '<p class="ad-nota">Valores de partida para as turmas desta escola. A carga horária e o formador variam de turma para turma - isto é só o que aparece preenchido à partida.</p>'
+        ? '<p class="ad-nota">Valores de partida para as turmas desta escola. A carga horária e o formador variam de turma para turma - isto é só o que aparece preenchido à partida. ' +
+          'As <strong>referências ao curso</strong> são os códigos das UFCD e os números de slide que a app mostra nos módulos e nos glossários: só liga isto se a escola tiver esse curso.</p>'
         : g[0] === 'Emails para a turma'
         ? '<p class="ad-nota">Saem sempre de <code>crm@cr0x.org</code>, e as respostas vêm para lá. O que muda por escola é só ' +
           'o <strong>nome</strong> que aparece na caixa de entrada de quem recebe: <em>Escola A</em> em vez de <em>Escola B</em>.</p>'
@@ -129,6 +131,11 @@
               '</div>' +
             '</div>' +
             '<input type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" data-logo-file hidden></label>';
+        }
+        if (c[2] === 'checkbox') {
+          return '<label class="ad-f ad-check" style="flex-direction:row;align-items:center;gap:9px;cursor:pointer">' +
+            '<input data-ef="' + c[0] + '" type="checkbox"' + (v(c[0]) ? ' checked' : '') + '>' +
+            '<span>' + c[1] + '</span></label>';
         }
         if (c[2] === 'color') {
           var cor = v(c[0]) || '#0078bf';
@@ -329,7 +336,8 @@
 
   function lerFicha(extra) {
     var d = {};
-    Array.prototype.forEach.call(document.querySelectorAll('[data-ef]'), function (i) { d[i.dataset.ef] = i.value.trim(); });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-ef]'), function (i) {
+      d[i.dataset.ef] = i.type === 'checkbox' ? i.checked : i.value.trim(); });
     Object.keys(extra || {}).forEach(function (k) { d[k] = extra[k]; });
     return d;
   }
