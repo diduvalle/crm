@@ -48,13 +48,28 @@ td .tag{align-self:auto}
 .tc-foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:auto;padding-top:14px;border-top:1px solid var(--border)}
 .tc-foot>.btn,.tc-foot>.btn-sec{flex:none}
 /* onde a linha parte: em cima o que é da turma, em baixo para onde se vai */
-.quebra{flex-basis:100%;height:0;margin:-4px 0}
+/* o cartão tem um canto: lá vive a roda dentada das definições */
+.tc{position:relative}
+.tc-meta,.tc h3{padding-right:34px}
+.tc-cog{position:absolute;top:14px;right:14px;width:30px;height:30px;border:1px solid transparent;
+  border-radius:8px;background:transparent;color:var(--muted2);display:grid;place-items:center;
+  cursor:pointer;transition:background .12s,color .12s,border-color .12s}
+.tc-cog svg{width:16px;height:16px}
+.tc-cog:hover{background:var(--surface2);color:var(--text);border-color:var(--border)}
+/* o lápis do nome: o mesmo da barra lateral, mas dentro da linha do título */
+.tc h3 .lapis-t{position:static;transform:none;display:inline-grid;vertical-align:middle;margin-left:5px}
+.tc:hover .lapis-t,.lapis-t:focus-visible{opacity:1}
+.nome-in{width:100%;font:inherit;font-size:1.05rem;font-weight:800;padding:3px 9px;
+  border:1.5px solid var(--g600);border-radius:9px;background:var(--surface);color:var(--text);outline:0}
 /* o dourado do badge: so existe aqui, nao entra no sistema de estilos */
 .btn-ouro{background:#d4af37;border-color:#d4af37;color:#241d0a}
 .btn-ouro:hover{background:#c8a42d;border-color:#c8a42d}
 /* o principal do cartão encosta à direita; com quebra de linha, fica sozinho
    e alinhado à direita na linha de baixo */
 .tc-foot>.btn:last-child{margin-left:auto}
+/* o Badges e o Abrir andam juntos, encostados à direita */
+.tc-foot>.btn-ouro{margin-left:auto}
+.tc-foot>.btn-ouro~.btn{margin-left:0}
 /* cartão de escola */
 .esc-cab{display:flex;align-items:center;gap:10px}
 .esc-logo{width:40px;height:40px;border-radius:10px;object-fit:contain;background:#fff;border:1px solid var(--border);flex:none;padding:3px}
@@ -251,13 +266,20 @@ td .tag{align-self:auto}
 .kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px}
 .kpi strong{display:block;font-size:1.5rem;font-weight:800;line-height:1.1}
 .kpi span{font-size:.76rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.03em}
-.g-perg{margin-bottom:18px}
-.g-perg h4{font-size:.88rem;font-weight:700;margin-bottom:9px}
+.g-bolhas{display:grid;gap:14px}
+.g-bolha{padding:18px 20px}
+.g-cab{display:flex;align-items:flex-start;gap:10px;margin-bottom:13px}
+.g-cab h4{flex:1;min-width:0;font-size:.9rem;font-weight:700;line-height:1.45}
+.g-cab .pill,.g-cab .g-copiar{flex:none;margin-top:1px}
+.g-copiar{white-space:nowrap}
+.g-copiar svg{width:14px;height:14px}
+.g-pe{margin-top:10px;padding-top:9px;border-top:1px solid var(--border);font-size:.76rem;color:var(--muted);font-weight:600}
 .g-lin{display:flex;align-items:center;gap:10px;margin-bottom:5px;font-size:.82rem}
 .g-lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .g-bar{flex:none;width:46%;height:16px;border-radius:5px;background:var(--surface3);overflow:hidden}
 .g-bar i{display:block;height:100%;background:var(--g500)}
 .g-bar.ok i{background:var(--ok)}
+.g-bar.vazia i{background:var(--muted2);opacity:.45}
 .g-n{flex:none;width:58px;text-align:right;color:var(--muted);font-weight:700}
 .corrigir-q{border-top:1px solid var(--border);padding-top:14px;margin-top:14px}
 .corrigir-q:first-child{border-top:0;padding-top:0;margin-top:0}
@@ -804,16 +826,15 @@ async function carregarTurmas(e){
         <span>As turmas criam-se no painel de administração da plataforma, dentro da escola.</span></div>`
     : `<div class="grid">${geridas.map(t=>t.gerida?`
         <article class="card tc">
+          <button class="tc-cog" data-cfg="${t.id}" title="Definições da turma" aria-label="Definições da turma">${ic('cog')}</button>
           <div class="tc-meta"><span class="tag">Turma ${esc(t.codigo)}</span>
             ${t.n_sessoes?`<span class="pill grey">${t.n_sessoes} sess${t.n_sessoes==1?'ão':'ões'}</span>`:''}</div>
-          <h3>${esc(t.nome)||'<span class="muted">Sem nome</span>'}</h3>
+          <h3>${esc(t.nome)||'<span class="muted">Sem nome</span>'}<button class="lapis lapis-t" data-nome-turma="${esc(t.codigo)}" title="Mudar o nome da turma">${ic('lapis')}</button></h3>
           <div class="tc-drive ${t.drive_url?'':'falta'}">${ic('pasta')}${t.drive_url?esc(t.drive_url.replace(/^https?:\/\//,'').slice(0,42)):'Falta a pasta do Drive'}</div>
           <div class="muted" style="font-size:.8rem">${t.n_formandos} formandos · último envio: ${t.ultimo_envio?dt(t.ultimo_envio):'nunca'}</div>
           ${moverSel(t)}
           <div class="tc-foot">
             <button class="tc-lixo" data-apagar-turma="${esc(t.codigo)}" title="Apagar a turma do CRM">${ic('lixo')}</button>
-            <button class="btn-sec btn-sm" data-cfg="${t.id}">${ic('cog')}Definições</button>
-            <span class="quebra"></span>
             <button class="btn-sec btn-sm" data-avals="${t.id}">${ic('papel')}Avaliações</button>
             <button class="btn btn-sm btn-ouro" data-selos="${t.id}">Badges</button>
             <button class="btn btn-sm" data-abrir="${t.id}">Abrir</button>
@@ -821,7 +842,7 @@ async function carregarTurmas(e){
         </article>`:`
         <article class="card tc tc-fora">
           <div class="tc-meta"><span class="tag">Turma ${esc(t.codigo)}</span><span class="pill amber">Ainda não está no Repo</span></div>
-          <h3>${esc(t.nome)||'<span class="muted">Sem nome</span>'}</h3>
+          <h3>${esc(t.nome)||'<span class="muted">Sem nome</span>'}<button class="lapis lapis-t" data-nome-turma="${esc(t.codigo)}" title="Mudar o nome da turma">${ic('lapis')}</button></h3>
           <div class="muted" style="font-size:.8rem">${t.n_formandos} formandos</div>
           ${moverSel(t)}
           <div class="tc-foot">
@@ -845,7 +866,40 @@ async function carregarTurmas(e){
     ()=>{ if(s.value) moverTurma(s.dataset.mover,s.value); }));
   document.querySelectorAll('[data-apagar-turma]').forEach(b=>b.addEventListener('click',
     ()=>apagarTurma(geridas.find(t=>t.codigo===b.dataset.apagarTurma))));
+  document.querySelectorAll('[data-nome-turma]').forEach(b=>b.addEventListener('click',ev=>{
+    ev.stopPropagation();
+    editarNomeTurma(geridas.find(t=>t.codigo===b.dataset.nomeTurma), b);
+  }));
   pintarNavEscolas();
+}
+
+/* Mudar o nome da turma no próprio cartão. O nome é da turma no CRM (não do
+   Repo), por isso quem o guarda é a função de sempre, root_renomear_turma. */
+function editarNomeTurma(t,el){
+  const h=el.closest('h3'); if(!h) return;
+  const antes=t.nome||'';
+  const inp=document.createElement('input');
+  inp.className='nome-in'; inp.value=antes; inp.maxLength=80;
+  inp.setAttribute('aria-label','Nome da turma');
+  h.replaceWith(inp); inp.focus(); inp.select();
+  let feito=false;
+  const termina=async guardar=>{
+    if(feito) return; feito=true;
+    const nome=inp.value.trim();
+    if(guardar && nome!==antes){
+      try{
+        await rpc('root_renomear_turma',{p_token:sessao.token,p_codigo:t.codigo,p_nome:nome});
+        toast('Nome guardado.');
+      }catch(e){ tratar(e); }
+    }
+    carregarTurmas(escolaAtual);
+  };
+  inp.addEventListener('keydown',ev=>{
+    if(ev.key==='Enter'){ ev.preventDefault(); termina(true); }
+    if(ev.key==='Escape'){ ev.preventDefault(); termina(false); }
+  });
+  inp.addEventListener('blur',()=>termina(true));
+  inp.addEventListener('click',ev=>ev.stopPropagation());
 }
 
 function abrirModal(html){
@@ -1974,7 +2028,7 @@ function pintarAplicacao(){
 
     <div class="section-head" style="margin-bottom:12px"><div><h3>Respostas, pergunta a pergunta</h3>
       <div class="sub">Só as de escolha e verdadeiro/falso. Conta quem já entregou.</div></div></div>
-    <div class="card card-pad" id="aGraficos"></div>`;
+    <div class="g-bolhas" id="aGraficos"></div>`;
 
   $('#voltarAvals').addEventListener('click',()=>turmaAtual?abrirAvaliacoes(turmaAtual):mostrarEscolas());
   const be=$('#aEnviar');
@@ -2000,42 +2054,174 @@ function pintarAplicacao(){
   pintarGraficos();
 }
 
+/* Uma bolha por pergunta, e cada uma sabe desenhar-se como imagem para ir
+   parar a um slide. A imagem não é uma fotografia do ecrã: é desenhada de
+   raiz numa tela, sempre clara e a 2x, para não sair esborratada no
+   projetor nem levar o tema escuro para dentro do PowerPoint. */
+let graficosDados=[];
+
 function pintarGraficos(){
   const entregues=pauta.filter(l=>l.submetido_em);
   const fechadas=aplItens.filter(it=>it.tipo==='escolha'||it.tipo==='vf');
+  graficosDados=[];
   if(!entregues.length||!fechadas.length){
-    $('#aGraficos').innerHTML=`<span class="hint">${!fechadas.length
+    $('#aGraficos').innerHTML=`<div class="card card-pad"><span class="hint">${!fechadas.length
       ?'Esta avaliação só tem perguntas de resposta escrita.'
-      :'Ainda não há entregas para contar.'}</span>`;
+      :'Ainda não há entregas para contar.'}</span></div>`;
     return;
   }
   let n=0;
-  $('#aGraficos').innerHTML=fechadas.map(it=>{
+  graficosDados=fechadas.map(it=>{
     n++;
     const ops=it.tipo==='vf'?['Verdadeiro','Falso']:(it.opcoes||[]);
     const valores=it.tipo==='vf'?[true,false]:ops.map((_,i)=>i);
-    const contas=valores.map(v=>entregues.filter(l=>(l.respostas||{})[it.id]===v).length);
-    const semResposta=entregues.length-contas.reduce((a,b)=>a+b,0);
+    const linhas=ops.map((o,i)=>{
+      const c=entregues.filter(l=>(l.respostas||{})[it.id]===valores[i]).length;
+      return {txt:o,n:c,pc:Math.round(c/entregues.length*100),certa:valores[i]===it.certa};
+    });
+    const sem=entregues.length-linhas.reduce((a,b)=>a+b.n,0);
+    if(sem) linhas.push({txt:'sem resposta',n:sem,pc:Math.round(sem/entregues.length*100),certa:false,vazia:true});
     const certos=entregues.filter(l=>(l.respostas||{})[it.id]===it.certa).length;
-    const pc=Math.round(certos/entregues.length*100);
-    return `<div class="g-perg">
-      <h4>${n}. ${esc(it.enunciado)}
-        <span class="pill ${pc>=70?'green':pc>=40?'amber':'red'}" style="margin-left:6px">${pc}% certas</span></h4>
-      ${ops.map((o,i)=>{
-        const c=contas[i], w=Math.round(c/entregues.length*100);
-        const eCerta=(valores[i]===it.certa);
-        return `<div class="g-lin">
-          <span class="g-lbl">${eCerta?ic('ok')+' ':''}${esc(o)}</span>
-          <span class="g-bar${eCerta?' ok':''}"><i style="width:${w}%"></i></span>
-          <span class="g-n">${c} · ${w}%</span></div>`;
-      }).join('')}
-      ${semResposta?`<div class="g-lin"><span class="g-lbl muted">sem resposta</span>
-        <span class="g-bar"><i style="width:${Math.round(semResposta/entregues.length*100)}%"></i></span>
-        <span class="g-n">${semResposta}</span></div>`:''}
-    </div>`;
-  }).join('');
+    return {num:n,enunciado:it.enunciado,linhas,certos,total:entregues.length,
+      pc:Math.round(certos/entregues.length*100)};
+  });
+
+  $('#aGraficos').innerHTML=graficosDados.map((g,i)=>`
+    <div class="card card-pad g-bolha">
+      <div class="g-cab">
+        <h4>${g.num}. ${esc(g.enunciado)}</h4>
+        <span class="pill ${g.pc>=70?'green':g.pc>=40?'amber':'red'}">${g.pc}% certas</span>
+        <button class="btn-ghost btn-xs g-copiar" data-copiar="${i}"
+          title="Copiar como imagem, para colar num slide">${ic('copiar')}Copiar imagem</button>
+      </div>
+      ${g.linhas.map(l=>`<div class="g-lin">
+        <span class="g-lbl${l.vazia?' muted':''}">${l.certa?ic('ok')+' ':''}${esc(l.txt)}</span>
+        <span class="g-bar${l.certa?' ok':''}${l.vazia?' vazia':''}"><i style="width:${l.pc}%"></i></span>
+        <span class="g-n">${l.n} · ${l.pc}%</span></div>`).join('')}
+      <div class="g-pe">${g.certos} de ${g.total} acertaram</div>
+    </div>`).join('');
+
+  document.querySelectorAll('[data-copiar]').forEach(b=>b.addEventListener('click',
+    ()=>copiarGrafico(+b.dataset.copiar,b)));
 }
 
+/* Copiar: o browser exige que a escrita na área de transferência nasça do
+   clique, por isso entrega-se a PROMESSA da imagem em vez de esperar por ela.
+   Onde isso não é permitido (ou falha), descarrega-se o ficheiro. */
+async function copiarGrafico(i,btn){
+  const g=graficosDados[i];
+  if(!g) return;
+  const antes=btn.innerHTML;
+  btn.disabled=true; btn.textContent='A desenhar…';
+  const imagem=desenharGrafico(g);
+  try{
+    if(!window.ClipboardItem) throw new Error('sem ClipboardItem');
+    await navigator.clipboard.write([new ClipboardItem({'image/png':imagem})]);
+    toast('Imagem copiada. Cola no slide com Ctrl+V.');
+  }catch(e){
+    try{
+      const bl=await imagem;
+      const a=document.createElement('a');
+      a.href=URL.createObjectURL(bl);
+      a.download='pergunta-'+g.num+'.png';
+      a.click(); URL.revokeObjectURL(a.href);
+      toast('O browser não deixou copiar - descarreguei a imagem.','warn');
+    }catch(err){ toast('Não foi possível gerar a imagem.','err'); }
+  }
+  btn.disabled=false; btn.innerHTML=antes;
+}
+
+/* A tela é sempre clara, com as cores da marca, e mede-se antes de se
+   desenhar: o enunciado e as opções podem ocupar as linhas que precisarem. */
+function desenharGrafico(g){
+  const pronto=(document.fonts&&document.fonts.ready)||Promise.resolve();
+  return pronto.then(()=>new Promise((res,rej)=>{
+    const E=2, L=900, M=40, COLN=110;          // escala, largura, margem, coluna dos números
+    const LARG=L-M*2, BARRA=LARG-COLN;
+    const F=(p,t)=>`${p} ${t}px Inter,Arial,sans-serif`;
+    const medir=document.createElement('canvas').getContext('2d');
+
+    const quebrar=(txt,fonte,max)=>{
+      medir.font=fonte;
+      const palavras=String(txt).split(/\s+/); const linhas=[]; let l='';
+      palavras.forEach(p=>{
+        const t=l?l+' '+p:p;
+        if(medir.measureText(t).width>max&&l){ linhas.push(l); l=p; } else l=t;
+      });
+      if(l) linhas.push(l);
+      return linhas;
+    };
+
+    const tituloL=quebrar(g.num+'. '+g.enunciado,F('700',21),LARG);
+    const ops=g.linhas.map(l=>({...l,linhas:quebrar(l.txt,F('400',15),BARRA-(l.certa?24:0))}));
+
+    /* O texto assenta na linha de base, por isso sobe ~15px acima do y: sem
+       folga a seguir à barra, a etiqueta seguinte parecia colada à barra de
+       cima em vez da sua. Estes números são o mesmo ritmo do desenho. */
+    let H=M+tituloL.length*29+2+34;                        // título + estado
+    ops.forEach(o=>{ H+=o.linhas.length*21+7+14+30; });    // texto + barra + folga
+    H+=28+M;                                               // filete + rodapé
+
+    const c=document.createElement('canvas');
+    c.width=L*E; c.height=Math.round(H)*E;
+    const x=c.getContext('2d');
+    x.scale(E,E);
+    x.textBaseline='alphabetic';
+
+    const TINTA='#172a36', FRACO='#5f6f7a', TRILHO='#eef3f7',
+          AZUL='#0078bf', VERDE='#0f9d58';
+    x.fillStyle='#ffffff'; x.fillRect(0,0,L,H);
+
+    let y=M+21;
+    x.fillStyle=TINTA; x.font=F('700',21);
+    tituloL.forEach(l=>{ x.fillText(l,M,y); y+=29; });
+
+    y+=2;
+    const txtPc=g.pc+'% certas';
+    x.font=F('600',14);
+    const largPc=x.measureText(txtPc).width;   // medir ANTES de trocar de fonte
+    x.fillStyle=g.pc>=70?VERDE:(g.pc>=40?'#a1500a':'#c62828');
+    x.fillText(txtPc,M,y);
+    x.font=F('400',14); x.fillStyle=FRACO;
+    x.fillText('  ·  '+g.certos+' de '+g.total+' acertaram',M+largPc,y);
+    y+=34;
+
+    const arred=(px,py,pw,ph,r)=>{
+      x.beginPath();
+      x.moveTo(px+r,py); x.lineTo(px+pw-r,py); x.quadraticCurveTo(px+pw,py,px+pw,py+r);
+      x.lineTo(px+pw,py+ph-r); x.quadraticCurveTo(px+pw,py+ph,px+pw-r,py+ph);
+      x.lineTo(px+r,py+ph); x.quadraticCurveTo(px,py+ph,px,py+ph-r);
+      x.lineTo(px,py+r); x.quadraticCurveTo(px,py,px+r,py); x.closePath(); x.fill();
+    };
+
+    ops.forEach(o=>{
+      x.font=F(o.certa?'600':'400',15);
+      x.fillStyle=o.vazia?FRACO:TINTA;
+      let esq=M;
+      if(o.certa){
+        /* o visto desenha-se a traço, para ficar nítido a qualquer tamanho */
+        x.save(); x.strokeStyle=VERDE; x.lineWidth=2; x.lineCap='round'; x.lineJoin='round';
+        x.beginPath(); x.moveTo(M+1,y-5); x.lineTo(M+5,y-1); x.lineTo(M+13,y-11); x.stroke(); x.restore();
+        esq=M+22;
+      }
+      o.linhas.forEach((l,k)=>{ x.fillText(l,esq,y+k*21); });
+      y+=o.linhas.length*21+7;
+
+      x.fillStyle=TRILHO; arred(M,y,BARRA,14,5);
+      if(o.pc>0){ x.fillStyle=o.certa?VERDE:(o.vazia?'#c9d3da':AZUL); arred(M,y,Math.max(6,BARRA*o.pc/100),14,5); }
+      x.fillStyle=o.vazia?FRACO:TINTA; x.font=F('700',13.5);
+      x.fillText(o.n+' · '+o.pc+'%',M+BARRA+14,y+12);
+      y+=14+30;
+    });
+
+    x.fillStyle='#e6ecf1'; x.fillRect(M,y+2,LARG,1);
+    x.fillStyle=FRACO; x.font=F('400',12.5);
+    x.fillText((aplAtual?aplAtual.titulo:'')+(turmaAtual?'  ·  Turma '+turmaAtual.codigo:'')+
+      '  ·  '+g.total+' respostas',M,y+20);
+
+    c.toBlob(b=>b?res(b):rej(new Error('sem imagem')),'image/png');
+  }));
+}
 async function devolverNotas(a,quantos,btn){
   const ok=await uiConfirm({titulo:'Devolver as notas?',ok:'Devolver e enviar',
     texto:`Cada um recebe o link do seu resultado: a nota, o que respondeu e os teus comentários.
