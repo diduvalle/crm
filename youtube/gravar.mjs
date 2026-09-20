@@ -78,8 +78,43 @@ async function semDialogo(f) {
   await f.evaluate(() => {
     const b = [...document.querySelectorAll('button')]
       .find(x => /^(cancelar|cancel)$/i.test((x.textContent || '').trim()) && x.offsetParent);
-    if (b) b.click();
+    if (!b) return;
+    /* um editor tem "Guardar" ao lado do "Cancelar"; um diálogo de
+       confirmação não tem. Sem isto, fechava-se o modal da proposta. */
+    const caixa = b.closest('.modal, .modal-wrap, dialog');
+    const guardar = caixa && [...caixa.querySelectorAll('button')]
+      .filter(x => x.offsetParent)
+      .some(x => /^(guardar|save|eliminar|delete)$/i.test((x.textContent || '').trim()));
+    if (guardar) return;
+    b.click();
   }).catch(() => {});
+}
+
+/* a entidade fictícia em nome de quem se vende. Sem ela, o PDF da
+   proposta sai com um buraco onde devia estar o nome. */
+async function prepararEntidade(f) {
+  await f.evaluate(() => {
+    location.hash = '#definicoes';
+  }).catch(() => {});
+  await new Promise(r => setTimeout(r, 1400));
+  await f.evaluate(() => {
+    const h = [...document.querySelectorAll('h3')].find(e => /^(Entidade|Entity)$/i.test(e.textContent.trim()));
+    const card = h && h.closest('.card');
+    if (!card) return;
+    const pôr = (chave, valor) => {
+      const i = card.querySelector('[data-set="' + chave + '"]');
+      if (!i || i.value) return;
+      i.value = valor;
+      i.dispatchEvent(new Event('input', { bubbles: true }));
+      i.dispatchEvent(new Event('change', { bubbles: true }));
+    };
+    pôr('entidade', 'Consultora Exemplo, Lda.');
+    pôr('nif', '501234567');
+    pôr('email', 'geral@consultoraexemplo.pt');
+    const g = [...card.querySelectorAll('button')].find(b => /^(guardar|save)$/i.test((b.textContent || '').trim()));
+    if (g) g.click();
+  }).catch(() => {});
+  await new Promise(r => setTimeout(r, 900));
 }
 
 /* ---------- gravar ---------- */
@@ -115,19 +150,20 @@ async function gravar(chave, lingua) {
   }
   if (!app) { console.log('  a app não carregou'); await ctx.close(); await b.close(); return; }
 
-  /* o login acontece por trás da abertura */
+  /* o login acontece por trás da abertura. Um guião com semLogin mostra
+     justamente o ecrã de entrada, e por isso não entra. */
   await app.waitForSelector('input[name=username]', { timeout: 25000 }).catch(() => {});
-  if (await app.$('input[name=username]')) {
+  if (!g.semLogin && await app.$('input[name=username]')) {
     await app.fill('input[name=username]', UTILIZADOR);
     await app.fill('input[name=password]', SENHA);
     await app.press('input[name=password]', 'Enter');
     await app.waitForFunction(() => document.querySelectorAll('.nav-link').length > 5,
       null, { timeout: 25000 }).catch(() => {});
   }
-  const erro = (await app.textContent('#loginErr').catch(() => '') || '').trim();
+  const erro = g.semLogin ? '' : (await app.textContent('#loginErr').catch(() => '') || '').trim();
   if (erro) { console.log('  NÃO ENTROU: ' + erro); await ctx.close(); await b.close(); return; }
   await p.waitForTimeout(900);
-  await semDialogo(app);
+  if (!g.semLogin) { await semDialogo(app); await prepararEntidade(app); }
 
   /* a abertura sai quando a sessão está pronta, não a meio */
   const falta = ABERTURA - agora();
@@ -139,7 +175,6 @@ async function gravar(chave, lingua) {
 
   /* ---- os passos ---- */
   for (const passo of g.passos) {
-    await semDialogo(app);
     const de = agora();
     try { await passo.fazer(app); } catch (e) { console.log('    passo falhou: ' + (e.message || '').slice(0, 70)); }
     await p.waitForTimeout((passo.espera ?? 2.6) * 1000);
