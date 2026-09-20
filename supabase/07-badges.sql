@@ -172,6 +172,26 @@ end $$;
 revoke all on function public.badge_cum_laude(uuid, uuid, uuid) from public, anon;
 grant execute on function public.badge_cum_laude(uuid, uuid, uuid) to anon, authenticated;
 
+-- Quem o tem, para o ecra o poder mostrar. E funcao NOVA em vez de uma
+-- coluna a mais no repo_selos: esse vive no SQL do projeto antigo e e
+-- lido pelas duas apps, e mudar-lhe o retorno obrigava a apaga-lo e
+-- recria-lo. A regra da estrada de terra: nao se toca no que o CRM
+-- antigo le.
+create or replace function public.badge_cum_laude_de(p_token uuid, p_repo_turma_id uuid)
+returns uuid language plpgsql security definer set search_path = public as $$
+declare rt public.repo_turmas; v uuid;
+begin
+  perform _repo_root(p_token);
+  select * into rt from repo_turmas where id = p_repo_turma_id;
+  if rt.id is null then return null; end if;
+  select b.user_id into v from badges b
+    join utilizadores u on u.id = b.user_id
+   where u.turma_id = rt.turma_id and b.cum_laude limit 1;
+  return v;
+end $$;
+revoke all on function public.badge_cum_laude_de(uuid, uuid) from public, anon;
+grant execute on function public.badge_cum_laude_de(uuid, uuid) to anon, authenticated;
+
 notify pgrst, 'reload schema';
 
 -- ---------------------------------------------------------------------
