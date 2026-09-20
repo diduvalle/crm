@@ -6252,7 +6252,7 @@ function openTaca(){
   const escada=PATAMARES.map((pt,k)=>{ const on=k<=m.i, agora=k===m.i;
     return `<div class="taca-deg ${on?'on':''} ${agora?'agora':''}"><span class="taca-deg-ic">${ic(on?'check':'lock',13)}</span>
       <span class="taca-deg-n">${esc(pt.nome)}</span><span class="muted" style="font-size:.72rem">${pt.min===0?'início':pt.min+(pt.min===8?' áreas':'+ áreas')}</span></div>`; }).join('');
-  const proximo = m.prox ? `<div class="callout info" style="margin:12px 0">${ic('taca',16)}<div class="ctxt"><strong>Próximo patamar: ${esc(m.prox.nome)}</strong> - faltam ${m.prox.min-m.cobertas} área(s). ${esc(m.atual.frase)}</div></div>`
+  const proximo = m.prox ? `<div class="callout info" style="margin:12px 0">${ic('taca',16)}<div class="ctxt"><strong>Próximo patamar: ${esc(m.prox.nome)}</strong> - ${(m.prox.min-m.cobertas)===1?'falta 1 área':'faltam '+(m.prox.min-m.cobertas)+' áreas'}. ${esc(m.atual.frase)}</div></div>`
                           : `<div class="callout green" style="margin:12px 0">${ic('check',16)}<div class="ctxt"><strong>${esc(m.atual.frase)}</strong></div></div>`;
   /* as áreas por visitar primeiro: quem tem menos feito aparece em cima */
   const areas=m.areas.slice().sort((a,b)=>(a.coberta-b.coberta)||(a.feitas/a.total-b.feitas/b.total)).map(a=>{
