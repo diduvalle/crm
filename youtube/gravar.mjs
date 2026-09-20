@@ -122,6 +122,9 @@ async function gravar(chave, lingua) {
   const g = GUIOES[chave];
   if (!g) { console.log('  guião desconhecido: ' + chave); return; }
   const nome = chave + '-' + lingua;
+  /* limpar os restos: uma gravação interrompida deixa cá ficheiros, e
+     baptizá-los com o nome desta seria dar por bom o vídeo errado */
+  fs.rmSync(SAIDA + '/tmp', { recursive: true, force: true });
   fs.mkdirSync(SAIDA + '/tmp', { recursive: true });
 
   const b = await chromium.launch();
@@ -160,8 +163,17 @@ async function gravar(chave, lingua) {
     await app.waitForFunction(() => document.querySelectorAll('.nav-link').length > 5,
       null, { timeout: 25000 }).catch(() => {});
   }
-  const erro = g.semLogin ? '' : (await app.textContent('#loginErr').catch(() => '') || '').trim();
-  if (erro) { console.log('  NÃO ENTROU: ' + erro); await ctx.close(); await b.close(); return; }
+  /* condição POSITIVA: ou a app está à vista, ou não se grava. Procurar
+     uma mensagem de erro não chegava - durante a avaria do servidor ela
+     nem sempre aparecia, e saía um vídeo do ecrã de entrada. */
+  const dentro = async () => g.semLogin
+    ? !!(await app.$('input[name=username]'))
+    : await app.evaluate(() => document.querySelectorAll('.nav-link').length > 5).catch(() => false);
+  if (!await dentro()) {
+    const erro = (await app.textContent('#loginErr').catch(() => '') || '').trim();
+    console.log('  NÃO ENTROU' + (erro ? ': ' + erro : ' (sem mensagem)'));
+    await ctx.close(); await b.close(); return;
+  }
   await p.waitForTimeout(900);
   if (!g.semLogin) { await semDialogo(app); await prepararEntidade(app); }
 
@@ -172,6 +184,11 @@ async function gravar(chave, lingua) {
   await p.waitForTimeout(480);
   await p.evaluate(() => document.getElementById('intro')?.remove());
   await p.waitForTimeout(250);
+  /* segunda verificação: é a partir daqui que o vídeo mostra alguma coisa */
+  if (!await dentro()) {
+    console.log('  DESISTIU: a app não estava à vista quando a abertura saiu');
+    await ctx.close(); await b.close(); return;
+  }
 
   /* ---- os passos ---- */
   for (const passo of g.passos) {
@@ -193,13 +210,19 @@ async function gravar(chave, lingua) {
   const duracao = agora();
   await p.close(); await ctx.close(); await b.close();
 
-  const feitos = fs.readdirSync(SAIDA + '/tmp').filter(f => f.endsWith('.webm'));
+  const feitos = fs.readdirSync(SAIDA + '/tmp').filter(f => f.endsWith('.webm'))
+    .map(f => ({ f, t: fs.statSync(path.join(SAIDA, 'tmp', f)).mtimeMs }))
+    .sort((a, b) => b.t - a.t);
   if (!feitos.length) { console.log('  ' + nome + ': NÃO GRAVOU'); return; }
   const destino = path.join(SAIDA, nome + '.webm');
-  fs.renameSync(path.join(SAIDA, 'tmp', feitos[0]), destino);
+  fs.renameSync(path.join(SAIDA, 'tmp', feitos[0].f), destino);
   fs.writeFileSync(path.join(SAIDA, nome + '.vtt'), vtt(cues));
-  console.log('  ' + nome.padEnd(26) + duracao.toFixed(1) + 's  ' +
-    ((fs.statSync(destino).size / 1024) | 0) + 'kB  ' + cues.length + ' legendas');
+  const kb = (fs.statSync(destino).size / 1024) | 0;
+  /* um vídeo destes anda nos 50-70 kB por segundo; muito abaixo disso é
+     sinal de que ficou truncado ou quase vazio */
+  const magro = kb < duracao * 25 ? '   << MAGRO, ver' : '';
+  console.log('  ' + nome.padEnd(26) + duracao.toFixed(1) + 's  ' + kb + 'kB  ' +
+    cues.length + ' legendas' + magro);
 }
 
 const args = process.argv.slice(2);
