@@ -185,7 +185,7 @@ function pintarFormulario(){
     '<div class="folha"><div id="lista"></div>'+
     '<div class="fim"><div class="txt"><strong>Já respondeste a tudo?</strong>'+
       '<span id="falta"></span></div>'+
-      '<button class="btn" id="submeter">Submeter a avaliação</button></div></div>';
+      '<button class="btn" id="submeter">Submeter</button></div></div>';
   $('#ecra').innerHTML=html;
 
   var lista=$('#lista'), n=0;
@@ -286,7 +286,7 @@ function submeter(){
     return rpc('teste_abrir',{p_token:T});
   }).then(function(d){ D=d; R=d.respostas||{}; window.scrollTo(0,0); pintar(); })
     .catch(function(){
-      b.disabled=false; b.textContent='Submeter a avaliação';
+      b.disabled=false; b.textContent='Submeter';
       alert('Não foi possível submeter. Tenta outra vez; o que escreveste está guardado.');
     });
 }
