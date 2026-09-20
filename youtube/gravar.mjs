@@ -1,17 +1,23 @@
 /* ============ A LINHA DE GRAVAÇÃO DOS VÍDEOS ============
-   Um vídeo = abertura + ecrã + fecho, numa GRAVAÇÃO CONTÍNUA. Não há
-   junção de ficheiros nem ffmpeg: a abertura e o fecho entram como uma
-   camada por cima da própria app, tocam, e saem.
+   Um vídeo = abertura + ecrã + fecho, numa gravação contínua. Sem
+   ffmpeg e sem juntar ficheiros.
 
-   A ABERTURA ESTÁ LÁ DESDE O PRIMEIRO FOTOGRAMA. Entra por
-   addInitScript, antes de qualquer script da página, e é por trás dela
-   que a sessão é iniciada. Na primeira versão o login aparecia no
-   vídeo - dez segundos a ver um formulário a ser preenchido.
+   A PÁGINA GRAVADA É MINHA, e a app vive dentro de um <iframe>. A
+   primeira versão injetava a abertura dentro da própria app, e deu
+   duas maneiras de correr mal ao mesmo tempo:
 
-   AS LEGENDAS SAEM DO RELÓGIO DA GRAVAÇÃO, não de tempos escritos à
-   mão. Cada passo traz a sua frase, e o tempo é o instante em que o
-   passo aconteceu. É a única forma de baterem certo com o ecrã, mesmo
-   que uma página demore mais a carregar num dia do que noutro.
+   - a folha de estilo da abertura tem `svg{width:360px}` e `body{...}`
+     sem âmbito, e pôs os ícones da app do tamanho de um punho;
+   - o arranque da app volta a desenhar o corpo e levava a camada com
+     ela, deixando o ecrã de entrada à vista nos primeiros segundos.
+
+   Com a app fechada num iframe, nada disto pode acontecer: a CSS não
+   passa a fronteira e a app não mexe no que está por fora. A abertura e
+   o fecho são os PRÓPRIOS ficheiros intro.html e outro.html, também em
+   iframes - o que se vê no vídeo é exatamente o que se vê ao abri-los.
+
+   AS LEGENDAS SAEM DO RELÓGIO DA GRAVAÇÃO. Cada passo traz a sua frase,
+   e o tempo é o instante em que o passo aconteceu.
 
    Uso:
      CRM_SENHA=... node gravar.mjs <chave>
@@ -21,68 +27,59 @@
 import { chromium } from 'playwright';
 import fs from 'fs';
 import path from 'path';
+import http from 'http';
 import { GUIOES } from './guioes.mjs';
 
 const AQUI = path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1'));
-/* podem vir de fora: o gravador corre a partir de onde o Playwright está
-   instalado, e não de dentro da pasta sincronizada */
 const MARCA = process.env.CRM_MARCA || path.resolve(AQUI, '../marca/intro');
 const SAIDA = process.env.CRM_SAIDA || path.resolve(AQUI, 'gravados');
 
 const TURMA = process.env.CRM_TURMA || 'https://crm.cr0x.org/crm?t=crm';
 const UTILIZADOR = process.env.CRM_UTILIZADOR || 'duvalle';
 const SENHA = process.env.CRM_SENHA || '';
-const ABERTURA = 4.2, FECHO = 4.2;
+const ABERTURA = 4.3, FECHO = 4.3;
+const PORTA = 8739;
 
-/* ---------- ler a abertura e o fecho ---------- */
-function pedaco(ficheiro) {
-  const s = fs.readFileSync(path.join(MARCA, ficheiro), 'utf8');
-  return {
-    /* fora a animação de saída: quem manda sair é o gravador, quando a
-       sessão estiver pronta. Senão a abertura acaba antes do login e
-       ficam segundos de creme vazio no vídeo. */
-    estilo: ((s.match(/<style>([\s\S]*?)<\/style>/) || [, ''])[1])
-              .replace(/\.palco\{animation:sai[^}]*\}/, ''),
-    corpo: (s.match(/<body>([\s\S]*?)<\/body>/) || [, ''])[1].replace(/<script>[\s\S]*?<\/script>/g, ''),
-  };
-}
+/* ---------- servir a abertura e o fecho ---------- */
+/* têm de vir por http: um iframe file:// dentro de uma página que não é
+   file:// é bloqueado pelo browser */
+const tipos = { '.html': 'text/html;charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png' };
+const servidor = http.createServer((q, r) => {
+  const f = path.join(MARCA, decodeURIComponent(q.url.split('?')[0]));
+  fs.readFile(f, (e, d) => {
+    if (e) { r.writeHead(404); r.end('x'); return; }
+    r.writeHead(200, { 'content-type': tipos[path.extname(f)] || 'application/octet-stream' });
+    r.end(d);
+  });
+}).listen(PORTA);
 
-/* a camada, com o seu próprio estilo, para não colidir com o da app */
-const montar = (estilo, corpo, fundo) => `(() => {
-  const pôr = () => {
-    if (document.getElementById('__camada')) return;
-    const s = document.createElement('style'); s.id = '__camada-estilo';
-    s.textContent = ${JSON.stringify(estilo)};
-    const d = document.createElement('div'); d.id = '__camada';
-    d.style.cssText = 'position:fixed;inset:0;z-index:2147483647;background:${fundo};display:grid;place-items:center';
-    d.innerHTML = ${JSON.stringify(corpo)};
-    (document.head || document.documentElement).appendChild(s);
-    (document.body || document.documentElement).appendChild(d);
-  };
-  if (document.documentElement) pôr(); else addEventListener('DOMContentLoaded', pôr);
-})()`;
-
-const desvanecer = `(() => { const d = document.getElementById('__camada');
-  if (d) { d.style.transition = 'opacity .45s ease'; d.style.opacity = '0'; } })()`;
-/* a app oferece a copia do servidor sempre que a sandbox esta vazia, e
-   o browser da gravacao esta sempre vazio. Cancelar mantem os dados de
-   exemplo, e com eles a gravacao fica repetivel. */
-async function semDialogo(p) {
-  await p.evaluate(() => {
-    const bs = [...document.querySelectorAll('button')];
-    const cancelar = bs.find(b => /^(cancelar|cancel)$/i.test((b.textContent || '').trim()) && b.offsetParent);
-    if (cancelar) cancelar.click();
-  }).catch(() => {});
-}
-
-const tirar = `(() => { document.getElementById('__camada')?.remove();
-  document.getElementById('__camada-estilo')?.remove(); })()`;
+/* ---------- o palco ---------- */
+const palco = urlApp => `<!doctype html><html><head><meta charset="utf-8"><style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#efe9dd}
+  iframe{position:fixed;inset:0;width:100%;height:100%;border:0;display:block}
+  #app{z-index:1}
+  #intro,#outro{z-index:9;transition:opacity .45s ease}
+</style></head><body>
+  <iframe id="app" src="${urlApp}"></iframe>
+  <iframe id="intro" src="http://127.0.0.1:${PORTA}/intro.html?hold=1"></iframe>
+</body></html>`;
 
 /* ---------- o .vtt ---------- */
 function vtt(cues) {
   const t = s => { const m = Math.floor(s / 60), q = s % 60;
     return '00:' + String(m).padStart(2, '0') + ':' + q.toFixed(3).padStart(6, '0'); };
   return 'WEBVTT\n\n' + cues.map(c => t(c.de) + ' --> ' + t(c.ate) + '\n' + c.texto).join('\n\n') + '\n';
+}
+
+/* a app oferece a cópia do servidor sempre que a sandbox está vazia, e o
+   browser da gravação está sempre vazio. Cancelar mantém os dados de
+   exemplo - e com eles a gravação fica repetível */
+async function semDialogo(f) {
+  await f.evaluate(() => {
+    const b = [...document.querySelectorAll('button')]
+      .find(x => /^(cancelar|cancel)$/i.test((x.textContent || '').trim()) && x.offsetParent);
+    if (b) b.click();
+  }).catch(() => {});
 }
 
 /* ---------- gravar ---------- */
@@ -92,68 +89,70 @@ async function gravar(chave, lingua) {
   const nome = chave + '-' + lingua;
   fs.mkdirSync(SAIDA + '/tmp', { recursive: true });
 
-  const intro = pedaco('intro.html'), outro = pedaco('outro.html');
   const b = await chromium.launch();
   const ctx = await b.newContext({
-    /* em newContext a opcao chama-se viewport, nao viewportSize: com o
-       nome errado a pagina ficava a 1280x720 dentro de um video de 1920 */
+    /* em newContext a opção chama-se viewport, não viewportSize */
     viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1,
     recordVideo: { dir: SAIDA + '/tmp/', size: { width: 1920, height: 1080 } },
   });
-
-  /* a língua fica escolhida antes de a página arrancar, para o ecrã não
-     piscar de PT para EN a meio */
   const sufixo = '::' + (new URL(TURMA).searchParams.get('t') || '');
   if (lingua === 'en') await ctx.addInitScript(s => {
     try { localStorage.setItem('crm-v1-lang' + s, 'en'); } catch (e) {}
   }, sufixo);
-
-  /* A ABERTURA, desde o primeiro fotograma */
-  await ctx.addInitScript(montar(intro.estilo, intro.corpo, '#efe9dd'));
 
   const p = await ctx.newPage();
   const t0 = Date.now();
   const agora = () => (Date.now() - t0) / 1000;
   const cues = [];
 
-  /* o login acontece POR TRÁS da abertura */
-  await p.goto(TURMA, { waitUntil: 'domcontentloaded' });
-  await p.waitForSelector('input[name=username]', { timeout: 20000 }).catch(() => {});
-  if (await p.$('input[name=username]')) {
-    await p.fill('input[name=username]', UTILIZADOR);
-    await p.fill('input[name=password]', SENHA);
-    await p.keyboard.press('Enter');
-    /* esperar pela app, nao por um numero de segundos */
-    await p.waitForFunction(() => document.querySelectorAll('.nav-link').length > 5,
+  await p.setContent(palco(TURMA));
+
+  /* a app, dentro do iframe */
+  let app = null;
+  for (let i = 0; i < 40 && !app; i++) {
+    await p.waitForTimeout(300);
+    app = p.frames().find(f => f.url().includes('crm.cr0x.org'));
+  }
+  if (!app) { console.log('  a app não carregou'); await ctx.close(); await b.close(); return; }
+
+  /* o login acontece por trás da abertura */
+  await app.waitForSelector('input[name=username]', { timeout: 25000 }).catch(() => {});
+  if (await app.$('input[name=username]')) {
+    await app.fill('input[name=username]', UTILIZADOR);
+    await app.fill('input[name=password]', SENHA);
+    await app.press('input[name=password]', 'Enter');
+    await app.waitForFunction(() => document.querySelectorAll('.nav-link').length > 5,
       null, { timeout: 25000 }).catch(() => {});
   }
-  const erro = (await p.textContent('#loginErr').catch(() => '') || '').trim();
+  const erro = (await app.textContent('#loginErr').catch(() => '') || '').trim();
   if (erro) { console.log('  NÃO ENTROU: ' + erro); await ctx.close(); await b.close(); return; }
-  await p.evaluate(() => document.fonts.ready);
+  await p.waitForTimeout(900);
+  await semDialogo(app);
 
-  /* a abertura tocou o que tinha a tocar; o resto do tempo foi o login */
-  /* dispensar a oferta de recuperacao enquanto a abertura ainda tapa */
-  await p.waitForTimeout(1200);
-  await semDialogo(p);
+  /* a abertura sai quando a sessão está pronta, não a meio */
   const falta = ABERTURA - agora();
   if (falta > 0) await p.waitForTimeout(falta * 1000);
-  await p.evaluate(desvanecer);
+  await p.evaluate(() => { const i = document.getElementById('intro'); if (i) i.style.opacity = '0'; });
   await p.waitForTimeout(480);
-  await p.evaluate(tirar);
+  await p.evaluate(() => document.getElementById('intro')?.remove());
   await p.waitForTimeout(250);
 
   /* ---- os passos ---- */
   for (const passo of g.passos) {
-    await semDialogo(p);
+    await semDialogo(app);
     const de = agora();
-    try { await passo.fazer(p); } catch (e) { console.log('    passo falhou: ' + (e.message || '').slice(0, 70)); }
+    try { await passo.fazer(app); } catch (e) { console.log('    passo falhou: ' + (e.message || '').slice(0, 70)); }
     await p.waitForTimeout((passo.espera ?? 2.6) * 1000);
     const texto = passo[lingua] || passo.pt;
     if (texto) cues.push({ de: +de.toFixed(3), ate: +agora().toFixed(3), texto });
   }
 
   /* ---- o fecho ---- */
-  await p.evaluate(montar(outro.estilo, outro.corpo, '#efe9dd'));
+  await p.evaluate(porta => {
+    const f = document.createElement('iframe');
+    f.id = 'outro'; f.src = 'http://127.0.0.1:' + porta + '/outro.html';
+    document.body.appendChild(f);
+  }, PORTA);
   await p.waitForTimeout(FECHO * 1000);
 
   const duracao = agora();
@@ -173,3 +172,4 @@ const lingua = args.includes('--en') ? 'en' : 'pt';
 const chaves = args[0] === 'todos' ? Object.keys(GUIOES) : [args[0]];
 for (const k of chaves) await gravar(k, lingua);
 try { fs.rmdirSync(SAIDA + '/tmp'); } catch (e) {}
+servidor.close();

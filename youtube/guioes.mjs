@@ -23,7 +23,15 @@ const clicar = texto => async p => {
 const abrirPrimeiro = selector => async p => {
   await p.evaluate(s => { document.querySelector(s)?.click(); }, selector);
 };
-const fechar = async p => { await p.keyboard.press('Escape'); };
+/* o passo recebe o FRAME da app, nao a pagina: um frame nao tem
+   teclado proprio, por isso fecha-se clicando */
+const fechar = async f => {
+  await f.evaluate(() => {
+    const x = [...document.querySelectorAll('button,.modal-x,[data-act="fechar"]')]
+      .find(e => /^(×|✕|x|fechar|close|cancelar)$/i.test((e.textContent||'').trim()) && e.offsetParent);
+    if (x) x.click();
+  });
+};
 const rolar = px => async p => { await p.evaluate(y => window.scrollBy({ top: y, behavior: 'smooth' }), px); };
 
 export const GUIOES = {
@@ -83,7 +91,7 @@ export const GUIOES = {
     titulo: 'Empresas & Contactos', titulo_en: 'Companies & Contacts',
     passos: [
       { fazer: ir('empresas'), espera: 3.0,
-        pt: 'Um CRB profissional separa a empresa da pessoa.',
+        pt: 'Um CRM profissional separa a empresa da pessoa.',
         en: 'A professional CRM keeps the company apart from the person.' },
       { fazer: async () => {}, espera: 3.0,
         pt: 'A empresa é a entidade legal: NIPC, CAE, dimensão e morada.',

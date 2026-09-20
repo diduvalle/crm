@@ -102,6 +102,10 @@
   <script>
     /* intro.html?nome=XPTO&sub=Centro%20de%20Formacao&cor=%23b31e2e */
     var q = new URLSearchParams(location.search);
+    /* ?hold=1 segura o último fotograma: quem o usa numa gravação é
+       que decide quando sai, e sem isto ficava um vazio no meio */
+    if (q.has('hold')) { const pa = document.querySelector('.palco');
+      if (pa) pa.style.animation = 'none'; }
     if (q.get('nome')) document.getElementById('nome').textContent = q.get('nome');
     if (q.get('sub'))  document.getElementById('sub').textContent  = q.get('sub');
     if (q.get('cor'))  document.documentElement.style.setProperty('--azul', q.get('cor'));
