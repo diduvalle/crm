@@ -5100,7 +5100,7 @@ function sendEmail(o){
   const ev={ id:uid('ev'), data:todayISO(), aberto, clicado, clienteId:o.clienteId||null, paraNome:c?`${c.nome} ${c.apelido||''}`.trim():(o.paraNome||''), paraEmail:c?c.email:(o.paraEmail||''),
     assunto:o.assunto||(tpl?mergeCtx(tpl.assunto,c,o.proposta):''), templateId:o.templateId||null,
     anexo:o.proposta?{tipo:'proposta',propostaId:o.proposta.id,numero:o.proposta.numero}:null,
-    origem:o.origem||'Manual', porUtilizador:currentUser()?currentUser().id:null, automacaoId:o.automacaoId||null, campanhaId:o.campanhaId||null, estado:'Enviado' };
+    mensagem:o.mensagem||'', origem:o.origem||'Manual', porUtilizador:currentUser()?currentUser().id:null, automacaoId:o.automacaoId||null, campanhaId:o.campanhaId||null, estado:'Enviado' };
   state.envios.unshift(ev); const acc=c?(accEmpOf(c)||c):null; if(acc) acc._scFired=false; return ev;   // conta contactada → rearma o gatilho "sem contacto"
 }
 /* ---------- envio real opcional via EmailJS ---------- */
@@ -5561,7 +5561,7 @@ async function mailSend(){
   const subj=mergeCtx(mailDraft.subject,c,null);
   const sigT=sigHtmlToText((currentUser()||{}).assinatura);
   const msg=mergeCtx(mailDraft.message,c,null)+(sigT?'\n\n'+mergeCtx(sigT,c,null):'');
-  const ev=sendEmail({clienteId:c?c.id:null, paraNome:c?`${c.nome} ${c.apelido||''}`.trim():to, paraEmail:to, templateId:null, assunto:subj, origem:'Manual'});
+  const ev=sendEmail({clienteId:c?c.id:null, paraNome:c?`${c.nome} ${c.apelido||''}`.trim():to, paraEmail:to, templateId:null, assunto:subj, mensagem:msg, origem:'Manual'});
   const real=realSendOn(); ev.modo=real?'real':'simulado'; if(mailDraft.cc)ev.cc=mailDraft.cc; if(mailDraft.bcc)ev.bcc=mailDraft.bcc;
   const _cc=mailDraft.cc, _bcc=mailDraft.bcc;
   mailDraft=defaultMailDraft(); applyMailTemplate(); save(); render();
@@ -5708,7 +5708,7 @@ async function doSendEmail(openMail){
     if(prop.online&&prop.online.token) pubLink=pubUrl(prop.online.token); }catch(e){} }
   const propNote = prop ? (pubLink ? '\n\nVeja e adjudique a sua proposta online:\n'+pubLink : '\n\n(Proposta '+prop.numero+')') : '';
   const body=mergeCtx((tpl?tpl.saudacao+'\n\n'+tpl.corpo+(tpl.botaoTexto&&tpl.botaoLink?'\n\n'+tpl.botaoTexto+': '+tpl.botaoLink:'')+propNote+'\n\n'+tpl.assinatura:''),cli,prop)+(sigT?'\n\n'+mergeCtx(sigT,cli,prop):'');
-  const ev=sendEmail({clienteId:cli.id, templateId:sendDraft.templateId, assunto:sendDraft.assunto, proposta:prop, origem:'Manual'});
+  const ev=sendEmail({clienteId:cli.id, templateId:sendDraft.templateId, assunto:sendDraft.assunto, proposta:prop, mensagem:body, origem:'Manual'});
   if(prop) snapshotVersao(prop);   // grava a versão das condições enviadas
   if(cli) maybeLeadQuente(cli.id);  // o email pode ter subido o score → gatilho comportamental
   const real=realSendOn(); ev.modo = real?'real':'simulado'; if(sendDraft.cc) ev.cc=sendDraft.cc; if(sendDraft.bcc) ev.bcc=sendDraft.bcc;
@@ -5727,7 +5727,7 @@ async function doSendEmail(openMail){
 function openEnvio(id){
   const e=state.envios.find(x=>x.id===id); if(!e)return; const tpl=state.templates.find(t=>t.id===e.templateId); const cli=getC(e.clienteId); const prop=e.anexo?state.propostas.find(p=>p.id===e.anexo.propostaId):null;
   $('#drawerTitle').innerHTML=`<h3 style="font-size:1.05rem;font-weight:800">${esc(e.assunto||'Email')}</h3><div class="sub" style="color:var(--muted);font-size:.82rem">${dPT(e.data)} · ${esc(e.origem)}</div>`;
-  $('#drawerBody').innerHTML=`<dl class="kv"><dt>Para</dt><dd>${esc(e.paraNome)} (${esc(e.paraEmail)})</dd><dt>Template</dt><dd>${esc(tpl?tpl.nome:'-')}</dd><dt>Anexo</dt><dd>${e.anexo?esc(e.anexo.numero)+'.pdf':'-'}</dd><dt>Estado</dt><dd><span class="pill green">${esc(e.estado)}</span></dd></dl><div class="divider" style="margin:14px 0"></div>${tpl?emailHTML(tpl,cli,prop):'<div class="empty">Template removido</div>'}`;
+  $('#drawerBody').innerHTML=`<dl class="kv"><dt>Para</dt><dd>${esc(e.paraNome)} (${esc(e.paraEmail)})</dd><dt>Template</dt><dd>${esc(tpl?tpl.nome:'-')}</dd><dt>Anexo</dt><dd>${e.anexo?esc(e.anexo.numero)+'.pdf':'-'}</dd><dt>Estado</dt><dd><span class="pill green">${esc(e.estado)}</span></dd></dl><div class="divider" style="margin:14px 0"></div>${tpl?emailHTML(tpl,cli,prop):(e.mensagem?'<div class="muted" style="font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px">Mensagem enviada</div><div style="white-space:pre-line;font-size:.9rem;line-height:1.6;border:1px solid var(--border);border-radius:var(--r);padding:14px;background:var(--surface2)">'+esc(e.mensagem)+'</div>':'<div class="empty">'+(e.templateId?'O modelo usado já não existe':'Enviado sem modelo - a mensagem não ficou guardada')+'</div>')}`;
   $('#drawerFoot').innerHTML=`${e.anexo&&prop?`<button class="btn-sec" data-act="print-prop" data-id="${prop.id}">${ic('print',16)} Ver PDF</button>`:''}<div style="flex:1"></div>${e.clienteId&&!e.aberto?`<button class="btn-sec" data-act="sim-abrir" data-id="${e.id}" title="Simular que o lead abriu (dispara automações comportamentais)">${ic('eye',16)} Simular abertura</button>`:''}${e.clienteId&&!e.clicado?`<button class="btn-sec" data-act="sim-clique" data-id="${e.id}" title="Simular que o lead clicou">${ic('check',16)} Simular clique</button>`:''}<button class="btn" data-act="resend-envio" data-id="${e.id}">${ic('send',16)} Reenviar</button>`;
   openDrawer();
 }
