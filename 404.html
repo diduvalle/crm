@@ -999,7 +999,7 @@ const I18N_EN = {
   'Valor':'Value','Produto':'Product','Produtos':'Products','Quantidade':'Quantity','Preço':'Price','Desconto':'Discount',
   'Validade':'Valid until','Descrição':'Description','Família':'Family','Subfamília':'Subfamily','Categoria':'Category',
   'Tipo':'Type','Ativo':'Active','Inativo':'Inactive','Morada':'Address','País':'Country','Código Postal':'Postal code',
-  'Assunto':'Subject','Mensagem':'Message','Modo':'Mode','Simulado':'Simulated','Sim':'Yes','Não':'No','Todos':'All',
+  'Assunto':'Subject','Mensagem':'Message','Modo':'Mode','Simulado':'Simulated','Sim':'Yes','Não':'No','Todos':'All','Abertos':'Open',
   'Fidelização':'Loyalty','Persona':'Persona','Pesquisar':'Search','NIF':'Tax ID','Website':'Website','Cargo':'Position',
   'Setor':'Sector','Dimensão':'Size','Responsável':'Owner','Prioridade':'Priority','Prazo':'Deadline','Criado':'Created',
   'Criada':'Created','Atualizado':'Updated','Ações':'Actions','Detalhes':'Details','Resumo':'Summary','Histórico':'History',
@@ -2837,14 +2837,17 @@ const CASO_KPI_ROT={abertos:'só os casos abertos',risco:'só os que têm o SLA 
 function casoRefresca(){
   const box=$('#casoBody'); if(!box){ render(); return; }
   box.innerHTML=casoBodyHTML();
-  $$('[data-act="caso-filtro"]').forEach(c=>c.classList.toggle('active', (c.dataset.estado||'')===(state._casoEstado||'')));
+  const fe=state._casoEstado==null?'abertos':state._casoEstado;
+  $$('[data-act="caso-filtro"]').forEach(c=>c.classList.toggle('active', (c.dataset.estado||'')===fe));
   $$('.kpi[data-f]').forEach(k=>k.classList.toggle('kpi-on', !!state._casoKpi && k.dataset.f===state._casoKpi));
 }
 function casoBodyHTML(){
-  const filtroE=state._casoEstado||''; const q=(state._q||'').toLowerCase().trim();
+  /* sem escolha feita ainda, a fila abre nos casos por resolver */
+  const filtroE=state._casoEstado==null?'abertos':state._casoEstado; const q=(state._q||'').toLowerCase().trim();
   const fk=state._casoKpi||'';
   let list=(state.casos||[]).slice();
-  if(filtroE) list=list.filter(c=>c.estado===filtroE);
+  if(filtroE==='abertos') list=list.filter(casoAberto);
+  else if(filtroE) list=list.filter(c=>c.estado===filtroE);
   if(fk==='abertos') list=list.filter(casoAberto);
   else if(fk==='risco') list=list.filter(c=>casoAberto(c)&&['risco','violado'].includes(casoSla(c).estado));
   else if(fk==='csat') list=list.filter(c=>c.csat!=null&&c.csat!=='');
@@ -2887,6 +2890,7 @@ views.casos = () => {
       </div>
     </div>
     <div class="toolbar" style="margin-bottom:12px;gap:6px;flex-wrap:wrap">
+      <button class="chip ${filtroE==='abertos'?'active':''}" data-act="caso-filtro" data-estado="abertos" title="Novo, Em curso e À espera - o que ainda dá trabalho">Abertos</button>
       ${CASO_ESTADOS.map(e=>`<button class="chip ${filtroE===e?'active':''}" data-act="caso-filtro" data-estado="${e}">${e}</button>`).join('')}
       <!-- o "Todos" ao fim: não é um estado, e é o único que traz os
            casos fechados de volta à lista -->
@@ -8482,7 +8486,7 @@ document.addEventListener('click', async e=>{
       openClient360(c.id);
     } break;
     case 'open-caso': openCaso360(id); break;
-    case 'caso-filtro': state._casoEstado=el.dataset.estado||''; state._casoKpi=null; casoRefresca(); break;
+    case 'caso-filtro': state._casoEstado=el.dataset.estado||''; state._casoKpi=null; casoRefresca(); break;   /* '' = Todos, escolhido a sério */
     /* KPI do Helpdesk: estreita a lista (e limpa o chip de estado, para não somar filtros escondidos) */
     case 'caso-kpi': { const f=el.dataset.f||'';
       state._casoKpi = (!f || state._casoKpi===f) ? null : f;
