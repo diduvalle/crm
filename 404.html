@@ -4143,26 +4143,36 @@ function pulsoCarregarBase(){
     .catch(()=>{});   /* sem o ficheiro, o Pulso fica como era */
 }
 /* ---- gralhas ---- */
-/* pares de letras de uma palavra: "casa" -> ca, as, sa */
-function cbotBigramas(w){ const o=[]; for(let i=0;i<w.length-1;i++) o.push(w.slice(i,i+2)); return o; }
-/* parecença entre duas palavras, de 0 a 1 (coeficiente de Dice) */
-function cbotParecem(a,b){
-  if(a===b) return 1; if(a.length<4||b.length<4) return 0;
-  const A=cbotBigramas(a), B=cbotBigramas(b); if(!A.length||!B.length) return 0;
-  const m=new Map(); A.forEach(x=>m.set(x,(m.get(x)||0)+1));
-  let c=0; B.forEach(x=>{ const k=m.get(x)||0; if(k>0){ c++; m.set(x,k-1); } });
-  return 2*c/(A.length+B.length);
+/* distância de edição entre duas raízes, com a troca de letras vizinhas
+   a contar 1 ("cleint"→"client"). Para de contar acima de 2. */
+function cbotDist(a,b){
+  if(a===b) return 0; const la=a.length, lb=b.length;
+  if(Math.abs(la-lb)>2) return 3;
+  const d=[]; for(let i=0;i<=la;i++){ d[i]=[i]; } for(let j=1;j<=lb;j++) d[0][j]=j;
+  for(let i=1;i<=la;i++){ for(let j=1;j<=lb;j++){
+    const c=a[i-1]===b[j-1]?0:1;
+    let v=Math.min(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1]+c);
+    if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1]) v=Math.min(v, d[i-2][j-2]+1);
+    d[i][j]=v; } }
+  return d[la][lb];
 }
-/* a pontuação aproximada: todas as raízes compridas da chave têm de ter
-   uma raiz parecida na pergunta. Vale 70% do que valeria a chave exata,
-   para nunca ganhar a uma correspondência a sério. */
+/* duas raízes são "quase iguais" se a distância couber no tamanho:
+   1 letra até 7, 2 letras a partir de 8. Raízes curtas só iguais. */
+function cbotParecem(a,b){
+  if(a===b) return true; const n=Math.max(a.length,b.length);
+  if(n<6) return false; return cbotDist(a,b) <= (n>=8?2:1);   /* abaixo de 6, "abert" e "alert" eram parecidos */
+}
+/* a pontuação aproximada: TODAS as palavras da chave (as curtas
+   incluídas) têm uma igual ou quase igual na pergunta, e pelo menos
+   uma delas é mesmo uma gralha - senão a exata já tratou disso. Vale
+   70% da chave exata, para nunca lhe ganhar. */
 function cbotScoreAprox(ks,q){
-  let n=0; const qr=cbotRaizes(q).filter(w=>w.length>=4);
-  if(!qr.length) return 0;
+  let n=0; const qr=cbotRaizes(q); if(!qr.length) return 0;
   ks.forEach(k=>{
-    const kr=cbotRaizes(k).filter(w=>w.length>=4); if(!kr.length||kr.length>4) return;
-    const todas=kr.every(w=>qr.some(x=>cbotParecem(w,x)>=0.75));
-    if(todas) n=Math.max(n, Math.round(cbotNorm(k).length*0.7));
+    const kr=cbotRaizes(k).filter(w=>w.length>=3); if(!kr.length||kr.length>5) return;
+    let gralha=false;
+    const todas=kr.every(w=>{ if(qr.includes(w)) return true; const ok=qr.some(x=>cbotParecem(w,x)); if(ok) gralha=true; return ok; });
+    if(todas&&gralha) n=Math.max(n, Math.round(cbotNorm(k).length*0.7));
   });
   return n;
 }
