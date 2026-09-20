@@ -1,5 +1,7 @@
 # Retenção & churn
 
+<figure class="crm-video" data-video="retencao" data-poster="/manual/assets/screens/retencao.png"></figure>
+
 Uma **proposta perdida** nunca chegou a ser cliente. Um **contrato cancelado** é um cliente que pagava e sai - é aqui que vive o **churn**. O módulo **Retenção** gere esses cancelamentos como um fluxo, para tentar **salvar** o cliente (save desk) e medir a perda de receita recorrente.
 
 ## O fluxo (kanban)

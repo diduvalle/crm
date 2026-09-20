@@ -14,6 +14,8 @@ A tua **assinatura** entra automaticamente no fim.
 
 ## Proposta online (link rastreável)
 
+<figure class="crm-video" data-video="proposta-online" data-poster="/manual/assets/screens/proposta-online.png"></figure>
+
 Em vez de mandar um PDF "às cegas", o email leva um **link** para a proposta online. Na proposta, o painel **Proposta online** mostra o link (copiar / abrir) e, mais importante, o que acontece depois:
 
 - **Aberturas** - quantas vezes o cliente abriu e **quando foi a última**. Sabes se ele já viu.

@@ -49,6 +49,8 @@ The campaign row states how many it reaches and how many are excluded; the **Sen
 
 ## Email / Communication
 
+<figure class="crm-video" data-video="comunicacao" data-poster="/manual/assets/screens/comunicacao.png"></figure>
+
 ### Tabs
 - **Send history** - rich table; click a send to view the preview and resend.
 - **Templates** - email templates.
@@ -119,6 +121,8 @@ The **Journeys** tab shows each automation as a **visual path**: `Start (event) 
 *Customer journeys and the web-to-lead capture form.*
 
 ## Lead capture form (web-to-lead)
+
+<figure class="crm-video" data-video="web-to-lead" data-poster="/manual/assets/screens/web-to-lead.png"></figure>
 
 At the bottom of the **Campaigns** screen there is a **lead capture form**. It simulates a website form (landing page): on **submit**, the data enters the CRM as:
 

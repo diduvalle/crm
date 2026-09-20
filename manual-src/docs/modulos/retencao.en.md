@@ -1,5 +1,7 @@
 # Retention & churn
 
+<figure class="crm-video" data-video="retencao" data-poster="/manual/assets/screens/retencao.png"></figure>
+
 A **lost proposal** never became a customer. A **cancelled contract** is a paying customer who leaves - that is where **churn** lives. The **Retention** module manages those cancellations as a flow, to try to **save** the customer (save desk) and measure lost recurring revenue.
 
 ## The flow (kanban)

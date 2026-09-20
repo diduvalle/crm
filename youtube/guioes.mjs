@@ -81,6 +81,38 @@ const fechar = async f => {
 };
 const nada = async () => {};
 
+/* abre o cartão das Definições que contém esta âncora, e traz-lo à
+   vista. Por âncora e não por título: em inglês o título é outro. */
+const abrirCartao = sel => async f => {
+  await f.evaluate(x => {
+    const alvo = document.querySelector(x);
+    const card = alvo && alvo.closest('.collapsible-card');
+    if (!card) return;
+    if (card.classList.contains('collapsed')) card.querySelector('.section-head').click();
+    card.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }, sel);
+};
+
+
+/* põe um ficheiro no campo de importação. É o único passo que precisa
+   do Playwright e não só do DOM: um <input type=file> não se preenche
+   por script da página. O ficheiro é escrito na pasta temporária do
+   sistema, com nomes obviamente inventados. */
+const CSV_DEMO = [
+  'nome,apelido,email,email_pessoal,username,password,papel',
+  'Ana,Costa,ana.costa@exemplo.pt,,,,Formando',
+  'Bruno,Dias,bruno.dias@exemplo.pt,,,,Formando',
+  'Carla,Nunes,carla.nunes@exemplo.pt,,,,Formando',
+  'Duarte,Melo,isto-nao-e-um-email,,,,Formando',
+];
+const porFicheiro = async f => {
+  const os = await import('os'), pathm = await import('path'), fsm = await import('fs');
+  const alvo = pathm.join(os.tmpdir(), 'turma-exemplo.csv');
+  fsm.writeFileSync(alvo, CSV_DEMO.join(String.fromCharCode(10)), 'utf8');
+  await f.setInputFiles('#importRosterFile', alvo);
+};
+
+
 export const GUIOES = {
 
 /* ===================== 1 ===================== */
@@ -277,7 +309,7 @@ pdf: { titulo: 'Exportar em PDF', titulo_en: 'Exporting as PDF', passos: [
 ]},
 
 /* ===================== 12 ===================== */
-aprovacao: { titulo: 'Aprovação de propostas', titulo_en: 'Proposal approval', passos: [
+'aprovacao-propostas': { titulo: 'Aprovação de propostas', titulo_en: 'Proposal approval', passos: [
   { fazer: ir('definicoes'), espera: 2.6, pt: '', en: '' },
   { fazer: seccao(1), espera: 3.8,
     pt: 'Acima de certo valor, ou de certo desconto, uma proposta não sai sem aprovação.',
@@ -304,7 +336,7 @@ modelos: { titulo: 'Modelos de Proposta', titulo_en: 'Proposal templates', passo
 ]},
 
 /* ===================== 14 ===================== */
-helpdesk: { titulo: 'Helpdesk', titulo_en: 'Helpdesk', passos: [
+'casos': { titulo: 'Helpdesk', titulo_en: 'Helpdesk', passos: [
   { fazer: ir('casos'), espera: 3.4,
     pt: 'Vender é metade; a outra metade é o que acontece depois.',
     en: 'Selling is half of it; the other half is what happens afterwards.' },
@@ -380,7 +412,7 @@ comunicacao: { titulo: 'Comunicação', titulo_en: 'Communication', passos: [
 ]},
 
 /* ===================== 19 ===================== */
-automacao: { titulo: 'Automações', titulo_en: 'Automations', passos: [
+'automacao-comportamental': { titulo: 'Automações', titulo_en: 'Automations', passos: [
   { fazer: ir('comunicacao'), espera: 2.4, pt: '', en: '' },
   { fazer: aba(3), espera: 3.6,
     pt: 'Uma automação é uma regra que age sozinha quando algo acontece.',
@@ -482,24 +514,24 @@ definicoes: { titulo: 'Definições', titulo_en: 'Settings', passos: [
   { fazer: ir('definicoes'), espera: 3.2,
     pt: 'As Definições são a configuração do sistema, e só o administrador lá entra.',
     en: 'Settings are the system configuration, and only the administrator goes in there.' },
-  { fazer: nada, espera: 3.2,
+  { fazer: abrirCartao('[data-set="entidade"]'), espera: 3.4,
     pt: 'A entidade é a empresa em nome de quem se vende: é ela que aparece nas propostas.',
     en: 'The entity is the company you sell on behalf of: it is what appears on proposals.' },
-  { fazer: seccao(8), espera: 3.6,
+  { fazer: abrirCartao('[data-act="new-group"]'), espera: 3.6,
     pt: 'Os grupos definem o que cada perfil vê, módulo a módulo.',
     en: 'Groups define what each profile sees, module by module.' },
-  { fazer: seccao(11), espera: 3.4,
+  { fazer: abrirCartao('[data-type="loyalty"]'), espera: 3.4,
     pt: 'Os níveis de fidelização calculam-se do volume ganho, não se atribuem à mão.',
     en: 'Loyalty tiers are calculated from won volume, not assigned by hand.' },
-  { fazer: seccao(12), espera: 3.4,
+  { fazer: abrirCartao('[data-act="reset-iva"]'), espera: 3.4,
     pt: 'E o IVA muda com a região: continente, Madeira e Açores.',
     en: 'And VAT changes by region: mainland, Madeira and the Azores.' },
 ]},
 
 /* ===================== 26 ===================== */
-turma: { titulo: 'Gerir a turma', titulo_en: 'Managing the class', passos: [
+'montar-turma': { titulo: 'Gerir a turma', titulo_en: 'Managing the class', passos: [
   { fazer: ir('definicoes'), espera: 2.6, pt: '', en: '' },
-  { fazer: seccao(5), espera: 3.8,
+  { fazer: abrirCartao('#importRosterFile'), espera: 3.8,
     pt: 'Dentro de uma turma, as Definições ganham dois cartões que só o formador vê.',
     en: 'Inside a class, Settings gain two cards only the trainer sees.' },
   { fazer: nada, espera: 3.6,
@@ -508,9 +540,81 @@ turma: { titulo: 'Gerir a turma', titulo_en: 'Managing the class', passos: [
   { fazer: nada, espera: 3.4,
     pt: 'Cada um recebe utilizador e palavra-passe, e entra na sua própria cópia.',
     en: 'Each one gets a username and a password, and enters their own copy.' },
-  { fazer: seccao(7), espera: 3.8,
+  { fazer: abrirCartao('[data-act="comparar-turma"]'), espera: 3.8,
     pt: 'E quando entregam o trabalho, chega aqui - com os dados todos, para rever e avaliar.',
     en: 'And when they submit their work, it lands here - with all the data, to review and grade.' },
+]},
+
+
+/* ===================== 27 ===================== */
+importar: { titulo: 'Importar formandos', titulo_en: 'Importing trainees', passos: [
+  { fazer: ir('definicoes'), espera: 2.6, pt: '', en: '' },
+  { fazer: abrirCartao('#importRosterFile'), espera: 3.6,
+    pt: 'Uma turma inteira não se escreve à mão: importa-se.',
+    en: 'A whole class is not typed in by hand: it is imported.' },
+  { fazer: nada, espera: 3.6,
+    pt: 'O modelo traz as colunas certas - nome, apelido e email são as obrigatórias.',
+    en: 'The template comes with the right columns - first name, surname and email are the required ones.' },
+  { fazer: nada, espera: 3.4,
+    pt: 'O utilizador e a palavra-passe ficam vazios: a app gera-os pela mesma regra para todos.',
+    en: 'Username and password are left empty: the app generates them by the same rule for everyone.' },
+  { fazer: porFicheiro, espera: 4.2,
+    pt: 'Ao escolher o ficheiro, cada linha é validada antes de entrar seja o que for.',
+    en: 'When the file is picked, every row is validated before anything is created.' },
+  { fazer: nada, espera: 4.0,
+    pt: 'As linhas boas ficam verdes, e a que tem o email mal escrito fica marcada a vermelho.',
+    en: 'Good rows turn green, and the one with the malformed email is flagged in red.' },
+  { fazer: nada, espera: 3.8,
+    pt: 'Só as válidas são importadas - as outras corrigem-se no ficheiro e voltam a entrar.',
+    en: 'Only valid rows are imported - the rest are fixed in the file and imported again.' },
+  { fazer: fechar, espera: 3.6,
+    pt: 'E importar não envia convites: as contas ficam criadas, o email vai quando o formador quiser.',
+    en: 'And importing sends no invitations: the accounts exist, the email goes out when the trainer decides.' },
+]},
+
+/* ===================== 28 ===================== */
+recuperar: { titulo: 'Recuperar a palavra-passe', titulo_en: 'Recovering a password', passos: [
+  { fazer: clicarAct('profile'), espera: 3.8,
+    pt: 'Quem sabe a palavra-passe atual muda-a no próprio perfil.',
+    en: 'Anyone who knows their current password changes it in their own profile.' },
+  { fazer: rolar(320), espera: 3.6,
+    pt: 'Escreve-se a atual, escreve-se a nova, e guarda-se.',
+    en: 'Type the current one, type the new one, and save.' },
+  { fazer: fechar, espera: 2.4, pt: '', en: '' },
+  { fazer: ir('definicoes'), espera: 2.6, pt: '', en: '' },
+  { fazer: abrirCartao('#importRosterFile'), espera: 4.0,
+    pt: 'Quem se esqueceu não fica sem acesso: pede ao formador, que a repõe na lista da turma.',
+    en: 'Anyone who forgot is not locked out: they ask the trainer, who resets it in the class list.' },
+  { fazer: nada, espera: 3.8,
+    pt: 'A nova palavra-passe é entregue à pessoa, que a muda depois para uma só sua.',
+    en: 'The new password is handed over, and the person changes it afterwards to one only they know.' },
+]},
+
+
+/* ===================== 29 ===================== */
+/* Grava-se com a conta de um formando: o botão de entrega não existe
+   para o formador. O diálogo abre-se e fecha-se - não se gasta uma
+   das duas entregas da pessoa a fazer um vídeo. */
+submeter: { titulo: 'Submeter o trabalho', titulo_en: 'Submitting your work', passos: [
+  { fazer: clicarAct('profile'), espera: 3.6,
+    pt: 'Antes de entregar, a assinatura: é ela que autentica a autoria do trabalho.',
+    en: 'Before submitting, the signature: it is what authenticates the authorship of the work.' },
+  { fazer: rolar(520), espera: 3.6,
+    pt: 'Escreve-se uma vez no perfil, e fica.',
+    en: 'It is written once in the profile, and stays.' },
+  { fazer: fechar, espera: 2.2, pt: '', en: '' },
+  { fazer: clicarAct('submit-work'), espera: 4.2,
+    pt: 'A entrega faz-se do próprio CRM: o que segue é um retrato completo da sandbox.',
+    en: 'Submitting happens from inside the CRM: what goes is a complete snapshot of the sandbox.' },
+  { fazer: nada, espera: 4.0,
+    pt: 'O email do formador vem preenchido, e o contador diz quantas entregas faltam.',
+    en: 'The trainer email comes filled in, and the counter says how many submissions are left.' },
+  { fazer: rolar(300), espera: 3.8,
+    pt: 'São duas, no máximo - entrega-se quando o trabalho estiver mesmo pronto.',
+    en: 'There are two at most - submit when the work is really finished.' },
+  { fazer: nada, espera: 3.6,
+    pt: 'Depois de submeter, a confirmação fica no ecrã, com a data e o resumo do que foi entregue.',
+    en: 'After submitting, the confirmation stays on screen, with the date and a summary of what was sent.' },
 ]},
 
 };

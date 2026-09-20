@@ -10,3 +10,13 @@ Thumbs.db
 # Gerado pelo CI: cópia de estilo/tokens.css para dentro do manual.
 # A fonte é estilo/tokens.css — não editar nem commitar esta cópia.
 manual-src/docs/stylesheets/tokens.css
+
+# Canal de vídeo: credenciais, gravações e voz gerada não vão para o
+# repositório. O que sobe é o vídeo, e os identificadores ficam no
+# video.js do manual.
+youtube/segredos.json
+youtube/subidos.json
+youtube/gravados/
+youtube/finais/
+youtube/narracao/
+node_modules/

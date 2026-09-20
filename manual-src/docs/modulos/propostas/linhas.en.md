@@ -1,5 +1,7 @@
 # Lines & catalogue
 
+<figure class="crm-video" data-video="linhas" data-poster="/manual/assets/screens/linhas.png"></figure>
+
 The proposal lines are the **items** - chosen from the **product catalogue** (there is no free-text description).
 
 ## Each line

@@ -23,42 +23,61 @@
 
    O QUE NÃO SE PODE DESFAZER
    O YouTube não deixa trocar o ficheiro de um vídeo já publicado. Se
-   um dia lhes for posta narração, são uploads novos e identificadores
-   novos - o que é barato, porque é isto que os escreve no manual.
+   algum tiver de ser refeito, é upload novo e identificador novo - o
+   que é barato, porque é este script que os escreve no manual.
    ======================================================== */
 import fs from 'fs';
 import path from 'path';
-import readline from 'readline';
+import http from 'http';
 
-const AQUI = path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1'));
-const GRAVADOS = process.env.CRM_GRAVADOS || path.join(AQUI, 'gravados');
-const SEGREDOS = path.join(AQUI, 'segredos.json');
+const AQUI = path.dirname(decodeURIComponent(new URL(import.meta.url).pathname).replace(/^\/([A-Za-z]:)/, '$1'));
+/* o que sobe é o ficheiro montado - com voz -, não a gravação muda */
+const GRAVADOS = process.env.CRM_FINAIS || path.join(AQUI, 'finais');
+/* fora do Drive e fora do repositório: é a chave de um canal */
+const SEGREDOS = process.env.CRM_SEGREDOS || path.join(AQUI, 'segredos.json');
 const REGISTO = path.join(AQUI, 'subidos.json');   /* o que já subiu, para poder retomar */
-const VIDEOJS = path.resolve(AQUI, '../manual-src/docs/assets/js/video.js');
+const VIDEOJS = process.env.CRM_VIDEOJS || path.resolve(AQUI, '../manual-src/docs/assets/js/video.js');
 
 const A_SERIO = process.argv.includes('--a-serio');
 const SCOPE = 'https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube.force-ssl';
 
-/* ---------- autorização, uma vez ---------- */
+/* ---------- autorização, uma vez ----------
+   O redirect "oob" (colar o código à mão) foi desligado pela Google.
+   Um cliente de computador recebe o código num servidor local. */
+const PORTA_AUTH = 8790;
 async function autorizar() {
   const s = JSON.parse(fs.readFileSync(SEGREDOS, 'utf8'));
+  const volta = 'http://127.0.0.1:' + PORTA_AUTH;
   const url = 'https://accounts.google.com/o/oauth2/v2/auth?' + new URLSearchParams({
-    client_id: s.client_id, redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
+    client_id: s.client_id, redirect_uri: volta,
     response_type: 'code', scope: SCOPE, access_type: 'offline', prompt: 'consent',
   });
-  console.log('\nAbre isto no browser, aprova, e cola aqui o código:\n\n' + url + '\n');
-  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-  const code = await new Promise(r => rl.question('código: ', x => { rl.close(); r(x.trim()); }));
+  console.log('\nAbre isto no browser e aprova. Escolhe a conta que gere o canal.\n\n' + url + '\n');
+
+  const code = await new Promise((resolve, reject) => {
+    const servidor = http.createServer((q, r) => {
+      const u = new URL(q.url, volta);
+      const c = u.searchParams.get('code'), e = u.searchParams.get('error');
+      r.writeHead(200, { 'content-type': 'text/html;charset=utf-8' });
+      r.end('<body style="font:16px system-ui;padding:40px;background:#efe9dd;color:#171412">' +
+        (c ? 'Autorizado. Já podes fechar esta janela.' : 'Não autorizado: ' + e) + '</body>');
+      servidor.close();
+      c ? resolve(c) : reject(new Error(e || 'sem código'));
+    });
+    servidor.listen(PORTA_AUTH);
+    setTimeout(() => { servidor.close(); reject(new Error('ninguém autorizou em 5 minutos')); }, 300000);
+  });
+
   const r = await fetch('https://oauth2.googleapis.com/token', {
     method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({ code, client_id: s.client_id, client_secret: s.client_secret,
-      redirect_uri: 'urn:ietf:wg:oauth:2.0:oob', grant_type: 'authorization_code' }),
+      redirect_uri: volta, grant_type: 'authorization_code' }),
   });
   const d = await r.json();
-  if (!d.refresh_token) { console.log('não veio refresh_token:', d); return; }
+  if (!d.refresh_token) { console.log('não veio refresh_token: ' + JSON.stringify(d).slice(0, 220)); return; }
   s.refresh_token = d.refresh_token;
   fs.writeFileSync(SEGREDOS, JSON.stringify(s, null, 1));
-  console.log('guardado em segredos.json. Já podes correr o upload.');
+  console.log('autorizado e guardado. Já se pode subir.');
 }
 
 async function token() {
@@ -147,6 +166,9 @@ async function main() {
 
   const tk = A_SERIO ? await token() : null;
   let novos = 0, legendasHoje = 0;
+  /* a quota de legendas é diária: quando acaba, acabou - não vale a
+     pena colecionar o mesmo 403 em cada vídeo seguinte */
+  let semQuotaLegendas = false;
 
   for (const f of videos) {
     const nome = f.replace('.webm', '');
@@ -154,10 +176,16 @@ async function main() {
     const g = GUIOES[chave];
     if (!g) { console.log('  ' + nome + ': sem guião, saltado'); continue; }
 
-    const titulo = (lingua === 'en' ? g.titulo_en : g.titulo) + ' · CRM';
+    /* a língua no título: o canal tem os dois, e há nomes iguais nas duas */
+    const titulo = (lingua === 'en' ? g.titulo_en : g.titulo) + ' · CRM (' + lingua.toUpperCase() + ')';
+    /* o texto falado vai na descrição: torna o vídeo pesquisável e
+       legível por quem não o pode ouvir */
+    const NL = String.fromCharCode(10);
+    const falado = g.passos.map(p => p[lingua] || p.pt).filter(Boolean).join(NL);
     const descricao = (lingua === 'en'
       ? 'Part of the CRM platform manual.\nFull manual: https://crm.cr0x.org/manual/en/\nPlatform: https://crm.cr0x.org'
-      : 'Faz parte do manual da plataforma CRM.\nManual completo: https://crm.cr0x.org/manual/\nPlataforma: https://crm.cr0x.org');
+      : 'Faz parte do manual da plataforma CRM.\nManual completo: https://crm.cr0x.org/manual/\nPlataforma: https://crm.cr0x.org')
+      + NL + NL + falado;
     const meta = { titulo, descricao, lingua: lingua === 'en' ? 'en' : 'pt',
       etiquetas: ['CRM', 'RGPD', 'formação', 'crm.cr0x.org'] };
 
@@ -176,9 +204,17 @@ async function main() {
 
       const vtt = path.join(GRAVADOS, nome + '.vtt');
       if (fs.existsSync(vtt) && !subidos[nome].legendas) {
-        if (legendasHoje >= 24) { console.log('    (quota de legendas por hoje: fica para amanhã)'); }
-        else { await subirLegendas(tk, id, vtt, meta.lingua);
+        if (semQuotaLegendas || legendasHoje >= 24) { /* fica para amanhã */ }
+        else try { await subirLegendas(tk, id, vtt, meta.lingua);
           subidos[nome].legendas = true; legendasHoje++; }
+        catch (e) {
+          const m = String(e.message || '');
+          /* 409 = a faixa já lá está, de uma tentativa anterior */
+          if (/"code":409/.test(m)) { subidos[nome].legendas = true; }
+          else if (/exceeded your/.test(m)) { semQuotaLegendas = true;
+            console.log('    (quota de legendas esgotada por hoje - o resto fica para amanhã)'); }
+          else throw e;
+        }
       }
       fs.writeFileSync(REGISTO, JSON.stringify(subidos, null, 1));
     } catch (e) {

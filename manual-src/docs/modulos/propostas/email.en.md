@@ -14,6 +14,8 @@ Your **signature** is added automatically at the end.
 
 ## Online proposal (trackable link)
 
+<figure class="crm-video" data-video="proposta-online" data-poster="/manual/assets/screens/proposta-online.png"></figure>
+
 Instead of sending a PDF "blind", the email carries a **link** to the online proposal. On the proposal, the **Online proposal** panel shows the link (copy / open) and, more importantly, what happens next:
 
 - **Opens** - how many times the client opened it and **when it was last opened**. You know whether they have seen it.

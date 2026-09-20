@@ -1,5 +1,7 @@
 # Getting started - Trainee
 
+<figure class="crm-video" data-video="entrar" data-poster="/manual/assets/screens/entrar.png"></figure>
+
 Welcome! Here are the essentials to get you started.
 
 ## 1. Enter the class

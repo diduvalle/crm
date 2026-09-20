@@ -15,11 +15,20 @@ All the manual's videos in one place - each feature in action, with narration an
 <figure data-video="produtos"><figcaption><strong>Products</strong></figcaption></figure>
 <figure data-video="propostas"><figcaption><strong>Proposals - Pipeline (Kanban)</strong></figcaption></figure>
 <figure data-video="criar-proposta"><figcaption><strong>Create a proposal</strong></figcaption></figure>
+<figure data-video="linhas"><figcaption><strong>Lines & catalogue</strong></figcaption></figure>
 <figure data-video="pdf"><figcaption><strong>Export PDF</strong></figcaption></figure>
+<figure data-video="proposta-online"><figcaption><strong>Online proposal</strong></figcaption></figure>
+<figure data-video="aprovacao-propostas"><figcaption><strong>Proposal approval</strong></figcaption></figure>
 <figure data-video="modelos"><figcaption><strong>Proposal Templates</strong></figcaption></figure>
-<figure data-video="campanhas"><figcaption><strong>Campaigns & Email</strong></figcaption></figure>
+<figure data-video="casos"><figcaption><strong>Helpdesk & cases</strong></figcaption></figure>
+<figure data-video="retencao"><figcaption><strong>Retention & churn</strong></figcaption></figure>
+<figure data-video="campanhas"><figcaption><strong>Campaigns & segmentation</strong></figcaption></figure>
+<figure data-video="web-to-lead"><figcaption><strong>Lead capture form</strong></figcaption></figure>
+<figure data-video="comunicacao"><figcaption><strong>Communication & templates</strong></figcaption></figure>
 <figure data-video="automacao-comportamental"><figcaption><strong>Behavioural automation</strong></figcaption></figure>
+<figure data-video="jornadas"><figcaption><strong>Customer journeys</strong></figcaption></figure>
 <figure data-video="analytics"><figcaption><strong>Analytics</strong></figcaption></figure>
+<figure data-video="decisao"><figcaption><strong>Decision models</strong></figcaption></figure>
 <figure data-video="rgpd"><figcaption><strong>GDPR</strong></figcaption></figure>
 <figure data-video="alertas"><figcaption><strong>Alerts</strong></figcaption></figure>
 <figure data-video="definicoes"><figcaption><strong>Settings</strong></figcaption></figure>
@@ -28,8 +37,9 @@ All the manual's videos in one place - each feature in action, with narration an
 ## Flows & tutorials
 
 <div class="video-gallery">
+<figure data-video="entrar"><figcaption><strong>Signing in</strong></figcaption></figure>
 <figure data-video="montar-turma"><figcaption><strong>Set up the class</strong></figcaption></figure>
+<figure data-video="importar"><figcaption><strong>Import trainees</strong></figcaption></figure>
 <figure data-video="submeter"><figcaption><strong>Submit your work</strong></figcaption></figure>
 <figure data-video="recuperar"><figcaption><strong>Recover the password</strong></figcaption></figure>
-<figure data-video="importar"><figcaption><strong>Import trainees</strong></figcaption></figure>
 </div>

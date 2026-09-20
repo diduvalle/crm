@@ -1,5 +1,7 @@
 # Linhas & catálogo
 
+<figure class="crm-video" data-video="linhas" data-poster="/manual/assets/screens/linhas.png"></figure>
+
 As linhas da proposta são os **artigos** - escolhidos do **catálogo de produtos** (não há descrição livre).
 
 ## Cada linha

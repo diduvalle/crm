@@ -49,6 +49,8 @@ A linha da campanha diz para quantos vai e quantos ficam de fora; o botão **Env
 
 ## Email / Comunicação
 
+<figure class="crm-video" data-video="comunicacao" data-poster="/manual/assets/screens/comunicacao.png"></figure>
+
 ### Separadores
 - **Histórico de envios** - tabela rica; clica num envio para ver a pré-visualização e reenviar.
 - **Templates** - modelos de email.
@@ -119,6 +121,8 @@ O separador **Jornadas** mostra cada automação como um **percurso visual**: `I
 *Jornadas do cliente e formulário de captação web-to-lead.*
 
 ## Formulário de captação (web-to-lead)
+
+<figure class="crm-video" data-video="web-to-lead" data-poster="/manual/assets/screens/web-to-lead.png"></figure>
 
 No fundo do ecrã **Campanhas** há um **formulário de captação**. Simula um formulário de site (landing page): ao **submeter**, os dados entram no CRM como:
 

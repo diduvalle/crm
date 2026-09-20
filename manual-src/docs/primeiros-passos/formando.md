@@ -1,5 +1,7 @@
 # Primeiros passos - Formando
 
+<figure class="crm-video" data-video="entrar" data-poster="/manual/assets/screens/entrar.png"></figure>
+
 Bem-vindo! Aqui está o essencial para começares.
 
 ## 1. Entrar na turma

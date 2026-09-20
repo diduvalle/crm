@@ -30,7 +30,7 @@ import path from 'path';
 import http from 'http';
 import { GUIOES } from './guioes.mjs';
 
-const AQUI = path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1'));
+const AQUI = path.dirname(decodeURIComponent(new URL(import.meta.url).pathname).replace(/^\/([A-Za-z]:)/, '$1'));
 const MARCA = process.env.CRM_MARCA || path.resolve(AQUI, '../marca/intro');
 const SAIDA = process.env.CRM_SAIDA || path.resolve(AQUI, 'gravados');
 
@@ -38,6 +38,13 @@ const TURMA = process.env.CRM_TURMA || 'https://crm.cr0x.org/crm?t=crm';
 const UTILIZADOR = process.env.CRM_UTILIZADOR || 'duvalle';
 const SENHA = process.env.CRM_SENHA || '';
 const ABERTURA = 4.3, FECHO = 4.3;
+/* quanto se deixa respirar depois de cada frase */
+const MARGEM = Number(process.env.CRM_MARGEM || 0.7);
+const NARRACAO = process.env.CRM_NARRACAO || path.resolve(AQUI, 'narracao');
+const TEMPOS = (() => {
+  try { return JSON.parse(fs.readFileSync(path.join(NARRACAO, 'tempos.json'), 'utf8')); }
+  catch (e) { return {}; }
+})();
 const PORTA = 8739;
 
 /* ---------- servir a abertura e o fecho ---------- */
@@ -191,10 +198,15 @@ async function gravar(chave, lingua) {
   }
 
   /* ---- os passos ---- */
-  for (const passo of g.passos) {
-    const de = agora();
+  const fala = TEMPOS[nome] || [];
+  for (let i = 0; i < g.passos.length; i++) {
+    const passo = g.passos[i];
     try { await passo.fazer(app); } catch (e) { console.log('    passo falhou: ' + (e.message || '').slice(0, 70)); }
-    await p.waitForTimeout((passo.espera ?? 2.6) * 1000);
+    /* o relógio conta a partir daqui: o ecrã já mudou */
+    const de = agora();
+    /* o tempo da fala, se houver; senão o que o guião pedia */
+    const d = fala[i] && fala[i].dur ? fala[i].dur + MARGEM : (passo.espera ?? 2.6);
+    await p.waitForTimeout(d * 1000);
     const texto = passo[lingua] || passo.pt;
     if (texto) cues.push({ de: +de.toFixed(3), ate: +agora().toFixed(3), texto });
   }

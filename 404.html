@@ -9,6 +9,7 @@
 <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
 <link rel="icon" type="image/png" href="/favicon-16.png" sizes="16x16">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#0078bf">
 <!-- Open Graph (WhatsApp, Messenger, Facebook, LinkedIn) -->
 <meta property="og:type" content="website">
@@ -8073,10 +8074,16 @@ function brandCorEfetiva(){
                       fonte: (ESPACO && ESPACO.cor) ? 'escola' : 'local' };
   return { cor: '#0078bf', fonte: 'plataforma' };
 }
+/* contraste do branco sobre a cor, pela regra do costume (WCAG). */
+function _lum(hex){ const c=_hexRgb(hex).map(v=>{ v/=255; return v<=.03928 ? v/12.92 : Math.pow((v+.055)/1.055,2.4); });
+  return .2126*c[0] + .7152*c[1] + .0722*c[2]; }
+function contrasteBranco(hex){ try{ return 1.05/(_lum(hex)+.05); }catch(e){ return 21; } }
 function brandCorNota(){
   const e = brandCorEfetiva();
-  if (e.fonte === 'escola')     return e.cor + ' - definida em ' + (ESPACO.nome || 'escola');
-  if (e.fonte === 'local')      return e.cor;
+  /* o texto branco por cima da cor da marca é o que se parte primeiro */
+  const fraco = contrasteBranco(e.cor) < 3 ? ' - clara demais: o texto branco por cima quase não se lê' : '';
+  if (e.fonte === 'escola')     return e.cor + ' - definida em ' + (ESPACO.nome || 'escola') + fraco;
+  if (e.fonte === 'local')      return e.cor + fraco;
   return 'cor da plataforma (predefinido)';
 }
 function logoURL(){ const b=brandCfg(); return b.logo||'favicon.svg'; }
