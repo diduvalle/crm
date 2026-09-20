@@ -5069,7 +5069,7 @@ const TRIGGERS=[
 const behavioralTriggers=['lead-quente','email-aberto','email-clicado','sem-contacto','loyalty-subiu','loyalty-desceu'];
 const loyaltyTriggers=['loyalty-subiu','loyalty-desceu'];
 const triggerLabel=v=>(TRIGGERS.find(t=>t.v===v)||{}).t||v;
-function mergeCtx(text, cliente, proposta){
+function mergeMap(cliente, proposta){
   const c=cliente||{}; const s=state.settings; const t=proposta?documentTotals(proposta):{sub:0,iva:0,total:0,desconto:0};
   const map={
     'cliente.nome':`${c.nome||''} ${c.apelido||''}`.trim()||'cliente','cliente.empresa':c.empresa||'','cliente.nif':c.nif||'','cliente.email':c.email||'','cliente.telefone':c.telefone||'','cliente.cidade':c.cidade||'',
@@ -5077,7 +5077,28 @@ function mergeCtx(text, cliente, proposta){
     'entidade.nome':s.entidade||'','entidade.nif':s.nif||'','entidade.email':s.email||'','entidade.telefone':s.telefone||'','data':dPT(todayISO()),
   };
   camposExtra().forEach(cx=>{ map['cliente.'+cx.chave]=cxTexto(c,cx); });   // campos criados pelo utilizador
+  return map;
+}
+function mergeCtx(text, cliente, proposta){
+  const map=mergeMap(cliente,proposta);
   return String(text||'').replace(/\{\{([\w.]+)\}\}/g,(m,k)=>map[k]!=null?map[k]:m);
+}
+/* Campos dinâmicos que o texto usa e que vão sair VAZIOS. Lê do mesmo mapa
+   que a substituição, para não haver duas verdades sobre o que está cheio.
+   Um campo que nem existe no mapa fica no texto tal e qual, e por isso dá
+   nas vistas sozinho - esse não conta. */
+function camposPorPreencher(cliente, proposta, ...textos){
+  const map=mergeMap(cliente,proposta), out=[];
+  textos.forEach(t=>String(t||'').replace(/\{\{([\w.]+)\}\}/g,(m,k)=>{
+    if(map[k]!=null && String(map[k]).trim()==='' && out.indexOf(k)<0) out.push(k);
+    return m;
+  }));
+  return out;
+}
+function avisoCampos(l){
+  return 'Esta mensagem usa campos que vão sair vazios:\n\n'+l.map(k=>'{{'+k+'}}').join('\n')
+    +'\n\nQuem receber vê o buraco no texto - por exemplo "Bem-vindo(a) à" sem nome nenhum a seguir.'
+    +'\n\nOs campos da entidade preenchem-se em Definições; os do cliente, na ficha dele.';
 }
 function hasSignature(u){ u=u||currentUser(); if(!u||!u.assinatura) return false; return !!(u.assinatura.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').trim() || /<img/i.test(u.assinatura)); }
 function currentSigHTML(cliente,proposta){ const u=currentUser(); if(!hasSignature(u)) return ''; const html=`<div style="font-family:${esc(u.assinaturaFont||'Inter, sans-serif')};font-size:${esc(u.assinaturaSize||'14px')};color:#15302a;line-height:1.5">${u.assinatura}</div>`; return mergeCtx(html,cliente,proposta); }
@@ -5574,6 +5595,8 @@ async function mailSend(){
   const sigT=sigHtmlToText((currentUser()||{}).assinatura);
   const msg=mergeCtx(mailDraft.message,c,null)+(sigT?'\n\n'+mergeCtx(sigT,c,null):'');
   const htmlEnvio=mailPreviewHTML();   // o MESMO que a pre-visualizacao mostra
+  const vazios=camposPorPreencher(c,null,mailDraft.subject,mailDraft.message);
+  if(vazios.length && !(await uiConfirm(avisoCampos(vazios),{title:'Campos por preencher',okText:'Enviar assim'}))) return;
   const ev=sendEmail({clienteId:c?c.id:null, paraNome:c?`${c.nome} ${c.apelido||''}`.trim():to, paraEmail:to, templateId:null, assunto:subj, mensagem:msg, origem:'Manual'});
   const real=realSendOn(); ev.modo=real?'real':'simulado'; if(mailDraft.cc)ev.cc=mailDraft.cc; if(mailDraft.bcc)ev.bcc=mailDraft.bcc;
   const _cc=mailDraft.cc, _bcc=mailDraft.bcc;
@@ -5721,6 +5744,8 @@ async function doSendEmail(openMail){
     if(prop.online&&prop.online.token) pubLink=pubUrl(prop.online.token); }catch(e){} }
   const propNote = prop ? (pubLink ? '\n\nVeja e adjudique a sua proposta online:\n'+pubLink : '\n\n(Proposta '+prop.numero+')') : '';
   const body=mergeCtx((tpl?tpl.saudacao+'\n\n'+tpl.corpo+(tpl.botaoTexto&&tpl.botaoLink?'\n\n'+tpl.botaoTexto+': '+tpl.botaoLink:'')+propNote+'\n\n'+tpl.assinatura:''),cli,prop)+(sigT?'\n\n'+mergeCtx(sigT,cli,prop):'');
+  const vazios=camposPorPreencher(cli,prop,sendDraft.assunto,(tpl?tpl.saudacao+' '+tpl.corpo+' '+(tpl.assinatura||'')+' '+(tpl.botaoTexto||''):''));
+  if(vazios.length && !(await uiConfirm(avisoCampos(vazios),{title:'Campos por preencher',okText:'Enviar assim'}))) return;
   const ev=sendEmail({clienteId:cli.id, templateId:sendDraft.templateId, assunto:sendDraft.assunto, proposta:prop, mensagem:body, origem:'Manual'});
   if(prop) snapshotVersao(prop);   // grava a versão das condições enviadas
   if(cli) maybeLeadQuente(cli.id);  // o email pode ter subido o score → gatilho comportamental
