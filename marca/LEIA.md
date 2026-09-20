@@ -30,6 +30,15 @@ icones/
   svg/                   os 49 ícones da interface, em currentColor
   png-tinta/             os mesmos a 256px, em tinta
   png-papel/             os mesmos a 256px, em papel
+redes/
+  linkedin-capa.html     a receita da capa da pagina do LinkedIn (1128x191)
+  linkedin-capa.png      a capa, a 2x - e o que se carrega la
+```
+
+A capa das redes nao desenha a marca: puxa os SVG de `logo/`. Para a voltar a gerar depois de mexer na receita (ou na marca):
+
+```
+node ferramentas/render-capa.mjs marca/redes/linkedin-capa.html marca/redes/linkedin-capa.png
 ```
 
 ## Qual usar

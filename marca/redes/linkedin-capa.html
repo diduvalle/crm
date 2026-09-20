@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<title>Capa do LinkedIn - crm.cr0x.org</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,800;1,800&family=Space+Mono:wght@400;700&display=swap">
+<style>
+/* A RECEITA DA CAPA DA PÁGINA DO LINKEDIN - 1128x191, que é o que eles pedem.
+   É o papel de parede da entrada do CRM: o mesmo papel, a mesma grelha de
+   pontos e os mesmos objetos a boiar, com a frase da casa por cima.
+
+   A marca NÃO é desenhada aqui - vem dos ficheiros de logo/, como manda o
+   LEIA.md desta pasta. Se a marca mudar, muda lá e volta a gerar-se isto.
+
+   Para voltar a gerar o PNG:
+     node ferramentas/render-capa.mjs marca/redes/linkedin-capa.html marca/redes/linkedin-capa.png
+   (sai a 2256x382, o dobro, para aguentar ecrãs retina) */
+:root{
+  --papel:#efe9dd; --tinta:#171412; --neutra:#2a2622; --azul-escuro:#005e95;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1128px;height:191px;overflow:hidden;background:var(--papel);
+  font-family:Archivo,system-ui,sans-serif;position:relative}
+
+/* a grelha de pontos, a mesma do site */
+.pontos{position:absolute;inset:0;
+  background-image:radial-gradient(var(--tinta) 0.5px, transparent 0.6px);
+  background-size:4px 4px;opacity:.07}
+
+.obj{position:absolute;display:block}
+
+/* O texto encosta à direita: o canto de baixo à esquerda é onde o LinkedIn
+   assenta o logótipo da página, e lá não pode estar nada que faça falta. */
+.txt{position:absolute;right:52px;top:50%;transform:translateY(-50%);width:585px;
+  text-align:right;z-index:3}
+.marca{font-family:"Space Mono",ui-monospace,monospace;font-size:.72rem;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--azul-escuro);font-weight:700;margin-bottom:11px}
+h1{font-weight:800;font-size:38px;line-height:.98;letter-spacing:-.035em;color:var(--tinta)}
+h1 em{font-style:italic;position:relative;display:inline-block}
+h1 em .pincel{position:absolute;left:-.08em;right:-.12em;bottom:-.1em;height:.26em;
+  width:auto;z-index:-1;fill:var(--neutra);opacity:.85}
+</style>
+</head>
+<body>
+<div class="pontos"></div>
+
+<div class="txt">
+  <p class="marca">crm.cr0x.org</p>
+  <h1>Um CRM inteiro, usado como <em>sala de aula<svg class="pincel" viewBox="0 0 340 30" preserveAspectRatio="none" aria-hidden="true"><path d="M2.5 17.5c10-3.6 22-5.6 36-6.4 26-1.6 52 1.2 78 2.2 30 1.2 60-0.6 90-2.4 28-1.7 55-3 82-1.1 18 1.3 33 4 47 8.4 3 0.9 3.4 6.6 0.4 7.4-14 3.6-29 4.6-45 4.2-30-0.8-59-4.2-89-4.6-32-0.4-63 2.4-95 3-26 0.5-51-0.6-75-4-10-1.4-19-3.4-27-6.2-3-1-3.1-5.5-2.4-6.5z"/></svg></em>.</h1>
+</div>
+
+<script>
+/* Onde cada objeto cai: da esquerda para o meio, a perder força, para a
+   direita ficar limpa. O azul é a variante do badge (terceira coluna azul),
+   e aparece uma vez só - é o mesmo peso que tem no papel de parede. */
+[
+  { x:21,  y:26,  w:107, r:-7, o:.16 },
+  { x:305, y:34,  w:77,  r:-3, o:.13 },
+  { x:477, y:42,  w:53,  r:-8, o:.08 },
+  { x:179, y:137, w:61,  r:6,  o:.10 },
+  { x:417, y:134, w:44,  r:9,  o:.22, azul:true },
+].forEach(function(p){
+  var i=document.createElement('img');
+  i.className='obj';
+  i.src='../logo/'+(p.azul?'crm-marca-badge.svg':'crm-marca.svg');
+  i.alt='';
+  i.style.cssText='left:'+p.x+'px;top:'+p.y+'px;width:'+p.w+'px;'+
+    'transform:rotate('+p.r+'deg);opacity:'+p.o;
+  document.body.appendChild(i);
+});
+</script>
+</body>
+</html>
