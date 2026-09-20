@@ -200,6 +200,70 @@ td .tag{align-self:auto}
 /* mover uma turma sem escola para uma escola */
 .mover{display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--muted);font-weight:600}
 .mover select{flex:1;min-width:0;font:inherit;font-size:.8rem;padding:5px 8px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text)}
+/* TESTES: construtor, pauta e gráficos */
+.add-lin{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 20px}
+.guardar-lin{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:16px;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--rl);box-shadow:var(--shadow);position:sticky;bottom:14px}
+.guardar-lin .btn{margin-left:auto}
+.chk{display:flex;align-items:center;gap:8px;font-size:.86rem;font-weight:700;cursor:pointer}
+.chk input{width:16px;height:16px;accent-color:var(--g600)}
+.chk input:disabled{opacity:.45}
+.item{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:16px;
+  margin-bottom:10px;box-shadow:var(--shadow)}
+.item.seccao{background:var(--surface2);border-style:dashed}
+.item-cab{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.item-cab .num{flex:none;width:26px;height:26px;border-radius:8px;background:var(--surface3);color:var(--muted);
+  display:grid;place-items:center;font-size:.76rem;font-weight:800}
+.item-cab select{font:inherit;font-size:.8rem;font-weight:700;padding:5px 8px;border:1px solid var(--border);
+  border-radius:8px;background:var(--surface);color:var(--text)}
+.pts-in{display:flex;align-items:center;gap:6px;font-size:.76rem;color:var(--muted);font-weight:700}
+.pts-in input{width:64px;font:inherit;font-size:.82rem;padding:5px 8px;border:1px solid var(--border);
+  border-radius:8px;background:var(--surface);color:var(--text)}
+.item-acc{margin-left:auto;display:flex;gap:2px}
+.item-acc button{width:28px;height:28px;border:0;border-radius:8px;background:transparent;color:var(--muted2);
+  display:grid;place-items:center;cursor:pointer}
+.item-acc button:hover{background:var(--surface2);color:var(--text)}
+.item-acc button svg{width:15px;height:15px}
+.item-acc .fora:hover{background:var(--danger-bg);color:var(--danger)}
+.item textarea{width:100%;min-height:58px;font:inherit;font-size:.9rem;padding:10px 12px;border:1px solid var(--border);
+  border-radius:var(--r);background:var(--surface);color:var(--text);resize:vertical}
+.item textarea:focus,.op-in:focus{outline:0;border-color:var(--g500)}
+.ops-ed{display:flex;flex-direction:column;gap:7px;margin-top:11px}
+.op-lin{display:flex;align-items:center;gap:9px}
+.op-lin input[type=radio]{width:17px;height:17px;accent-color:var(--ok);flex:none;cursor:pointer}
+.op-in{flex:1;min-width:0;font:inherit;font-size:.88rem;padding:8px 11px;border:1px solid var(--border);
+  border-radius:9px;background:var(--surface);color:var(--text)}
+.tc-lixo.mini{width:26px;height:26px;opacity:.55}
+.tc-lixo.mini svg{width:14px;height:14px}
+.item:hover .tc-lixo.mini{opacity:1}
+.vf-ed{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:10px}
+.op-vf{display:flex;align-items:center;gap:7px;font-size:.88rem;font-weight:700;cursor:pointer}
+.op-vf input{width:17px;height:17px;accent-color:var(--ok)}
+/* pauta e gráficos */
+.cartoes{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px}
+.kpi strong{display:block;font-size:1.5rem;font-weight:800;line-height:1.1}
+.kpi span{font-size:.76rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.03em}
+.g-perg{margin-bottom:18px}
+.g-perg h4{font-size:.88rem;font-weight:700;margin-bottom:9px}
+.g-lin{display:flex;align-items:center;gap:10px;margin-bottom:5px;font-size:.82rem}
+.g-lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.g-bar{flex:none;width:46%;height:16px;border-radius:5px;background:var(--surface3);overflow:hidden}
+.g-bar i{display:block;height:100%;background:var(--g500)}
+.g-bar.ok i{background:var(--ok)}
+.g-n{flex:none;width:58px;text-align:right;color:var(--muted);font-weight:700}
+.corrigir-q{border-top:1px solid var(--border);padding-top:14px;margin-top:14px}
+.corrigir-q:first-child{border-top:0;padding-top:0;margin-top:0}
+.corrigir-q .enun{font-size:.88rem;font-weight:700;margin-bottom:7px}
+.corrigir-q .dada{white-space:pre-wrap;font-size:.86rem;padding:10px 12px;background:var(--surface2);
+  border:1px solid var(--border);border-radius:var(--r)}
+.corrigir-q .linha{display:flex;align-items:center;gap:10px;margin-top:9px;flex-wrap:wrap}
+.corrigir-q .linha input[type=number]{width:80px;font:inherit;font-size:.86rem;padding:6px 9px;
+  border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text)}
+.corrigir-q .linha input[type=text]{flex:1;min-width:160px;font:inherit;font-size:.86rem;padding:6px 9px;
+  border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text)}
+.nota-fim{display:flex;align-items:center;gap:10px;font-size:.92rem;font-weight:800}
+.nota-fim .v{font-size:1.5rem;color:var(--g700)}
 </style>
 </head>
 <body>
@@ -240,6 +304,7 @@ td .tag{align-self:auto}
     <nav class="nav">
       <div class="nav-group">Gestão</div>
       <button class="nav-link active" data-view="escolas"></button>
+      <button class="nav-link" data-view="testes"></button>
       <div class="nav-group">Escolas</div>
       <div id="navEscolas"></div>
     </nav>
@@ -277,6 +342,10 @@ td .tag{align-self:auto}
       <section class="view" id="vTurmas"></section>
       <section class="view" id="vSessoes"></section>
       <section class="view" id="vSelos"></section>
+      <section class="view" id="vTestes"></section>
+      <section class="view" id="vTeste"></section>
+      <section class="view" id="vAvals"></section>
+      <section class="view" id="vApl"></section>
     </div>
   </div>
 </div>
@@ -309,7 +378,12 @@ const I={
   sol:'M12 4V2M12 22v-2M4 12H2M22 12h-2M5.6 5.6 4.2 4.2M19.8 19.8l-1.4-1.4M5.6 18.4l-1.4 1.4M19.8 4.2l-1.4 1.4M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0',
   lua:'M21 13a8 8 0 1 1-10-10 6 6 0 0 0 10 10',
   ok:'M20 6 9 17l-5-5',
-  alerta:'M12 9v4m0 4h.01M10.3 3.9 2.4 17.5A2 2 0 0 0 4.1 20.5h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0'
+  alerta:'M12 9v4m0 4h.01M10.3 3.9 2.4 17.5A2 2 0 0 0 4.1 20.5h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0',
+  cima:'M12 19V5M5 12l7-7 7 7',
+  baixo:'M12 5v14M19 12l-7 7-7-7',
+  grafico:'M3 3v18h18M7 15l3-4 3 3 5-7',
+  tranca:'M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4',
+  papel:'M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h6'
 };
 // width/height por omissão: sem isto, um SVG sem regra de CSS renderiza
 // gigante. Onde há regra (.btn svg, .nav-link svg…) o CSS ganha à mesma.
@@ -359,7 +433,11 @@ const ERROS={
   DADOS_EM_FALTA:'Falta preencher campos obrigatórios.',
   NAO_ENCONTRADO:'Já não existe.',
   JA_ENVIADA:'Esta sessão já foi enviada - já não se edita.',
-  SEM_RESEND:'O envio de email não está configurado no servidor.'
+  SEM_RESEND:'O envio de email não está configurado no servidor.',
+  CHAVE_POR_CONFIRMAR:'Confirma as respostas certas do teste antes de o aplicares a uma turma.',
+  TESTE_VAZIO:'Este teste ainda não tem perguntas.',
+  SEM_TITULO:'Falta o título do teste.',
+  SEM_SESSAO:'Esta aplicação perdeu a sessão de envio. Aplica o teste outra vez.'
 };
 function toast(msg,tipo){
   const t=document.createElement('div');
@@ -408,7 +486,9 @@ function filtrar(){
     el.style.display=(!q||el.textContent.toLowerCase().includes(q))?'':'none';
   });
 }
+let accaoPrimaria=null;
 $('#btnPrimario').addEventListener('click',()=>{
+  if(accaoPrimaria) return accaoPrimaria();
   if(turmaAtual) modalSessao(turmaAtual,null);
 });
 
@@ -418,10 +498,16 @@ $('#btnPrimario').addEventListener('click',()=>{
   const b=$('.nav-link[data-view="escolas"]');
   b.innerHTML=ic('escola')+'<span class="lbl">Escolas</span>';
   b.addEventListener('click',mostrarEscolas);
+  const bt=$('.nav-link[data-view="testes"]');
+  bt.innerHTML=ic('papel')+'<span class="lbl">Testes</span>';
+  bt.addEventListener('click',mostrarTestes);
 })();
 
 /* A hierarquia é Escolas -> Turmas -> Sessões. Só uma vista está ativa. */
-function mostrarVista(id){ document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id)); }
+function mostrarVista(id){
+  accaoPrimaria=null;
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
+}
 function rotuloVoltar(){
   if(!escolaAtual) return 'Turmas';
   return escolaAtual.slug?('Turmas de '+esc(escolaAtual.nome||escolaAtual.slug)):'Turmas sem escola';
@@ -633,7 +719,9 @@ function subTurmas(){
 function marcarNavEscola(){
   document.querySelectorAll('.nav-escola').forEach(el=>
     el.classList.toggle('active', !!escolaAtual && el.dataset.escola===escolaAtual.slug));
-  $('.nav-link[data-view="escolas"]').classList.toggle('active', !escolaAtual);
+  const emTestes=!!document.querySelector('#vTestes.active, #vTeste.active');
+  $('.nav-link[data-view="escolas"]').classList.toggle('active', !escolaAtual && !emTestes);
+  const bt=$('.nav-link[data-view="testes"]'); if(bt) bt.classList.toggle('active', emTestes);
 }
 function editarNomeEscola(e,el){
   const lbl=el.querySelector('.lbl'); const antes=e.nome||e.slug;
@@ -718,6 +806,7 @@ async function carregarTurmas(e){
           <div class="tc-foot">
             <button class="tc-lixo" data-apagar-turma="${esc(t.codigo)}" title="Apagar a turma do CRM">${ic('lixo')}</button>
             <button class="btn-sec btn-sm" data-cfg="${t.id}">${ic('cog')}Definições</button>
+            <button class="btn-sec btn-sm" data-avals="${t.id}">${ic('papel')}Avaliações</button>
             <button class="btn btn-sm btn-ouro" data-selos="${t.id}">Badges</button>
             <button class="btn btn-sm" data-abrir="${t.id}">Abrir</button>
           </div>
@@ -740,6 +829,8 @@ async function carregarTurmas(e){
     ()=>modalTurma(geridas.find(t=>t.id===b.dataset.cfg))));
   document.querySelectorAll('[data-selos]').forEach(b=>b.addEventListener('click',
     ()=>abrirSelos(geridas.find(t=>t.id===b.dataset.selos))));
+  document.querySelectorAll('[data-avals]').forEach(b=>b.addEventListener('click',
+    ()=>abrirAvaliacoes(geridas.find(t=>t.id===b.dataset.avals))));
   document.querySelectorAll('[data-adicionar]').forEach(b=>b.addEventListener('click',
     ()=>modalAdicionarTurma(geridas.find(t=>t.codigo===b.dataset.adicionar))));
   document.querySelectorAll('[data-mover]').forEach(s=>s.addEventListener('change',
@@ -857,6 +948,10 @@ function modalTurma(t){
 async function carregarSessoes(t){
   try{ sessoes=await rpc('repo_sessoes_listar',{p_token:sessao.token,p_repo_turma_id:t.id}); }
   catch(e){ return tratar(e); }
+  /* Os badges e as avaliações também são sessões por dentro, mas têm ecrã
+     próprio: aqui só se listam os avisos de material. (O tipo só chega
+     depois do 09-testes.sql; até lá vêm todas, como vinham.) */
+  sessoes=sessoes.filter(s=>!s.tipo||s.tipo==='sessao');
 
   const estado=s=>{
     if(!s.enviado_em) return '<span class="pill amber">Rascunho</span>';
@@ -1397,6 +1492,670 @@ function modalEmail(s){
     </div>
     <div class="modal-foot"><span></span><button class="btn" data-fechar>Fechar</button></div>
   </div>`);
+}
+
+/* ================== TESTES E AVALIAÇÕES ==================
+   Um teste é um MODELO e vive na biblioteca (item "Testes" na barra). Aplicá-lo
+   a uma turma COPIA as perguntas para a aplicação: mexer no modelo depois já não
+   mexe no que a turma respondeu.
+
+   Aplicar, enviar, corrigir e devolver fazem-se dentro da turma (botão
+   "Avaliações" no cartão). Por dentro, uma aplicação é uma sessão do Repo como
+   as outras - é por isso que o envio, o registo de aberturas e o reenvio já
+   funcionam sem código novo.
+   ========================================================= */
+let testes=[], testeEdit=null, aplicacoes=[], aplAtual=null, aplItens=[], pauta=[];
+const nm=n=>String(Math.round((+n||0)*100)/100).replace('.',',');
+const LETRA=i=>String.fromCharCode(97+i);
+
+/* ---------- A biblioteca ---------- */
+function mostrarTestes(){
+  escolaAtual=null; turmaAtual=null;
+  mostrarVista('vTestes');
+  accaoPrimaria=()=>editarTeste(null);
+  $('#hTitulo').textContent='Testes';
+  $('#hSub').textContent='A biblioteca. Um teste escreve-se aqui e aplica-se dentro de cada turma.';
+  $('#btnPrimario').classList.remove('hidden');
+  $('#btnPrimario').innerHTML=ic('mais')+'Novo teste';
+  $('#pesquisa').value='';
+  marcarNavEscola();
+  carregarTestes().then(filtrar);
+}
+
+async function carregarTestes(){
+  try{ testes=await rpc('testes_listar',{p_token:sessao.token}); }
+  catch(e){ if(faltaSql(e,'09-testes.sql')) return; return tratar(e); }
+
+  $('#vTestes').innerHTML = !testes.length
+    ? `<div class="empty">${ic('papel')}<strong>Ainda não há testes</strong>
+        <span>Um teste escreve-se uma vez e aplica-se a quantas turmas quiseres.</span></div>`
+    : `<div class="grid">${testes.map(t=>`
+      <article class="card tc">
+        <div class="tc-meta">
+          ${t.modulo?`<span class="tag">UFCD ${esc(t.modulo)}</span>`:''}
+          ${t.escola?`<span class="pill grey">${esc(t.escola)}</span>`:'<span class="pill grey">Todas as escolas</span>'}
+          ${t.por_marcar>0
+            ? `<span class="pill amber">${t.por_marcar} sem resposta certa</span>`
+            : (t.chave_ok?'<span class="pill green">Pronto a aplicar</span>':'<span class="pill amber">Chave por confirmar</span>')}
+        </div>
+        <h3>${esc(t.titulo)}</h3>
+        ${t.descricao?`<div class="muted" style="font-size:.82rem">${esc(t.descricao)}</div>`:''}
+        <div class="muted" style="font-size:.8rem">${plural(+t.n_perguntas||0,'pergunta','perguntas')} · ${nm(t.pontos)} pontos · ${plural(+t.n_aplicacoes||0,'aplicação','aplicações')}</div>
+        <div class="tc-foot">
+          <button class="tc-lixo" data-apagar-teste="${t.id}" title="Apagar o teste">${ic('lixo')}</button>
+          <button class="btn btn-sm" data-editar-teste="${t.id}">${ic('lapis')}Abrir</button>
+        </div>
+      </article>`).join('')}</div>`;
+
+  document.querySelectorAll('[data-editar-teste]').forEach(b=>b.addEventListener('click',
+    ()=>editarTeste(b.dataset.editarTeste)));
+  document.querySelectorAll('[data-apagar-teste]').forEach(b=>b.addEventListener('click',
+    ()=>apagarTeste(testes.find(t=>t.id===b.dataset.apagarTeste))));
+}
+
+async function apagarTeste(t){
+  if(!t) return;
+  const ok=await uiConfirmCodigo({titulo:`Apagar "${t.titulo}"?`,ok:'Apagar o teste',
+    texto:`<strong>Apaga o teste e não se desfaz.</strong>
+      <ul class="perda">
+        <li>${plural(+t.n_perguntas||0,'pergunta','perguntas')} e as respostas certas</li>
+        <li>${plural(+t.n_aplicacoes||0,'aplicação','aplicações')} a turmas, com as respostas e as notas</li>
+      </ul>`});
+  if(!ok) return;
+  try{ await rpc('teste_apagar',{p_token:sessao.token,p_id:t.id}); }
+  catch(e){ return tratar(e); }
+  toast('Teste apagado.');
+  carregarTestes();
+}
+
+/* ---------- O construtor ---------- */
+async function editarTeste(id){
+  if(id){
+    try{ testeEdit=await rpc('teste_ler',{p_token:sessao.token,p_id:id}); }
+    catch(e){ return tratar(e); }
+  }else{
+    testeEdit={id:null,titulo:'',descricao:'',modulo:'',espaco_id:null,chave_ok:false,itens:[]};
+  }
+  testeEdit.itens=(testeEdit.itens||[]).map(it=>({...it,
+    opcoes:Array.isArray(it.opcoes)?it.opcoes:[],
+    certa:(it.certa===undefined?null:it.certa)}));
+  mostrarVista('vTeste');
+  $('#hTitulo').textContent=testeEdit.id?'Editar teste':'Novo teste';
+  $('#hSub').textContent='As perguntas, as respostas certas e as cotações';
+  $('#btnPrimario').classList.add('hidden');
+  $('#pesquisa').value='';
+  marcarNavEscola();
+  pintarTeste();
+}
+
+function pintarTeste(){
+  const T=testeEdit;
+  const opsEscola=escolas.filter(e=>e.slug&&!e.arquivado);
+  $('#vTeste').innerHTML=`<button class="voltar" id="voltarTestes">${ic('seta')}Testes</button>
+    <div class="card card-pad" style="margin-bottom:18px">
+      <div class="form-grid">
+        <div class="field full"><label>Título</label>
+          <input id="tTitulo" value="${esc(T.titulo)}" placeholder="Avaliação final - 10868"></div>
+        <div class="field"><label>UFCD / módulo</label>
+          <input id="tModulo" value="${esc(T.modulo)}" placeholder="10868"></div>
+        <div class="field"><label>Escola</label>
+          <select id="tEspaco">
+            <option value="">Todas as escolas</option>
+            ${opsEscola.map(e=>`<option value="${esc(e.id)}"${T.espaco_id===e.id?' selected':''}>${esc(e.nome||e.slug)}</option>`).join('')}
+          </select>
+          <span class="hint">Serve para arrumar a biblioteca. Aplicar continua a ser turma a turma.</span></div>
+        <div class="field full"><label>Descrição</label>
+          <input id="tDesc" value="${esc(T.descricao)}" placeholder="O que é, e como conta"></div>
+      </div>
+    </div>
+    <div id="tItens"></div>
+    <div class="add-lin">
+      <button class="btn-sec btn-sm" data-add="escolha">${ic('mais')}Escolha múltipla</button>
+      <button class="btn-sec btn-sm" data-add="vf">${ic('mais')}Verdadeiro / falso</button>
+      <button class="btn-sec btn-sm" data-add="aberta">${ic('mais')}Resposta aberta</button>
+      <button class="btn-sec btn-sm" data-add="seccao">${ic('mais')}Secção</button>
+    </div>
+    <div class="guardar-lin">
+      <label class="chk"><input type="checkbox" id="tChave"${T.chave_ok?' checked':''}>
+        <span>Confirmo as respostas certas</span></label>
+      <span class="hint" id="tAviso"></span>
+      <button class="btn" id="tGuardar">${ic('ok')}Guardar</button>
+    </div>`;
+
+  $('#voltarTestes').addEventListener('click',mostrarTestes);
+  $('#tChave').addEventListener('change',()=>{ testeEdit.chave_ok=$('#tChave').checked; });
+  $('#tGuardar').addEventListener('click',guardarTeste);
+  document.querySelectorAll('#vTeste [data-add]').forEach(b=>b.addEventListener('click',()=>{
+    lerCampos();
+    const tipo=b.dataset.add;
+    testeEdit.itens.push({id:null,tipo,enunciado:'',ajuda:'',
+      opcoes:tipo==='escolha'?['','','','']:[],
+      certa:null,pontos:tipo==='seccao'?0:(tipo==='vf'?0.5:1)});
+    pintarItens();
+    const cx=document.querySelectorAll('#tItens .item');
+    const ult=cx[cx.length-1]; if(ult){ const a=ult.querySelector('textarea'); if(a){ a.focus(); a.scrollIntoView({block:'center'}); } }
+  }));
+  pintarItens();
+}
+
+const TIPOS={escolha:'Escolha múltipla',vf:'Verdadeiro / falso',aberta:'Resposta aberta',seccao:'Secção'};
+
+function pintarItens(){
+  const T=testeEdit; let n=0;
+  $('#tItens').innerHTML=T.itens.map((it,i)=>{
+    const sec=it.tipo==='seccao';
+    if(!sec) n++;
+    let corpo='';
+    if(it.tipo==='escolha'){
+      corpo=`<div class="ops-ed">
+        ${(it.opcoes||[]).map((o,j)=>`<div class="op-lin">
+          <input type="radio" name="c${i}" data-certa="${i}|${j}"${it.certa===j?' checked':''} title="Marcar como resposta certa" aria-label="Resposta certa">
+          <input class="op-in" data-op="${i}|${j}" value="${esc(o)}" placeholder="Opção ${j+1}">
+          <button class="tc-lixo mini" data-op-fora="${i}|${j}" title="Tirar esta opção">${ic('lixo')}</button>
+        </div>`).join('')}
+        <div><button class="btn-ghost btn-xs" data-op-mais="${i}">${ic('mais')}Opção</button>
+          <span class="hint" style="margin-left:6px">O botão redondo marca a resposta certa.</span></div>
+      </div>`;
+    }else if(it.tipo==='vf'){
+      corpo=`<div class="vf-ed">
+        <label class="op-vf"><input type="radio" name="c${i}" data-certa="${i}|true"${it.certa===true?' checked':''}><span>Verdadeiro</span></label>
+        <label class="op-vf"><input type="radio" name="c${i}" data-certa="${i}|false"${it.certa===false?' checked':''}><span>Falso</span></label>
+        <span class="hint">A afirmação acima é verdadeira ou falsa?</span>
+      </div>`;
+    }else if(it.tipo==='aberta'){
+      corpo=`<span class="hint">Resposta escrita. Corriges à mão, com os pontos que deres a cada um.</span>`;
+    }else{
+      corpo=`<input class="op-in" data-ajuda="${i}" value="${esc(it.ajuda)}" placeholder="Subtítulo da secção (opcional)" style="margin-top:10px">`;
+    }
+    return `<div class="item${sec?' seccao':''}" data-i="${i}">
+      <div class="item-cab">
+        <span class="num">${sec?ic('lista'):n}</span>
+        <select data-tipo="${i}">${Object.keys(TIPOS).map(k=>`<option value="${k}"${it.tipo===k?' selected':''}>${TIPOS[k]}</option>`).join('')}</select>
+        ${sec?'':`<span class="pts-in">Pontos <input type="number" step="0.5" min="0" data-pontos="${i}" value="${it.pontos}"></span>`}
+        <div class="item-acc">
+          <button data-mover-i="${i}|-1" title="Subir"${i===0?' disabled':''}>${ic('cima')}</button>
+          <button data-mover-i="${i}|1" title="Descer"${i===T.itens.length-1?' disabled':''}>${ic('baixo')}</button>
+          <button class="fora" data-fora-i="${i}" title="Apagar">${ic('lixo')}</button>
+        </div>
+      </div>
+      <textarea data-enun="${i}" placeholder="${sec?'Título da secção (ex: 3ª Parte - Verdadeiro / Falso)':'Escreve aqui a pergunta'}">${esc(it.enunciado)}</textarea>
+      ${corpo}
+    </div>`;
+  }).join('')||`<div class="empty">${ic('papel')}<strong>Sem perguntas</strong>
+      <span>Acrescenta a primeira em baixo.</span></div>`;
+
+  const cx=$('#tItens');
+  cx.querySelectorAll('[data-tipo]').forEach(s=>s.addEventListener('change',()=>{
+    lerCampos();
+    const i=+s.dataset.tipo, it=T.itens[i];
+    it.tipo=s.value; it.certa=null;
+    if(it.tipo==='escolha'&&!(it.opcoes||[]).length) it.opcoes=['','','',''];
+    if(it.tipo==='seccao') it.pontos=0;
+    pintarItens();
+  }));
+  cx.querySelectorAll('[data-certa]').forEach(r=>r.addEventListener('change',()=>{
+    const p=r.dataset.certa.split('|'), i=+p[0];
+    T.itens[i].certa=(p[1]==='true')?true:(p[1]==='false')?false:+p[1];
+    avisoChave();
+  }));
+  cx.querySelectorAll('[data-op-mais]').forEach(b=>b.addEventListener('click',()=>{
+    lerCampos(); T.itens[+b.dataset.opMais].opcoes.push(''); pintarItens();
+  }));
+  cx.querySelectorAll('[data-op-fora]').forEach(b=>b.addEventListener('click',()=>{
+    lerCampos();
+    const p=b.dataset.opFora.split('|'), i=+p[0], j=+p[1], it=T.itens[i];
+    it.opcoes.splice(j,1);
+    if(it.certa===j) it.certa=null; else if(typeof it.certa==='number'&&it.certa>j) it.certa--;
+    pintarItens();
+  }));
+  cx.querySelectorAll('[data-mover-i]').forEach(b=>b.addEventListener('click',()=>{
+    lerCampos();
+    const p=b.dataset.moverI.split('|'), i=+p[0], d=+p[1], j=i+d;
+    if(j<0||j>=T.itens.length) return;
+    const x=T.itens[i]; T.itens[i]=T.itens[j]; T.itens[j]=x;
+    pintarItens();
+  }));
+  cx.querySelectorAll('[data-fora-i]').forEach(b=>b.addEventListener('click',async()=>{
+    const i=+b.dataset.foraI;
+    const ok=await uiConfirm({titulo:'Apagar esta pergunta?',ok:'Apagar',perigo:true,
+      texto:'Sai do teste. As aplicações já feitas ficam como estão.'});
+    if(!ok) return;
+    lerCampos(); T.itens.splice(i,1); pintarItens();
+  }));
+  avisoChave();
+}
+
+/* Lê o que está nos campos para dentro do objeto, antes de voltar a desenhar:
+   sem isto, acrescentar uma opção apagava o que já lá estava escrito. */
+function lerCampos(){
+  const T=testeEdit;
+  if($('#tTitulo')){
+    T.titulo=$('#tTitulo').value;
+    T.modulo=$('#tModulo').value.trim();
+    T.descricao=$('#tDesc').value;
+    T.espaco_id=$('#tEspaco').value||null;
+    T.chave_ok=$('#tChave').checked;
+  }
+  document.querySelectorAll('#tItens [data-enun]').forEach(el=>{ T.itens[+el.dataset.enun].enunciado=el.value; });
+  document.querySelectorAll('#tItens [data-ajuda]').forEach(el=>{ T.itens[+el.dataset.ajuda].ajuda=el.value; });
+  document.querySelectorAll('#tItens [data-pontos]').forEach(el=>{ T.itens[+el.dataset.pontos].pontos=+el.value||0; });
+  document.querySelectorAll('#tItens [data-op]').forEach(el=>{
+    const p=el.dataset.op.split('|'); T.itens[+p[0]].opcoes[+p[1]]=el.value;
+  });
+}
+
+/* Uma pergunta fechada sem resposta certa não se corrige sozinha - e um teste
+   com buracos na chave não pode ser aplicado. */
+function avisoChave(){
+  const falta=testeEdit.itens.filter(it=>
+    (it.tipo==='escolha'||it.tipo==='vf')&&(it.certa===null||it.certa===undefined)).length;
+  const a=$('#tAviso'), c=$('#tChave');
+  if(!a||!c) return;
+  a.textContent=falta?plural(falta,'pergunta ainda sem resposta certa','perguntas ainda sem resposta certa')+'.':'';
+  a.style.color=falta?'var(--warn)':'';
+  c.disabled=falta>0;
+  if(falta){ c.checked=false; testeEdit.chave_ok=false; }
+}
+
+async function guardarTeste(ev){
+  lerCampos();
+  const T=testeEdit;
+  if(!String(T.titulo||'').trim()) return toast('Falta o título do teste.','err');
+  if(!T.itens.length) return toast('Um teste sem perguntas não se guarda.','err');
+  const b=ev&&ev.currentTarget;
+  if(b){ b.disabled=true; b.textContent='A guardar…'; }
+  const itens=T.itens.map(it=>{
+    let opcoes=[], certa=(it.certa===undefined?null:it.certa);
+    if(it.tipo==='escolha'){
+      /* tirar as opções vazias mexe nos índices - a resposta certa anda com elas */
+      let nova=null;
+      (it.opcoes||[]).forEach((o,j)=>{
+        if(String(o).trim()===''){ return; }
+        if(j===certa) nova=opcoes.length;
+        opcoes.push(o);
+      });
+      certa=nova;
+    }
+    if(it.tipo==='aberta'||it.tipo==='seccao') certa=null;
+    return {id:it.id||null,tipo:it.tipo,enunciado:it.enunciado||'',ajuda:it.ajuda||'',
+      opcoes,certa,pontos:it.tipo==='seccao'?0:(+it.pontos||0)};
+  });
+  try{
+    const r=await rpc('teste_gravar',{p_token:sessao.token,p_id:T.id,
+      p_dados:{titulo:String(T.titulo).trim(),descricao:T.descricao||'',modulo:T.modulo||'',
+        espaco_id:T.espaco_id||null,chave_ok:!!T.chave_ok,itens}});
+    T.id=r.id;
+    toast('Teste guardado.');
+    mostrarTestes();
+  }catch(e){
+    tratar(e);
+    if(b){ b.disabled=false; b.innerHTML=ic('ok')+'Guardar'; }
+  }
+}
+
+/* ---------- As avaliações de uma turma ---------- */
+async function abrirAvaliacoes(t){
+  turmaAtual=t;
+  mostrarVista('vAvals');
+  $('#hTitulo').textContent='Avaliações · '+(t.nome||('Turma '+t.codigo));
+  $('#hSub').textContent='Turma '+t.codigo+' · '+t.n_formandos+' formandos';
+  $('#btnPrimario').classList.add('hidden');
+  $('#pesquisa').value='';
+  pintarNavEscolas();
+  carregarAvaliacoes(t);
+}
+
+async function carregarAvaliacoes(t){
+  try{ aplicacoes=await rpc('teste_aplicacoes_da_turma',{p_token:sessao.token,p_repo_turma_id:t.id}); }
+  catch(e){ if(faltaSql(e,'09-testes.sql')) return; return tratar(e); }
+
+  const estado=a=>{
+    if(a.devolvidos>0&&a.devolvidos>=a.entregues) return '<span class="pill green">Devolvida</span>';
+    if(a.entregues>0&&a.corrigidos>=a.entregues) return '<span class="pill blue">Por devolver</span>';
+    if(a.entregues>0) return `<span class="pill amber">Por corrigir · ${a.entregues-a.corrigidos}</span>`;
+    if(a.enviados>0) return '<span class="pill grey">À espera de respostas</span>';
+    return '<span class="pill amber">Por enviar</span>';
+  };
+  const topo=`<button class="voltar" id="voltarTurmas3">${ic('seta')}${rotuloVoltar()}</button>
+    <div class="section-head" style="margin-bottom:16px">
+      <div><h3>Avaliações</h3>
+        <div class="sub">Cada formando recebe um link só dele. As notas voltam pelo mesmo caminho.</div></div>
+      <button class="btn" id="aplicarTeste">${ic('mais')}Aplicar um teste</button>
+    </div>`;
+
+  $('#vAvals').innerHTML = topo + (!aplicacoes.length
+    ? `<div class="empty">${ic('papel')}<strong>Esta turma ainda não tem avaliações</strong>
+        <span>Aplica um teste da biblioteca - as perguntas ficam guardadas nesta aplicação.</span></div>`
+    : `<div class="table-wrap"><table><thead><tr>
+        <th>Avaliação</th><th>Estado</th><th>Entregues</th><th>Média</th><th></th>
+      </tr></thead><tbody>${aplicacoes.map(a=>`
+        <tr class="clickable" data-apl="${a.id}">
+          <td><div class="cell-main">${a.modulo?`<span class="tag" style="margin-right:7px">${esc(a.modulo)}</span>`:''}${esc(a.titulo)}</div>
+              <div class="cell-sub">${dt(a.criado_em)} · ${nm(a.pontos_total)} pontos${a.fechado?' · fechada':''}</div></td>
+          <td>${estado(a)}</td>
+          <td>${a.entregues}/${a.destinatarios}</td>
+          <td>${a.media!=null?nm(a.media)+' / '+nm(a.pontos_total):'<span class="muted">-</span>'}</td>
+          <td class="t-right muted">${ic('olho')}</td>
+        </tr>`).join('')}</tbody></table></div>`);
+
+  $('#voltarTurmas3').addEventListener('click',voltarATurmas);
+  $('#aplicarTeste').addEventListener('click',()=>modalAplicar(t));
+  document.querySelectorAll('[data-apl]').forEach(r=>r.addEventListener('click',
+    ()=>abrirAplicacao(aplicacoes.find(a=>a.id===r.dataset.apl))));
+}
+
+async function modalAplicar(t){
+  try{ testes=await rpc('testes_listar',{p_token:sessao.token}); }
+  catch(e){ if(faltaSql(e,'09-testes.sql')) return; return tratar(e); }
+  const prontos=testes.filter(x=>x.chave_ok&&+x.n_perguntas>0);
+  const f=abrirModal(`<div class="modal" style="width:min(620px,100%)">
+    <div class="modal-head"><div><h3>Aplicar um teste</h3>
+      <div class="sub">Turma ${esc(t.codigo)} · as perguntas ficam congeladas nesta aplicação</div></div></div>
+    <div class="modal-body">
+      ${!prontos.length
+        ? `<div class="empty">${ic('papel')}<strong>Nenhum teste pronto</strong>
+            <span>Um teste só se aplica depois de confirmares as respostas certas, em Testes.</span></div>`
+        : `<div class="root-list">${prontos.map(x=>`
+            <button class="root-trow" data-usar="${x.id}">
+              <div class="root-tinfo"><strong>${esc(x.titulo)}</strong>
+                <span>${x.modulo?'UFCD '+esc(x.modulo)+' · ':''}${plural(+x.n_perguntas||0,'pergunta','perguntas')} · ${nm(x.pontos)} pontos</span></div>
+              ${ic('seta')}
+            </button>`).join('')}</div>`}
+    </div>
+    <div class="modal-foot"><span></span><button class="btn-sec" data-fechar>Fechar</button></div></div>`);
+
+  f.querySelectorAll('[data-usar]').forEach(b=>b.addEventListener('click',async()=>{
+    b.disabled=true;
+    let r;
+    try{ r=await rpc('teste_aplicar',{p_token:sessao.token,p_teste_id:b.dataset.usar,p_repo_turma_id:t.id}); }
+    catch(e){ b.disabled=false; return tratar(e); }
+    f.remove();
+    await carregarAvaliacoes(t);
+    if(!r.destinatarios) return toast('Aplicado, mas nenhum formando desta turma tem email.','warn');
+    const ok=await uiConfirm({titulo:'Enviar já a avaliação?',ok:'Enviar agora',
+      texto:`O link pessoal vai para <strong>${plural(r.destinatarios,'formando','formandos')}</strong>.
+        <br><br><span class="hint">Se preferires, envias depois - o botão fica no ecrã da avaliação.</span>`});
+    if(!ok) return toast('Aplicada. Envias quando quiseres.','warn');
+    enviarAplicacao(r.sessao_id);
+  }));
+}
+
+async function enviarAplicacao(sessaoId,botao){
+  if(botao){ botao.disabled=true; botao.textContent='A enviar…'; }
+  const r=await edge('repo-enviar',{token:sessao.token,sessao_id:sessaoId});
+  if(turmaAtual) await carregarAvaliacoes(turmaAtual);
+  if(aplAtual) await abrirAplicacao(aplAtual);
+  if(!r.ok) return toast(r.erro||'O envio falhou.','err');
+  if(r.falhados) return toast(`Enviado a ${r.enviados}, falhou em ${r.falhados}.`,'warn');
+  if(!r.enviados) return toast('Nada por enviar - já estavam todos avisados.','warn');
+  toast(`Enviado a ${plural(r.enviados,'formando','formandos')}.`);
+}
+
+/* ---------- Uma aplicação: pauta, correção e gráficos ---------- */
+async function abrirAplicacao(a){
+  if(!a) return;
+  aplAtual=a;
+  mostrarVista('vApl');
+  $('#hTitulo').textContent=a.titulo;
+  $('#hSub').textContent=(turmaAtual?'Turma '+turmaAtual.codigo+' · ':'')+nm(a.pontos_total)+' pontos';
+  $('#btnPrimario').classList.add('hidden');
+  $('#pesquisa').value='';
+  $('#vApl').innerHTML='<div class="empty"><strong>A carregar…</strong></div>';
+  try{
+    const d=await rpc('teste_aplicacao_ler',{p_token:sessao.token,p_aplicacao_id:a.id});
+    aplItens=d.itens||[];
+    aplAtual={...a,...d};
+    pauta=await rpc('teste_pauta',{p_token:sessao.token,p_aplicacao_id:a.id});
+  }catch(e){ return tratar(e); }
+  pintarAplicacao();
+}
+
+function pintarAplicacao(){
+  const a=aplAtual;
+  const total=pauta.length;
+  const enviados=pauta.filter(l=>l.enviado_em).length;
+  const entregues=pauta.filter(l=>l.submetido_em).length;
+  const corrigidos=pauta.filter(l=>l.corrigido_em).length;
+  const devolvidos=pauta.filter(l=>l.devolvido_em).length;
+  const notas=pauta.filter(l=>l.nota!=null).map(l=>+l.nota);
+  const media=notas.length?notas.reduce((x,y)=>x+y,0)/notas.length:null;
+  const porCorrigir=entregues-corrigidos;
+  const porDevolver=corrigidos-devolvidos;
+
+  const estadoLinha=l=>{
+    if(l.devolvido_em) return `<span class="pill green">Devolvida</span>`;
+    if(l.corrigido_em) return `<span class="pill blue">Corrigida</span>`;
+    if(l.submetido_em) return `<span class="pill amber">Entregue</span>`;
+    if(l.primeiro_clique) return `<span class="pill grey">Abriu</span>`;
+    if(l.enviado_em) return `<span class="pill grey">Enviado</span>`;
+    if(l.erro) return `<span class="pill red">Falhou</span>`;
+    return `<span class="muted">-</span>`;
+  };
+
+  $('#vApl').innerHTML=`<button class="voltar" id="voltarAvals">${ic('seta')}Avaliações</button>
+    <div class="section-head" style="margin-bottom:16px">
+      <div><h3>${esc(a.titulo)}</h3>
+        <div class="sub">${a.fechado?'Fechada a respostas':'A aceitar respostas'} · ${nm(a.pontos_total)} pontos</div></div>
+      <div class="toolbar" style="gap:8px">
+        ${enviados<total?`<button class="btn btn-sm" id="aEnviar">${ic('mail')}Enviar${enviados?' a quem falta':''}</button>`:''}
+        ${porDevolver>0?`<button class="btn btn-sm" id="aDevolver">${ic('ok')}Devolver ${porDevolver} nota${porDevolver==1?'':'s'}</button>`:''}
+        <button class="btn-sec btn-sm" id="aFechar">${ic('tranca')}${a.fechado?'Reabrir':'Fechar'}</button>
+        <button class="btn-sec btn-sm" id="aCsv">${ic('copiar')}CSV</button>
+      </div>
+    </div>
+
+    <div class="cartoes">
+      <div class="kpi"><strong>${enviados}/${total}</strong><span>enviados</span></div>
+      <div class="kpi"><strong>${entregues}</strong><span>entregues</span></div>
+      <div class="kpi"><strong>${porCorrigir}</strong><span>por corrigir</span></div>
+      <div class="kpi"><strong>${media!=null?nm(media):'-'}</strong><span>média</span></div>
+    </div>
+
+    <div class="table-wrap" style="margin-bottom:22px"><table><thead><tr>
+      <th>Formando</th><th>Estado</th><th>Entregue</th><th>Nota</th><th></th>
+    </tr></thead><tbody>${pauta.map(l=>`
+      <tr>
+        <td><div class="cell-main">${esc(l.nome)}</div><div class="cell-sub">${esc(l.email||'sem email')}</div></td>
+        <td>${estadoLinha(l)}</td>
+        <td>${l.submetido_em?dt(l.submetido_em):'<span class="muted">-</span>'}</td>
+        <td>${l.nota!=null?`<strong>${nm(l.nota)}</strong> <span class="muted">/ ${nm(a.pontos_total)}</span>`:'<span class="muted">-</span>'}</td>
+        <td class="t-right">${l.resposta_id&&l.submetido_em
+          ? `<button class="btn-sec btn-xs" data-corrigir="${l.resposta_id}">${l.corrigido_em?'Rever':'Corrigir'}</button>`
+          : (l.acesso_id&&l.enviado_em?`<button class="btn-ghost btn-xs" data-reenviar="${l.acesso_id}">Reenviar</button>`:'')}</td>
+      </tr>`).join('')}</tbody></table></div>
+
+    <div class="section-head" style="margin-bottom:12px"><div><h3>Respostas, pergunta a pergunta</h3>
+      <div class="sub">Só as de escolha e verdadeiro/falso. Conta quem já entregou.</div></div></div>
+    <div class="card card-pad" id="aGraficos"></div>`;
+
+  $('#voltarAvals').addEventListener('click',()=>turmaAtual?abrirAvaliacoes(turmaAtual):mostrarEscolas());
+  const be=$('#aEnviar');
+  if(be) be.addEventListener('click',()=>enviarAplicacao(a.sessao_id,be));
+  const bd=$('#aDevolver');
+  if(bd) bd.addEventListener('click',()=>devolverNotas(a,porDevolver,bd));
+  $('#aFechar').addEventListener('click',async()=>{
+    try{ await rpc('teste_fechar',{p_token:sessao.token,p_aplicacao_id:a.id,p_fechado:!a.fechado}); }
+    catch(e){ return tratar(e); }
+    toast(a.fechado?'Reaberta - já podem responder.':'Fechada - deixou de aceitar respostas.');
+    abrirAplicacao(a);
+  });
+  $('#aCsv').addEventListener('click',()=>csvPauta(a));
+  document.querySelectorAll('[data-corrigir]').forEach(b=>b.addEventListener('click',
+    ()=>modalCorrigir(pauta.find(l=>l.resposta_id===b.dataset.corrigir))));
+  document.querySelectorAll('[data-reenviar]').forEach(b=>b.addEventListener('click',async()=>{
+    b.disabled=true; b.textContent='A enviar…';
+    const r=await edge('repo-enviar',{token:sessao.token,sessao_id:a.sessao_id,acesso_id:b.dataset.reenviar});
+    if(!r.ok) return toast(r.erro||'O envio falhou.','err');
+    toast('Reenviado.');
+    abrirAplicacao(a);
+  }));
+  pintarGraficos();
+}
+
+function pintarGraficos(){
+  const entregues=pauta.filter(l=>l.submetido_em);
+  const fechadas=aplItens.filter(it=>it.tipo==='escolha'||it.tipo==='vf');
+  if(!entregues.length||!fechadas.length){
+    $('#aGraficos').innerHTML=`<span class="hint">${!fechadas.length
+      ?'Esta avaliação só tem perguntas de resposta escrita.'
+      :'Ainda não há entregas para contar.'}</span>`;
+    return;
+  }
+  let n=0;
+  $('#aGraficos').innerHTML=fechadas.map(it=>{
+    n++;
+    const ops=it.tipo==='vf'?['Verdadeiro','Falso']:(it.opcoes||[]);
+    const valores=it.tipo==='vf'?[true,false]:ops.map((_,i)=>i);
+    const contas=valores.map(v=>entregues.filter(l=>(l.respostas||{})[it.id]===v).length);
+    const semResposta=entregues.length-contas.reduce((a,b)=>a+b,0);
+    const certos=entregues.filter(l=>(l.respostas||{})[it.id]===it.certa).length;
+    const pc=Math.round(certos/entregues.length*100);
+    return `<div class="g-perg">
+      <h4>${n}. ${esc(it.enunciado)}
+        <span class="pill ${pc>=70?'green':pc>=40?'amber':'red'}" style="margin-left:6px">${pc}% certas</span></h4>
+      ${ops.map((o,i)=>{
+        const c=contas[i], w=Math.round(c/entregues.length*100);
+        const eCerta=(valores[i]===it.certa);
+        return `<div class="g-lin">
+          <span class="g-lbl">${eCerta?ic('ok')+' ':''}${esc(o)}</span>
+          <span class="g-bar${eCerta?' ok':''}"><i style="width:${w}%"></i></span>
+          <span class="g-n">${c} · ${w}%</span></div>`;
+      }).join('')}
+      ${semResposta?`<div class="g-lin"><span class="g-lbl muted">sem resposta</span>
+        <span class="g-bar"><i style="width:${Math.round(semResposta/entregues.length*100)}%"></i></span>
+        <span class="g-n">${semResposta}</span></div>`:''}
+    </div>`;
+  }).join('');
+}
+
+async function devolverNotas(a,quantos,btn){
+  const ok=await uiConfirm({titulo:'Devolver as notas?',ok:'Devolver e enviar',
+    texto:`Cada um recebe o link do seu resultado: a nota, o que respondeu e os teus comentários.
+      <br><br>Vão <strong>${plural(quantos,'nota','notas')}</strong>.`});
+  if(!ok) return;
+  btn.disabled=true; btn.textContent='A devolver…';
+  let r;
+  try{ r=await rpc('teste_devolver',{p_token:sessao.token,p_aplicacao_id:a.id}); }
+  catch(e){ btn.disabled=false; return tratar(e); }
+  await enviarAplicacao(r.sessao_id);
+}
+
+function modalCorrigir(l){
+  if(!l) return;
+  const a=aplAtual;
+  const pontosMao={}, coment={};
+  (l.pontos||{}) && Object.keys(l.pontos||{}).forEach(k=>{ pontosMao[k]=+l.pontos[k]; });
+  let n=0;
+  const corpo=aplItens.map(it=>{
+    if(it.tipo==='seccao') return `<div class="corrigir-q"><div class="enun" style="color:var(--muted)">${esc(it.enunciado)}</div></div>`;
+    n++;
+    const dada=(l.respostas||{})[it.id];
+    /* Nas fechadas, a conta faz-se aqui pela mesma regra do servidor, em vez de
+       se ler o que está guardado: assim uma entrega antiga (ou um teste onde a
+       resposta certa entrou depois) mostra o que o servidor vai mesmo somar. */
+    const ganhos=(it.tipo==='escolha'||it.tipo==='vf')
+      ? ((dada!==undefined&&dada!==null&&dada===it.certa)?(+it.pontos||0):0)
+      : (l.pontos||{})[it.id];
+    let resp='', extra='';
+    if(it.tipo==='escolha'){
+      const ops=it.opcoes||[];
+      const certa=it.certa;
+      resp=`<div class="dada">${dada===undefined||dada===null
+        ? '(sem resposta)'
+        : esc(LETRA(dada)+') '+(ops[dada]!==undefined?ops[dada]:'?'))}</div>`;
+      extra=`<div class="linha"><span class="pill ${ganhos>0?'green':'red'}">${ganhos>0?'certa':'errada'}</span>
+        <span class="hint">certa: ${certa==null?'-':esc(LETRA(certa)+') '+(ops[certa]||''))}</span>
+        <strong style="margin-left:auto">${nm(ganhos||0)} / ${nm(it.pontos)}</strong></div>`;
+    }else if(it.tipo==='vf'){
+      resp=`<div class="dada">${dada===true?'Verdadeiro':dada===false?'Falso':'(sem resposta)'}</div>`;
+      extra=`<div class="linha"><span class="pill ${ganhos>0?'green':'red'}">${ganhos>0?'certa':'errada'}</span>
+        <span class="hint">certa: ${it.certa===true?'Verdadeiro':it.certa===false?'Falso':'-'}</span>
+        <strong style="margin-left:auto">${nm(ganhos||0)} / ${nm(it.pontos)}</strong></div>`;
+    }else{
+      resp=`<div class="dada">${dada?esc(dada):'<span class="muted">(sem resposta)</span>'}</div>`;
+      extra=`<div class="linha">
+        <label class="hint">Pontos</label>
+        <input type="number" step="0.5" min="0" max="${it.pontos}" data-p="${it.id}"
+          value="${ganhos!==undefined?ganhos:''}" placeholder="0">
+        <span class="hint">de ${nm(it.pontos)}</span>
+        <input type="text" data-c="${it.id}" value="${esc((l.comentarios||{})[it.id]||'')}" placeholder="Comentário (opcional)">
+      </div>`;
+    }
+    return `<div class="corrigir-q">
+      <div class="enun">${n}. ${esc(it.enunciado)}</div>${resp}${extra}</div>`;
+  }).join('');
+
+  const f=abrirModal(`<div class="modal wide">
+    <div class="modal-head"><div><h3>${esc(l.nome)}</h3>
+      <div class="sub">Entregue a ${dt(l.submetido_em)} · ${esc(a.titulo)}</div></div></div>
+    <div class="modal-body">${corpo}
+      <div class="field" style="margin-top:18px"><label>Comentário geral</label>
+        <textarea id="cGeral" style="min-height:80px" placeholder="O que correu bem, o que falta trabalhar">${esc(l.comentario||'')}</textarea></div>
+    </div>
+    <div class="modal-foot">
+      <div class="nota-fim">Nota: <span class="v" id="cNota">-</span> <span class="muted">/ ${nm(a.pontos_total)}</span></div>
+      <div style="display:flex;gap:10px">
+        <button class="btn-sec" data-fechar>Cancelar</button>
+        <button class="btn" id="cGuardar">${ic('ok')}Guardar correção</button>
+      </div></div></div>`);
+
+  const soma=()=>{
+    let s=0;
+    aplItens.forEach(it=>{
+      if(it.tipo==='seccao') return;
+      if(it.tipo==='aberta'){
+        const el=f.querySelector(`[data-p="${it.id}"]`);
+        s+=Math.min(+((el&&el.value)||0),+it.pontos);
+      }else{
+        const d=(l.respostas||{})[it.id];
+        s+=(d!==undefined&&d!==null&&d===it.certa)?(+it.pontos||0):0;
+      }
+    });
+    f.querySelector('#cNota').textContent=nm(s);
+  };
+  f.querySelectorAll('[data-p]').forEach(i=>i.addEventListener('input',soma));
+  soma();
+
+  f.querySelector('#cGuardar').addEventListener('click',async e=>{
+    const b=e.currentTarget; b.disabled=true; b.textContent='A guardar…';
+    const p={}, c={};
+    f.querySelectorAll('[data-p]').forEach(i=>{ p[i.dataset.p]=+i.value||0; });
+    f.querySelectorAll('[data-c]').forEach(i=>{ if(i.value.trim()) c[i.dataset.c]=i.value.trim(); });
+    try{
+      await rpc('teste_corrigir',{p_token:sessao.token,p_resposta_id:l.resposta_id,
+        p_pontos:p,p_comentarios:c,p_comentario:f.querySelector('#cGeral').value.trim()});
+    }catch(err){ b.disabled=false; b.innerHTML=ic('ok')+'Guardar correção'; return tratar(err); }
+    f.remove();
+    toast('Correção guardada.');
+    abrirAplicacao(aplAtual);
+  });
+}
+
+/* A pauta em CSV: uma linha por formando, uma coluna por pergunta. */
+function csvPauta(a){
+  const perg=aplItens.filter(it=>it.tipo!=='seccao');
+  const cab=['Formando','Utilizador','Email','Enviado','Abriu','Entregue','Nota','Total','Percentagem']
+    .concat(perg.map((it,i)=>'P'+(i+1)));
+  const val=(it,v)=>{
+    if(v===undefined||v===null||v==='') return '';
+    if(it.tipo==='escolha') return LETRA(v)+') '+((it.opcoes||[])[v]||'');
+    if(it.tipo==='vf') return v?'Verdadeiro':'Falso';
+    return String(v);
+  };
+  const linhas=pauta.map(l=>[
+    l.nome,l.username||'',l.email||'',
+    l.enviado_em?dt(l.enviado_em):'', l.primeiro_clique?dt(l.primeiro_clique):'',
+    l.submetido_em?dt(l.submetido_em):'',
+    l.nota!=null?nm(l.nota):'', nm(a.pontos_total),
+    l.nota!=null&&+a.pontos_total?Math.round(l.nota/a.pontos_total*100)+'%':''
+  ].concat(perg.map(it=>val(it,(l.respostas||{})[it.id]))));
+  const cel=x=>{ const s=String(x==null?'':x); return /[";\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
+  const csv='﻿'+[cab].concat(linhas).map(r=>r.map(cel).join(';')).join('\r\n');
+  const u=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  const el=document.createElement('a');
+  el.href=u; el.download='pauta-'+slugDe(a.titulo)+'.csv'; el.click();
+  URL.revokeObjectURL(u);
+  toast('Pauta descarregada.');
 }
 
 /* ---------- Arranque ---------- */

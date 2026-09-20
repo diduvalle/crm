@@ -66,7 +66,10 @@ for (const alvo of ALVO) {
       const nome = tag + (cls ? '.' + cls : '');
 
       if ((fs < CHAO || fs > TETO) && !/^(h1|h2)$/.test(tag) && !(fs > TETO && capa(e))) a.escala.push(nome + '  ' + fs + 'px  "' + t + '"');
-      if (/Newsreader|Georgia|serif/i.test(c.fontFamily) && /^(input|button|select|textarea)$/.test(tag))
+      /* "sans-serif" também tem "serif" lá dentro: sem o limite à esquerda, a
+         pilha normal da app (…,system-ui,sans-serif) dava falso alarme em
+         todos os botões. Só conta o serif que está lá por si. */
+      if (/Newsreader|Georgia|(?:^|[,\s])serif\b/i.test(c.fontFamily) && /^(input|button|select|textarea)$/.test(tag))
         a.serif.push(nome + '  "' + t + '"');
 
       const cor = num(c.color), bg = fundo(e), o = opac(e);
