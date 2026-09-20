@@ -3,7 +3,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Manual of the CRM platform - guide for trainers and trainees (UFCD 10868 and 10870).">
+        <meta name="description" content="Manual of the CRM platform - guide for trainers and trainees.">
       
       
         <meta name="author" content="Diogo du Valle">
@@ -72,7 +72,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="CRM - Manual">
   <meta property="og:title" content="3.3 Email &amp; Branding · CRM - Manual">
-  <meta property="og:description" content="Manual of the CRM platform - guide for trainers and trainees (UFCD 10868 and 10870).">
+  <meta property="og:description" content="Manual of the CRM platform - guide for trainers and trainees.">
   <meta property="og:url" content="https://crm.cr0x.org/manual/en/formador/email-marca/">
   <meta property="og:locale" content="en_US">
   <meta property="og:image" content="https://crm.cr0x.org/manual/assets/og-image.png">
@@ -83,7 +83,7 @@
   <meta property="og:image:alt" content="CRM - Manual">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="3.3 Email &amp; Branding · CRM - Manual">
-  <meta name="twitter:description" content="Manual of the CRM platform - guide for trainers and trainees (UFCD 10868 and 10870).">
+  <meta name="twitter:description" content="Manual of the CRM platform - guide for trainers and trainees.">
   <meta name="twitter:image" content="https://crm.cr0x.org/manual/assets/og-image.png">
 
   <link href="../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
@@ -981,10 +981,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#branding-appearance-white-label" class="md-nav__link">
+  <a href="#branding-appearance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Branding &amp; Appearance (white-label)
+        Branding &amp; Appearance
       
     </span>
   </a>
@@ -2257,10 +2257,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#branding-appearance-white-label" class="md-nav__link">
+  <a href="#branding-appearance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Branding &amp; Appearance (white-label)
+        Branding &amp; Appearance
       
     </span>
   </a>
@@ -2295,16 +2295,30 @@
 <li><strong>Send test</strong> sends a real email so you can confirm.</li>
 </ul>
 <div class="admonition info">
-<p class="admonition-title">Email identity</p>
-<p>Emails go out under the name <strong>CRM</strong> and replies go to the entity's email. The visible sender address is the one configured in the platform's email account.</p>
-</div>
-<h2 id="branding-appearance-white-label">Branding &amp; Appearance (white-label)<a class="headerlink" href="#branding-appearance-white-label" title="Permanent link">¶</a></h2>
-<p>Lets you replicate the CRM for another entity:</p>
+<p class="admonition-title">Who appears as the sender depends on the email</p>
+<p>There are two cases, and they are worth keeping apart:</p>
 <ul>
-<li><strong>Name</strong>, <strong>primary colour</strong> (automatically derives the whole palette), <strong>logo</strong> and <strong>login background</strong>.</li>
-<li><strong>Apply branding</strong> recolours the app live; <strong>Reset to default</strong> returns to the original green.</li>
-<li>The branding <strong>travels in the JSON Export</strong> - you replicate the environment in another use just with import + changing name/colour/logo.</li>
+<li>Emails the <strong>CRM sends to clients</strong> (proposals, campaigns) go out under the <strong>entity name</strong> set in <em>Settings → Entity</em>, and replies go to <strong>that entity's email</strong>. In a class, that is the <strong>fictional company of whoever is working</strong> - which is the point, because the exercise is selling on its behalf.</li>
+<li><strong>Platform notices</strong> (invitation, password reset, submission notice) go out under the <strong>school's name</strong>.</li>
 </ul>
+<p>The visible sender address is always the platform's email account, which does not change. That is why a client may see <em>"external sender"</em>: the name is the entity's, the address belongs to the sending service.</p>
+</div>
+<h2 id="branding-appearance">Branding &amp; Appearance<a class="headerlink" href="#branding-appearance" title="Permanent link">¶</a></h2>
+<p>Sets the <strong>name</strong>, the <strong>primary colour</strong> (which derives the whole palette), the <strong>logo</strong> and the <strong>sign-in background</strong>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Inside a school, the branding is not yours</p>
+<p>If you are in a school space (<code>crm.cr0x.org/school</code>), the <strong>name</strong>, the <strong>logo</strong> and the <strong>colour</strong> come from that school's configuration and <strong>override whatever you set here</strong>. The colour field tells you where it comes from - <em>"set in \&lt;school&gt;"</em>.</p>
+<p>What stays yours is the <strong>sign-in background</strong>, and the button that <strong>resets</strong> it to the platform's.</p>
+<p>This is deliberate: a school's branding has to be the same across all of its classes, and cannot depend on each trainer remembering to repeat it.</p>
+</div>
+<ul>
+<li><strong>Reset to default</strong> returns to the platform identity - <strong>blue</strong>, with no custom logo. In a school space, the school's branding takes over again right after.</li>
+<li>The branding <strong>travels in the JSON Export</strong> - handy for moving an environment from one place to another.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Outside a school</p>
+<p>Opened at <code>crm.cr0x.org</code> with no space, the app uses the platform's neutral branding and these fields do rule. That is the case for anyone trying the platform without being tied to an institution.</p>
+</div>
 
 
 

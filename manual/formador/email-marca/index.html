@@ -3,7 +3,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Manual da plataforma CRM - guia para formadores e formandos das UFCD 10868 e 10870.">
+        <meta name="description" content="Manual da plataforma CRM - guia para formadores e formandos.">
       
       
         <meta name="author" content="Diogo du Valle">
@@ -72,7 +72,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="CRM - Manual">
   <meta property="og:title" content="3.3 Email &amp; Marca · CRM - Manual">
-  <meta property="og:description" content="Manual da plataforma CRM - guia para formadores e formandos das UFCD 10868 e 10870.">
+  <meta property="og:description" content="Manual da plataforma CRM - guia para formadores e formandos.">
   <meta property="og:url" content="https://crm.cr0x.org/manual/formador/email-marca/">
   <meta property="og:locale" content="pt_PT">
   <meta property="og:image" content="https://crm.cr0x.org/manual/assets/og-image.png">
@@ -83,7 +83,7 @@
   <meta property="og:image:alt" content="CRM - Manual">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="3.3 Email &amp; Marca · CRM - Manual">
-  <meta name="twitter:description" content="Manual da plataforma CRM - guia para formadores e formandos das UFCD 10868 e 10870.">
+  <meta name="twitter:description" content="Manual da plataforma CRM - guia para formadores e formandos.">
   <meta name="twitter:image" content="https://crm.cr0x.org/manual/assets/og-image.png">
 
   <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
@@ -981,10 +981,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#marca-aparencia-white-label" class="md-nav__link">
+  <a href="#marca-aparencia" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Marca &amp; Aparência (white-label)
+        Marca &amp; Aparência
       
     </span>
   </a>
@@ -2257,10 +2257,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#marca-aparencia-white-label" class="md-nav__link">
+  <a href="#marca-aparencia" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Marca &amp; Aparência (white-label)
+        Marca &amp; Aparência
       
     </span>
   </a>
@@ -2295,16 +2295,30 @@
 <li><strong>Enviar teste</strong> envia um email real para confirmares.</li>
 </ul>
 <div class="admonition info">
-<p class="admonition-title">Identidade dos emails</p>
-<p>Os emails saem com o nome <strong>CRM</strong> e as respostas vão para o email da entidade. O endereço visível do remetente é o configurado na conta de email da plataforma.</p>
-</div>
-<h2 id="marca-aparencia-white-label">Marca &amp; Aparência (white-label)<a class="headerlink" href="#marca-aparencia-white-label" title="Permanent link">¶</a></h2>
-<p>Permite replicar o CRM para outra entidade:</p>
+<p class="admonition-title">Quem aparece como remetente depende do email</p>
+<p>São dois casos, e vale a pena não os confundir:</p>
 <ul>
-<li><strong>Nome</strong>, <strong>cor principal</strong> (deriva automaticamente toda a paleta), <strong>logótipo</strong> e <strong>fundo do login</strong>.</li>
-<li><strong>Aplicar marca</strong> recolore a app ao vivo; <strong>Repor predefinição</strong> volta ao verde original.</li>
-<li>A marca <strong>viaja no Export JSON</strong> - replicas o ambiente noutra utilização só com import + trocar nome/cor/logo.</li>
+<li>Os <strong>emails que o CRM envia a clientes</strong> (propostas, campanhas) saem com o <strong>nome da entidade</strong> que está em <em>Definições → Entidade</em>, e as respostas vão para o <strong>email dessa entidade</strong>. Numa turma, isso é a <strong>empresa fictícia de quem está a trabalhar</strong> - é o que se pretende, porque o exercício é ele estar a vender em nome dela.</li>
+<li>Os <strong>avisos da própria plataforma</strong> (convite, reposição de palavra-passe, aviso de entrega) saem com o <strong>nome da escola</strong>.</li>
 </ul>
+<p>O endereço visível do remetente é sempre o da conta de email da plataforma, que não muda. Por isso um cliente pode ver <em>"remetente externo"</em>: o nome é o da entidade, o endereço é o do serviço de envio.</p>
+</div>
+<h2 id="marca-aparencia">Marca &amp; Aparência<a class="headerlink" href="#marca-aparencia" title="Permanent link">¶</a></h2>
+<p>Define o <strong>nome</strong>, a <strong>cor principal</strong> (que deriva a paleta toda), o <strong>logótipo</strong> e o <strong>fundo do ecrã de entrada</strong>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Numa escola, a marca não é tua</p>
+<p>Se estás num espaço de escola (<code>crm.cr0x.org/escola</code>), o <strong>nome</strong>, o <strong>logótipo</strong> e a <strong>cor</strong> vêm da configuração dessa escola e <strong>ganham ao que puseres aqui</strong>. O campo da cor diz-te de onde ela vem - <em>"definida em \&lt;escola&gt;"</em>.</p>
+<p>O que continua a ser teu é o <strong>fundo do ecrã de entrada</strong>, e o botão que o <strong>repõe</strong> ao da plataforma.</p>
+<p>Isto é de propósito: a marca de uma escola tem de ser igual em todas as turmas dela, e não pode depender de cada formador se lembrar de a repetir.</p>
+</div>
+<ul>
+<li><strong>Repor predefinição</strong> volta à identidade da plataforma - <strong>azul</strong>, sem logótipo próprio. Se estiveres num espaço de escola, a marca da escola volta a impor-se logo a seguir.</li>
+<li>A marca <strong>viaja no Export JSON</strong> - útil para levar um ambiente de um lado para o outro.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Fora de uma escola</p>
+<p>Aberta em <code>crm.cr0x.org</code> sem espaço, a app usa a marca neutra da plataforma e aí sim estes campos mandam. É o caso de quem experimenta a plataforma sem estar ligado a nenhuma instituição.</p>
+</div>
 
 
 
