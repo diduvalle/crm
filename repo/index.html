@@ -1225,6 +1225,15 @@ async function modalEstado(s){
 
   const pendentes=linhas.filter(l=>!l.enviado_em&&l.email).length;
   const naoAbriram=linhas.filter(l=>l.enviado_em&&!l.primeiro_clique).length;
+  /* O cabecalho vinha do objeto da lista, carregado antes das aberturas:
+     dizia "0 de 2 ja abriram" com a tabela em baixo a mostrar os dois, e
+     escondia o "Repor contador", que so aparece quando ha aberturas. Conta
+     das MESMAS linhas que a tabela mostra, e escreve de volta em `s` para a
+     lista atras nao ficar a mentir. */
+  const total=linhas.length;
+  const enviados=linhas.filter(l=>l.enviado_em).length;
+  const abriram=linhas.filter(l=>l.primeiro_clique).length;
+  s.enviados=enviados; s.abriram=abriram; s.destinatarios=total;
   const emailLinha=l=>{
     if(!l.email) return '<span class="muted">sem email</span>';
     const e2=l.email2&&l.email2!==l.email?` · ${esc(l.email2)} <span class="muted">(institucional)</span>`:'';
@@ -1234,7 +1243,7 @@ async function modalEstado(s){
   const f=abrirModal(`<div class="modal wide">
     <div class="modal-head">
       <div><h3>${s.modulo?`<span class="tag" style="vertical-align:middle;margin-right:8px">UFCD ${esc(s.modulo)}</span>`:''}${esc(s.titulo)}</h3>
-        <div class="sub">${s.enviados||0} enviado(s) · ${s.abriram} de ${s.destinatarios} já abriram</div></div>
+        <div class="sub">${enviados} enviado(s) · ${abriram} de ${total} já abriram</div></div>
       <button class="icon-btn" id="eRefrescar" title="Atualizar - ver se há aberturas novas">${ic('refrescar')}</button>
     </div>
     <div class="modal-body">
@@ -1253,7 +1262,7 @@ async function modalEstado(s){
     <div class="modal-foot">
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn-danger btn-sm" id="ePagar">${ic('lixo')}Apagar</button>
-        ${s.abriram>0?`<button class="btn-sec btn-sm" id="eRepor">${ic('seta')}Repor contador</button>`:''}
+        ${abriram>0?`<button class="btn-sec btn-sm" id="eRepor">${ic('seta')}Repor contador</button>`:''}
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
         <button class="btn-sec" id="eVer">${ic('olho')}Ver email</button>
