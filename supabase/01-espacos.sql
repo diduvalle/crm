@@ -1,5 +1,5 @@
 -- =====================================================================
---  FASE 2.0 - PASSO 01: ESPAÇOS
+--  FASE 2.0 — PASSO 01: ESPAÇOS
 -- =====================================================================
 --  Um espaço é uma escola. Hoje a marca do IEFP está escrita em 132
 --  sítios do index.html; a partir daqui vem toda de uma linha desta
@@ -7,7 +7,7 @@
 --
 --  ESTRITAMENTE ADITIVO. Tabelas novas, funções novas, e uma única
 --  coluna acrescentada a `turmas` (anulável, que a app antiga ignora).
---  Nada do que o iefpcrm.cr0x.org lê é alterado ou apagado - é a regra
+--  Nada do que o iefpcrm.cr0x.org lê é alterado ou apagado — é a regra
 --  da estrada de terra, e é o que deixa o CRM antigo a funcionar para
 --  sempre enquanto isto cresce ao lado.
 --
@@ -47,6 +47,10 @@ create table if not exists public.espacos (
   limite_envios    int  not null default 2,
 
   -- formação
+  -- Mostrar os códigos das UFCD e os números de slide dentro da app?
+  -- Só faz sentido onde o curso existe: fora dele apontam para
+  -- material que a escola não tem. Desligado por omissão.
+  refs_curso       boolean not null default false,
   modulos          text not null default '',
   horas            text not null default '',
   formador         text not null default '',
@@ -62,6 +66,10 @@ create table if not exists public.espacos (
   criado_em        timestamptz not null default now(),
   criado_por       text not null default ''
 );
+
+-- A tabela já existe em produção, e o `if not exists` de cima não lhe
+-- acrescenta colunas nenhumas.
+alter table public.espacos add column if not exists refs_curso boolean not null default false;
 
 -- Nomes que não podem ser espaço: colidem com caminhos do site ou com
 -- o que já está publicado. O `iefp` fica reservado desde o primeiro dia
@@ -106,6 +114,7 @@ returns json language sql security definer set search_path = public as $$
     'modulos', e.modulos, 'horas', e.horas, 'formador', e.formador,
     'seloLigado', e.selo_ligado, 'seloTexto', e.selo_texto,
     'seloEmissor', e.selo_emissor,
+    'refsCurso', e.refs_curso,
     'arquivado', e.arquivado
   ) end
   from public.espacos e
@@ -185,6 +194,7 @@ begin
     selo_ligado       = coalesce((p_dados->>'seloLigado')::boolean, selo_ligado),
     selo_texto        = coalesce(p_dados->>'seloTexto', selo_texto),
     selo_emissor      = coalesce(p_dados->>'seloEmissor', selo_emissor),
+    refs_curso        = coalesce((p_dados->>'refsCurso')::boolean, refs_curso),
     arquivado         = coalesce((p_dados->>'arquivado')::boolean, arquivado)
   where id = v_id;
 
@@ -195,7 +205,7 @@ end $$;
 -- Criar turma DENTRO de um espaço
 -- ---------------------------------------------------------------------
 -- A `criar_turma` antiga fica exatamente como está, com o portão do
--- email `for<n>@formacao.iefp.pt`, a servir o iefpcrm congelado - se um
+-- email `for<n>@formacao.iefp.pt`, a servir o iefpcrm congelado — se um
 -- dia um formador do IEFP quiser usá-lo, continua a conseguir.
 --
 -- Esta é outra função. Não tem portão de email porque não precisa:

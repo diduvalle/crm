@@ -765,7 +765,7 @@ const INFO={
 };
 function infoTip(key){ const d=INFO[key]; if(!d) return ''; return `<span class="infotip" tabindex="0" role="button" aria-label="${esc(d.t)}"><span class="infotip-ic">${ic('info',12)}</span><span class="infotip-pop"><strong>${esc(d.t)}</strong><span class="ix">${esc(d.x)}</span><span class="ref">${ic(/^\s*\d{4,5}\b/.test(d.r||'')?'slides':'book',11)} ${esc(d.r)}</span></span></span>`; }
 /* grelha de glossário reutilizável: [termo, definição, referência ao slide] */
-function glossGrid(arr,hi){ hi=hi||'shield'; return `<div class="gloss-grid">${arr.map(g=>`<div class="gloss"><h4>${ic(hi,15)} ${esc(g[0])}</h4><p>${esc(g[1])}</p>${g[2]?`<p style="margin-top:8px;color:var(--g700);font-weight:700;font-size:.72rem;display:flex;align-items:center;gap:5px;border-top:1px solid var(--border);padding-top:7px">${ic('slides',12)} ${esc(g[2])}</p>`:''}</div>`).join('')}</div>`; }
+function glossGrid(arr,hi){ hi=hi||'shield'; return `<div class="gloss-grid">${arr.map(g=>`<div class="gloss"><h4>${ic(hi,15)} ${esc(g[0])}</h4><p>${esc(g[1])}</p>${(g[2]&&refsCurso())?`<p style="margin-top:8px;color:var(--g700);font-weight:700;font-size:.72rem;display:flex;align-items:center;gap:5px;border-top:1px solid var(--border);padding-top:7px">${ic('slides',12)} ${esc(g[2])}</p>`:''}</div>`).join('')}</div>`; }
 /* Glossário CRM (UFCD 10868) - termo, definição, slide do deck DEFAULT */
 const CRMGLOSS=[
   ['CRM','Conjunto de Processos, Tecnologias e Comportamentos centrados no cliente - não é um mero arquivo de dados.','10868 · slide 7'],
@@ -1289,6 +1289,12 @@ const I18N_EN = {
   'Sem novas compras há mais de 90 dias':'No new purchases for over 90 days',
   'Transformar dados para decidir e prever comportamentos futuros.':'Turning data into decisions and predictions of future behaviour.',
   'UFCD 10869 - Modelos de análise à decisão':'UFCD 10869 - Decision analysis models',
+  /* as mesmas frases sem a referência ao curso, para quando a escola a desliga */
+  'Modelos de análise à decisão':'Decision analysis models',
+  'Regulamento Geral sobre a Proteção de Dados (RGPD)':'General Data Protection Regulation (GDPR)',
+  'Proteção de dados':'Data protection','Importação / exportação':'Import / export',
+  'Conceitos-chave de CRM e Analytics.':'Key concepts of CRM and Analytics.',
+  'Conceitos-chave de proteção de dados':'Key concepts of data protection',
   'UFCD 10870 - Regulamento Geral sobre a Proteção de Dados (RGPD)':'UFCD 10870 - General Data Protection Regulation (GDPR)',
   'Valor que um cliente gera ao longo de toda a relação.':'The value a customer generates over the whole relationship.',
   'Variação da taxa de conversão':'Change in conversion rate',
@@ -2093,6 +2099,11 @@ let espacosRows = [];
    NIF são as duas que escapam sempre e depois fazem falta - a primeira ao
    selo e ao relatório, a segunda ao aviso legal, que sem ela teria de ser
    texto fixo. Por isso estão aqui em vez de ficarem para "depois". */
+/* o nome da coluna na base, quando não é igual ao da chave */
+const ESPACO_COL = { logo:'logo_url', logoEscuro:'logo_escuro_url', favicon:'favicon_url',
+  legalNome:'legal_nome', emailContacto:'email_contacto', responsavelDados:'responsavel_dados',
+  remetenteNome:'remetente_nome', emailResposta:'email_resposta', seloEmissor:'selo_emissor',
+  seloLigado:'selo_ligado', seloTexto:'selo_texto', refsCurso:'refs_curso' };
 const ESPACO_CAMPOS = [
   ['nome','Nome da escola','text'], ['slug','Endereço (slug)','text'],
   ['logo','Logótipo (URL)','text'], ['cor','Cor principal','text'],
@@ -2103,6 +2114,9 @@ const ESPACO_CAMPOS = [
   ['modulos','Módulos','text'], ['horas','Carga horária','text'],
   ['formador','Formador por omissão','text'],
   ['seloEmissor','Emissor do selo','text'],
+  /* só faz sentido onde o curso existe: fora do IEFP, um "UFCD 10868"
+     e um "slide 114" apontam para material que a escola não tem */
+  ['refsCurso','Mostrar referências ao curso (UFCD e slides)','checkbox'],
 ];
 
 function espacoCardHTML(e){
@@ -2115,8 +2129,12 @@ function espacoCardHTML(e){
       ${e ? `<span class="muted" style="font-size:.72rem">/?e=${esc(e.slug)}</span>` : ''}
     </div>
     <div class="grid2" style="gap:8px">
-      ${ESPACO_CAMPOS.map(([k,rot,t]) => `<div class="field"><label>${rot}</label>
-        <input data-ef="${k}" type="${t}" value="${v(k === 'logo' ? 'logo_url' : k === 'cor' ? 'cor' : k === 'legalNome' ? 'legal_nome' : k === 'emailContacto' ? 'email_contacto' : k === 'responsavelDados' ? 'responsavel_dados' : k === 'remetenteNome' ? 'remetente_nome' : k === 'emailResposta' ? 'email_resposta' : k === 'seloEmissor' ? 'selo_emissor' : k)}"></div>`).join('')}
+      ${ESPACO_CAMPOS.map(([k,rot,t]) => t === 'checkbox'
+        ? `<label class="field" style="flex-direction:row;align-items:center;gap:9px;cursor:pointer">
+            <input data-ef="${k}" type="checkbox" style="width:16px;height:16px;flex:none" ${e && e[ESPACO_COL[k] || k] ? 'checked' : ''}>
+            <span>${rot}</span></label>`
+        : `<div class="field"><label>${rot}</label>
+        <input data-ef="${k}" type="${t}" value="${v(ESPACO_COL[k] || k)}"></div>`).join('')}
     </div>
     <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
       <button class="btn" data-act="espaco-guardar">Guardar</button>
@@ -2173,7 +2191,8 @@ function rootCardOf(el){ return el.closest('.root-card'); }
 /* Lê o cartão inteiro de uma vez. O servidor só aplica as chaves que
    conhece, por isso mandar tudo é seguro e poupa comparações aqui. */
 function espacoLer(card){
-  const d={}; card.querySelectorAll('[data-ef]').forEach(i=>{ d[i.dataset.ef]=i.value.trim(); });
+  const d={}; card.querySelectorAll('[data-ef]').forEach(i=>{
+    d[i.dataset.ef] = i.type === 'checkbox' ? i.checked : i.value.trim(); });
   return d;
 }
 function espacoGuardar(el){
@@ -2420,7 +2439,7 @@ views.dashboard = () => {
       ${(()=>{ const d=monthlyRevenue(props); return bars(d,190,true)+leituraReceita(d); })()}
     </div>
     <div class="card card-pad" style="display:flex;flex-direction:column">
-      <div class="section-head" style="margin-bottom:12px"><div><h3>Atalhos pedagógicos</h3><div class="sub">UFCD 10868 · 10870</div></div></div>
+      <div class="section-head" style="margin-bottom:12px"><div><h3>Atalhos pedagógicos</h3><div class="sub">${ufcd('UFCD 10868 · 10870')}</div></div></div>
       <div class="mini-list" style="flex:1;display:flex;flex-direction:column;justify-content:space-between">
         <a class="mini-item" href="#analytics"><span class="ic">${ic('chart')}</span><span class="grow"><strong>KPIs & Dashboards</strong><span>Conversão, churn, LTV, funil de vendas</span></span></a>
         <a class="mini-item" href="#empresas"><span class="ic">${ic('building')}</span><span class="grow"><strong>Empresas & Contactos</strong><span>Modelo Account/Contact, dados fiscais</span></span></a>
@@ -3003,11 +3022,11 @@ views.campanhas = () => {
       <div class="divider" style="margin:16px 0"></div>
       <h4 style="font-weight:800;font-size:.92rem;margin-bottom:10px">${ic('target',15)} Persona pedagógica ${infoTip('persona')}</h4>
       <div class="persona-card"><div class="pav">🏨</div><div><strong>Zé Miguel · 40 anos</strong><div class="muted" style="font-size:.82rem">Hoteleiro independente · procura automatização de processos e fidelização. Canal: LinkedIn. Orçamento médio.</div></div></div>
-      <p class="muted" style="font-size:.8rem;margin-top:10px">A <strong>persona</strong> representa o cliente ideal e orienta a comunicação (UFCD 10868 - hiperpersonalização).</p>
+      <p class="muted" style="font-size:.8rem;margin-top:10px">A <strong>persona</strong> representa o cliente ideal e orienta a comunicação${ufcd(' (UFCD 10868 - hiperpersonalização)')}.</p>
     </div>
   </div>
   <div class="card card-pad">
-    <div class="section-head" style="margin-bottom:14px"><div><h3>${ic('target',16)} Formulário de captação (web-to-lead)</h3><div class="sub">Simula um formulário do site: quem submete entra no CRM como contacto + empresa, com origem "Formulário" e fase Lead (UFCD 10867)</div></div></div>
+    <div class="section-head" style="margin-bottom:14px"><div><h3>${ic('target',16)} Formulário de captação (web-to-lead)</h3><div class="sub">Simula um formulário do site: quem submete entra no CRM como contacto + empresa, com origem "Formulário" e fase Lead${ufcd(' (UFCD 10867)')}</div></div></div>
     <div class="form-grid">
       <div class="field"><label>Nome *</label><input id="wl-nome" placeholder="ex.: Helena Marques"></div>
       <div class="field"><label>Email *</label><input id="wl-email" type="email" placeholder="ex.: helena@empresa.pt"></div>
@@ -4738,7 +4757,7 @@ views.decisao = () => {
   const rfm=rfmData().map(x=>Object.assign(x,rfmSeg(x))).sort((a,b)=>b.M-a.M);
   const segCount={}; rfm.forEach(x=>{ segCount[x.seg]=(segCount[x.seg]||0)+1; });
   return `
-  <div class="callout green">${ic('bulb',18)}<div style="flex:1"><strong>UFCD 10869 - Modelos de análise à decisão</strong><span class="ctxt">Recomendações inteligentes, simulação de cenários, segmentação RFM e previsão de vendas, a partir dos dados do CRM.</span></div></div>
+  <div class="callout green">${ic('bulb',18)}<div style="flex:1"><strong>${ufcd('UFCD 10869 - ')}Modelos de análise à decisão</strong><span class="ctxt">Recomendações inteligentes, simulação de cenários, segmentação RFM e previsão de vendas, a partir dos dados do CRM.</span></div></div>
   <div class="card card-pad">
     <div class="section-head" style="margin-bottom:14px"><div><h3>${ic('bulb',16)} Próxima melhor ação (Next Best Action)</h3><div class="sub">O CRM sugere a ação com mais impacto para cada conta</div></div></div>
     ${nba.length?`<div class="mini-list">${nba.map(o=>`<div class="mini-item"><span class="ic" style="background:${o.pri>=3?'#00A65122':'#d9770622'};color:${o.pri>=3?'#00A651':'#d97706'}">${ic('bulb')}</span><span class="grow"><strong>${esc(o.accao)} · ${esc(o.nome)}</strong><span>${esc(o.motivo)}</span></span><button class="btn-sec btn-xs" data-act="open-empresa" data-id="${o.empId}">Abrir</button></div>`).join('')}</div>`:empty('Sem recomendações','Tudo em dia - nenhuma ação prioritária.')}
@@ -4810,7 +4829,7 @@ views.analytics = () => {
   if(cmpOn){ const len=daysBetween(r.from,r.to); const prevTo=addDays(r.from,-1); const prevFrom=addDays(prevTo,-len); prev=analyticsMetrics(prevFrom,prevTo); prevLabel=`${dPT(prevFrom)} a ${dPT(prevTo)}`; }
   const cR=cmpOn?cmp(receita,prev.receita):{}, cC=cmpOn?cmp(conv,prev.conv):{}, cT=cmpOn?cmp(ticket,prev.ticket):{}, cH=cmpOn?cmp(churn,prev.churn,true):{};
   return `
-  <div class="callout green">${ic('chart',18)}<div style="flex:1"><strong>UFCD 10868 - CRM Analytics ${infoTip('crm')}</strong><span class="ctxt">KPIs de vendas e gestão de serviços, calculados em tempo real a partir dos dados do CRM. Filtre por período para analisar data a data.</span></div><button class="btn-sec btn-sm" data-act="an-report" style="flex:0 0 auto">${ic('print',15)} Exportar PDF</button></div>
+  <div class="callout green">${ic('chart',18)}<div style="flex:1"><strong>${ufcd('UFCD 10868 - ')}CRM Analytics ${infoTip('crm')}</strong><span class="ctxt">KPIs de vendas e gestão de serviços, calculados em tempo real a partir dos dados do CRM. Filtre por período para analisar data a data.</span></div><button class="btn-sec btn-sm" data-act="an-report" style="flex:0 0 auto">${ic('print',15)} Exportar PDF</button></div>
   ${dateBar('an', extra)}
   ${canCmp?`<div class="toolbar" style="justify-content:flex-end"><button class="btn-sec btn-sm" data-act="an-compare" style="${cmpOn?'border-color:var(--g400);color:var(--g700);background:var(--g100)':''}">${ic('trend',14)} ${cmpOn?'A comparar com período anterior':'Comparar com período anterior'}</button></div>${cmpOn?`<div class="muted" style="font-size:.78rem;text-align:right">Período anterior (igual duração): <strong>${prevLabel}</strong></div>`:''}`:''}
   <div class="grid cols-4">
@@ -4915,7 +4934,7 @@ views.analytics = () => {
     </div>
   </div>
   <div class="card card-pad">
-    <div class="section-head" style="margin-bottom:14px"><div><h3>Glossário CRM</h3><div class="sub">Conceitos-chave da UFCD 10868 - CRM Analytics. Cada cartão indica o slide do módulo.</div></div></div>
+    <div class="section-head" style="margin-bottom:14px"><div><h3>Glossário CRM</h3><div class="sub">Conceitos-chave de CRM e Analytics.${ufcd(' UFCD 10868. Cada cartão indica o slide do módulo.')}</div></div></div>
     ${glossGrid(CRMGLOSS,'chart')}
   </div>`;
 };
@@ -4931,7 +4950,7 @@ views.rgpd = () => {
   const abertos=fped.filter(p=>p.estado!=='Concluído').length;
   const atrasados=fped.filter(p=>p.estado!=='Concluído'&&daysBetween(todayISO(),p.prazo)<0).length;
   return `
-  <div class="callout green">${ic('shield',18)}<div style="flex:1"><strong>UFCD 10870 - Regulamento Geral sobre a Proteção de Dados (RGPD)</strong><span class="ctxt">Conformidade prática: consentimentos, direitos dos titulares, registo de atividades de tratamento (RoPA) e violações de dados.</span></div><div class="toolbar" style="flex:0 0 auto"><button class="btn-sec btn-sm" data-act="rgpd-report">${ic('print',15)} Relatório</button><a class="btn-sec btn-sm" href="#portal">${ic('eye',15)} Portal do Titular</a></div></div>
+  <div class="callout green">${ic('shield',18)}<div style="flex:1"><strong>${ufcd('UFCD 10870 - ')}Regulamento Geral sobre a Proteção de Dados (RGPD)</strong><span class="ctxt">Conformidade prática: consentimentos, direitos dos titulares, registo de atividades de tratamento (RoPA) e violações de dados.</span></div><div class="toolbar" style="flex:0 0 auto"><button class="btn-sec btn-sm" data-act="rgpd-report">${ic('print',15)} Relatório</button><a class="btn-sec btn-sm" href="#portal">${ic('eye',15)} Portal do Titular</a></div></div>
   ${dateBar('rg', act?`${fcons.length} consentimentos · ${fped.length} pedidos · ${fviol.length} violações`:'')}
   <div class="grid cols-4">
     ${kpi('Consentimentos ativos '+infoTip('consentimento'), fmtN(ativos), {icon:'check', sub:act?'no período':'', act:'rgpd-kpi', f:'ativos', on:state._rgpdFiltro==='ativos', title:'Ver os consentimentos ativos'})}
@@ -5050,7 +5069,7 @@ function rgpdTab(tab, ctx){
     <div class="progress" style="margin-bottom:14px"><i style="width:${dCount/total*100}%"></i></div>
     <div class="checklist">${checks.map((c,i)=>`<div class="check-item ${done[i]?'done':''}" data-check="${i}"><span class="check-box">${done[i]?ic('check',14):''}</span><span class="ctxt2">${esc(c)}</span></div>`).join('')}</div>
     <div class="divider" style="margin:20px 0"></div>
-    <div class="section-head" style="margin-bottom:14px"><div><h3>Glossário RGPD</h3><div class="sub">Conceitos-chave da UFCD 10870</div></div></div>
+    <div class="section-head" style="margin-bottom:14px"><div><h3>Glossário RGPD</h3><div class="sub">Conceitos-chave de proteção de dados${ufcd(' - UFCD 10870')}</div></div></div>
     ${glossGrid(gloss,'shield')}`;
 }
 
@@ -5491,7 +5510,7 @@ function comRegisto(){
 function comJornadas(){
   const autos=state.automacoes||[];
   return `<div class="card card-pad">
-    <div class="section-head" style="margin-bottom:14px"><div><h3>Jornadas do cliente</h3><div class="sub">As automações vistas como um percurso: evento → esperas → emails. Cada jornada nutre o lead ao longo do tempo (UFCD 10867).</div></div><button class="btn" data-act="auto-new">+ Automação</button></div>
+    <div class="section-head" style="margin-bottom:14px"><div><h3>Jornadas do cliente</h3><div class="sub">As automações vistas como um percurso: evento → esperas → emails. Cada jornada nutre o lead ao longo do tempo${ufcd(' (UFCD 10867)')}.</div></div><button class="btn" data-act="auto-new">+ Automação</button></div>
     ${autos.length?autos.map(a=>journeyHTML(a)).join(''):empty('Sem jornadas','Crie uma automação para ver a jornada.')}
   </div>`+comRegisto();
 }
@@ -5555,7 +5574,7 @@ views.email = () => {
   const env=state.envios; const ab=env.filter(e=>e.aberto).length; const cl=env.filter(e=>e.clicado).length; const real=realSendOn();
   const pc=mailDraft.clienteId?getC(mailDraft.clienteId):null;
   return `
-  <div class="callout green">${ic('mail',18)}<div style="flex:1"><strong>Centro de Email</strong><span class="ctxt">Componha e envie emails à medida para os seus clientes, com pré-visualização ao vivo e acompanhamento de leitura. UFCD 10868 - métricas de email marketing.</span></div></div>
+  <div class="callout green">${ic('mail',18)}<div style="flex:1"><strong>Centro de Email</strong><span class="ctxt">Componha e envie emails à medida para os seus clientes, com pré-visualização ao vivo e acompanhamento de leitura.${ufcd(' UFCD 10868 - métricas de email marketing.')}</span></div></div>
   <div class="grid cols-4">
     ${kpi('Emails enviados', fmtN(env.length), {icon:'send', sub:`${env.filter(e=>e.origem==='Manual').length} manuais`})}
     ${kpi('Taxa de abertura '+infoTip('abertura'), pct(env.length?ab/env.length*100:0), {icon:'eye', sub:`${ab} abertos`})}
@@ -6712,7 +6731,7 @@ views.definicoes = () => {
       <div class="callout info" style="margin-top:14px">${ic('info',16)}<div class="ctxt">Acima destes valores, quando a proposta passa a Enviada/Negociação/Ganha, fica retida em "Aprovações pendentes" (ecrã Propostas) até o gestor aprovar ou rejeitar.</div></div>
     </div>
     <div class="card card-pad">
-      <div class="section-head" style="margin-bottom:16px"><div><h3>Dados & backup</h3><div class="sub">Importação / exportação (UFCD 10870)</div></div></div>
+      <div class="section-head" style="margin-bottom:16px"><div><h3>Dados & backup</h3><div class="sub">Importação / exportação${ufcd(' (UFCD 10870)')}</div></div></div>
       <div class="callout info" style="margin-bottom:14px">${ic('alert',16)}<div class="ctxt">Os dados são guardados no <strong>localStorage</strong> deste navegador. Exporte para fazer backup ou migrar.</div></div>
       <div class="toolbar">
         <button class="btn-sec" data-act="export">${ic('download',16)} Exportar JSON</button>
@@ -7646,7 +7665,7 @@ function printRGPDReport(){
   <h2>Violações de Dados</h2>
   <table><thead><tr><th>Data</th><th>Descrição</th><th>Risco</th><th>Afetados</th><th>CNPD</th></tr></thead><tbody>
   ${fviol.map(v=>row([dPT(v.data),esc(v.descricao),esc(v.risco),fmtN(v.afetados),esc(v.notificada)])).join('')||'<tr><td colspan=5>Sem violações registadas</td></tr>'}</tbody></table>
-  <p class="muted" style="margin-top:34px;border-top:1px solid #dbe6df;padding-top:12px">Documento gerado por ${esc(brandName())} - ferramenta pedagógica (UFCD 10870 - Administração de CRM / RGPD). Não constitui aconselhamento jurídico.</p>
+  <p class="muted" style="margin-top:34px;border-top:1px solid #dbe6df;padding-top:12px">Documento gerado por ${esc(brandName())} - ferramenta pedagógica${ufcd(' (UFCD 10870 - Administração de CRM / RGPD)')}. Não constitui aconselhamento jurídico.</p>
   </body></html>`);
   w.document.close(); nomearJanela(w); setTimeout(()=>w.print(),300);
 }
@@ -7690,7 +7709,7 @@ function printAnalyticsReport(){
   <h2>Top empresas (por valor ganho)</h2>
   <table><thead><tr><th>#</th><th>Empresa</th><th style="text-align:right">Valor</th></tr></thead><tbody>
   ${top.map((x,i)=>`<tr><td>${i+1}</td><td>${esc(x.name)}</td><td style="text-align:right">${fmt(x.v)}</td></tr>`).join('')||'<tr><td colspan=3>Sem dados no período</td></tr>'}</tbody></table>
-  <p class="muted" style="margin-top:30px;border-top:1px solid #dbe6df;padding-top:12px">Documento gerado por ${esc(brandName())} - ferramenta pedagógica (UFCD 10868 - CRM Analytics).</p>
+  <p class="muted" style="margin-top:30px;border-top:1px solid #dbe6df;padding-top:12px">Documento gerado por ${esc(brandName())} - ferramenta pedagógica${ufcd(' (UFCD 10868 - CRM Analytics)')}.</p>
   </body></html>`);
 }
 
@@ -7924,7 +7943,7 @@ function render(){
   buildNav(); updateNotifBadge();
   $$('#nav .nav-link').forEach(a=>a.classList.toggle('active',a.dataset.nav===v));
   $('#pageTitle').textContent=titleOf(v);
-  const crumbs={dashboard:'Visão geral',empresas:'Entidades & dados fiscais',clientes:'Contactos (pessoas)',agenda:'Calendário & tarefas',produtos:'Catálogo',propostas:'Pipeline comercial',modelos:'Construtor de modelos de proposta',campanhas:'Marketing direcionado',email:'Envio e acompanhamento de emails',analytics:'KPIs & Dashboards (UFCD 10868)',rgpd:'Proteção de dados (UFCD 10870)',comunicacao:'Templates de email',alertas:'Alertas & atividade',definicoes:'Configuração do sistema'};
+  const crumbs={dashboard:'Visão geral',empresas:'Entidades & dados fiscais',clientes:'Contactos (pessoas)',agenda:'Calendário & tarefas',produtos:'Catálogo',propostas:'Pipeline comercial',modelos:'Construtor de modelos de proposta',campanhas:'Marketing direcionado',email:'Envio e acompanhamento de emails',analytics:'KPIs & Dashboards'+ufcd(' (UFCD 10868)'),rgpd:'Proteção de dados'+ufcd(' (UFCD 10870)'),comunicacao:'Templates de email',alertas:'Alertas & atividade',definicoes:'Configuração do sistema'};
   $('#breadcrumb').innerHTML='<span>'+esc(brandName())+'</span> · <span>'+esc(crumbs[v]||'')+'</span>';
   const fn=views[v]||views.dashboard;
   $('#content').innerHTML=`<section class="view active">${fn()}</section>`;
@@ -8059,6 +8078,17 @@ function brandCfg(){
 }
 /* Os valores de recurso são da PLATAFORMA, não de uma escola: é isto que
    impede o nome de uma instituição de reaparecer por omissão. */
+/* Esta escola quer ver as referências ao curso? Os códigos das UFCD e
+   os números de slide são de um curso concreto: fora dele não querem
+   dizer nada, e apontam para material que a escola não tem. */
+/* devolve o pedaço com a referência, ou nada - para se poder colar no
+   meio de uma frase sem a partir */
+function ufcd(txt){ return refsCurso() ? txt : ''; }
+function refsCurso(){ try{
+  if (!ESPACO) return true;                    /* turma sem escola: é o CRM de quem o escreveu */
+  if (!('refsCurso' in ESPACO)) return true;   /* coluna ainda não criada: não se muda nada */
+  return !!ESPACO.refsCurso;
+}catch(e){ return true; } }
 function brandName(){ const b=brandCfg(); return (b.nome&&b.nome.trim())||'CRM'; }
 /* A cor que a app está MESMO a usar, e de onde ela vem. O campo das
    Definições mostrava o que estava guardado no browser, e por isso ficava
@@ -9580,7 +9610,7 @@ const PERSONAS=[
 function openWizard(){
   editing={type:'__wizard'};
   $('#modalTitle').textContent='Gerar campanha a partir de persona';
-  $('#modalSub').textContent='Marketing direcionado · UFCD 10868';
+  $('#modalSub').textContent='Marketing direcionado'+ufcd(' · UFCD 10868');
   $('#modal').classList.remove('wide');
   $('#modalDelete').style.display='none';
   $('#modalForm').innerHTML=wizardHTML(PERSONAS[0].id);
