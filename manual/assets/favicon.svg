@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="200" height="200" rx="34" fill="#efe9dd"/>
+  <!-- para 16 e 32px: so as colunas. As barras, a esta escala, sao ruido. -->
+  <g transform="translate(100,100) scale(1.62) translate(-100,-100)">
+    <g transform="rotate(-5 100 100)">
+      <rect x="55" y="77" width="28" height="47" rx="5" fill="none" stroke="#2a2622" stroke-width="5.4"/>
+      <rect x="86" y="77" width="28" height="47" rx="5" fill="none" stroke="#2a2622" stroke-width="5.4"/>
+      <rect x="117" y="77" width="28" height="47" rx="5" fill="#2a2622"/>
+    </g>
+  </g>
+</svg>
