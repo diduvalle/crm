@@ -67,6 +67,40 @@ a{text-decoration:none;color:inherit}
 .app.nav-collapsed .made-by span{display:none}
 .app.nav-collapsed .legal-link{display:none}
 .submit-work{width:100%;justify-content:center;margin-top:9px;background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18);color:#fff}
+/* A taça do percurso: vive ao pé do perfil, na mesma família visual do
+   botão de submeter. Uma barra fina diz quanto falta para o próximo
+   patamar - progresso visível, sem número nenhum a competir. */
+.taca{width:100%;display:flex;align-items:center;gap:10px;margin-top:9px;padding:8px 10px;border-radius:11px;text-align:left;cursor:pointer;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;font:inherit;transition:background .14s}
+.taca:hover{background:rgba(255,255,255,.16)}
+.taca-ic{flex:0 0 auto;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--g600);color:#fff}
+.taca-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.taca-txt strong{font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.taca-txt>span{font-size:.68rem;color:rgba(255,255,255,.6);white-space:nowrap}
+.taca-bar{display:block;height:4px;border-radius:99px;background:rgba(255,255,255,.14);overflow:hidden;margin-top:3px}
+.taca-bar i,.taca-mini i{display:block;height:100%;background:var(--g400);border-radius:99px;transition:width .3s}
+/* o painel */
+.taca-topo{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.taca-grande{display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:var(--g100);color:var(--g700);flex:0 0 auto}
+.taca-nome{font-size:1.25rem;font-weight:800;letter-spacing:-.01em}
+.taca-h4{font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:4px 0 8px}
+.taca-escada{display:flex;flex-direction:column;gap:4px}
+.taca-deg{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:9px;border:1px solid var(--border);color:var(--muted);background:var(--surface)}
+.taca-deg.on{color:var(--text);border-color:var(--g200);background:var(--g50)}
+.taca-deg.agora{border-color:var(--g600);box-shadow:0 0 0 2px var(--g100)}
+.taca-deg-ic{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--surface3);color:var(--muted);flex:0 0 auto}
+.taca-deg.on .taca-deg-ic{background:var(--g600);color:#fff}
+.taca-deg-n{flex:1;font-weight:700;font-size:.86rem}
+.taca-area{border:1px solid var(--border);border-radius:9px;padding:6px 10px;margin-bottom:6px;background:var(--surface)}
+.taca-area.ok{border-color:var(--g200)}
+.taca-area summary{display:flex;align-items:center;gap:8px;cursor:pointer;list-style:none;font-size:.86rem}
+.taca-area summary::-webkit-details-marker{display:none}
+.taca-area-ic{display:grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--surface3);color:var(--muted);flex:0 0 auto}
+.taca-area.ok .taca-area-ic{background:var(--g600);color:#fff}
+.taca-area summary strong{flex:0 0 auto}
+.taca-mini{flex:1;height:5px;border-radius:99px;background:var(--surface3);overflow:hidden;min-width:40px}
+.taca-faltam{margin:0 0 6px 26px;padding:0;font-size:.8rem;color:var(--text)}
+.taca-faltam li{margin:2px 0}
 .submit-work:hover{background:rgba(255,255,255,.18)}
 .app.nav-collapsed .submit-work span{display:none}
 

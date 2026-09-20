@@ -711,6 +711,8 @@ const I = {
   slides:'<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>',
   support:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="m5.6 5.6 3.3 3.3M15.1 15.1l3.3 3.3M18.4 5.6l-3.3 3.3M8.9 15.1l-3.3 3.3"/>',
   star:'<path d="m12 2 3 6.5 7 .9-5 4.9 1.3 7L12 18l-6.6 3.3L6.7 14l-5-4.9 7-.9z"/>',
+  taca:'<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/>',
+  circle:'<circle cx="12" cy="12" r="8"/>',
   chat:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
   bulb:'<path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1v.2h6v-.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2z"/>',
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
@@ -968,7 +970,11 @@ const I18N_EN = {
   'Exportar JSON':'Export JSON','Importar JSON':'Import JSON','Descarregar':'Download','Enviar':'Send','Enviar teste':'Send test',
   'Pré-visualizar':'Preview','Pré-visualização':'Preview','Descarregar PDF':'Download PDF','Enviar por email':'Send by email',
   'Exportar base (base.json)':'Export base (base.json)','Recarregar base online':'Reload online base',
-  'Submeter o meu trabalho':'Submit my work','Descarregar e entregar o meu trabalho':'Download and submit my work',
+  'Submeter o meu trabalho':'Submit my work',
+  'A tua taça do percurso':'Your journey trophy','Taça do percurso':'Journey trophy','Os patamares':'The tiers','As oito áreas':'The eight areas',
+  'Ponto de partida':'Starting point','Primeiro passo':'First step','A ganhar ritmo':'Picking up pace','Meio percurso':'Halfway','Quase lá':'Almost there','Percurso completo':'Full journey',
+  'Ainda por experimentar:':'Not tried yet:','Tudo feito nesta área.':'Everything done in this area.',
+  'O nível nunca desce. Conta só o que fizeste no CRM - não a presença, nem a nota.':'The level never goes down. Only what you did in the CRM counts - not attendance, not grades.','Descarregar e entregar o meu trabalho':'Download and submit my work',
   'Ver tudo':'View all','Limpar':'Clear','Aplicar':'Apply','Voltar':'Back','Anterior':'Previous','Seguinte':'Next','Gerar':'Generate',
   // Login
   'Bem-vindo':'Welcome','Inicie sessão para continuar.':'Sign in to continue.','Utilizador':'Username','Palavra-passe':'Password',
@@ -1470,7 +1476,7 @@ function demoData(){
        A funcionalidade mantem-se em Definicoes -> Grupos de Utilizadores,
        para o formador a LIGAR quando quiser demonstrar o que e um papel com
        acesso restrito - que num CRM a serio existe mesmo. */
-    'Formando':{modules:ALL_MOD.filter(m=>m!=='definicoes'),gestor:false,feats:['entidade','gerador','loyalty','origens','funcoes','brand']},
+    'Formando':{modules:ALL_MOD.filter(m=>m!=='definicoes'),gestor:false,feats:['entidade','gerador','loyalty','origens','funcoes','brand','taca']},
   };
   const propostaTemplates = [
     {id:'pt1',nome:'Clássico',cor:corBase(),criadoPor:'u1',criadoEm:'2026-01-05',blocks:[
@@ -1632,7 +1638,9 @@ function load(){
     // backfill de sub-permissões (feats): sessões antigas ficaram sem elas → repor o default do grupo (só se nunca foram definidas)
     if(r.feats===undefined && def.roles[name] && def.roles[name].feats) r.feats=def.roles[name].feats.slice();
     // 'funcoes' era gerido pela feat 'origens' → quem a tinha herda a nova feat (não perde a secção)
-    if(Array.isArray(r.feats) && r.feats.includes('origens') && !r.feats.includes('funcoes')) r.feats.push('funcoes'); });
+    if(Array.isArray(r.feats) && r.feats.includes('origens') && !r.feats.includes('funcoes')) r.feats.push('funcoes');
+    /* a taça nasceu depois destas sessões: entra ligada, como nas novas */
+    if(Array.isArray(r.feats) && name==='Formando' && !r.feats.includes('taca')) r.feats.push('taca'); });
   // garantir que cada modelo tem blocos (construtor por blocos)
   (state.propostaTemplates||[]).forEach(t=>{ if(!Array.isArray(t.blocks)||!t.blocks.length) t.blocks=blocksFromLegacy(t); });
   // associar linhas de proposta ao catálogo (produtoId)
@@ -1844,7 +1852,7 @@ function isAdmin(){ if(!state.settings.requireLogin) return !verComo; return pap
 function can(mod){ if(!state.settings.requireLogin) return true; const r=currentRole(); return r?r.modules.includes(mod):false; }
 function isGestor(){ const r=currentRole(); return !!(r&&r.gestor); }
 /* Sub-permissões (sandbox): acesso a secções específicas das Definições sem dar o módulo completo. */
-const FEATS=[{k:'entidade',l:'Entidade'},{k:'gerador',l:'Gerador de dados'},{k:'loyalty',l:'Níveis de fidelização'},{k:'origens',l:'Origens de cliente'},{k:'segmentos',l:'Segmentos'},{k:'metas',l:'Metas de vendas'},{k:'campos',l:'Campos personalizados'},{k:'funcoes',l:'Função do contacto'},{k:'equipa',l:'Equipa & permissões'},{k:'brand',l:'Marca & Aparência'}];
+const FEATS=[{k:'entidade',l:'Entidade'},{k:'gerador',l:'Gerador de dados'},{k:'loyalty',l:'Níveis de fidelização'},{k:'origens',l:'Origens de cliente'},{k:'segmentos',l:'Segmentos'},{k:'metas',l:'Metas de vendas'},{k:'campos',l:'Campos personalizados'},{k:'funcoes',l:'Função do contacto'},{k:'equipa',l:'Equipa & permissões'},{k:'brand',l:'Marca & Aparência'},{k:'taca',l:'Taça do percurso'}];
 function canFeat(key){ if(!state.settings.requireLogin) return true; if(isAdmin()||can('definicoes')) return true; const r=currentRole(); return !!(r&&r.feats&&r.feats.includes(key)); }
 function hasAnyFeat(){ if(isAdmin()||can('definicoes')) return true; const r=currentRole(); return !!(r&&r.feats&&r.feats.length); }
 function doLogin(username,password){
@@ -6188,6 +6196,82 @@ function barraCob(feitas,total){
     <div class="muted" style="font-size:.7rem;margin-top:3px">${p}% · ${feitas}/${total}</div></div>`;
 }
 
+/* ---------- A TAÇA DO PERCURSO ----------
+   O nível nunca desce e ninguém é prejudicado por fazer menos: o piso é
+   o mesmo para todos. O que se organiza é o fazer MAIS, em patamares
+   que se desbloqueiam por ÁREAS cobertas (8), nunca por práticas (30)
+   nem por cliques - Marketing tem 7 práticas e Catálogo 2, e contar
+   práticas ensinava a ir por onde rende mais. As práticas ficam por
+   baixo, como o detalhe de cada área e a barra até ao próximo patamar.
+   Ninguém chega aos 100% numa turma de duas semanas: por isso há seis
+   degraus antes do último, e o penúltimo ("Quase lá") é o teto real. */
+const PATAMARES=[
+  {min:0, nome:'Ponto de partida',  frase:'A taça está vazia, mas é tua. Cada área do CRM que experimentares acende-a um pouco.'},
+  {min:1, nome:'Primeiro passo',    frase:'Já mexeste numa área. As outras sete estão à espera.'},
+  {min:2, nome:'A ganhar ritmo',    frase:'Duas ou três áreas cobertas. O CRM começa a ser teu.'},
+  {min:4, nome:'Meio percurso',     frase:'Metade do mapa é teu. Daqui para a frente é curiosidade.'},
+  {min:6, nome:'Quase lá',          frase:'Seis ou sete áreas. Poucos chegam aqui numa turma.'},
+  {min:8, nome:'Percurso completo', frase:'As oito áreas. Não ficou nada por experimentar.'},
+];
+const AREAS_ORDEM=['Contas','Catálogo','Vendas','Modelos','Marketing','Serviço','RGPD','Parametrização'];
+/* para onde leva cada área, quando falta */
+const AREA_ROTA={Contas:'empresas',Catálogo:'produtos',Vendas:'propostas',Modelos:'modelos',Marketing:'campanhas',Serviço:'helpdesk',RGPD:'rgpd',Parametrização:'definicoes'};
+
+/* o estado inteiro do mapa, calculado do trabalho local */
+function mapaPratica(p){
+  const pr=praticasEntrega(p||state);
+  const areas=AREAS_ORDEM.map(a=>{ const L=pr.lista.filter(x=>x.mod===a);
+    return {a, feitas:L.filter(x=>x.feito).length, total:L.length, coberta:L.some(x=>x.feito), faltam:L.filter(x=>!x.feito)}; });
+  const cobertas=areas.filter(x=>x.coberta).length;
+  let i=0; PATAMARES.forEach((pt,k)=>{ if(cobertas>=pt.min) i=k; });
+  const atual=PATAMARES[i], prox=PATAMARES[i+1]||null;
+  return {areas, cobertas, praticas:pr.feitas, total:pr.total, i, atual, prox,
+    resumo:{patamar:atual.nome, nivel:i, areas:cobertas, praticas:pr.feitas, total:pr.total, em:todayISO()}};
+}
+
+/* o botão do rodapé: a taça, o patamar, e a barra até ao próximo */
+function tacaHTML(){
+  if(!canFeat('taca')) return '';
+  const m=mapaPratica();
+  const pct=Math.round(m.cobertas/8*100);
+  return `<button class="taca" data-act="taca" title="A tua taça do percurso">
+    <span class="taca-ic">${ic('taca',18)}</span>
+    <span class="taca-txt"><strong>${esc(m.atual.nome)}</strong><span>${m.cobertas} de 8 áreas · ${m.praticas}/${m.total} práticas</span>
+    <span class="taca-bar"><i style="width:${pct}%"></i></span></span></button>`;
+}
+
+/* o painel: os patamares como uma escada, e as áreas com o que falta
+   escrito como convite, com um atalho para o sítio certo */
+function openTaca(){
+  const m=mapaPratica();
+  editing={type:'__taca'};
+  $('#modalTitle').textContent='A tua taça do percurso';
+  $('#modalSub').textContent=m.atual.nome+' · '+m.cobertas+' de 8 áreas';
+  $('#modal').classList.add('wide'); $('#modalDelete').style.display='none';
+  { const sv=$('[data-act="modal-save"]'); if(sv){ sv.style.display=''; sv.disabled=false; sv.textContent='Fechar'; } }
+  const escada=PATAMARES.map((pt,k)=>{ const on=k<=m.i, agora=k===m.i;
+    return `<div class="taca-deg ${on?'on':''} ${agora?'agora':''}"><span class="taca-deg-ic">${ic(on?'check':'lock',13)}</span>
+      <span class="taca-deg-n">${esc(pt.nome)}</span><span class="muted" style="font-size:.72rem">${pt.min===0?'início':pt.min+(pt.min===8?' áreas':'+ áreas')}</span></div>`; }).join('');
+  const proximo = m.prox ? `<div class="callout info" style="margin:12px 0">${ic('taca',16)}<div class="ctxt"><strong>Próximo patamar: ${esc(m.prox.nome)}</strong> - faltam ${m.prox.min-m.cobertas} área(s). ${esc(m.atual.frase)}</div></div>`
+                          : `<div class="callout green" style="margin:12px 0">${ic('check',16)}<div class="ctxt"><strong>${esc(m.atual.frase)}</strong></div></div>`;
+  /* as áreas por visitar primeiro: quem tem menos feito aparece em cima */
+  const areas=m.areas.slice().sort((a,b)=>(a.coberta-b.coberta)||(a.feitas/a.total-b.feitas/b.total)).map(a=>{
+    const pct=Math.round(a.feitas/a.total*100);
+    const faltam=a.faltam.slice(0,3).map(x=>`<li>${esc(x.l)}</li>`).join('');
+    return `<details class="taca-area ${a.coberta?'ok':''}"><summary><span class="taca-area-ic">${ic(a.coberta?'check':'circle',14)}</span>
+      <strong>${esc(a.a)}</strong><span class="muted">${a.feitas}/${a.total}</span><span class="taca-mini"><i style="width:${pct}%"></i></span>
+      <a class="btn-ghost btn-xs" href="#${AREA_ROTA[a.a]}" data-act="close-modal-go">Ir ${ic('chevR',12)}</a></summary>
+      ${faltam?`<div class="muted" style="font-size:.78rem;margin:6px 0 2px">Ainda por experimentar:</div><ul class="taca-faltam">${faltam}</ul>`:'<div class="muted" style="font-size:.78rem;margin:6px 0">Tudo feito nesta área.</div>'}
+    </details>`; }).join('');
+  $('#modalForm').innerHTML=`<div class="taca-topo"><div class="taca-grande">${ic('taca',44)}</div><div><div class="taca-nome">${esc(m.atual.nome)}</div>
+      <div class="muted">${m.cobertas} de 8 áreas · ${m.praticas} de ${m.total} práticas</div></div></div>
+    ${proximo}
+    <div class="grid cols-2" style="gap:16px;align-items:start"><div><h4 class="taca-h4">Os patamares</h4><div class="taca-escada">${escada}</div>
+      <p class="muted" style="font-size:.76rem;margin-top:8px">O nível nunca desce. Conta só o que fizeste no CRM - não a presença, nem a nota.</p></div>
+    <div><h4 class="taca-h4">As oito áreas</h4>${areas}</div></div>`;
+  $('#modalBack').classList.add('open');
+}
+
 /* Ficha detalhada de UMA entrega: o que criou, por módulo, e que práticas demonstrou */
 /* Uma prática: se houver itens, o rótulo abre uma gaveta com os nomes.
    "Criou empresas" sem dizer quantas nem quais não serve para avaliar. */
@@ -7250,6 +7334,7 @@ async function saveModal(){
   if(editing&&editing.type==='__send') return doSendEmail(false);
   if(editing&&editing.type==='__submitwork') return sendSubmitWork();
   if(editing&&editing.type==='__revisao') return closeModal();
+  if(editing&&editing.type==='__taca') return closeModal();
   if(editing&&editing.type==='__import') return confirmImport();
   if(editing&&editing.type==='__auto') return saveAuto();
   if(editing&&editing.type==='__group') return saveGroup();
@@ -7818,7 +7903,10 @@ function sendSubmitWork(){
   if(!hasSignature(u)){ toast('Assinatura obrigatória','Adicione a assinatura no seu perfil para submeter','warn'); openProfile(); return; }
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(to)){ toast('Email do formador inválido','Confirme o endereço','warn'); return; }
   const sv=$('[data-act="modal-save"]'); if(sv){ sv.disabled=true; sv.textContent='A submeter…'; }
-  supaSubmeter(msg, state).then(res=>{
+  /* o patamar vai dentro do snapshot: é dali, e não do browser, que o
+     badge o lê - o localStorage edita-se com F12, o snapshot não */
+  const pay=Object.assign({}, state, {mapa: mapaPratica(state).resumo});
+  supaSubmeter(msg, pay).then(res=>{
     /* O aviso era um toast que desaparecia em segundos - e a pergunta que
        fica a seguir a uma entrega é sempre a mesma: "terá ido?". Passa a
        ficar no ecrã, com data e número, até se fechar. */
@@ -7876,8 +7964,9 @@ function buildNav(){
   if(foot){
     const credit=`${TURMA?`<div class="turma-chip" title="Ambiente isolado desta turma">${ic('building',12)} Turma: ${esc(TURMA)}</div>`:''}<a href="https://www.linkedin.com/in/ldvale/" target="_blank" rel="noopener noreferrer" class="made-by" title="LinkedIn - Diogo du Valle">${ic('linkedin',14)}<span>Created by Diogo du Valle</span></a><a class="legal-link" href="https://crm.cr0x.org/manual/aviso-legal/" target="_blank" rel="noopener">Aviso legal</a>`;
     if(u){
+      const tacaBtn=(u.papel==='Formando')?tacaHTML():'';
       const submitBtn=(u.papel==='Formando')?`<button class="btn-sec btn-sm submit-work" data-act="submit-work" title="Enviar o meu trabalho ao formador">${ic('upload',15)}<span>Submeter o meu trabalho</span></button>`:'';
-      foot.innerHTML=`<div class="profile"><div class="profile-id" data-act="profile" title="Editar o meu perfil" style="display:flex;align-items:center;gap:11px;flex:1;min-width:0;cursor:pointer">${avatarHTML(u,36)}<div class="profile-txt"><strong>${esc(u.nome)} ${esc(u.apelido||'')}</strong><span>${verComo?`a ver como ${esc(verComo)}`:esc(u.papel)}</span></div></div>${(papelReal()==='Administrador'||papelReal()==='Formador')?`<button class="icon-btn" data-act="ver-como" title="Ver a app como um formando a vê" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18);color:#fff;width:34px;height:34px">${ic('eye',16)}</button>`:''}<button class="icon-btn" data-act="logout" title="Terminar sessão" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18);color:#fff;width:34px;height:34px">${ic('logout',16)}</button></div>${submitBtn}${credit}`;
+      foot.innerHTML=`<div class="profile"><div class="profile-id" data-act="profile" title="Editar o meu perfil" style="display:flex;align-items:center;gap:11px;flex:1;min-width:0;cursor:pointer">${avatarHTML(u,36)}<div class="profile-txt"><strong>${esc(u.nome)} ${esc(u.apelido||'')}</strong><span>${verComo?`a ver como ${esc(verComo)}`:esc(u.papel)}</span></div></div>${(papelReal()==='Administrador'||papelReal()==='Formador')?`<button class="icon-btn" data-act="ver-como" title="Ver a app como um formando a vê" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18);color:#fff;width:34px;height:34px">${ic('eye',16)}</button>`:''}<button class="icon-btn" data-act="logout" title="Terminar sessão" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18);color:#fff;width:34px;height:34px">${ic('logout',16)}</button></div>${tacaBtn}${submitBtn}${credit}`;
     } else {
       foot.innerHTML=`<div class="profile"><div class="avatar">DV</div><div class="profile-txt"><strong>Formador</strong><span>Sessão de demonstração</span></div></div>${credit}`;
     }
@@ -8588,6 +8677,8 @@ document.addEventListener('click', async e=>{
     case 'inv-reset': { const t=INVITE_DEFAULT; document.querySelectorAll('#modalForm [data-inv]').forEach(el=>{ if(t[el.dataset.inv]!=null) el.value=t[el.dataset.inv]; }); const p=$('#invPreview'); if(p) p.innerHTML=invitePreviewHTML(); toast('Reposto','Modelo predefinido'); break; }
     case 'gen': if(!canFeat('gerador')){ toast('Sem permissão','','warn'); break; } gerarExemplos(+el.dataset.n||0, +el.dataset.p||0, +el.dataset.e||0); break;
     case 'submit-work': openSubmitWork(); break;
+    case 'taca': openTaca(); break;
+    case 'close-modal-go': closeModal(); break;   /* o href faz o resto */
     case 'download-trabalho': submitWork(); break;
     case 'entregas-reload': renderEntregas(); renderTurmaRoster(); break;
     case 'reload-analytics': { const b=$('#siteAnalytics'); if(b) b.innerHTML='<div class="muted" style="padding:6px 2px">A atualizar…</div>'; renderSiteAnalytics(); } break;
