@@ -2887,8 +2887,10 @@ views.casos = () => {
       </div>
     </div>
     <div class="toolbar" style="margin-bottom:12px;gap:6px;flex-wrap:wrap">
-      <button class="chip ${!filtroE?'active':''}" data-act="caso-filtro" data-estado="">Todos</button>
       ${CASO_ESTADOS.map(e=>`<button class="chip ${filtroE===e?'active':''}" data-act="caso-filtro" data-estado="${e}">${e}</button>`).join('')}
+      <!-- o "Todos" ao fim: não é um estado, e é o único que traz os
+           casos fechados de volta à lista -->
+      <button class="chip ${!filtroE?'active':''}" data-act="caso-filtro" data-estado="">Todos</button>
     </div>
     <div id="casoBody">${casoBodyHTML()}</div>
   </div>`;

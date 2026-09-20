@@ -199,6 +199,13 @@ td .cell-sub{font-size:.78rem;color:var(--muted)}
 .pill.purple{background:#f0e9fb;color:#7c3aed}
 [data-theme="dark"] .pill.purple{background:#241a3a;color:#b794f6}
 .chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:8px;font-size:.78rem;font-weight:600;background:var(--surface2);border:1px solid var(--border);color:var(--muted)}
+/* O chip escolhido. A classe já era posta pelo JavaScript; faltava a
+   regra - e por isso clicar num filtro não mudava nada no ecrã. Serve
+   os filtros do Helpdesk, os estados de um caso e os da Retenção. */
+.chip.active{background:var(--g600);border-color:var(--g600);color:#fff}
+.chip.active:hover{background:var(--g700);border-color:var(--g700)}
+button.chip{cursor:pointer;transition:background .12s,border-color .12s,color .12s}
+button.chip:hover{border-color:var(--g400);color:var(--g-texto)}
 .tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:.72rem;font-weight:700;background:var(--g100);color:var(--g-texto)}
 
 /* ---------- FORMS ---------- */
