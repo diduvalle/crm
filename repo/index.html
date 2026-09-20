@@ -951,7 +951,9 @@ async function carregarSelos(t){
     : `<div class="table-wrap"><table><thead><tr>
         <th>Formando</th><th>Badge</th><th>Estado</th><th>Abriu</th><th></th>
       </tr></thead><tbody>${lista.map(x=>{
-        const curto=x.destino?esc(String(x.destino).replace(/^https?:\/\/crm\.cr0x\.org\/b\//,'').replace(/\/$/,'')):'';
+        /* o que se mostra e o CODIGO, venha ele da pasta antiga (/b/CODIGO/)
+           ou da pagina nova (/b/?c=CODIGO) - o endereco fica no link */
+        const curto=x.destino?esc(String(x.destino).replace(/^https?:\/\/crm\.cr0x\.org\/b\//,'').replace(/^\?c=/,'').replace(/\/$/,'')):'';
         return `<tr>
           <td><div class="cell-main">${esc(x.nome)}</div><div class="cell-sub">${esc(x.email||'sem email')}</div></td>
           <td>${x.destino
