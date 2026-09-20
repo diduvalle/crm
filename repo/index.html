@@ -55,6 +55,11 @@ td .tag{align-self:auto}
 .esc-logo-vazio svg{width:20px;height:20px}
 .tc-fora{border-style:dashed}
 .tc-arq{filter:grayscale(1);background:var(--surface2)}
+/* apagar a escola: discreto como o lápis da barra, acende no cartão */
+.tc-lixo{width:30px;height:30px;flex:none;border:1px solid transparent;border-radius:8px;background:transparent;color:var(--muted2);display:grid;place-items:center;cursor:pointer;opacity:0;transition:opacity .12s,background .12s,color .12s}
+.tc-lixo svg{width:15px;height:15px}
+.tc:hover .tc-lixo,.tc-lixo:focus-visible{opacity:1}
+.tc-lixo:hover{background:var(--danger-bg);color:var(--danger)}
 .sec-titulo{font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:22px 0 10px}
 
 /* CABEÇALHO DE SECÇÃO COM VOLTAR */
@@ -443,7 +448,8 @@ async function carregarEscolas(){
           </div>
           <div class="muted" style="font-size:.8rem">${e.n_turmas} turma${e.n_turmas==1?'':'s'} · ${e.n_geridas} no Repo</div>
           <div class="tc-foot">
-            ${e.slug?`<a class="btn-sec btn-sm" href="../${esc(e.slug)}" target="_blank" rel="noopener">${ic('link')}Abrir o CRM</a>`:''}
+            ${e.slug?`<button class="tc-lixo" data-apagar="${esc(e.slug)}" title="Apagar a escola (as turmas não se apagam)">${ic('lixo')}</button>
+            <a class="btn-sec btn-sm" href="../${esc(e.slug)}" target="_blank" rel="noopener">${ic('link')}Abrir o CRM</a>`:''}
             <button class="btn btn-sm" data-abrir-escola="${esc(e.slug)}">${ic('gente')}Turmas</button>
           </div>
         </article>`;
@@ -454,7 +460,31 @@ async function carregarEscolas(){
       +(arq.length?`<h3 class="sec-titulo">Arquivadas</h3><div class="grid">${arq.map(cartao).join('')}</div>`:'');
   document.querySelectorAll('[data-abrir-escola]').forEach(b=>b.addEventListener('click',
     ()=>abrirEscola(escolas.find(e=>e.slug===b.dataset.abrirEscola))));
+  document.querySelectorAll('[data-apagar]').forEach(b=>b.addEventListener('click',
+    ()=>apagarEscola(escolas.find(e=>e.slug===b.dataset.apagar))));
   pintarNavEscolas();
+}
+
+/* Apagar uma escola. A escola é o RÓTULO: o servidor solta as turmas dela
+   (espaco_id a nulo) antes de apagar a linha, por isso elas voltam para
+   "Sem escola" com formandos, sessões e badges intactos. Desfaz-se: cria-se
+   a escola outra vez e movem-se de volta. O que se perde é a identidade e
+   o endereço crm.cr0x.org/<slug>. */
+async function apagarEscola(e){
+  if(!e||!e.slug) return;
+  const n=+e.n_turmas||0;
+  const ok=await uiConfirm({titulo:`Apagar a escola ${e.nome||e.slug}?`,perigo:true,ok:'Apagar a escola',
+    texto:(n?`As <strong>${n} turma${n==1?'':'s'}</strong> não se apagam: voltam para "Sem escola", com tudo o que têm dentro (formandos, sessões, badges).<br><br>`:'')
+      +`Perde-se a identidade da escola (nome, logótipo, cor, dados legais) e o endereço <code>crm.cr0x.org/${esc(e.slug)}</code> deixa de abrir.`});
+  if(!ok) return;
+  try{ await rpc('espaco_apagar',{p_token:sessao.token,p_id:e.id}); }
+  catch(err){
+    const m=(err&&err.message)||'';
+    if(/espaco_apagar|PGRST202/.test(m)) return toast('Falta correr o SQL 04-espaco-apagar.sql no Supabase.','err');
+    return tratar(err);
+  }
+  toast(`Escola apagada.${n?` ${n} turma${n==1?'':'s'} de volta a "Sem escola".`:''}`);
+  mostrarEscolas();
 }
 
 /* ---------- As escolas na barra lateral ----------
