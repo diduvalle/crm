@@ -848,11 +848,20 @@ figure.crm-video figcaption{ margin-top:.5rem }
 /* o 'Created by' ficou em .72rem enquanto o resto do rodape passou a px:
    com o corpo a 125% isso da 14.4px ao lado de 12.5px, e le-se como duas
    coisas coladas. O rodape inteiro e' cromo, nao e' prosa: vai a Archivo. */
+/* uma so linha, nao tres pedacos: mesmo tamanho, mesmo peso e
+   mesmo brilho em tudo o que la esta. So o hover distingue o link. */
+.md-copyright,
+.md-copyright *,
 .md-copyright .made-by,
-.md-copyright .made-by span{
+.md-copyright .made-by span,
+.md-footer-meta a{
   font-family:"Archivo", system-ui, sans-serif;
-  font-size:13px; font-weight:600; letter-spacing:0;
+  font-size:12.5px; font-weight:600; letter-spacing:0;
+  color:rgba(255,255,255,.72);
 }
+.md-copyright .made-by:hover,
+.md-copyright .made-by:hover span,
+.md-footer-meta a:hover{ color:#fff }
 .md-copyright .made-by svg{ width:13px; height:13px }
 .md-footer__title,
 .md-footer__direction,
