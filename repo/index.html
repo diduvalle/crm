@@ -459,8 +459,8 @@ async function carregarEscolas(){
 /* ---------- As escolas na barra lateral ----------
    Um item por escola (as arquivadas não), com lápis ao passar o rato: o nome
    vira campo, Enter guarda pela espaco_guardar, Esc desiste. O grupo "Sem
-   escola" não é uma escola - não tem nome para mudar; o que se faz é mover
-   as turmas dele para uma escola (seletor em cada cartão). */
+   escola" não é uma escola: dar-lhe um nome CRIA a escola e move as turmas
+   do grupo para lá (também se podem mover uma a uma, no cartão). */
 function pintarNavEscolas(){
   const n=$('#navEscolas'); if(!n) return;
   const vivas=escolas.filter(e=>!e.arquivado);
@@ -469,7 +469,7 @@ function pintarNavEscolas(){
       ${e.logo_url?`<img class="nav-esc-logo" src="${esc(e.logo_url)}" alt="">`
                   :`<span class="nav-esc-ini">${e.slug?esc((e.nome||e.slug).trim().charAt(0).toUpperCase()):'?'}</span>`}
       <span class="lbl">${e.slug?esc(e.nome||e.slug):'Sem escola'}</span>
-      ${e.slug?`<button class="lapis" data-renomear="${esc(e.slug)}" title="Mudar o nome">${ic('lapis')}</button>`:''}
+      <button class="lapis" data-renomear="${esc(e.slug)}" title="${e.slug?'Mudar o nome':'Dar um nome: cria a escola e move estas turmas para lá'}">${ic('lapis')}</button>
     </div>`).join('')||'<div class="nav-vazio">Ainda sem escolas</div>';
   n.querySelectorAll('.nav-escola').forEach(el=>el.addEventListener('click',ev=>{
     if(ev.target.closest('.lapis, input')) return;
@@ -497,6 +497,7 @@ function editarNomeEscola(e,el){
     const nome=inp.value.trim();
     if(!guardar||!nome||nome===antes){ pintarNavEscolas(); return; }
     try{
+      if(!e.slug){ await criarEscolaDasSemEscola(nome); return; }
       await rpc('espaco_guardar',{p_token:sessao.token,p_id:e.id,p_dados:{slug:e.slug,nome}});
       e.nome=nome; toast('Nome guardado.');
       if(escolaAtual&&escolaAtual.slug===e.slug) $('#hTitulo').textContent=nome;
@@ -509,6 +510,27 @@ function editarNomeEscola(e,el){
   });
   inp.addEventListener('blur',()=>termina(true));
   inp.addEventListener('click',ev=>ev.stopPropagation());
+}
+/* Slug a partir do nome (o espaco_guardar exige ^[a-z0-9][a-z0-9-]{1,30}$), sem
+   colidir com os que já existem. */
+function slugDe(nome){
+  let s=nome.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,31);
+  if(!/^[a-z0-9]/.test(s)) s='e'+s;
+  if(s.length<2) s+='1';
+  const usados=new Set(escolas.map(x=>x.slug)); const base=s; let i=2;
+  while(usados.has(s)) s=base.slice(0,28)+'-'+(i++);
+  return s;
+}
+async function criarEscolaDasSemEscola(nome){
+  const slug=slugDe(nome);
+  await rpc('espaco_guardar',{p_token:sessao.token,p_id:null,p_dados:{slug,nome}});
+  const turmas=await rpc('repo_turmas_da_escola',{p_token:sessao.token,p_slug:''});
+  for(const t of turmas) await rpc('turma_mover',{p_token:sessao.token,p_codigo:t.codigo,p_slug:slug});
+  const n=turmas.length;
+  toast(`Escola "${nome}" criada · ${n} turma${n==1?'':'s'} movida${n==1?'':'s'}.`);
+  await carregarEscolas();
+  const nova=escolas.find(x=>x.slug===slug);
+  if(nova) abrirEscola(nova); else mostrarEscolas();
 }
 function moverSel(t){
   if(!escolaAtual||escolaAtual.slug) return '';
