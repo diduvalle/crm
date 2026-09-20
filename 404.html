@@ -3749,6 +3749,18 @@ function pulsoEmpresa(q){
     if(!ambigua) achada=e; });
   return achada;
 }
+/* a empresa da ficha aberta, se a pergunta apontar para "esta/este/aqui" */
+function pulsoContexto(q){
+  try{
+    if(!/(^|[^a-z])(esta|este|desta|deste|nesta|neste|aqui|atual|actual)([^a-z]|$)/.test(q)) return null;
+    if(!editing||!editing.id||!can("empresas")) return null;
+    let e=null;
+    if(editing.type==='empresa') e=(state.empresas||[]).find(x=>x.id===editing.id);
+    else if(editing.type==='cliente'){ const c=(state.clientes||[]).find(x=>x.id===editing.id); e=c&&(state.empresas||[]).find(x=>x.id===c.empresaId); }
+    else if(editing.type==='proposta'){ const p=(state.propostas||[]).find(x=>x.id===editing.id); e=p&&(state.empresas||[]).find(x=>x.id===p.empresaId); }
+    return e?pulsoResumoEmpresa(e):null;
+  }catch(err){ return null; }
+}
 function pulsoResumoEmpresa(e){
   const props=(state.propostas||[]).filter(p=>p.empresaId===e.id);
   const ganhas=props.filter(p=>p.estado==="Ganha");
@@ -4121,7 +4133,41 @@ const cbotRaizes = t => cbotNorm(t).split(/[^a-z0-9]+/).filter(Boolean).map(cbot
    pergunta sobre PROPOSTAS que so por acaso dizia "equipa". Uma entrada vale o
    que vale a sua melhor correspondencia - nao o numero de sinonimos que eu me
    lembrei de escrever. */
-function cbotScore(ks,q){ let n=0; const qr=cbotRaizes(q); const qs=" "+qr.join(" ")+" ";
+/* ---- a base do manual ---- */
+const CBOT_MANUAL=[];
+/* uma entrada do manual na língua da interface, marcada como "como se faz" */
+function pulsoManualEntrada(i){ return Object.assign({ajuda:1}, i, {t:(getLang()==='en'&&i.en)?i.en:i.t}); }
+function pulsoCarregarBase(){
+  fetch('/pulso-base.json',{cache:'no-store'}).then(r=>{ if(!r.ok) throw 0; return r.json(); })
+    .then(l=>{ if(Array.isArray(l)){ CBOT_MANUAL.length=0; l.forEach(x=>{ if(x&&x.k&&x.k.length&&x.t) CBOT_MANUAL.push(x); }); } })
+    .catch(()=>{});   /* sem o ficheiro, o Pulso fica como era */
+}
+/* ---- gralhas ---- */
+/* pares de letras de uma palavra: "casa" -> ca, as, sa */
+function cbotBigramas(w){ const o=[]; for(let i=0;i<w.length-1;i++) o.push(w.slice(i,i+2)); return o; }
+/* parecença entre duas palavras, de 0 a 1 (coeficiente de Dice) */
+function cbotParecem(a,b){
+  if(a===b) return 1; if(a.length<4||b.length<4) return 0;
+  const A=cbotBigramas(a), B=cbotBigramas(b); if(!A.length||!B.length) return 0;
+  const m=new Map(); A.forEach(x=>m.set(x,(m.get(x)||0)+1));
+  let c=0; B.forEach(x=>{ const k=m.get(x)||0; if(k>0){ c++; m.set(x,k-1); } });
+  return 2*c/(A.length+B.length);
+}
+/* a pontuação aproximada: todas as raízes compridas da chave têm de ter
+   uma raiz parecida na pergunta. Vale 70% do que valeria a chave exata,
+   para nunca ganhar a uma correspondência a sério. */
+function cbotScoreAprox(ks,q){
+  let n=0; const qr=cbotRaizes(q).filter(w=>w.length>=4);
+  if(!qr.length) return 0;
+  ks.forEach(k=>{
+    const kr=cbotRaizes(k).filter(w=>w.length>=4); if(!kr.length||kr.length>4) return;
+    const todas=kr.every(w=>qr.some(x=>cbotParecem(w,x)>=0.75));
+    if(todas) n=Math.max(n, Math.round(cbotNorm(k).length*0.7));
+  });
+  return n;
+}
+function cbotScore(ks,q){ const e=cbotScoreExato(ks,q); return e>0?e:cbotScoreAprox(ks,q); }
+function cbotScoreExato(ks,q){ let n=0; const qr=cbotRaizes(q); const qs=" "+qr.join(" ")+" ";
   ks.forEach(k=>{ const kk=cbotNorm(k);
     /* 1. a frase tal e qual - o sinal mais forte */
     const curto = kk.length<=4;
@@ -4141,6 +4187,7 @@ function cbotTodas(){
   return CBOT_META.map(x=>Object.assign({},x))
     .concat(CBOT.filter(i=>can(i.mod)))
     .concat(CBOT_NUM2.filter(i=>!i.mod||can(i.mod)))
+    .concat(CBOT_MANUAL.filter(i=>!i.mod||can(i.mod)).map(pulsoManualEntrada))
     .concat(CBOT_AJUDA.concat(CBOT_AJUDA2,CBOT_AJUDA3,CBOT_AJUDA4).filter(i=>!i.mod||can(i.mod)).map(i=>Object.assign({ajuda:1},i)))
     .concat(CBOT_GLOS);
 }
@@ -4182,10 +4229,18 @@ function cbotResponde(txt){
   /* CBOT ja foi percorrido acima - aqui so a segunda leva de numeros */
   CBOT_NUM2.forEach(i=>{ if(i.mod&&!can(i.mod)) return; const p=cbotScore(i.k,q); if(p>pts){pts=p;melhor=i;} });
   CBOT_AJUDA.concat(CBOT_AJUDA2,CBOT_AJUDA3,CBOT_AJUDA4).forEach(i=>{ if(i.mod&&!can(i.mod)) return; const p=cbotScore(i.k,q); if(p>pts){pts=p;melhor=Object.assign({ajuda:1},i);} });
+  /* a base do manual: a mesma pontuação, com um empurrão pequeno para o
+     ecrã onde a pessoa está - "o ecrã" em Propostas é o ecrã das
+     propostas. Empata com as escritas à mão, nunca as passa. */
+  { const v=currentView();
+    CBOT_MANUAL.forEach(i=>{ if(i.mod&&!can(i.mod)) return; let p=cbotScore(i.k,q); if(p>0 && i.mod===v) p+=1; if(p>pts){pts=p;melhor=pulsoManualEntrada(i);} }); }
   /* o glossario nao depende de modulo nenhum: um termo explica-se sempre */
   CBOT_GLOS.forEach(i=>{ const p=cbotScore(i.k,q); if(p>pts){pts=p;melhor=i;} });
   /* nome de empresa na frase: ganha a tudo o resto, porque é sempre mais
      específico do que uma pergunta genérica */
+  /* "esta empresa", "este cliente", "esta proposta": a ficha que está
+     aberta é o contexto - responde-se sobre ela sem obrigar a escrever o nome */
+  { const c=pulsoContexto(q); if(c) return c; }
   if(can("empresas") && !(melhor&&melhor.ajuda&&pts>=12)){ const e=pulsoEmpresa(q); if(e) return pulsoResumoEmpresa(e); }
   /* LIMIAR DE CONFIANCA
      Antes, qualquer pontuacao acima de zero ganhava. Resultado: "quero ver as
@@ -4220,9 +4275,9 @@ function cbotResponde(txt){
     /* depois de explicar um termo, o passo seguinte costuma ser ver o número.
        "O que é o MRR" → "qual o valor do meu pipeline". */
     if(melhor.glos) return Object.assign({},melhor,{perto:cbotProximas(melhor.termo||q,melhor,2)});
-    return melhor;   /* as de ajuda são texto fixo */
+    return Object.assign({},melhor,{perto:melhor.perto||cbotProximas(q,melhor,2)});   /* as de ajuda são texto fixo */
   }
-  try{ return Object.assign({ajuda:melhor.ajuda},melhor.f(q)); }
+  try{ const r=Object.assign({ajuda:melhor.ajuda},melhor.f(q)); if(!r.perto) r.perto=cbotProximas(q,melhor,2); return r; }
   catch(e){ return {t:"Encontrei a pergunta mas falhei a ir buscar os dados. Veja o módulo diretamente."}; }
 }
 
@@ -9934,6 +9989,7 @@ render();
    branco a quem tem a ligação lenta. */
 espacoCarregar();
 tryLoadBase();
+pulsoCarregarBase();
 
 // Kanban drag & drop (delegado, re-liga após cada render via listeners no documento)
 let dragId=null;
