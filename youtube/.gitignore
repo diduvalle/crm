@@ -1,0 +1,6 @@
+# nunca no repositorio: sao as chaves do canal
+segredos.json
+# o registo do que ja subiu, e as gravacoes
+subidos.json
+gravados/
+node_modules/
