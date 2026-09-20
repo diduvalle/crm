@@ -1,5 +1,5 @@
 /* ===========================================================
-   CRM - Manual · design system 1:1 com a app
+   IEFP CRM - Manual · design system 1:1 com a app
    Os tokens NÃO se copiam para aqui: vêm de estilo/tokens.css,
    que o CI copia para esta pasta antes de construir o manual.
    Mexer nas cores faz-se lá, e muda a app, o repositório e isto.
@@ -9,7 +9,7 @@
    dos titulos tem de vir a parte, e um @import so vale no topo. */
 @import url("https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&display=swap");
 
-/* --- Cor primária (azul da plataforma) --- */
+/* --- Cor primária (verde IEFP) --- */
 [data-md-color-primary="custom"] {
   --md-primary-fg-color:        var(--g800);
   --md-primary-fg-color--light: var(--g600);
@@ -19,7 +19,7 @@
 }
 [data-md-color-accent="custom"] {
   --md-accent-fg-color:              var(--g700);
-  --md-accent-fg-color--transparent: rgba(0,108,172,.1);
+  --md-accent-fg-color--transparent: rgba(0,137,75,.1);
   --md-accent-bg-color:              #ffffff;
   --md-accent-bg-color--light:       rgba(255,255,255,.7);
 }
@@ -48,7 +48,7 @@
 }
 
 /* ===========================================================
-   1. Canvas da app: fundo de papel + conteúdo em card
+   1. Canvas da app: fundo cinza-esverdeado + conteúdo em card
    =========================================================== */
 [data-md-color-scheme="default"] { --md-default-bg-color: var(--crm-bg); }
 .md-main { background: var(--crm-bg); }
@@ -76,7 +76,7 @@
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-thumb { background: var(--crm-border); border-radius: 20px; border: 2px solid var(--crm-bg); }
 ::-webkit-scrollbar-thumb:hover { background: var(--crm-muted2); }
-::selection { background: rgba(0,120,191,.22); }
+::selection { background: rgba(0,166,81,.22); }
 
 /* ===========================================================
    2. Header claro com blur (como o .header da app)
@@ -90,7 +90,7 @@
   box-shadow: none;
 }
 .md-header[data-md-state="shadow"],
-.md-header--shadow { box-shadow: 0 4px 14px rgba(0,45,75,.07); }
+.md-header--shadow { box-shadow: 0 4px 14px rgba(0,60,33,.07); }
 .md-header__title { font-weight: 800; font-size: .85rem; color: var(--crm-text); }
 .md-header__button { color: var(--crm-text); }
 .md-header__button:hover { color: var(--crm-g700); opacity: 1; }
@@ -123,7 +123,7 @@
 }
 .md-header__option[data-md-component="palette"] > label.md-header__button.md-icon svg { width: 18px; height: 18px; }
 
-/* Botão de idioma (PT/EN) = .icon-btn.lang-btn da app (40×40, texto azul, sem globo) */
+/* Botão de idioma (PT/EN) = .icon-btn.lang-btn da app (40×40, texto verde, sem globo) */
 .md-header .md-select > .md-header__button.md-icon {
   width: 40px; height: 40px; padding: 0; margin: 0; opacity: 1;
   display: inline-flex; align-items: center; justify-content: center;
@@ -135,7 +135,7 @@
 .md-header .md-select > .md-header__button.md-icon:hover {
   background: var(--crm-surface2); border-color: var(--crm-g300); color: var(--crm-g700);
 }
-/* sem globo - igual ao botão PT/EN da app (só texto azul) */
+/* sem globo - igual ao botão PT/EN da app (só texto verde) */
 .md-header .md-select > .md-header__button.md-icon svg { display: none; }
 /* mostra o idioma ATUAL (como o toggle da app): PT nas páginas PT, EN nas EN */
 .md-header .md-select > .md-header__button.md-icon::after { content: "PT/EN"; font: inherit; color: inherit; }
@@ -165,7 +165,7 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 [data-md-toggle="search"]:checked ~ .md-header .md-search__form {
   background: var(--crm-surface);
   border-color: var(--crm-g400);
-  box-shadow: 0 0 0 3px rgba(0,120,191,.14);
+  box-shadow: 0 0 0 3px rgba(0,166,81,.14);
   border-radius: var(--crm-rs) var(--crm-rs) 0 0;
 }
 .md-search__input { font-size: .74rem; color: var(--crm-text); }
@@ -286,7 +286,7 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 .md-typeset h3 { font-size: .98rem; font-weight: 750; margin-top: 1.7rem; color: var(--crm-text); }
 .md-typeset h4 { font-size: .85rem; font-weight: 700; }
 [data-md-color-scheme="slate"] .md-typeset h1 { color: #e7f3ec; }
-[data-md-color-scheme="slate"] .md-typeset h2 { color: var(--crm-g600); border-bottom-color: rgba(0,120,191,.22); }
+[data-md-color-scheme="slate"] .md-typeset h2 { color: var(--crm-g600); border-bottom-color: rgba(0,166,81,.22); }
 
 /* Parágrafo de entrada */
 .md-typeset h1 + p { font-size: .92rem; line-height: 1.6; color: var(--crm-muted); }
@@ -313,7 +313,7 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 .md-typeset .grid > .card:hover {
   transform: translateY(-3px);
   border-color: var(--crm-g400);
-  box-shadow: 0 16px 40px rgba(0,94,149,.16);
+  box-shadow: 0 16px 40px rgba(0,107,60,.16);
 }
 
 /* Ícone do cartão = .kpi-ic / .mini-item .ic da app */
@@ -339,44 +339,10 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 }
 .md-typeset .grid.cards li > p:last-child > a:hover { color: var(--crm-g600); text-decoration: none; gap: .5rem; }
 
-/* ===========================================================
-   6. Hero da homepage (gradiente da app)
-   =========================================================== */
-.crm-hero {
-  position: relative; overflow: hidden;
-  border-radius: var(--crm-rl);
-  padding: 1.6rem 1.7rem 1.5rem;
-  margin: .2rem 0 1.4rem;
-  background: linear-gradient(125deg, var(--crm-g800), var(--crm-g600) 55%, var(--crm-g400));
-  color: #fff;
-  box-shadow: 0 16px 40px rgba(0,94,149,.24);
-}
-.crm-hero::after {
-  content: ""; position: absolute; right: -60px; top: -60px;
-  width: 280px; height: 280px;
-  background: radial-gradient(circle, rgba(255,255,255,.16), transparent 70%);
-  pointer-events: none;
-}
-.md-typeset .crm-hero h1 { color: #fff; margin: 0 0 .35rem; font-size: 1.65rem; }
-.md-typeset .crm-hero p { color: rgba(255,255,255,.9); max-width: 48rem; margin: 0; font-size: .82rem; position: relative; }
-.crm-hero-actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: 1rem; position: relative; }
-.md-typeset .crm-hero-actions a {
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 9px 15px; border-radius: 10px; font-weight: 700; font-size: .74rem;
-  text-decoration: none !important; transition: transform .08s, background .15s;
-}
-.md-typeset .crm-hero-actions a:active { transform: translateY(1px); }
-.md-typeset .crm-hero-actions .hb-solid { background: #fff; color: var(--crm-g800); }
-.md-typeset .crm-hero-actions .hb-solid:hover { background: #f0f0f0; color: var(--crm-g900); }
-.md-typeset .crm-hero-actions .hb-out {
-  background: rgba(255,255,255,.16); color: #fff; border: 1px solid rgba(255,255,255,.45);
-}
-.md-typeset .crm-hero-actions .hb-out:hover { background: rgba(255,255,255,.28); color: #fff; }
-.crm-hero-actions svg {
-  width: 16px; height: 16px; fill: none; stroke: currentColor;
-  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none;
-}
-/* Sem âncora ¶ (permalink) no título do hero - ali não é uma secção navegável */
+/* o heroi da homepage em papel: o desenho de gradiente escuro que
+   estava aqui deixou de ter fundo, mas os botoes continuaram brancos -
+   texto branco sobre papel, ou seja um botao fantasma. O bloco sai; o
+   desenho em papel esta mais abaixo na folha. */
 .md-typeset .crm-hero .headerlink { display: none; }
 
 /* ===========================================================
@@ -434,7 +400,7 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
   padding: .1em .38em; font-size: .82em;
 }
 [data-md-color-scheme="slate"] .md-typeset code {
-  background: rgba(0,120,191,.10); color: #8cc2e2; border-color: rgba(0,120,191,.2);
+  background: rgba(0,166,81,.10); color: #8fe0b3; border-color: rgba(0,166,81,.2);
 }
 .md-typeset pre > code { border-radius: var(--crm-r); padding: 1em 1.1em; border: 0; }
 .md-typeset .highlight { border-radius: var(--crm-r); box-shadow: var(--crm-shadow); }
@@ -470,7 +436,7 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 .md-typeset .md-button:active { transform: translateY(1px); }
 .md-typeset .md-button--primary {
   background: var(--crm-g600); border-color: var(--crm-g600); color: #fff;
-  box-shadow: 0 2px 8px rgba(0,120,191,.28);
+  box-shadow: 0 2px 8px rgba(0,166,81,.28);
 }
 .md-typeset .md-button--primary:hover { background: var(--crm-g700); border-color: var(--crm-g700); }
 
@@ -494,7 +460,7 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 
 /* Rodapé "meta" do Material */
 .md-footer { background: var(--crm-g900); }
-.md-footer-meta { background: var(--crm-g900); }
+.md-footer-meta { background: #04492c; }
 .md-footer__inner { padding-top: .6rem; padding-bottom: .6rem; }
 .md-footer__link { color: rgba(255,255,255,.85); }
 .md-footer__link:hover { color: #fff; }
@@ -531,10 +497,10 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
   width: 17px; height: 17px; flex: none;
   fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
 }
-/* CTA = .btn da app (azul com glow) */
+/* CTA = .btn da app (verde com glow) */
 .crm-foot-cta {
   background: var(--crm-g600) !important; border-color: transparent !important;
-  color: #fff !important; box-shadow: 0 2px 8px rgba(0,120,191,.28);
+  color: #fff !important; box-shadow: 0 2px 8px rgba(0,166,81,.28);
 }
 .crm-foot-cta:hover { background: var(--crm-g700) !important; color: #fff !important; }
 
@@ -648,7 +614,7 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 :root, body,
 [data-md-color-scheme="default"] {
   --pl-papel:#efe9dd; --pl-papel-2:#f5f1e8; --pl-branco:#fdfbf7;
-  --pl-tinta:#171412; --pl-tinta-2:#4a423c; --pl-fraco:#8a7f75;
+  --pl-tinta:#171412; --pl-tinta-2:#4a423c; --pl-fraco:#6f655c;   /* escurecido: a #8a7f75 so dava 3.2:1 sobre papel */
   --pl-azul:#0078bf;
   --pl-azul-escuro:#005e95;   /* o mesmo azul, escurecido ate passar 4.5:1 em texto pequeno */ --pl-risco:#ddd4c4;
 
@@ -717,9 +683,9 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 
 /* a navegação e as etiquetas em mono pequeno, como na montra */
 .md-nav__title, .md-nav--secondary .md-nav__title{
-  font-family:"Space Mono", ui-monospace, monospace;
-  font-size:.62rem; letter-spacing:.16em; text-transform:uppercase;
-  color:var(--pl-fraco); font-weight:700;
+  font-family:"Archivo", system-ui, sans-serif;
+  font-size:11.5px; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--pl-tinta); font-weight:800;   /* a --pl-fraco so dava 3.2:1 */
 }
 .md-nav__link{ font-family:"Archivo", system-ui, sans-serif; font-size:.78rem }
 .md-typeset code{ font-family:"Space Mono", ui-monospace, monospace; font-size:.8em }
@@ -756,14 +722,17 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
 .crm-hero h1{ margin-top:0 }
 .crm-hero-actions{ display:flex; gap:10px; flex-wrap:wrap; margin:1.6em 0 0 }
 .crm-hero-actions .hb-solid,
+.crm-hero-actions .hb-out,
 .crm-hero-actions .hb-ghost{
   display:inline-flex; align-items:center; gap:8px;
   font-family:"Archivo",sans-serif; font-size:.82rem; font-weight:600;
   padding:10px 18px; border-radius:9px; text-decoration:none; border:1.5px solid var(--pl-tinta);
 }
 .crm-hero-actions .hb-solid{ background:var(--pl-tinta); color:var(--pl-papel) }
+.crm-hero-actions .hb-out,
 .crm-hero-actions .hb-ghost{ background:none; color:var(--pl-tinta) }
 .crm-hero-actions .hb-solid:hover{ background:var(--pl-azul); border-color:var(--pl-azul) }
+.crm-hero-actions .hb-out:hover,
 .crm-hero-actions .hb-ghost:hover{ background:var(--pl-tinta); color:var(--pl-papel) }
 /* um SVG sem tamanho ocupa o que houver: foi isto que pôs o ícone a
    encher a página quando as classes do CSS deixaram de bater. */
@@ -861,26 +830,6 @@ figure.crm-video figcaption{ margin-top:.5rem }
 .md-search__icon{ width:17px; height:17px }
 .md-search__options{ top:2px }
 
-/* 3. O hover do menu ainda era o do desenho escuro: fundo transparente
-      claro e texto BRANCO, que sobre papel desaparece. E os titulos de
-      seccao passam a ter a cor do resto, com peso a fazer a divisao -
-      um cinza mais claro nao e' uma hierarquia, e' um texto apagado. */
-@media screen and (min-width:76.25em){
-  .md-sidebar--primary .md-nav__link:hover,
-  .md-sidebar--primary .md-nav__link:focus{
-    background:rgba(23,20,18,.05) !important;
-    color:var(--pl-tinta) !important;
-  }
-  .md-sidebar--primary .md-nav__item--section > .md-nav__link,
-  .md-sidebar--primary .md-nav__title{
-    color:var(--pl-tinta) !important; font-weight:700 !important;
-    opacity:.75; margin-top:1.1em;
-  }
-  .md-sidebar--primary .md-nav__item--section > .md-nav__link:hover{
-    background:none !important; opacity:1;
-  }
-}
-
 /* 4. O rodape estava a 16px, do tamanho do corpo do texto, e em serif -
       parecia mais conteudo em vez do fim da pagina. */
 .md-footer-meta{ font-size:13px }
@@ -896,6 +845,21 @@ figure.crm-video figcaption{ margin-top:.5rem }
 /* a navegacao anterior/seguinte tambem vinha do tamanho do corpo */
 .md-footer__title{ font-size:15px; line-height:1.4 }
 .md-footer__direction{ font-size:11px; opacity:.6 }
+/* o 'Created by' ficou em .72rem enquanto o resto do rodape passou a px:
+   com o corpo a 125% isso da 14.4px ao lado de 12.5px, e le-se como duas
+   coisas coladas. O rodape inteiro e' cromo, nao e' prosa: vai a Archivo. */
+.md-copyright .made-by,
+.md-copyright .made-by span{
+  font-family:"Archivo", system-ui, sans-serif;
+  font-size:13px; font-weight:600; letter-spacing:0;
+}
+.md-copyright .made-by svg{ width:13px; height:13px }
+.md-footer__title,
+.md-footer__direction,
+.md-footer__link .md-ellipsis{
+  font-family:"Archivo", system-ui, sans-serif;
+}
+.md-footer__direction{ letter-spacing:.06em; text-transform:uppercase; font-weight:700 }
 
 /* o botão flutuante "voltar ao topo" ficou de fora das regras de controlo
    e herdou a serif do corpo do texto - num botão não se lê */
