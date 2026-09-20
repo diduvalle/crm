@@ -10,13 +10,27 @@ The platform can send emails **for real** (proposals, submission notices) or in 
 - The only thing you manage is the **mode**: turn **“Enable real sending”** on/off and click **Save configuration**.
 - **Send test** sends a real email so you can confirm.
 
-!!! info "Email identity"
-    Emails go out under the name **CRM** and replies go to the entity's email. The visible sender address is the one configured in the platform's email account.
+!!! info "Who appears as the sender depends on the email"
+    There are two cases, and they are worth keeping apart:
 
-## Branding & Appearance (white-label)
+    - Emails the **CRM sends to clients** (proposals, campaigns) go out under the **entity name** set in *Settings → Entity*, and replies go to **that entity's email**. In a class, that is the **fictional company of whoever is working** - which is the point, because the exercise is selling on its behalf.
+    - **Platform notices** (invitation, password reset, submission notice) go out under the **school's name**.
 
-Lets you replicate the CRM for another entity:
+    The visible sender address is always the platform's email account, which does not change. That is why a client may see *"external sender"*: the name is the entity's, the address belongs to the sending service.
 
-- **Name**, **primary colour** (automatically derives the whole palette), **logo** and **login background**.
-- **Apply branding** recolours the app live; **Reset to default** returns to the original green.
-- The branding **travels in the JSON Export** - you replicate the environment in another use just with import + changing name/colour/logo.
+## Branding & Appearance
+
+Sets the **name**, the **primary colour** (which derives the whole palette), the **logo** and the **sign-in background**.
+
+!!! warning "Inside a school, the branding is not yours"
+    If you are in a school space (`crm.cr0x.org/school`), the **name**, the **logo** and the **colour** come from that school's configuration and **override whatever you set here**. The colour field tells you where it comes from - *"set in \<school\>"*.
+
+    What stays yours is the **sign-in background**, and the button that **resets** it to the platform's.
+
+    This is deliberate: a school's branding has to be the same across all of its classes, and cannot depend on each trainer remembering to repeat it.
+
+- **Reset to default** returns to the platform identity - **blue**, with no custom logo. In a school space, the school's branding takes over again right after.
+- The branding **travels in the JSON Export** - handy for moving an environment from one place to another.
+
+!!! note "Outside a school"
+    Opened at `crm.cr0x.org` with no space, the app uses the platform's neutral branding and these fields do rule. That is the case for anyone trying the platform without being tied to an institution.

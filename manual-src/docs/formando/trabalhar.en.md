@@ -10,16 +10,29 @@ Your workspace has several **modules**, in the sidebar. Here's what each one doe
 - **Products** - catalogue (family → subfamily → item).
 - **Proposals** - pipeline in **Kanban**; export each proposal as a **PDF A4**.
 - **Calendar** - calendar and tasks.
+- **Templates** - how the proposal PDF looks, assembled from blocks.
+
+## Customer service
+
+- **Helpdesk** - support requests end to end: deadlines (SLA) and satisfaction.
+- **Retention** - cancelled contracts, win-back attempts and *churn*.
 
 ## Marketing & Analysis
 
 - **Campaigns** - marketing by segment (with a per-persona generator).
 - **Email** - compose and track emails (opens/clicks).
 - **Analytics** - funnel, conversion, CAC, LTV, *lead scoring*.
+- **Decision** - what to do next, scenario simulation and forecasting.
 
 ## Compliance
 
 - **GDPR** - consents, data subject requests, RoPA, breaches. See **[GDPR & Pedagogy](../rgpd/index.md)**.
+
+## System
+
+- **Communication** - email templates, send history and automations.
+- **Alerts** - what needs attention: deadlines, stalled proposals, unanswered requests.
+- **Settings** - the configuration. In a class, only the trainer goes in there.
 
 ## Is my work safe?
 

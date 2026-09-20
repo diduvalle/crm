@@ -7,7 +7,7 @@
 <meta name="description" content="Plataforma pedagógica de CRM e Proteção de Dados (RGPD).">
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="theme-color" content="#006B3C">
+<meta name="theme-color" content="#0078bf">
 <!-- Open Graph (WhatsApp, Messenger, Facebook, LinkedIn) -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CRM">
@@ -960,20 +960,19 @@ const I18N_EN = {
   'Bem-vindo':'Welcome','Inicie sessão para continuar.':'Sign in to continue.','Utilizador':'Username','Palavra-passe':'Password',
   'o seu utilizador':'your username','Portal do Titular (RGPD) →':'Data Subject Portal (GDPR) →',
   /* --- Ecrã de login (PT→EN) --- */
-  'Indique o número da sua turma para entrar.':'Enter your class number to sign in.',
-  'Número da turma':'Class number','ou':'or','Sou formador - criar nova turma':"I'm a trainer - create a new class",
+  'Indique o código da sua turma para entrar.':'Enter your class code to sign in.',
+  'Código da turma':'Class code','ou':'or',
   'Recentes neste dispositivo':'Recent on this device','Inicie sessão na sua turma.':'Sign in to your class.',
   'Esqueci-me da palavra-passe':'Forgot my password','Portal do Titular':'Data Subject Portal','trocar':'switch',
   'Criar nova turma':'Create a new class',
   'Email institucional *':'Institutional email *','Nome *':'First name *','Apelido':'Surname',
-  'Número da turma *':'Class number *','Nome da turma (opcional)':'Class name (optional)',
+  'Código da turma *':'Class code *','Nome da turma (opcional)':'Class name (optional)',
   'Utilizador *':'Username *','Palavra-passe *':'Password *','Criar turma e entrar':'Create class and enter',
   '← Voltar ao início de sessão':'← Back to sign in','Suporte':'Support',
   'Recuperar palavra-passe':'Reset password','Para formadores. Use o seu código de recuperação.':'For trainers. Use your recovery code.',
   'Código de recuperação':'Recovery code','Nova palavra-passe':'New password','Redefinir e entrar':'Reset and enter',
   'Aviso legal':'Legal notice','Plataforma de Formação':'Training Platform',
   'Relação com o Cliente, na prática.':'Customer Relationship, in practice.',
-  'Ambiente pedagógico das UFCD 10868 - CRM Analytics e 10870 - Administração de CRM.':'Learning environment for the UFCD 10868 - CRM Analytics and 10870 - CRM Administration courses.',
   // Campos / etiquetas frequentes
   'Nome':'Name','Apelido':'Surname','Email':'Email','Telefone':'Phone','Empresa':'Company','Cidade':'City','Região':'Region',
   'Estado':'Status','Segmento':'Segment','Origem':'Source','Notas':'Notes','Papel':'Role','Data':'Date','Total':'Total',
@@ -994,7 +993,7 @@ const I18N_EN = {
   // Cartões / títulos de secção mais visíveis
   'Configuração do sistema':'System configuration','Gestão de clientes':'Customer management','Catálogo':'Catalogue',
   'Pipeline comercial':'Sales pipeline','Marketing direcionado':'Targeted marketing','Templates de email':'Email templates',
-  'Grupos de Utilizadores':'User Groups','Utilizadores':'Users','Base partilhada & entregas (online)':'Shared base & submissions (online)',
+  'Grupos de Utilizadores':'User Groups','Utilizadores':'Users','Base partilhada':'Shared base',
   'Envio de email real (EmailJS)':'Real email sending (EmailJS)','Guardar':'Save','Modo real ATIVO':'Real mode ACTIVE',
   'Ativar envio real':'Enable real sending','Service ID':'Service ID','Template ID':'Template ID','Public Key':'Public Key'
 ,
@@ -1454,7 +1453,7 @@ function demoData(){
     'Formando':{modules:ALL_MOD.filter(m=>m!=='definicoes'),gestor:false,feats:['entidade','gerador','loyalty','origens','funcoes','brand']},
   };
   const propostaTemplates = [
-    {id:'pt1',nome:'Clássico',cor:'#006B3C',criadoPor:'u1',criadoEm:'2026-01-05',blocks:[
+    {id:'pt1',nome:'Clássico',cor:corBase(),criadoPor:'u1',criadoEm:'2026-01-05',blocks:[
       {id:'b1',type:'header',logo:true,contactos:true,badge:'PROPOSTA'},
       {id:'b2',type:'texto',conteudo:'Exmo(a). Sr(a). {{cliente.nome}},\n\nNa sequência do interesse demonstrado, a {{entidade.nome}} tem o prazer de apresentar a seguinte proposta dirigida à {{cliente.empresa}}.',alinhamento:'left',tamanho:'.92rem'},
       {id:'b3',type:'cliente',titulo:'Cliente'},
@@ -1479,11 +1478,11 @@ function demoData(){
     {id:'l3',nome:'Ouro',minVolume:6000,desconto:10,estado:'Ativo'},
   ];
   const templates = [
-    {id:'t1',nome:'Envio de proposta',assunto:'A sua proposta {{proposta.numero}} - {{entidade.nome}}',cor:'#006B3C',mostrarLogo:true,saudacao:'Exmo(a). Sr(a). {{cliente.nome}},',corpo:'É com muito gosto que enviamos a proposta {{proposta.numero}} - "{{proposta.titulo}}", no valor total de {{proposta.total}}.\n\nA proposta segue em anexo (PDF) e fica válida até {{proposta.validade}}. Ficamos ao dispor para qualquer esclarecimento.',botaoTexto:'Ver proposta',botaoLink:'#',assinatura:'Com os melhores cumprimentos,\nEquipa {{entidade.nome}}',criadoPor:'u1',criadoEm:'2026-01-08'},
+    {id:'t1',nome:'Envio de proposta',assunto:'A sua proposta {{proposta.numero}} - {{entidade.nome}}',cor:corBase(),mostrarLogo:true,saudacao:'Exmo(a). Sr(a). {{cliente.nome}},',corpo:'É com muito gosto que enviamos a proposta {{proposta.numero}} - "{{proposta.titulo}}", no valor total de {{proposta.total}}.\n\nA proposta segue em anexo (PDF) e fica válida até {{proposta.validade}}. Ficamos ao dispor para qualquer esclarecimento.',botaoTexto:'Ver proposta',botaoLink:'#',assinatura:'Com os melhores cumprimentos,\nEquipa {{entidade.nome}}',criadoPor:'u1',criadoEm:'2026-01-08'},
     {id:'t2',nome:'Follow-up de proposta',assunto:'Seguimento da proposta {{proposta.numero}}',cor:'#00A651',mostrarLogo:true,saudacao:'Olá {{cliente.nome}},',corpo:'Gostaríamos de saber se teve oportunidade de analisar a proposta {{proposta.numero}}. Estamos disponíveis para esclarecer qualquer questão ou ajustar a proposta às necessidades da {{cliente.empresa}}.',botaoTexto:'Falar connosco',botaoLink:'mailto:{{entidade.email}}',assinatura:'Cumprimentos,\n{{entidade.nome}}',criadoPor:'u1',criadoEm:'2026-01-08'},
-    {id:'t3',nome:'Agradecimento (cliente ganho)',assunto:'Obrigado pela sua confiança',cor:'#006B3C',mostrarLogo:true,saudacao:'Olá {{cliente.nome}},',corpo:'Obrigado por escolher a {{entidade.nome}}! É um prazer tê-lo(a) como cliente. A nossa equipa vai acompanhar de perto a implementação.',botaoTexto:'',botaoLink:'',assinatura:'Até breve,\n{{entidade.nome}}',criadoPor:'u1',criadoEm:'2026-01-08'},
+    {id:'t3',nome:'Agradecimento (cliente ganho)',assunto:'Obrigado pela sua confiança',cor:corBase(),mostrarLogo:true,saudacao:'Olá {{cliente.nome}},',corpo:'Obrigado por escolher a {{entidade.nome}}! É um prazer tê-lo(a) como cliente. A nossa equipa vai acompanhar de perto a implementação.',botaoTexto:'',botaoLink:'',assinatura:'Até breve,\n{{entidade.nome}}',criadoPor:'u1',criadoEm:'2026-01-08'},
     {id:'t4',nome:'Boas-vindas (novo cliente)',assunto:'Bem-vindo(a) à {{entidade.nome}}',cor:'#00A651',mostrarLogo:true,saudacao:'Olá {{cliente.nome}},',corpo:'Seja bem-vindo(a)! Registámos os seus dados e estamos prontos para ajudar a {{cliente.empresa}}. Pode gerir as suas preferências de privacidade a qualquer momento.',botaoTexto:'Portal do Titular',botaoLink:'#portal',assinatura:'{{entidade.nome}}',criadoPor:'u1',criadoEm:'2026-01-08'},
-    {id:'t5',nome:'Confirmação de consentimento (RGPD)',assunto:'Confirmação das suas preferências de privacidade',cor:'#006B3C',mostrarLogo:true,saudacao:'Olá {{cliente.nome}},',corpo:'Confirmamos o registo das suas preferências de privacidade. Pode retirar o consentimento a qualquer momento, de forma tão simples como o deu.',botaoTexto:'Gerir consentimentos',botaoLink:'#portal',assinatura:'{{entidade.nome}}',criadoPor:'u3',criadoEm:'2026-02-01'},
+    {id:'t5',nome:'Confirmação de consentimento (RGPD)',assunto:'Confirmação das suas preferências de privacidade',cor:corBase(),mostrarLogo:true,saudacao:'Olá {{cliente.nome}},',corpo:'Confirmamos o registo das suas preferências de privacidade. Pode retirar o consentimento a qualquer momento, de forma tão simples como o deu.',botaoTexto:'Gerir consentimentos',botaoLink:'#portal',assinatura:'{{entidade.nome}}',criadoPor:'u3',criadoEm:'2026-02-01'},
   ];
   const automacoes = [
     {id:'au1',nome:'Sequência de boas-vindas',trigger:'novo-cliente',condSegmento:'Todos',estado:'Ativa',criadoPor:'u1',disparos:3,passos:[{templateId:'t4',atrasoDias:0},{templateId:'t5',atrasoDias:7}]},
@@ -1659,7 +1658,7 @@ function load(){
   (state.camposExtra||[]).forEach(c=>{ if(c.ativo==null)c.ativo=true; if(!Array.isArray(c.opcoes))c.opcoes=[]; });
   (state.automacoes||[]).forEach(a=>{ if(!a.condSegmento) a.condSegmento='Todos'; if(!Array.isArray(a.passos)) a.passos=a.templateId?[{templateId:a.templateId,atrasoDias:a.atrasoDias||0}]:[]; });
   // migrar templates de email antigos para o novo modelo
-  (state.templates||[]).forEach(t=>{ if(t.cor==null)t.cor='#006B3C'; if(t.mostrarLogo==null)t.mostrarLogo=true; if(t.saudacao==null)t.saudacao='Olá {{cliente.nome}},'; if(t.corpo==null)t.corpo=''; if(t.botaoTexto==null)t.botaoTexto=''; if(t.botaoLink==null)t.botaoLink=''; if(t.assinatura==null)t.assinatura='{{entidade.nome}}'; });
+  (state.templates||[]).forEach(t=>{ if(t.cor==null)t.cor=corBase(); if(t.mostrarLogo==null)t.mostrarLogo=true; if(t.saudacao==null)t.saudacao='Olá {{cliente.nome}},'; if(t.corpo==null)t.corpo=''; if(t.botaoTexto==null)t.botaoTexto=''; if(t.botaoLink==null)t.botaoLink=''; if(t.assinatura==null)t.assinatura='{{entidade.nome}}'; });
   (state.propostas||[]).forEach(p=>{ if(!p.criadoPor)p.criadoPor=null; if(!p.alteradoEm)p.alteradoEm=p.criada; });
   // dados antigos (pré-login) sem credenciais → repor contas demo (mantém clientes/propostas/etc.)
   if(!Array.isArray(state.utilizadores) || !state.utilizadores.length || state.utilizadores.some(u=>!u.username||!u.password)){
@@ -1785,7 +1784,7 @@ function mrrEmRisco(){ return retEmRisco().reduce((s,r)=>s+(+r.mrr||0),0); }
 function mrrChurn(){ return (state.retencoes||[]).filter(r=>r.estado==='Cancelado'&&!r.recuperado).reduce((s,r)=>s+(+r.mrr||0),0); }
 function saveRate(){ const fechados=(state.retencoes||[]).filter(r=>['Retido','Cancelado'].includes(r.estado)); if(!fechados.length) return null; const ret=fechados.filter(r=>r.estado==='Retido').length; return Math.round(ret/fechados.length*100); }
 const clientValue = id => state.propostas.filter(p=>p.clienteId===id&&p.estado==='Ganha').reduce((s,p)=>s+propTotal(p),0);
-// volumes p/ fidelização: TCV líquido (sem desconto) — evita o ciclo desconto↔loyalty
+// volumes p/ fidelização: TCV líquido (sem desconto) - evita o ciclo desconto↔loyalty
 const empVolume = id => state.propostas.filter(p=>p.empresaId===id&&p.estado==='Ganha').reduce((s,p)=>s+proposalCalc(p).sub,0);
 const particularVolume = id => state.propostas.filter(p=>p.clienteId===id&&!p.empresaId&&p.estado==='Ganha').reduce((s,p)=>s+proposalCalc(p).sub,0);
 function recalcLoyalty(){
@@ -2178,7 +2177,7 @@ function espacoArquivar(el){
    Sete campos, e o uiPrompt desta app só aceita um - por isso o formulário
    abre dentro do próprio cartão, em vez de se inventar um diálogo novo. */
 const TURMA_CAMPOS = [
-  ['codigo','Número da turma'], ['nome','Nome da turma'],
+  ['codigo','Código da turma'], ['nome','Nome da turma'],
   ['fnome','Nome do formador'], ['fapelido','Apelido'],
   ['femail','Email do formador'], ['user','Utilizador'], ['pass','Password inicial'],
 ];
@@ -4813,7 +4812,7 @@ views.analytics = () => {
   <div class="split eq">
     <div class="card card-pad">
       <div class="section-head" style="margin-bottom:16px"><div><h3>Funil de aquisição ${infoTip('leadfunil')}</h3><div class="sub">Ciclo de vida das <strong>empresas</strong> (Lead → Cliente)${act?' · criadas no período':''}</div></div></div>
-      ${(()=>{ const al=accountList().filter(a=>!act||inDateRange(a.criado,r.from,r.to)); const ff=['Lead','MQL','SQL','Cliente'].map(f=>({f,v:al.filter(a=>a.fase===f).length})); const fm=Math.max(...ff.map(x=>x.v),1); const cores={Lead:'#8dd3a6',MQL:'#3cba6f',SQL:'#00A651',Cliente:'#006B3C'}; return al.length?`<div class="funnel">${ff.map((x,i)=>{const w=Math.max(8,x.v/fm*100);const cv=i>0&&ff[i-1].v?Math.round(x.v/ff[i-1].v*100):100;return `<div class="funnel-row"><div class="funnel-bar" style="width:${w}%;background:${cores[x.f]}">${x.f} · ${x.v}</div><span class="funnel-meta">${i>0?cv+'%':''}</span></div>`;}).join('')}</div><div class="callout info" style="margin-top:16px">${ic('alert',16)}<div class="ctxt"><strong>Qualificar ${infoTip('fase')}:</strong> a empresa avança Lead → MQL (uma pessoa demonstra interesse) → SQL (oportunidade real) → Cliente.</div></div>`:empty('Sem contas no período'); })()}
+      ${(()=>{ const al=accountList().filter(a=>!act||inDateRange(a.criado,r.from,r.to)); const ff=['Lead','MQL','SQL','Cliente'].map(f=>({f,v:al.filter(a=>a.fase===f).length})); const fm=Math.max(...ff.map(x=>x.v),1); const cores={Lead:mixHex(corBase(),'#ffffff',.28),MQL:mixHex(corBase(),'#ffffff',.52),SQL:mixHex(corBase(),'#ffffff',.76),Cliente:corBase()}; return al.length?`<div class="funnel">${ff.map((x,i)=>{const w=Math.max(8,x.v/fm*100);const cv=i>0&&ff[i-1].v?Math.round(x.v/ff[i-1].v*100):100;return `<div class="funnel-row"><div class="funnel-bar" style="width:${w}%;background:${cores[x.f]}">${x.f} · ${x.v}</div><span class="funnel-meta">${i>0?cv+'%':''}</span></div>`;}).join('')}</div><div class="callout info" style="margin-top:16px">${ic('alert',16)}<div class="ctxt"><strong>Qualificar ${infoTip('fase')}:</strong> a empresa avança Lead → MQL (uma pessoa demonstra interesse) → SQL (oportunidade real) → Cliente.</div></div>`:empty('Sem contas no período'); })()}
     </div>
     <div class="card card-pad">
       <div class="section-head" style="margin-bottom:14px"><div><h3>Aquisição por origem ${infoTip('origem')}</h3><div class="sub">Que canal traz melhores clientes (ROI)</div></div></div>
@@ -5068,7 +5067,7 @@ function currentSigHTML(cliente,proposta){ const u=currentUser(); if(!hasSignatu
 function sigHtmlToText(html){ if(!html) return ''; return html.replace(/<br\s*\/?>/gi,'\n').replace(/<\/(div|p|h[1-6])>/gi,'\n').replace(/<img[^>]*>/gi,'').replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\n{3,}/g,'\n\n').trim(); }
 function sigInsertImage(input){ const f=input.files&&input.files[0]; if(!f) return; const r=new FileReader(); r.onload=ev=>{ const im=new Image(); im.onload=()=>{ const max=240; let w=im.width,h=im.height; if(w>max){ h=Math.round(h*max/w); w=max; } const cv=document.createElement('canvas'); cv.width=w; cv.height=h; cv.getContext('2d').drawImage(im,0,0,w,h); const ed=$('#sigEditor'); if(ed){ const img=document.createElement('img'); img.src=cv.toDataURL('image/png'); img.style.maxWidth='240px'; ed.appendChild(img); ed.appendChild(document.createElement('br')); } }; im.src=ev.target.result; }; r.readAsDataURL(f); input.value=''; }
 function emailHTML(tpl, cliente, proposta, sigHTML){
-  const cor=tpl.cor||'#006B3C'; const nl=x=>esc(mergeCtx(x,cliente,proposta)).replace(/\n/g,'<br>');
+  const cor=tpl.cor||corBase(); const nl=x=>esc(mergeCtx(x,cliente,proposta)).replace(/\n/g,'<br>');
   const logo=tpl.mostrarLogo!==false?`<img src="${logoSrc()}" style="height:32px;margin-bottom:12px" onerror="this.style.display='none'">`:'';
   const btn=tpl.botaoTexto?`<div style="margin:18px 0"><a href="${esc(mergeCtx(tpl.botaoLink||'#',cliente,proposta))}" style="background:${cor};color:#fff;text-decoration:none;padding:11px 22px;border-radius:8px;font-weight:700;display:inline-block">${esc(mergeCtx(tpl.botaoTexto,cliente,proposta))}</a></div>`:'';
   const anexo=proposta?`<div style="margin-top:16px;padding:10px 14px;background:#f3faf6;border:1px solid #e2eae5;border-radius:8px;font-size:13px;color:#15302a">📎 ${esc(proposta.numero)}.pdf</div>`:'';
@@ -5144,7 +5143,7 @@ function formInv(){ const els=document.querySelectorAll('#modalForm [data-inv]')
 function invitePreviewHTML(){ const f={nome:'Maria',apelido:'Silva',username:'1234567',email:'1234567@exemplo.pt'};
   const t=buildInviteTpl(f,genFormandoPwd(f.email,f.nome,f.apelido,f.username));
   return `<div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden">
-    <div style="background:${esc(t.cor||'#006B3C')};height:6px"></div>
+    <div style="background:${esc(t.cor||corBase())};height:6px"></div>
     <div style="padding:14px 16px"><div style="font-size:.72rem;color:var(--muted);margin-bottom:8px">Assunto: <strong style="color:var(--text)">${esc(t.assunto)}</strong></div>
     <pre style="white-space:pre-wrap;font-family:inherit;font-size:.85rem;line-height:1.6;color:var(--text);margin:0">${esc(inviteBodyText(t))}</pre></div></div>`; }
 function openInviteEditor(){ const t=inviteTpl(); editing={type:'__invite'};
@@ -5160,7 +5159,7 @@ function openInviteEditor(){ const t=inviteTpl(); editing={type:'__invite'};
         <div class="field"><label>Corpo</label><textarea data-inv="corpo" rows="7">${esc(t.corpo)}</textarea></div>
         <div class="field"><label>Texto do botão</label><input data-inv="botaoTexto" value="${esc(t.botaoTexto)}"></div>
         <div class="field"><label>Assinatura</label><textarea data-inv="assinatura" rows="2">${esc(t.assinatura)}</textarea></div>
-        <div class="field" style="max-width:160px"><label>Cor</label><input type="color" data-inv="cor" value="${esc(t.cor||'#006B3C')}" style="width:52px;height:36px;padding:2px;cursor:pointer"></div>
+        <div class="field" style="max-width:160px"><label>Cor</label><input type="color" data-inv="cor" value="${esc(t.cor||corBase())}" style="width:52px;height:36px;padding:2px;cursor:pointer"></div>
         <div><button class="btn-sec btn-sm" data-act="inv-reset">Repor predefinido</button></div>
       </div>
       <div><label style="font-size:.72rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.04em">Pré-visualização</label><div id="invPreview" style="margin-top:8px">${invitePreviewHTML()}</div></div>
@@ -5482,7 +5481,7 @@ function renderMailResults(q){
   box.innerHTML=m.length?m.map(c=>`<div class="mail-result" data-act="mail-pick" data-id="${c.id}">${avatarHTML({nome:c.nome,apelido:c.apelido},26)}<div style="flex:1;min-width:0"><strong>${esc(c.nome)} ${esc(c.apelido||'')}</strong><div class="muted" style="font-size:.72rem">${esc(c.email||'')}${c.empresa?' · '+esc(c.empresa):''}</div></div></div>`).join(''):'<div class="mail-result is-empty">Sem resultados</div>';
 }
 function applyMailTemplate(){ if(!mailDraft) return; const t=state.templates.find(x=>x.id===mailDraft.templateId); const c=mailDraft.clienteId?getC(mailDraft.clienteId):null; if(t){ mailDraft.subject=mergeCtx(t.assunto||'',c,null); mailDraft.message=mergeCtx((t.saudacao?t.saudacao+'\n\n':'')+(t.corpo||'')+(t.assinatura?'\n\n'+t.assinatura:''),c,null); } }
-function mailPreviewHTML(){ const c=mailDraft.clienteId?getC(mailDraft.clienteId):null; const synthetic={cor:'#006B3C',mostrarLogo:true,saudacao:'',corpo:mergeCtx(mailDraft.message||'',c,null),botaoTexto:'',botaoLink:'',assinatura:''}; return emailHTML(synthetic,c,null,currentSigHTML(c,null)); }
+function mailPreviewHTML(){ const c=mailDraft.clienteId?getC(mailDraft.clienteId):null; const synthetic={cor:corBase(),mostrarLogo:true,saudacao:'',corpo:mergeCtx(mailDraft.message||'',c,null),botaoTexto:'',botaoLink:'',assinatura:''}; return emailHTML(synthetic,c,null,currentSigHTML(c,null)); }
 function syncMailDraft(){ const f=$('#mailForm'); if(!f||!mailDraft) return; f.querySelectorAll('[data-mail]').forEach(el=>{ mailDraft[el.dataset.mail]=el.value; }); }
 function updateMailPreview(){ const p=$('#mailPreview'); if(p) p.innerHTML=mailPreviewHTML(); const sj=$('#mailSubjPrev'); if(sj) sj.textContent=mailDraft.subject||'(sem assunto)'; }
 function readStepHTML(e){ const o=e.aberto, k=e.clicado; return `<div class="read-steps"><span class="rs done">${ic('check',12)} Enviado</span><span class="rs ${o?'done':''}">${ic('eye',12)} ${o?'Aberto':'Não aberto'}</span><span class="rs ${k?'done':''}">${ic('trend',12)} ${k?'Clicou':'Sem clique'}</span></div>`; }
@@ -5559,7 +5558,7 @@ async function mailSend(){
 
 /* ---- editor de template de email (2 painéis) ---- */
 let emailDraft=null;
-function newEmailTemplate(){ return {id:uid('t'),nome:'',assunto:'',cor:'#006B3C',mostrarLogo:true,saudacao:'Olá {{cliente.nome}},',corpo:'',botaoTexto:'',botaoLink:'',assinatura:'Com os melhores cumprimentos,\n{{entidade.nome}}',criadoPor:(currentUser()?currentUser().id:null),criadoEm:todayISO()}; }
+function newEmailTemplate(){ return {id:uid('t'),nome:'',assunto:'',cor:corBase(),mostrarLogo:true,saudacao:'Olá {{cliente.nome}},',corpo:'',botaoTexto:'',botaoLink:'',assinatura:'Com os melhores cumprimentos,\n{{entidade.nome}}',criadoPor:(currentUser()?currentUser().id:null),criadoEm:todayISO()}; }
 function openEmailEditor(id){ emailDraft=id?clone(state.templates.find(x=>x.id===id)):newEmailTemplate(); if(currentView()!=='comunicacao'){ location.hash='#comunicacao'; setTimeout(render,0); } else render(); }
 function emailEditorHTML(){
   const d=emailDraft; const sample=state.propostas[0]; const sampleCli=sample?getC(sample.clienteId):state.clientes[0];
@@ -5898,7 +5897,7 @@ function renderEntregas(){
   const box=$('#entregasBox'); if(!box) return;
   supaListarSubmissoes().then(list=>{
     list=list||[];
-    // ordinal cronológico por formando (1ª, 2ª entrega) — cada submissão fica como linha própria, com o seu link
+    // ordinal cronológico por formando (1ª, 2ª entrega) - cada submissão fica como linha própria, com o seu link
     const asc=[...list].sort((a,b)=>String(a.criado_em).localeCompare(String(b.criado_em)));
     const ord={}, tot={}; asc.forEach(s=>{ const k=String(s.username||'').toLowerCase(); tot[k]=(tot[k]||0)+1; ord[s.id]=tot[k]; });
     const rows=list.map(s=>{ const k=String(s.username||'').toLowerCase(); return `<tr>
@@ -5920,7 +5919,7 @@ function fonteBadge(it){ const f=itemFonte(it);
   if(f==='manual') return `<span class="chip" style="background:var(--g100);color:var(--g700);font-weight:700" title="Criado manualmente pelo formando">Manual</span>`;
   if(f==='gerado') return `<span class="chip" style="background:var(--surface3);color:var(--muted)" title="Gerado pelo botão Gerador de dados de exemplo">Gerado</span>`;
   if(f==='base')   return `<span class="chip" style="background:var(--surface3);color:var(--muted2)" title="Veio nos dados de exemplo (arranque)">Base</span>`;
-  return `<span class="muted" style="font-size:.72rem" title="Origem não registada (entrega anterior a esta funcionalidade)">—</span>`; }
+  return `<span class="muted" style="font-size:.72rem" title="Origem não registada (entrega anterior a esta funcionalidade)">-</span>`; }
 /* ================== ANÁLISE DE UMA ENTREGA ==================
    A submissão traz o estado inteiro do CRM do formando. O problema nunca foi
    o que se captura - é o que se consegue LER. Isto transforma o payload num
@@ -6098,7 +6097,7 @@ function barraCob(feitas,total){
 const MAX_ITENS=25;
 function praticaHTML(x){
   const cor = x.feito ? "var(--g600)" : "var(--muted)";
-  const marca = x.feito ? ic("check",14) : "—";
+  const marca = x.feito ? ic("check",14) : "-";
   const cont = x.n ? `<span class="pill ${x.feito?"green":"grey"}" style="font-size:.62rem;flex:0 0 auto">${x.n}</span>` : "";
   const rot = `<span style="${x.feito?"":"color:var(--muted)"};flex:1">${esc(x.l)}</span>${cont}`;
   const cab = `<span style="color:${cor};flex:0 0 auto;line-height:1">${marca}</span>`;
@@ -6259,7 +6258,7 @@ function renderRevisao(p,nome){
     <h3 style="font-size:.95rem;margin:6px 0 8px">Propostas (${prop.length}) <span class="muted" style="font-weight:500;font-size:.78rem">- "PDF" regenera o documento a partir do trabalho entregue</span></h3>
     <div class="table-wrap" style="max-height:210px;overflow:auto"><table><thead><tr><th>Número</th><th>Título</th><th>Cliente</th><th>Estado</th><th>Origem</th><th></th></tr></thead><tbody>${prop.slice(0,150).map(pr=>`<tr><td>${esc(pr.numero||'-')}</td><td>${esc(pr.titulo||'-')}</td><td>${esc(cn(pr.clienteId))}</td><td>${esc(pr.estado||'-')}</td><td>${fonteBadge(pr)}</td><td class="t-right"><button class="btn-sec btn-xs" type="button" data-act="entrega-prop-pdf" data-pid="${esc(pr.id||'')}">${ic('download',12)} PDF</button></td></tr>`).join('')||`<tr><td colspan="6" class="muted" style="padding:10px">Sem propostas.</td></tr>`}</tbody></table></div>
     <h3 style="font-size:.95rem;margin:14px 0 8px">Modelos de proposta (${mods.length}) <span class="muted" style="font-weight:500;font-size:.78rem">- construídos no separador Modelos</span></h3>
-    <div class="table-wrap" style="max-height:210px;overflow:auto"><table><thead><tr><th>Nome</th><th>Cor</th><th>Blocos</th><th>Criado</th><th>Origem</th></tr></thead><tbody>${mods.slice(0,150).map(m=>`<tr><td>${esc(m.nome||'-')}</td><td><span style="display:inline-block;width:13px;height:13px;border-radius:3px;vertical-align:middle;border:1px solid var(--border);background:${esc(m.cor||'#006B3C')}"></span> <span class="muted" style="font-size:.78rem">${esc(m.cor||'-')}</span></td><td>${(m.blocks||[]).length}</td><td>${esc(dPT(m.criadoEm))}</td><td>${fonteBadge(m)}</td></tr>`).join('')||`<tr><td colspan="5" class="muted" style="padding:10px">Sem modelos criados.</td></tr>`}</tbody></table></div>
+    <div class="table-wrap" style="max-height:210px;overflow:auto"><table><thead><tr><th>Nome</th><th>Cor</th><th>Blocos</th><th>Criado</th><th>Origem</th></tr></thead><tbody>${mods.slice(0,150).map(m=>`<tr><td>${esc(m.nome||'-')}</td><td><span style="display:inline-block;width:13px;height:13px;border-radius:3px;vertical-align:middle;border:1px solid var(--border);background:${esc(m.cor||corBase())}"></span> <span class="muted" style="font-size:.78rem">${esc(m.cor||'-')}</span></td><td>${(m.blocks||[]).length}</td><td>${esc(dPT(m.criadoEm))}</td><td>${fonteBadge(m)}</td></tr>`).join('')||`<tr><td colspan="5" class="muted" style="padding:10px">Sem modelos criados.</td></tr>`}</tbody></table></div>
     <div class="toolbar" style="margin-top:14px"><button class="btn-sec btn-sm" type="button" data-act="entrega-baixar-atual">${ic('download',15)} Descarregar trabalho completo (.json)</button></div>`;
   $('#modalBack').classList.add('open');
 }
@@ -6672,10 +6671,9 @@ views.definicoes = () => {
     <div class="callout info" style="margin-top:14px">${ic('alert',16)}<div class="ctxt">Os exemplos são <strong>acrescentados</strong> aos dados atuais. Para guardar e reutilizar a base entre computadores/formações, use <strong>Exportar JSON</strong> (guardar) e <strong>Importar JSON</strong> (recuperar).</div></div>
   </div>
   <div class="card card-pad">
-    <div class="section-head" style="margin-bottom:14px"><div><h3>Base partilhada & entregas (online)</h3><div class="sub">A app carrega automaticamente a base online; os formandos entregam o trabalho na pasta indicada (ex.: OneDrive/Teams).</div></div></div>
+    <div class="section-head" style="margin-bottom:14px"><div><h3>Base partilhada</h3><div class="sub">Um ficheiro de arranque comum, carregado automaticamente. A entrega do trabalho não passa por aqui: faz-se pelo botão <strong>Submeter o meu trabalho</strong> e chega a <strong>Entrega &amp; validação</strong>.</div></div></div>
     <div class="form-grid">
       <div class="field"><label>Ficheiro da base (URL ou nome)</label><input data-share="baseURL" value="${esc(s.baseURL||'')}" placeholder="base.json"><span class="hint">Deixe "base.json" se estiver na mesma pasta do site.</span></div>
-      <div class="field"><label>Pasta de entrega dos formandos</label><input data-share="entregaURL" value="${esc(s.entregaURL||'')}" placeholder="https://… (link da pasta OneDrive/Teams)"><span class="hint">Cole o link da pasta partilhada onde recebe os trabalhos.</span></div>
     </div>
     <div class="toolbar" style="margin-top:8px">
       <button class="btn" data-act="save-share">Guardar</button>
@@ -7108,7 +7106,7 @@ function openProfile(){
           <button type="button" class="sig-tb" data-act="sig-cmd" data-cmd="bold" onmousedown="event.preventDefault()" title="Negrito"><b>B</b></button>
           <button type="button" class="sig-tb" data-act="sig-cmd" data-cmd="italic" onmousedown="event.preventDefault()" title="Itálico"><i>I</i></button>
           <button type="button" class="sig-tb" data-act="sig-cmd" data-cmd="underline" onmousedown="event.preventDefault()" title="Sublinhado"><u>U</u></button>
-          <button type="button" class="sig-tb" data-act="sig-cmd" data-cmd="foreColor" data-val="#006B3C" onmousedown="event.preventDefault()" style="color:#006B3C" title="Verde">A</button>
+          <button type="button" class="sig-tb" data-act="sig-cmd" data-cmd="foreColor" data-val="${corBase()}" onmousedown="event.preventDefault()" style="color:${corBase()}" title="Cor da marca">A</button>
           <button type="button" class="sig-tb" data-act="sig-cmd" data-cmd="foreColor" data-val="#15302a" onmousedown="event.preventDefault()" style="color:#15302a" title="Escuro">A</button>
           <button type="button" class="sig-tb" data-act="sig-cmd" data-cmd="foreColor" data-val="#7a8c84" onmousedown="event.preventDefault()" style="color:#7a8c84" title="Cinza">A</button>
           <button type="button" class="sig-tb" data-act="sig-link" onmousedown="event.preventDefault()" title="Inserir link">${ic('link',14)}</button>
@@ -7545,13 +7543,14 @@ function printRGPDReport(){
   const dCount=checks.filter((_,i)=>state.checklistRGPD&&state.checklistRGPD[i]).length;
   const row=(c)=>`<tr>${c.map(x=>`<td>${x}</td>`).join('')}</tr>`;
   const w=window.open('','_blank');
+  const P = pdfPaleta();   /* a cor da marca, nao um verde fixo */
   w.document.write(`<!doctype html><html lang="pt-PT"><head><meta charset="UTF-8"><title>Relatório RGPD - ${esc(s.entidade)}</title>
-  <style>body{font-family:Inter,system-ui,sans-serif;color:#15302a;padding:38px;max-width:880px;margin:0 auto;font-size:13px}
-  h1{color:#006B3C;font-size:1.5rem}h2{color:#005a32;font-size:1.05rem;margin:22px 0 8px;border-bottom:2px solid #E8F5EE;padding-bottom:5px}
-  .head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #006B3C;padding-bottom:14px}
-  .muted{color:#5f746b}table{width:100%;border-collapse:collapse;margin-top:6px}th,td{padding:7px 9px;border-bottom:1px solid #dbe6df;text-align:left}th{background:#E8F5EE;color:#005a32;font-size:.78rem;text-transform:uppercase}
-  .kpis{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}.k{flex:1;min-width:120px;border:1px solid #dbe6df;border-radius:10px;padding:11px}.k b{display:block;font-size:1.4rem;color:#006B3C}.k span{font-size:.74rem;color:#5f746b;text-transform:uppercase}
-  .bar{height:9px;background:#eef4f0;border-radius:20px;overflow:hidden;margin-top:6px}.bar>i{display:block;height:100%;background:#00A651}
+  <style>body{font-family:Inter,system-ui,sans-serif;color:${P.tinta};padding:38px;max-width:880px;margin:0 auto;font-size:13px}
+  h1{color:${P.forte};font-size:1.5rem}h2{color:${P.escuro};font-size:1.05rem;margin:22px 0 8px;border-bottom:2px solid ${P.chapa};padding-bottom:5px}
+  .head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid ${P.forte};padding-bottom:14px}
+  .muted{color:${P.fraco}}table{width:100%;border-collapse:collapse;margin-top:6px}th,td{padding:7px 9px;border-bottom:1px solid ${P.linha};text-align:left}th{background:${P.chapa};color:${P.escuro};font-size:.78rem;text-transform:uppercase}
+  .kpis{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}.k{flex:1;min-width:120px;border:1px solid ${P.linha};border-radius:10px;padding:11px}.k b{display:block;font-size:1.4rem;color:${P.forte}}.k span{font-size:.74rem;color:${P.fraco};text-transform:uppercase}
+  .bar{height:9px;background:${P.fundo};border-radius:20px;overflow:hidden;margin-top:6px}.bar>i{display:block;height:100%;background:${P.forte}}
   .warn{color:#dc2626;font-weight:700}@media print{body{padding:0}}</style></head><body>
   <div class="head"><div><h1>Relatório de Conformidade RGPD</h1><div class="muted">${esc(s.entidade)} · NIF ${esc(s.nif)}</div><div class="muted">Encarregado de Proteção de Dados: ${esc(s.epd||'-')}</div></div>
   <div style="text-align:right" class="muted">Emitido em<br><strong style="color:#15302a">${dPT(todayISO())}</strong>${act?`<br><span style="font-size:.8rem">Período: ${rg.from?dPT(rg.from):'início'} a ${rg.to?dPT(rg.to):'hoje'}</span>`:''}</div></div>
@@ -7599,15 +7598,16 @@ function printAnalyticsReport(){
   const vc=(cur,pv,inv)=>{ if(pv==null) return ''; const d=pv===0?(cur>0?100:0):(cur-pv)/pv*100; const col=Math.abs(d)<0.05?'#5f746b':((inv?d<0:d>0)?'#0f9d58':'#dc2626'); return `<span style="color:${col};font-weight:700;font-size:.8rem"> ${d>0?'▲':d<0?'▼':'•'} ${Math.abs(d).toLocaleString('pt-PT',{maximumFractionDigits:1})}%</span>`; };
   const funnel=[['Leads / Criadas',props.length],['Enviadas',props.filter(p=>['Enviada','Negociação','Ganha','Perdida'].includes(p.estado)).length],['Negociação',props.filter(p=>['Negociação','Ganha'].includes(p.estado)).length],['Ganhas',ganhas.length]];
   const fmax=Math.max(...funnel.map(f=>f[1]),1);
+  const P = pdfPaleta();   /* a cor da marca, nao um verde fixo */
   openPrint(`<!doctype html><html lang="pt-PT"><head><meta charset="UTF-8"><title>Relatório Analytics - ${esc(s.entidade)}</title>
-  <style>body{font-family:Inter,system-ui,sans-serif;color:#15302a;padding:38px;max-width:880px;margin:0 auto;font-size:13px}
-  h1{color:#006B3C;font-size:1.5rem}h2{color:#005a32;font-size:1.05rem;margin:22px 0 8px;border-bottom:2px solid #E8F5EE;padding-bottom:5px}
-  .head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #006B3C;padding-bottom:14px}.muted{color:#5f746b}
-  .kpis{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}.k{flex:1;min-width:130px;border:1px solid #dbe6df;border-radius:10px;padding:12px}.k b{display:block;font-size:1.4rem;color:#006B3C}.k span{font-size:.74rem;color:#5f746b;text-transform:uppercase}
-  table{width:100%;border-collapse:collapse;margin-top:6px}th,td{padding:7px 9px;border-bottom:1px solid #dbe6df;text-align:left}th{background:#E8F5EE;color:#005a32;font-size:.76rem;text-transform:uppercase}
-  .fbar{height:24px;background:#006B3C;border-radius:5px;color:#fff;display:flex;align-items:center;padding:0 10px;font-size:.8rem;font-weight:700;margin:4px 0}
+  <style>body{font-family:Inter,system-ui,sans-serif;color:${P.tinta};padding:38px;max-width:880px;margin:0 auto;font-size:13px}
+  h1{color:${P.forte};font-size:1.5rem}h2{color:${P.escuro};font-size:1.05rem;margin:22px 0 8px;border-bottom:2px solid ${P.chapa};padding-bottom:5px}
+  .head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid ${P.forte};padding-bottom:14px}.muted{color:${P.fraco}}
+  .kpis{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}.k{flex:1;min-width:130px;border:1px solid ${P.linha};border-radius:10px;padding:12px}.k b{display:block;font-size:1.4rem;color:${P.forte}}.k span{font-size:.74rem;color:${P.fraco};text-transform:uppercase}
+  table{width:100%;border-collapse:collapse;margin-top:6px}th,td{padding:7px 9px;border-bottom:1px solid ${P.linha};text-align:left}th{background:${P.chapa};color:${P.escuro};font-size:.76rem;text-transform:uppercase}
+  .fbar{height:24px;background:${P.forte};border-radius:5px;color:#fff;display:flex;align-items:center;padding:0 10px;font-size:.8rem;font-weight:700;margin:4px 0}
   @media print{body{padding:0}}</style></head><body>
-  <div class="head"><div><h1>Relatório de Analytics</h1><div class="muted">${esc(s.entidade)} · UFCD 10868 - CRM Analytics</div></div>
+  <div class="head"><div><h1>Relatório de Analytics</h1><div class="muted">${esc(s.entidade)} · Analytics de CRM</div></div>
   <div style="text-align:right" class="muted">Emitido em<br><strong style="color:#15302a">${dPT(todayISO())}</strong>${act?`<br><span style="font-size:.8rem">Período: ${r.from?dPT(r.from):'início'} a ${r.to?dPT(r.to):'hoje'}</span>`:'<br><span style="font-size:.8rem">Todos os dados</span>'}${prev?`<br><span style="font-size:.78rem">vs ${prevLabel}</span>`:''}</div></div>
   <div class="kpis">
     <div class="k"><b>${fmt(receita)}${prev?vc(receita,prev.receita):''}</b><span>Receita ganha</span></div>
@@ -7993,6 +7993,25 @@ function brandName(){ const b=brandCfg(); return (b.nome&&b.nome.trim())||'CRM';
 /* A cor que a app está MESMO a usar, e de onde ela vem. O campo das
    Definições mostrava o que estava guardado no browser, e por isso ficava
    vazio quando a cor vinha da escola - enquanto a app ia toda pintada. */
+/* A paleta dos relatorios em PDF. Vinha escrita a verde do IEFP em tres
+   folhas de estilo diferentes, e uma escola recebia os documentos com a
+   cor de outra instituicao. Agora deriva da marca; as neutras ficam
+   neutras, porque um cinzento com tinta verde ao lado de um azul e pior
+   do que um cinzento sem tinta nenhuma. */
+function mixHex(a,b,p){ const h=x=>[1,3,5].map(i=>parseInt(x.slice(i,i+2),16));
+  const A=h(a[0]==='#'?a:'#'+a), B=h(b[0]==='#'?b:'#'+b);
+  return '#'+A.map((v,i)=>Math.round(v*p+B[i]*(1-p)).toString(16).padStart(2,'0')).join(''); }
+/* A cor por omissao de um modelo de proposta ou de email. Era o verde do
+   IEFP: um formando de outra escola comecava com a cor de uma instituicao
+   que nao e a dele. O try existe porque isto tambem corre no arranque,
+   antes de o estado existir. */
+function corBase(){ try{ return brandCorEfetiva().cor; }catch(e){ return '#0078bf'; } }
+function pdfPaleta(){
+  const m = brandCorEfetiva().cor;
+  return { forte:m, escuro:mixHex(m,'#000000',.78), chapa:mixHex(m,'#ffffff',.09),
+           tinta:'#1b1f24', fraco:'#5c6672', linha:'#dde2e8', fundo:'#eef1f4' };
+}
+
 function brandCorEfetiva(){
   const b = brandCfg();
   if (b.cor) return { cor: b.cor[0]==='#' ? b.cor : '#'+b.cor,
@@ -8804,22 +8823,23 @@ function dsarReportHTML(id){
   const linha=(k,v)=>`<tr><th>${esc(k)}</th><td>${v==null||v===''?'<i>(não preenchido)</i>':esc(String(v))}</td></tr>`;
   const sec=(n,t)=>`<h2><span class="n">${n}</span>${esc(t)}</h2>`;
   const nada='<p class="vazio">Não existem registos desta natureza.</p>';
+  const P = pdfPaleta();   /* a cor da marca, nao um verde fixo */
   return `<!doctype html><html lang="pt-PT"><head><meta charset="UTF-8"><title>Relatório de acesso - ${esc(c.nome)} ${esc(c.apelido||'')}</title><style>
     @page{size:A4;margin:16mm 15mm 18mm}
     *{box-sizing:border-box} html,body{margin:0;padding:0}
-    body{font-family:Inter,system-ui,sans-serif;color:#15302a;font-size:12px;line-height:1.55;background:#eef2f0}
+    body{font-family:Inter,system-ui,sans-serif;color:${P.tinta};font-size:12px;line-height:1.55;background:${P.fundo}}
     .doc{background:#fff;width:794px;max-width:100%;margin:20px auto;padding:38px 42px 56px;box-shadow:0 10px 40px rgba(0,0,0,.13)}
-    .top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #00A651;padding-bottom:12px;margin-bottom:18px}
-    .top h1{margin:0;font-size:19px;color:#006B3C} .top .sub{font-size:11px;color:#5f746b;margin-top:3px}
-    .top .meta{text-align:right;font-size:10.5px;color:#5f746b}
-    h2{font-size:13px;color:#006B3C;margin:18px 0 7px;display:flex;align-items:center;gap:7px}
-    h2 .n{display:inline-grid;place-items:center;width:19px;height:19px;border-radius:5px;background:#00A651;color:#fff;font-size:11px}
+    .top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid ${P.forte};padding-bottom:12px;margin-bottom:18px}
+    .top h1{margin:0;font-size:19px;color:${P.forte}} .top .sub{font-size:11px;color:${P.fraco};margin-top:3px}
+    .top .meta{text-align:right;font-size:10.5px;color:${P.fraco}}
+    h2{font-size:13px;color:${P.forte};margin:18px 0 7px;display:flex;align-items:center;gap:7px}
+    h2 .n{display:inline-grid;place-items:center;width:19px;height:19px;border-radius:5px;background:${P.forte};color:#fff;font-size:11px}
     table{width:100%;border-collapse:collapse;margin:6px 0 4px} tr,table{page-break-inside:avoid}
-    th,td{border:1px solid #dbe6df;padding:5px 8px;text-align:left;vertical-align:top}
-    th{background:#f1f8f4;font-weight:700;width:32%;color:#15302a}
-    .vazio{color:#6b7c73;font-style:italic;margin:4px 0}
-    .aviso{background:#f1f8f4;border-left:3px solid #00A651;padding:9px 12px;margin:8px 0;font-size:11px}
-    .foot{margin-top:22px;padding-top:10px;border-top:1px solid #dbe6df;font-size:10px;color:#5f746b}
+    th,td{border:1px solid ${P.linha};padding:5px 8px;text-align:left;vertical-align:top}
+    th{background:${P.chapa};font-weight:700;width:32%;color:${P.tinta}}
+    .vazio{color:${P.fraco};font-style:italic;margin:4px 0}
+    .aviso{background:${P.chapa};border-left:3px solid ${P.forte};padding:9px 12px;margin:8px 0;font-size:11px}
+    .foot{margin-top:22px;padding-top:10px;border-top:1px solid ${P.linha};font-size:10px;color:${P.fraco}}
     ul{margin:5px 0 5px 18px;padding:0} li{margin:2px 0}
     @media print{body{background:#fff}.doc{width:auto;margin:0;padding:0;box-shadow:none}}
   </style></head><body><div class="doc">
@@ -9288,7 +9308,7 @@ function renderLogin(){
       <form id="loginForm" onsubmit="return false">
         <div class="field"><label>Email institucional *</label><input name="email" type="email" autocomplete="email" placeholder="email institucional"></div>
         <div class="form-grid" style="gap:12px"><div class="field"><label>Nome *</label><input name="nome" placeholder="primeiro nome"></div><div class="field"><label>Apelido</label><input name="apelido" placeholder="apelido"></div></div>
-        <div class="field"><label>Número da turma *</label><input name="codigo" placeholder="12345678" maxlength="24"></div>
+        <div class="field"><label>Código da turma *</label><input name="codigo" placeholder="crm-2026" maxlength="24" spellcheck="false"></div>
         <div class="field"><label>Nome da turma (opcional)</label><input name="nometurma" placeholder="ex.: CRM 2026 - Manhã"></div>
         <div class="form-grid" style="gap:12px"><div class="field"><label>Utilizador *</label><input name="username" autocomplete="username" placeholder="ex.: formador"></div><div class="field"><label>Palavra-passe *</label><input name="password" type="password" autocomplete="new-password" placeholder="••••••••"></div></div>
         <button type="button" class="btn login-btn" data-act="criarturma">Criar turma e entrar</button>
@@ -9317,9 +9337,9 @@ function renderLogin(){
     // Principal = HUB (sem login próprio). Entra-se por número de turma;
     // criar turma (formador); suporte (root) = escrever "root" no número.
     body=`<h2 class="login-h">Bem-vindo</h2>
-      <p class="login-sub">Indique o número da sua turma para entrar.</p>
+      <p class="login-sub">Indique o código da sua turma para entrar.</p>
       <form id="loginForm" onsubmit="return false">
-        <div class="field"><label>Número da turma</label><input name="codigo" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="ex.: 12345678"></div>
+        <div class="field"><label>Código da turma</label><input name="codigo" maxlength="24" autocomplete="off" spellcheck="false" placeholder="ex.: crm-2026"></div>
         <button type="button" class="btn login-btn" data-act="enter-turma">Entrar</button>
       </form>
       <div id="loginErr" class="login-err"></div>
@@ -9571,7 +9591,7 @@ function blockHTML(b,p,cor){
     default: return '';
   }
 }
-function blocksHTML(tpl,p){ const cor=tpl.cor||'#006B3C'; return (tpl.blocks||[]).map(b=>blockHTML(b,p,cor)).join(''); }
+function blocksHTML(tpl,p){ const cor=tpl.cor||corBase(); return (tpl.blocks||[]).map(b=>blockHTML(b,p,cor)).join(''); }
 function proposalDocHTML(tpl,p){
   return `<!doctype html><html lang="pt-PT"><head><meta charset="UTF-8"><title>${esc(p.numero||'Proposta')} - ${esc(p.titulo||'')}</title>
   <style>
@@ -9600,7 +9620,7 @@ function exemploProp(){ return state.propostas[0]||{numero:'PROP-0000',titulo:'P
 
 /* ---- editor por blocos ---- */
 let tplDraft=null, tplSel=null, lastTagEl=null, tplDragFrom=null;
-function newTemplate(){ return {id:uid('pt'),nome:'',cor:'#006B3C',criadoPor:(currentUser()?currentUser().id:null),criadoEm:todayISO(),blocks:[]}; }
+function newTemplate(){ return {id:uid('pt'),nome:'',cor:corBase(),criadoPor:(currentUser()?currentUser().id:null),criadoEm:todayISO(),blocks:[]}; }
 function openTplEditor(id){ tplDraft = id ? clone(state.propostaTemplates.find(x=>x.id===id)) : newTemplate(); tplSel = tplDraft.blocks.length?0:null; if(currentView()!=='modelos'){ location.hash='#modelos'; setTimeout(render,0); } else render(); }
 function updatePaper(){ const el=$('#tplPaper'); if(el&&tplDraft) el.innerHTML=blocksHTML(tplDraft,exemploProp()); }
 function applyBlockField(el){ if(!tplDraft) return; const i=+el.dataset.bi, f=el.dataset.bf; const b=tplDraft.blocks[i]; if(!b) return; b[f]= el.type==='checkbox'?el.checked : (el.type==='number'?Number(el.value): el.value); updatePaper(); }

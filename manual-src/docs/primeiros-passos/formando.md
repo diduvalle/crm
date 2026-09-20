@@ -4,21 +4,21 @@ Bem-vindo! Aqui está o essencial para começares.
 
 ## 1. Entrar na turma
 
-1. Abre o **link que o formador te deu** (tem o número da turma):
+1. Abre o **link que o formador te deu** (traz o endereço da escola e o código da turma):
    ```
-   https://crm.cr0x.org/?t=12345678
+   https://crm.cr0x.org/escola?t=crm-2026
    ```
 2. Escreve o teu **utilizador** e a tua **palavra-passe**.
 3. Clica **Entrar**.
 
 !!! tip "Não tens o link?"
-    No ecrã inicial podes escrever o **número da turma** no campo próprio e clicar *Entrar*. Se o número não existir, a app avisa.
+    No ecrã inicial da tua escola podes escrever o **código da turma** no campo próprio e clicar *Entrar*. Se o código não existir, a app avisa.
 
 ## 2. Conhecer o teu espaço
 
 Cada formando tem a **sua própria *sandbox*** - uma cópia do CRM só tua, com dados de exemplo já carregados. Podes criar, editar e apagar à vontade: **não afeta os colegas**.
 
-A navegação está à esquerda, por grupos (Principal, Marketing & Análise, Conformidade, Sistema).
+A navegação está à esquerda, por grupos (Principal, Serviço ao cliente, Marketing & Análise, Conformidade, Sistema).
 
 :octicons-arrow-right-24: Vê o que cada módulo faz em **[Trabalhar no CRM](../formando/trabalhar.md)**.
 

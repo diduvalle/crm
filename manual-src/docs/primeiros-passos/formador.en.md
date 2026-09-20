@@ -14,7 +14,7 @@ The class is created by the **platform administration**, not by you. You receive
 Open the address, enter the class code and sign in with your credentials.
 
 !!! warning "Keep the recovery code"
-    The **recovery code** (e.g. `A1B2-C3D4-E5F6`) is shown **only once**, to whoever created the class. It is how you recover your password if you forget it. **Write it down somewhere safe.**
+    The **recovery code** (e.g. `A1B2-C3D4-E5F6`) is generated **only once**, when the class is created, and handed to you with the rest of the credentials. It is how you recover your password if you forget it. **Keep it somewhere safe** - there is no second copy.
 
 You are the **Administrator** of your class - you and no one else.
 
@@ -29,10 +29,10 @@ Inside the class, go to **Settings → Class trainees**. You have two ways:
 
 ## 3. Share access
 
-Share the **link with the number** with the class:
+Share your **space address with the class code** with the class:
 
 ```
-https://crm.cr0x.org/?t=12345678
+https://crm.cr0x.org/escola?t=crm-2026
 ```
 
 Each trainee opens the link and signs in with **their own username and password**.

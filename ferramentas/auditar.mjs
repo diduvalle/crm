@@ -52,7 +52,7 @@ for (const alvo of ALVO) {
     const L = v => { const s = v.slice(0,3).map(n => { n = n/255; return n <= .03928 ? n/12.92 : Math.pow((n+.055)/1.055, 2.4); });
       return .2126*s[0] + .7152*s[1] + .0722*s[2]; };
 
-    const a = { escala: [], serif: [], contraste: [], caixas: [] };
+    const a = { escala: [], serif: [], contraste: [], caixas: [], colados: [] };
     const CHAO = 11, TETO = 34;
     const capa = e => !!e.closest('.crm-hero, .hero, header');   /* o titulo de capa e grande de proposito */
 
@@ -78,6 +78,25 @@ for (const alvo of ALVO) {
       }
     }
 
+    /* PEDACOS COLADOS: dentro de uma mesma linha de texto, dois tamanhos
+       ou duas familias diferentes leem-se como uma colagem. Foi assim que
+       o 'Created by Diogo du Valle' ficou a 14.4px ao lado de 12.5px. */
+    for (const cx of document.querySelectorAll('.md-copyright, .md-footer-meta__inner, .md-header__inner, .md-footer__link, nav, footer, .crm-hero-actions')) {
+      if (!vis(cx)) continue;
+      const linha = new Map();
+      for (const e of cx.querySelectorAll('*')) {
+        if (e.namespaceURI !== 'http://www.w3.org/1999/xhtml' || !vis(e) || !soTexto(e)) continue;
+        const c = getComputedStyle(e), q = e.getBoundingClientRect();
+        const y = Math.round(q.bottom / 4);                 /* mesma linha de base */
+        const k = parseFloat(c.fontSize).toFixed(1) + ' ' + c.fontFamily.split(',')[0].replace(/"/g, '');
+        if (!linha.has(y)) linha.set(y, new Map());
+        if (!linha.get(y).has(k)) linha.get(y).set(k, (e.textContent || '').trim().slice(0, 26));
+      }
+      for (const [, v] of linha) if (v.size > 1)
+        a.colados.push((cx.className || cx.tagName).toString().split(' ')[0] + '  ' +
+          [...v].map(([k, t]) => k + 'px "' + t + '"').join('  |  '));
+    }
+
     const barra = document.querySelector('.md-header');
     if (barra) { const hb = barra.getBoundingClientRect().height;
       for (const s of ['.md-search__form', '.md-header__button']) {
@@ -88,7 +107,7 @@ for (const alvo of ALVO) {
   });
   await p.close();
 
-  const nome = { escala: 'fora de escala', serif: 'serif em controlos', contraste: 'contraste fraco', caixas: 'caixas desproporcionadas' };
+  const nome = { escala: 'fora de escala', serif: 'serif em controlos', contraste: 'contraste fraco', caixas: 'caixas desproporcionadas', colados: 'tamanhos misturados na mesma linha' };
   const linhas = [];
   for (const k of Object.keys(r)) [...new Set(r[k])].forEach(x => linhas.push('   ' + nome[k] + ' · ' + x));
   total += linhas.length;

@@ -4,21 +4,21 @@ Welcome! Here are the essentials to get you started.
 
 ## 1. Enter the class
 
-1. Open the **link your trainer gave you** (it has the class number):
+1. Open the **link your trainer gave you** (it carries your school address and the class code):
    ```
-   https://crm.cr0x.org/?t=12345678
+   https://crm.cr0x.org/escola?t=crm-2026
    ```
 2. Type your **username** and your **password**.
 3. Click **Enter**.
 
 !!! tip "Don’t have the link?"
-    On the home screen you can type the **class number** in the dedicated field and click *Enter*. If the number doesn’t exist, the app warns you.
+    On your school’s home screen you can type the **class code** in the dedicated field and click *Enter*. If the code doesn’t exist, the app warns you.
 
 ## 2. Get to know your space
 
 Each trainee has **their own *sandbox*** - a copy of the CRM just for you, with sample data already loaded. You can create, edit and delete freely: **it doesn’t affect your classmates**.
 
-Navigation is on the left, grouped (Main, Marketing & Analysis, Compliance, System).
+Navigation is on the left, grouped (Main, Customer service, Marketing & Analysis, Compliance, System).
 
 :octicons-arrow-right-24: See what each module does in **[Working in the CRM](../formando/trabalhar.md)**.
 

@@ -4,10 +4,10 @@
 |---|---|
 | **Turma** | Ambiente isolado, identificado por um código (`?t=123A`). |
 | **Sandbox** | A cópia do CRM de cada formando, guardada no próprio computador. |
-| **Administrador** | O formador que cria a turma; gere acessos, entregas e definições. |
+| **Administrador** | O formador responsável pela turma; gere acessos, entregas e definições. A turma em si é criada pela administração da plataforma. |
 | **Formando** | Utilizador que trabalha na sua *sandbox* e submete o trabalho. |
 | **Entrega** | *Snapshot* do trabalho do formando, submetido ao formador (máx. 2). |
-| **Código de recuperação** | Código mostrado uma vez ao criar a turma; recupera a palavra-passe do formador. |
+| **Código de recuperação** | Código gerado uma única vez quando a turma é criada e entregue ao formador com as credenciais; recupera-lhe a palavra-passe. |
 | **Modelo de proposta** | Estrutura por blocos que define o aspeto do PDF da proposta. |
 | **Pipeline** | Conjunto de propostas por estado (Kanban): Criada → Enviada → Negociação → Ganha / Perdida. |
 | **RoPA** | Registo das Atividades de Tratamento (RGPD). |

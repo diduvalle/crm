@@ -1,9 +1,9 @@
 # FAQ - frequently asked questions
 
 ??? question "I forgot my password. What now?"
-    **Trainee:** ask the trainer to reset it (*Manage the class*). **Trainer:** use the **recovery code** you received when you created the class.
+    **Trainee:** ask the trainer to reset it (*Manage the class*). **Trainer:** use the **recovery code** handed to you with the class credentials.
 
-??? question "I entered the class number and it says it doesn't exist."
+??? question "I entered the class code and it says it doesn't exist."
     Check the class code with your trainer. If the class exists, you get in; otherwise, the app warns you to avoid mistakes.
 
 ??? question "Does my data disappear if I close the browser?"

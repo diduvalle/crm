@@ -14,7 +14,7 @@ A turma é criada pela **administração da plataforma**, não por ti. Recebes:
 Abre o endereço, indica o código da turma e entra com as tuas credenciais.
 
 !!! warning "Guarda o código de recuperação"
-    O **código de recuperação** (ex.: `A1B2-C3D4-E5F6`) é mostrado **uma única vez**, a quem criou a turma. É a forma de recuperares a palavra-passe se a esqueceres. **Anota-o num local seguro.**
+    O **código de recuperação** (ex.: `A1B2-C3D4-E5F6`) é gerado **uma única vez**, quando a turma é criada, e entregue-te com as restantes credenciais. É a forma de recuperares a palavra-passe se a esqueceres. **Guarda-o num local seguro** - não há segunda via.
 
 Ficas como **Administrador** da tua turma - só tu, mais ninguém.
 
@@ -29,10 +29,10 @@ Dentro da turma, vai a **Definições → Formandos da turma**. Tens duas vias:
 
 ## 3. Partilhar o acesso
 
-Partilha com a turma o **link com o número**:
+Partilha com a turma o **endereço do teu espaço com o código da turma**:
 
 ```
-https://crm.cr0x.org/?t=12345678
+https://crm.cr0x.org/escola?t=crm-2026
 ```
 
 Cada formando abre o link e entra com o **seu utilizador e palavra-passe**.

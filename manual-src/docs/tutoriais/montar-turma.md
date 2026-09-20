@@ -1,26 +1,26 @@
 # Tutorial guiado: montar a turma em 10 minutos
 
 !!! abstract "Neste tutorial"
-    **Objetivo:** criar a turma, importar os formandos, partilhar o acesso e estar pronto para receber entregas. · **Duração:** ~10 min · **Para:** Formador.
+    **Objetivo:** entrar na turma, importar os formandos, partilhar o acesso e estar pronto para receber entregas. · **Duração:** ~10 min · **Para:** Formador.
 
 ## Antes de começar
 
-- [x] Tens o teu **email institucional**.
+- [x] Tens o **endereço da tua escola**, o **código da turma** e as tuas credenciais.
 - [x] Tens a **lista de formandos** (nome, apelido, email).
 
 ---
 
-## Passo 1 · Criar a turma
+## Passo 1 · Entrar na turma
 
 1. Abre o **endereço da tua escola** (ex.: `crm.cr0x.org/escola`).
 2. Indica o **código da turma** que te deram e entra com o teu utilizador e palavra-passe.
 
 !!! warning "Guarda o código de recuperação"
-    Aparece **uma vez** - anota-o. É a tua forma de recuperar a palavra-passe.
+    Foi-te entregue com as credenciais e não há segunda via. É a tua forma de recuperar a palavra-passe.
 
 <figure class="crm-video" data-video="montar-turma" data-poster="/manual/assets/screens/hub.png"></figure>
 
-*Criar a turma a partir do ecrã inicial.*
+*Entrar na turma a partir do ecrã inicial da escola.*
 
 ---
 
@@ -50,10 +50,10 @@
 
 ## Passo 4 · Partilhar o acesso
 
-Envia à turma o link com o número:
+Envia à turma o endereço do teu espaço com o código da turma:
 
 ```
-https://crm.cr0x.org/?t=12345678
+https://crm.cr0x.org/escola?t=crm-2026
 ```
 
 Cada formando entra com o **seu utilizador e palavra-passe**.

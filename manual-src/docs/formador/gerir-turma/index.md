@@ -4,7 +4,7 @@ Tudo o que toca aos **acessos dos formandos** está em **Definições → Forman
 
 !!! info "Como funciona - antes de usar"
     1. Os acessos vivem **online**, ligados a **esta** turma.
-    2. Partilha o link `?t=12345678` - cada formando entra com o **seu utilizador e palavra-passe**.
+    2. Partilha o endereço do teu espaço com `?t=<código-da-turma>` - cada formando entra com o **seu utilizador e palavra-passe**.
     3. Cada formando **só acede a esta turma** e tem a **sua sandbox** (os dados ficam no computador dele).
 
 ## Ações

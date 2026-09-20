@@ -10,16 +10,29 @@ O teu espaço tem vários **módulos**, na barra lateral. Aqui está o que cada 
 - **Produtos** - catálogo (família → subfamília → artigo).
 - **Propostas** - pipeline em **Kanban**; exporta cada proposta em **PDF A4**.
 - **Agenda** - calendário e tarefas.
+- **Modelos** - o aspeto do PDF da proposta, montado por blocos.
+
+## Serviço ao cliente
+
+- **Helpdesk** - os pedidos de apoio de ponta a ponta: prazos (SLA) e satisfação.
+- **Retenção** - contratos cancelados, tentativa de recuperação e *churn*.
 
 ## Marketing & Análise
 
 - **Campanhas** - marketing por segmento (com gerador por persona).
 - **Email** - compor e acompanhar emails (abertura/cliques).
 - **Analytics** - funil, conversão, CAC, LTV, *lead scoring*.
+- **Decisão** - o que fazer a seguir, simulação de cenários e previsão.
 
 ## Conformidade
 
 - **RGPD** - consentimentos, pedidos de titular, RoPA, violações. Vê **[RGPD & Pedagogia](../rgpd/index.md)**.
+
+## Sistema
+
+- **Comunicação** - modelos de email, histórico de envios e automações.
+- **Alertas** - o que precisa de atenção: prazos, propostas paradas, pedidos por responder.
+- **Definições** - a configuração. Numa turma, só o formador lá entra.
 
 ## O meu trabalho está seguro?
 

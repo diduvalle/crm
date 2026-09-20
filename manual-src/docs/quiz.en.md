@@ -1,6 +1,6 @@
 # Self-assessment
 
-Test the concepts from the training units **10868 - CRM Analytics** and **10870 - CRM Administration**. Pick one answer per question - the result and explanation appear instantly.
+Test the CRM and GDPR concepts. Pick one answer per question - the result and explanation appear instantly.
 
 <div id="quiz" class="quiz"></div>
 

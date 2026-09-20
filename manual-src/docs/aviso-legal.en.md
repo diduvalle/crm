@@ -1,6 +1,6 @@
 # Legal notice
 
-**CRM** is an **independent, non-commercial, educational** project created by **Diogo du Valle** as a teaching tool for the training units **10868 - CRM Analytics** and **10870 - CRM Administration**.
+**CRM** is an **independent, non-commercial, educational** project created by **Diogo du Valle** as a training support tool.
 
 ## Trademark and logo
 
@@ -38,7 +38,7 @@ When a trainee **signs in to a class**, an account exists. From then on we store
 ## Rights and contact
 
 - Rights over trademarks, logos and other identified elements belong to their respective owners.
-- If any rights holder considers that any element should be **changed or removed**, it will be handled promptly. Contact: **geral@crm.cr0x.org**.
+- If any rights holder considers that any element should be **changed or removed**, it will be handled promptly. Contact: **crm@cr0x.org**.
 
 !!! note "Note"
     This notice is intended to clarify the educational, unofficial nature of the project and **does not constitute legal advice**.

@@ -11,6 +11,21 @@ The **system configuration** (System group). The cards are **collapsible** - cli
 ### Entity
 Data used in proposals and communications: **entity name**, **NIF/NIPC**, **phone**, **email** (the *reply-to* of emails), **city**, **DPO** (Data Protection Officer).
 
+### Proposal approval
+The rule that makes a proposal need a manager's approval before moving on (by value or by discount). → [Proposal approval](propostas/aprovacao.md).
+
+### Shared base
+A common starting file (`base.json`), loaded automatically, so everyone starts from the same place. **Submitting work does not go through here** - that is the *Submit my work* button.
+
+### Contact roles
+Editable list of each person's **role** in the company (Decision maker, Technical, Finance…). Feeds the *Role* field on the contact record.
+
+### Unanswered questions to Pulso
+What the class asked [Pulso](assistente.md) that it could not answer. It is the list the new phrases come from.
+
+### Site analytics *(Admin)*
+Anonymous usage statistics - pages viewed, language, device type. No cookies and no personal data.
+
 ### Data & backup
 **Export** / **Import** the full CRM JSON (backup or migration). This is also where you **restore the sample data**.
 
@@ -18,7 +33,9 @@ Data used in proposals and communications: **entity name**, **NIF/NIPC**, **phon
 Quickly creates realistic **companies, contacts and proposals** (PT) - adds to the existing data.
 
 ### Brand & Appearance
-*White-label*: **name**, **primary color** (derives the palette), **logo**, **login background**. **Apply** / **Reset to default**. → [Email & Brand](../formador/email-marca.md).
+**Name**, **primary color** (derives the palette), **logo**, **sign-in background**. **Apply** / **Reset to default**.
+
+In a school space the name, the logo and the color **come from the school** and override whatever you set here - the color field says where it comes from. → [Email & Brand](../formador/email-marca.md).
 
 ### Real email sending (EmailJS) *(Admin)*
 The **keys** are **fixed** (🔒); you only manage the **mode** (real/simulated) + **Send test**. → [Email & Brand](../formador/email-marca.md).

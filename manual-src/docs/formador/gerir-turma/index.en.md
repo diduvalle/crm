@@ -4,7 +4,7 @@ Everything related to **trainee access** is in **Settings → Class trainees**. 
 
 !!! info "How it works - before you use it"
     1. Access lives **online**, linked to **this** class.
-    2. Share the link `?t=12345678` - each trainee logs in with **their own username and password**.
+    2. Share your space address with `?t=<class-code>` - each trainee logs in with **their own username and password**.
     3. Each trainee **only accesses this class** and has **their own sandbox** (the data stays on their computer).
 
 ## Actions

@@ -29,7 +29,7 @@ Here you will find everything you need, organized into **two tracks**. Choose yo
 
     ---
 
-    Create and manage the class, import trainees, validate work, manage email and branding.
+    Receive the class, import trainees, validate work, manage email and branding.
 
     [:octicons-arrow-right-24: Start as a trainer](primeiros-passos/formador.md)
 
@@ -45,7 +45,7 @@ Here you will find everything you need, organized into **two tracks**. Choose yo
 
 ## What is CRM?
 
-It is a **complete CRM** (clients, companies, products, proposals, campaigns, email, analytics, calendar) with a strong **GDPR** module - designed to **practice** the concepts of the the content in a realistic and safe environment.
+It is a **complete CRM** (clients, companies, products, proposals, campaigns, email, analytics, calendar) with a strong **GDPR** module - designed to **practice** the concepts in a realistic and safe environment.
 
 - **Each class has its own isolated environment** - trainees do not mix.
 - **Each trainee has their own *sandbox*** - work freely without affecting others.
@@ -62,5 +62,5 @@ It is a **complete CRM** (clients, companies, products, proposals, campaigns, em
 | **For the Trainer** | Trainer | Manage the class, submissions, email and branding |
 | **For the Trainee** | Trainee | Work in the CRM, recover your password, submit |
 | **Features** | Both | Each module explained in detail |
-| **GDPR & Pedagogy** | Both | Link to the the modules |
+| **GDPR & Pedagogy** | Both | Compliance in practice and teaching notes |
 | **FAQ · Glossary** | Both | Common questions and terms |

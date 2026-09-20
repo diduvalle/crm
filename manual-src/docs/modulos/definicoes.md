@@ -11,6 +11,21 @@ A **configuração do sistema** (grupo Sistema). Os cartões são **colapsáveis
 ### Entidade
 Dados usados em propostas e comunicações: **nome da entidade**, **NIF/NIPC**, **telefone**, **email** (é o *reply-to* dos emails), **cidade**, **EPD** (Encarregado de Proteção de Dados).
 
+### Aprovação de propostas
+A regra que obriga uma proposta a ser aprovada por um gestor antes de avançar (por valor ou por desconto). → [Aprovação de propostas](propostas/aprovacao.md).
+
+### Base partilhada
+Um ficheiro de arranque comum (`base.json`), carregado automaticamente, para toda a gente começar do mesmo sítio. **A entrega do trabalho não passa por aqui** - faz-se pelo botão *Submeter o meu trabalho*.
+
+### Funções de contacto
+Lista editável do **papel** de cada pessoa na empresa (Decisor, Técnico, Financeiro…). Alimenta o campo *Função* da ficha do contacto.
+
+### Perguntas ao Pulso sem resposta
+O que a turma perguntou ao [Pulso](assistente.md) e ele não soube responder. É a lista de onde saem as frases a acrescentar.
+
+### Analítica do site *(Admin)*
+As estatísticas anónimas de utilização - páginas vistas, idioma, tipo de dispositivo. Sem cookies e sem dados pessoais.
+
 ### Dados & backup
 **Exportar** / **Importar** o JSON completo do CRM (backup ou migração). É também aqui que **repões os dados de exemplo**.
 
@@ -18,7 +33,9 @@ Dados usados em propostas e comunicações: **nome da entidade**, **NIF/NIPC**, 
 Cria rapidamente **empresas, contactos e propostas** realistas (PT) - acrescenta aos dados existentes.
 
 ### Marca & Aparência
-*White-label*: **nome**, **cor principal** (deriva a paleta), **logótipo**, **fundo do login**. **Aplicar** / **Repor predefinição**. → [Email & Marca](../formador/email-marca.md).
+**Nome**, **cor principal** (deriva a paleta), **logótipo**, **fundo do ecrã de entrada**. **Aplicar** / **Repor predefinição**.
+
+Num espaço de escola, o nome, o logótipo e a cor **vêm da escola** e ganham ao que aqui puseres - o campo da cor diz de onde ela vem. → [Email & Marca](../formador/email-marca.md).
 
 ### Envio de email real (EmailJS) *(Admin)*
 As **chaves** estão **fixas** (🔒); geres só o **modo** (real/simulado) + **Enviar teste**. → [Email & Marca](../formador/email-marca.md).

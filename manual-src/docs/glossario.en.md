@@ -2,12 +2,12 @@
 
 | Term | Meaning |
 |---|---|
-| **Class** | Isolated environment, identified by an 8-digit number (`?t=12345678`). |
+| **Class** | Isolated environment, identified by a code (`?t=crm-2026`). |
 | **Sandbox** | Each trainee's copy of the CRM, saved on their own computer. |
-| **Administrator** | The trainer who creates the class; manages access, submissions and settings. |
+| **Administrator** | The trainer in charge of the class; manages access, submissions and settings. The class itself is created by the platform administration. |
 | **Trainee** | User who works in their *sandbox* and submits the work. |
 | **Submission** | *Snapshot* of the trainee's work, submitted to the trainer (max. 2). |
-| **Recovery code** | Code shown once when creating the class; recovers the trainer's password. |
+| **Recovery code** | Code generated once when the class is created and handed to the trainer with the credentials; recovers their password. |
 | **Proposal template** | Block-based structure that defines the look of the proposal PDF. |
 | **Pipeline** | Set of proposals by status (Kanban): Created → Sent → Negotiation → Won / Lost. |
 | **RoPA** | Records of Processing Activities (GDPR). |

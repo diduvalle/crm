@@ -38,7 +38,7 @@ Quando um formando **inicia sessão numa turma**, passa a existir uma conta. Aí
 ## Direitos e contacto
 
 - Os direitos sobre marcas, logótipos e demais elementos identificados pertencem aos respetivos titulares.
-- Se qualquer titular de direitos entender que algum elemento deve ser **alterado ou removido**, será atendido prontamente. Contacto: **geral@crm.cr0x.org**.
+- Se qualquer titular de direitos entender que algum elemento deve ser **alterado ou removido**, será atendido prontamente. Contacto: **crm@cr0x.org**.
 
 !!! note "Nota"
     Este aviso destina-se a esclarecer a natureza pedagógica e não-oficial do projeto e **não constitui aconselhamento jurídico**.

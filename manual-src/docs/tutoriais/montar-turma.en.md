@@ -1,26 +1,26 @@
 # Guided tutorial: set up the class in 10 minutes
 
 !!! abstract "In this tutorial"
-    **Goal:** create the class, import the trainees, share access and be ready to receive submissions. · **Duration:** ~10 min · **For:** Trainer.
+    **Goal:** enter the class, import the trainees, share access and be ready to receive submissions. · **Duration:** ~10 min · **For:** Trainer.
 
 ## Before you start
 
-- [x] You have your **institutional email**.
+- [x] You have your **school address**, the **class code** and your credentials.
 - [x] You have the **list of trainees** (first name, surname, email).
 
 ---
 
-## Step 1 · Create the class
+## Step 1 · Enter the class
 
 1. Open your **school's address** (e.g. `crm.cr0x.org/school`).
 2. Enter the **class code** you were given and sign in with your username and password.
 
 !!! warning "Save the recovery code"
-    It appears **once** - write it down. It is your way to recover the password.
+    It was handed to you with the credentials and there is no second copy. It is your way to recover the password.
 
 <figure class="crm-video" data-video="montar-turma" data-poster="/manual/assets/screens/hub.png"></figure>
 
-*Create the class from the home screen.*
+*Entering the class from your school's home screen.*
 
 ---
 
@@ -50,10 +50,10 @@
 
 ## Step 4 · Share access
 
-Send the class the link with the number:
+Send the class your space address with the class code:
 
 ```
-https://crm.cr0x.org/?t=12345678
+https://crm.cr0x.org/escola?t=crm-2026
 ```
 
 Each trainee enters with **their own username and password**.

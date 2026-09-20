@@ -29,7 +29,7 @@ Aqui encontras tudo o que precisas, organizado em **duas vertentes**. Escolhe o 
 
     ---
 
-    Criar e gerir a turma, importar formandos, validar trabalhos, gerir o email e a marca.
+    Receber a turma, importar formandos, validar trabalhos, gerir o email e a marca.
 
     [:octicons-arrow-right-24: Começar como formador](primeiros-passos/formador.md)
 
@@ -45,7 +45,7 @@ Aqui encontras tudo o que precisas, organizado em **duas vertentes**. Escolhe o 
 
 ## O que é o CRM?
 
-É um **CRM completo** (clientes, empresas, produtos, propostas, campanhas, email, analytics, agenda) com um módulo forte de **RGPD** - pensado para **praticar** os conceitos das os conteúdos num ambiente realista e seguro.
+É um **CRM completo** (clientes, empresas, produtos, propostas, campanhas, email, analytics, agenda) com um módulo forte de **RGPD** - pensado para **praticar** os conceitos num ambiente realista e seguro.
 
 - **Cada turma tem o seu ambiente isolado** - os formandos não se misturam.
 - **Cada formando tem a sua *sandbox*** - trabalha à vontade sem afetar os colegas.
@@ -62,5 +62,5 @@ Aqui encontras tudo o que precisas, organizado em **duas vertentes**. Escolhe o 
 | **Para o Formador** | Formador | Gerir turma, entregas, email e marca |
 | **Para o Formando** | Formando | Trabalhar no CRM, recuperar palavra-passe, submeter |
 | **Funcionalidades** | Ambos | Cada módulo explicado em detalhe |
-| **RGPD & Pedagogia** | Ambos | Ligação às os módulos |
+| **RGPD & Pedagogia** | Ambos | Conformidade na prática e notas de ensino |
 | **FAQ · Glossário** | Ambos | Dúvidas comuns e termos |
