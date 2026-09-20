@@ -60,6 +60,26 @@ td .tag{align-self:auto}
 .tc-lixo svg{width:15px;height:15px}
 .tc:hover .tc-lixo,.tc-lixo:focus-visible{opacity:1}
 .tc-lixo:hover{background:var(--danger-bg);color:var(--danger)}
+/* as turmas da escola aberta, por baixo dela na barra */
+.nav-sub{display:flex;flex-direction:column;gap:1px;margin:1px 0 6px 17px;padding-left:9px;border-left:1.5px solid var(--regua)}
+.nav-turma{display:flex;align-items:center;gap:7px;width:100%;text-align:left;font-family:Archivo,system-ui,sans-serif;font-size:.82rem;font-weight:600;color:var(--tinta-2);background:none;border:0;border-radius:8px;padding:6px 9px;cursor:pointer}
+.nav-turma .lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-turma:hover{background:rgba(23,20,18,.06);color:var(--tinta)}
+[data-theme="dark"] .nav-turma:hover{background:rgba(239,233,221,.08)}
+.nav-turma.active{background:var(--papel-claro);color:var(--tinta);box-shadow:inset 0 0 0 1px var(--regua)}
+.nav-turma.fora{color:var(--fraco)}
+.nav-turma-fora{margin-left:auto;display:grid;place-items:center;opacity:.75}
+.nav-turma-fora svg{width:14px;height:14px}
+.app.nav-collapsed .nav-sub{display:none}
+/* confirmação com código: o que não se desfaz escreve-se à mão */
+.perda{margin:12px 0 0;padding-left:20px}
+.perda li{font-size:.88rem;margin-bottom:5px}
+.cod-caixa{display:flex;align-items:center;gap:14px;margin-top:18px;padding:14px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface2)}
+.cod-caixa>div{display:flex;flex-direction:column;gap:3px}
+.cod{font-family:"Space Mono",ui-monospace,monospace;font-size:1.45rem;font-weight:700;letter-spacing:.28em;color:var(--danger)}
+.cod-in{width:112px;margin-left:auto;font-family:"Space Mono",ui-monospace,monospace;font-size:1.15rem;font-weight:700;letter-spacing:.18em;text-align:center;padding:9px;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);color:var(--text)}
+.cod-in:focus{outline:0;border-color:var(--danger)}
+.modal-foot button:disabled{cursor:not-allowed;background:var(--surface3);color:var(--muted);border-color:transparent;box-shadow:none}
 .sec-titulo{font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:22px 0 10px}
 
 /* CABEÇALHO DE SECÇÃO COM VOLTAR */
@@ -423,6 +443,7 @@ function abrirTurma(t){
   $('#btnPrimario').classList.remove('hidden');
   $('#btnPrimario').innerHTML=ic('mais')+'Nova sessão';
   $('#pesquisa').value='';
+  pintarNavEscolas();
   carregarSessoes(t).then(filtrar);
 }
 
@@ -448,7 +469,7 @@ async function carregarEscolas(){
           </div>
           <div class="muted" style="font-size:.8rem">${e.n_turmas} turma${e.n_turmas==1?'':'s'} · ${e.n_geridas} no Repo</div>
           <div class="tc-foot">
-            ${e.slug?`<button class="tc-lixo" data-apagar="${esc(e.slug)}" title="Apagar a escola (as turmas não se apagam)">${ic('lixo')}</button>
+            ${e.slug?`<button class="tc-lixo" data-apagar="${esc(e.slug)}" title="Apagar a escola e tudo o que está dentro">${ic('lixo')}</button>
             <a class="btn-sec btn-sm" href="../${esc(e.slug)}" target="_blank" rel="noopener">${ic('link')}Abrir o CRM</a>`:''}
             <button class="btn btn-sm" data-abrir-escola="${esc(e.slug)}">${ic('gente')}Turmas</button>
           </div>
@@ -465,26 +486,92 @@ async function carregarEscolas(){
   pintarNavEscolas();
 }
 
-/* Apagar uma escola. A escola é o RÓTULO: o servidor solta as turmas dela
-   (espaco_id a nulo) antes de apagar a linha, por isso elas voltam para
-   "Sem escola" com formandos, sessões e badges intactos. Desfaz-se: cria-se
-   a escola outra vez e movem-se de volta. O que se perde é a identidade e
-   o endereço crm.cr0x.org/<slug>. */
+/* ---------- Apagar a sério ----------
+   Apaga mesmo: a escola leva as turmas, e a turma leva os formandos, as
+   entregas, os badges, as sessões e os acessos. Não se desfaz, por isso a
+   confirmação diz primeiro o que vai levar e pede um código de 4 dígitos
+   escrito à mão - a ideia é obrigar a ler, não a carregar. */
+const plural=(n,um,muitos)=>n+' '+(n==1?um:muitos);
+function faltaSql(err,ficheiro){
+  if(!/PGRST202|Could not find the function/.test((err&&err.message)||'')) return false;
+  toast('Falta correr o SQL '+ficheiro+' no Supabase.','err');
+  return true;
+}
+function uiConfirmCodigo({titulo,texto,ok='Apagar'}){
+  const cod=String(Math.floor(1000+Math.random()*9000));
+  return new Promise(res=>{
+    const f=abrirModal(`<div class="modal" style="width:min(500px,100%)">
+      <div class="modal-head"><div><h3>${esc(titulo)}</h3></div></div>
+      <div class="modal-body">
+        <div style="font-size:.92rem">${texto}</div>
+        <div class="cod-caixa">
+          <div><span class="hint">Escreve este código para confirmar</span><strong class="cod">${cod}</strong></div>
+          <input class="cod-in" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="----" aria-label="Código de confirmação">
+        </div>
+      </div>
+      <div class="modal-foot"><span></span>
+        <div style="display:flex;gap:10px">
+          <button class="btn-sec" data-nao>Cancelar</button>
+          <button class="btn-danger" data-sim disabled>${esc(ok)}</button>
+        </div></div></div>`);
+    const inp=f.querySelector('.cod-in'), b=f.querySelector('[data-sim]');
+    const fecha=v=>{ f.remove(); res(v); };
+    inp.addEventListener('input',()=>{
+      inp.value=inp.value.replace(/\D/g,'').slice(0,4);
+      b.disabled=inp.value!==cod;
+    });
+    inp.addEventListener('keydown',ev=>{ if(ev.key==='Enter'&&!b.disabled){ ev.preventDefault(); fecha(true); } });
+    b.addEventListener('click',()=>fecha(true));
+    f.querySelector('[data-nao]').addEventListener('click',()=>fecha(false));
+    const obs=new MutationObserver(()=>{ if(!document.body.contains(f)){ obs.disconnect(); res(false); } });
+    obs.observe(document.body,{childList:true});
+    setTimeout(()=>inp.focus(),60);
+  });
+}
+
 async function apagarEscola(e){
   if(!e||!e.slug) return;
-  const n=+e.n_turmas||0;
-  const ok=await uiConfirm({titulo:`Apagar a escola ${e.nome||e.slug}?`,perigo:true,ok:'Apagar a escola',
-    texto:(n?`As <strong>${n} turma${n==1?'':'s'}</strong> não se apagam: voltam para "Sem escola", com tudo o que têm dentro (formandos, sessões, badges).<br><br>`:'')
-      +`Perde-se a identidade da escola (nome, logótipo, cor, dados legais) e o endereço <code>crm.cr0x.org/${esc(e.slug)}</code> deixa de abrir.`});
+  let lista=[];
+  try{ lista=await rpc('repo_turmas_da_escola',{p_token:sessao.token,p_slug:e.slug}); }
+  catch(err){ return tratar(err); }
+  const nf=lista.reduce((s,t)=>s+(+t.n_formandos||0),0);
+  const ns=lista.reduce((s,t)=>s+(+t.n_sessoes||0),0);
+  const ok=await uiConfirmCodigo({titulo:`Apagar a escola ${e.nome||e.slug}?`,ok:'Apagar a escola',
+    texto:`<strong>Apaga tudo o que está dentro e não se desfaz.</strong>
+      <ul class="perda">
+        <li>${plural(lista.length,'turma','turmas')}${lista.length?': '+lista.map(t=>esc(t.codigo)).join(', '):''}</li>
+        <li>${plural(nf,'formando','formandos')}, com as entregas, os badges e os registos de acesso</li>
+        <li>${plural(ns,'sessão','sessões')} do Repo e o histórico de envios</li>
+        <li>a identidade da escola e o endereço <code>crm.cr0x.org/${esc(e.slug)}</code></li>
+      </ul>`});
   if(!ok) return;
-  try{ await rpc('espaco_apagar',{p_token:sessao.token,p_id:e.id}); }
-  catch(err){
-    const m=(err&&err.message)||'';
-    if(/espaco_apagar|PGRST202/.test(m)) return toast('Falta correr o SQL 04-espaco-apagar.sql no Supabase.','err');
-    return tratar(err);
-  }
-  toast(`Escola apagada.${n?` ${n} turma${n==1?'':'s'} de volta a "Sem escola".`:''}`);
+  let r;
+  try{ r=await rpc('espaco_apagar',{p_token:sessao.token,p_id:e.id}); }
+  catch(err){ if(faltaSql(err,'05-apagar-a-serio.sql')) return; return tratar(err); }
+  toast(`Escola apagada. Levou ${plural(r.turmas,'turma','turmas')} e ${plural(r.formandos,'formando','formandos')}.`);
   mostrarEscolas();
+}
+
+async function apagarTurma(t){
+  if(!t) return;
+  const ok=await uiConfirmCodigo({titulo:`Apagar a turma ${t.codigo}?`,ok:'Apagar a turma',
+    texto:`<strong>Apaga a turma do CRM inteiro, não só do Repo. Não se desfaz.</strong>
+      <ul class="perda">
+        <li>${plural(+t.n_formandos||0,'formando','formandos')}, com as entregas, os badges e os registos de acesso</li>
+        <li>${plural(+t.n_sessoes||0,'sessão','sessões')} do Repo e o histórico de envios</li>
+        <li>as propostas que os formandos publicaram online</li>
+      </ul>
+      <span class="hint">Se só a queres fora do Repo, usa "Tirar do Repo" nas Definições da turma.</span>`});
+  if(!ok) return;
+  let r;
+  try{ r=await rpc('turma_apagar',{p_token:sessao.token,p_codigo:t.codigo}); }
+  catch(err){ if(faltaSql(err,'05-apagar-a-serio.sql')) return; return tratar(err); }
+  toast(`Turma ${r.codigo} apagada.`);
+  if(turmaAtual&&turmaAtual.codigo===t.codigo) turmaAtual=null;
+  const slug=escolaAtual&&escolaAtual.slug;
+  await carregarEscolas();
+  const ainda=escolas.find(x=>x.slug===slug);
+  if(ainda) abrirEscola(ainda); else mostrarEscolas();
 }
 
 /* ---------- As escolas na barra lateral ----------
@@ -501,16 +588,32 @@ function pintarNavEscolas(){
                   :`<span class="nav-esc-ini">${e.slug?esc((e.nome||e.slug).trim().charAt(0).toUpperCase()):'?'}</span>`}
       <span class="lbl">${e.slug?esc(e.nome||e.slug):'Sem escola'}</span>
       <button class="lapis" data-renomear="${esc(e.slug)}" title="${e.slug?'Mudar o nome':'Dar um nome: cria a escola e move estas turmas para lá'}">${ic('lapis')}</button>
-    </div>`).join('')||'<div class="nav-vazio">Ainda sem escolas</div>';
+    </div>${escolaAtual&&escolaAtual.slug===e.slug?subTurmas():''}`).join('')||'<div class="nav-vazio">Ainda sem escolas</div>';
   n.querySelectorAll('.nav-escola').forEach(el=>el.addEventListener('click',ev=>{
     if(ev.target.closest('.lapis, input')) return;
     abrirEscola(escolas.find(e=>e.slug===el.dataset.escola));
+  }));
+  n.querySelectorAll('[data-nav-turma]').forEach(b=>b.addEventListener('click',ev=>{
+    ev.stopPropagation();
+    const t=geridas.find(x=>x.codigo===b.dataset.navTurma); if(!t) return;
+    if(t.gerida) abrirTurma(t); else modalAdicionarTurma(t);
   }));
   n.querySelectorAll('[data-renomear]').forEach(b=>b.addEventListener('click',ev=>{
     ev.stopPropagation();
     editarNomeEscola(escolas.find(e=>e.slug===b.dataset.renomear), b.closest('.nav-escola'));
   }));
   marcarNavEscola();
+}
+/* As turmas da escola aberta, por baixo dela. Saem do `geridas`, que é o
+   que a vista das turmas acabou de carregar - não se pede nada outra vez. */
+function subTurmas(){
+  if(!geridas.length) return '<div class="nav-sub"><div class="nav-vazio">sem turmas</div></div>';
+  return `<div class="nav-sub">${geridas.map(t=>`
+    <button class="nav-turma${turmaAtual&&turmaAtual.codigo===t.codigo?' active':''}${t.gerida?'':' fora'}"
+      data-nav-turma="${esc(t.codigo)}" title="${t.gerida?esc('Turma '+t.codigo):'Ainda não está no Repo - carrega para adicionar'}">
+      <span class="lbl">${esc(t.nome||('Turma '+t.codigo))}</span>
+      ${t.gerida?'':'<span class="nav-turma-fora">'+ic('mais')+'</span>'}
+    </button>`).join('')}</div>`;
 }
 function marcarNavEscola(){
   document.querySelectorAll('.nav-escola').forEach(el=>
@@ -596,6 +699,7 @@ async function carregarTurmas(e){
           <div class="muted" style="font-size:.8rem">${t.n_formandos} formandos · último envio: ${t.ultimo_envio?dt(t.ultimo_envio):'nunca'}</div>
           ${moverSel(t)}
           <div class="tc-foot">
+            <button class="tc-lixo" data-apagar-turma="${esc(t.codigo)}" title="Apagar a turma do CRM">${ic('lixo')}</button>
             <button class="btn-sec btn-sm" data-cfg="${t.id}">${ic('cog')}Definições</button>
             <button class="btn btn-sm btn-ouro" data-selos="${t.id}">Badges</button>
             <button class="btn btn-sm" data-abrir="${t.id}">Abrir</button>
@@ -607,6 +711,7 @@ async function carregarTurmas(e){
           <div class="muted" style="font-size:.8rem">${t.n_formandos} formandos</div>
           ${moverSel(t)}
           <div class="tc-foot">
+            <button class="tc-lixo" data-apagar-turma="${esc(t.codigo)}" title="Apagar a turma do CRM">${ic('lixo')}</button>
             <button class="btn btn-sm" data-adicionar="${esc(t.codigo)}">${ic('mais')}Adicionar ao Repo</button>
           </div>
         </article>`).join('')}</div>`);
@@ -622,6 +727,9 @@ async function carregarTurmas(e){
     ()=>modalAdicionarTurma(geridas.find(t=>t.codigo===b.dataset.adicionar))));
   document.querySelectorAll('[data-mover]').forEach(s=>s.addEventListener('change',
     ()=>{ if(s.value) moverTurma(s.dataset.mover,s.value); }));
+  document.querySelectorAll('[data-apagar-turma]').forEach(b=>b.addEventListener('click',
+    ()=>apagarTurma(geridas.find(t=>t.codigo===b.dataset.apagarTurma))));
+  pintarNavEscolas();
 }
 
 function abrirModal(html){
@@ -697,7 +805,7 @@ function modalTurma(t){
       </div>
     </div>
     <div class="modal-foot">
-      <button class="btn-danger btn-sm" id="tRemover">${ic('lixo')}Remover turma</button>
+      <button class="btn-sec btn-sm" id="tRemover">Tirar do Repo</button>
       <div style="display:flex;gap:10px">
         <button class="btn-sec" data-fechar>Cancelar</button>
         <button class="btn" id="tGuardar">Guardar</button>
@@ -720,11 +828,11 @@ function modalTurma(t){
     }catch(e){ tratar(e); }
   });
   f.querySelector('#tRemover').addEventListener('click',async()=>{
-    const ok=await uiConfirm({titulo:`Remover a turma ${t.codigo}?`,perigo:true,ok:'Remover',
-      texto:'As sessões e os registos de acesso vão com ela. Não afeta a turma no CRM.'});
+    const ok=await uiConfirm({titulo:`Tirar a turma ${t.codigo} do Repo?`,perigo:true,ok:'Tirar do Repo',
+      texto:'As sessões e os registos de acesso vão com ela. A turma continua no CRM, com os formandos e o trabalho deles - para a apagar a sério, usa o caixote no cartão.'});
     if(!ok) return;
     try{ await rpc('repo_turma_remover',{p_token:sessao.token,p_id:t.id});
-      f.remove(); toast('Turma removida.'); carregarTurmas(escolaAtual); }catch(e){ tratar(e); }
+      f.remove(); toast('Turma fora do Repo.'); carregarTurmas(escolaAtual); }catch(e){ tratar(e); }
   });
 }
 
@@ -787,6 +895,7 @@ async function abrirSelos(t){
   $('#hSub').textContent='Turma '+t.codigo+' · '+t.n_formandos+' formandos';
   $('#btnPrimario').classList.add('hidden');
   $('#pesquisa').value='';
+  pintarNavEscolas();
   $('#vSelos').innerHTML='<div class="empty"><strong>A preparar…</strong></div>';
   try{
     const p=await rpc('repo_selos_preparar',{p_token:sessao.token,p_repo_turma_id:t.id});
