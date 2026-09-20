@@ -11,6 +11,8 @@
 <link rel="stylesheet" href="../estilo/tokens.css">
 <link rel="stylesheet" href="../estilo/componentes.css">
 <style>
+/* Fundo do ecrã de entrada: a imagem da plataforma (absoluto, porque o componentes.css vive em /estilo/) */
+:root{--login-bg:url('/background.png')}
 /* Só o que é do repositório. O resto vem de estilo/ (partilhado com a app). */
 .nav-link{background:none;border:0;width:100%;text-align:left;font:inherit}
 .profile .sair{margin-left:auto;flex:none;width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);color:#fff;cursor:pointer}
@@ -41,9 +43,17 @@ td .tag{align-self:auto}
 .tc-drive.falta{color:var(--warn)}
 .tc-foot{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:14px;border-top:1px solid var(--border)}
 /* o dourado do badge: so existe aqui, nao entra no sistema de estilos */
-.btn-ouro{background:#d4af37;border-color:#d4af37;color:#16240f}
+.btn-ouro{background:#d4af37;border-color:#d4af37;color:#241d0a}
 .btn-ouro:hover{background:#c8a42d;border-color:#c8a42d}
 .tc-foot .btn{margin-left:auto}
+/* cartão de escola */
+.esc-cab{display:flex;align-items:center;gap:10px}
+.esc-logo{width:40px;height:40px;border-radius:10px;object-fit:contain;background:#fff;border:1px solid var(--border);flex:none;padding:3px}
+.esc-logo-vazio{display:grid;place-items:center;color:var(--muted)}
+.esc-logo-vazio svg{width:20px;height:20px}
+.tc-fora{border-style:dashed}
+.tc-arq{opacity:.6}
+.sec-titulo{font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:22px 0 10px}
 
 /* CABEÇALHO DE SECÇÃO COM VOLTAR */
 .voltar{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:700;color:var(--muted);background:none;border:0;cursor:pointer;padding:4px 0;margin-bottom:6px}
@@ -57,7 +67,7 @@ td .tag{align-self:auto}
 .rt-tb svg{width:15px;height:15px}
 .rt-sep{width:1px;height:20px;background:var(--border);margin:0 2px}
 .rt-editor{min-height:120px;max-height:260px;overflow-y:auto;border:1px solid var(--border);border-radius:0 0 10px 10px;padding:12px 14px;background:var(--surface2);color:var(--text);outline:none;font-size:.9rem}
-.rt-editor:focus{border-color:var(--g400);box-shadow:0 0 0 3px rgba(0,166,81,.14);background:var(--surface)}
+.rt-editor:focus{border-color:var(--g400);box-shadow:0 0 0 3px rgba(0,120,191,.14);background:var(--surface)}
 .rt-editor:empty:before{content:attr(data-placeholder);color:var(--muted2)}
 .rt-editor p{margin:0 0 9px}
 .rt-editor ul,.rt-editor ol{margin:0 0 9px 20px}
@@ -96,14 +106,7 @@ td .tag{align-self:auto}
 /* o empty state é um "herói": ícone maior, mas com tamanho fixo */
 .empty svg{width:34px;height:34px;flex:none}
 
-/* LISTA DE TURMAS DO CRM (adicionar) */
-.crm-lista{display:flex;flex-direction:column;gap:8px;max-height:50vh;overflow:auto}
-.crm-row{display:flex;align-items:center;gap:12px;padding:11px 13px;border:1px solid var(--border);border-radius:10px;background:var(--surface);cursor:pointer}
-.crm-row:hover{border-color:var(--g400)}
-.crm-row input[type=radio]{flex:none;width:18px;height:18px;margin:0;accent-color:var(--g600)}
-.crm-row .crm-info{flex:1;min-width:0}
-.crm-row .crm-info strong{display:block;font-size:.9rem}
-.crm-row .crm-info span{font-size:.78rem;color:var(--muted)}
+/* (a lista de turmas do CRM saiu: as turmas escolhem-se dentro da escola) */
 
 /* o partilhado só define .field .hint; aqui usamos notas soltas (prévia, avisos) */
 .hint{font-size:.74rem;color:var(--muted);font-weight:500}
@@ -153,7 +156,7 @@ td .tag{align-self:auto}
     </div>
     <nav class="nav">
       <div class="nav-group">Gestão</div>
-      <button class="nav-link active" data-view="turmas"></button>
+      <button class="nav-link active" data-view="escolas"></button>
     </nav>
     <div class="nav-foot">
       <div class="profile">
@@ -177,7 +180,7 @@ td .tag{align-self:auto}
         <button class="icon-btn" id="btnRecolher" title="Recolher menu">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M9 3v18M3 3h18v18H3z"/></svg>
         </button>
-        <div><h2 id="hTitulo">Turmas</h2><div class="breadcrumb" id="hSub"></div></div>
+        <div><h2 id="hTitulo">Escolas</h2><div class="breadcrumb" id="hSub"></div></div>
       </div>
       <div class="header-r">
         <button class="icon-btn" id="btnTema" title="Tema claro/escuro"></button>
@@ -185,7 +188,8 @@ td .tag{align-self:auto}
       </div>
     </header>
     <div class="content">
-      <section class="view active" id="vTurmas"></section>
+      <section class="view active" id="vEscolas"></section>
+      <section class="view" id="vTurmas"></section>
       <section class="view" id="vSessoes"></section>
       <section class="view" id="vSelos"></section>
     </div>
@@ -206,6 +210,7 @@ const I={
   pasta:'M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z',
   mail:'M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l9 6 9-6',
   gente:'M16 19v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M9.5 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6M21 19v-2a4 4 0 0 0-3-3.9',
+  escola:'M3 21h18M5 21V7l7-4 7 4v14M9 21v-5h6v5M9 11h.01M15 11h.01M9 14h.01M15 14h.01',
   link:'M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1',
   mais:'M12 5v14M5 12h14',
   lapis:'M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16zM14 6l4 4',
@@ -228,7 +233,7 @@ const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 const $=s=>document.querySelector(s);
 const dt=s=>s?new Date(s).toLocaleString('pt-PT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
 
-let sessao=null, geridas=[], sessoes=[], turmaAtual=null;
+let sessao=null, escolas=[], escolaAtual=null, geridas=[], sessoes=[], turmaAtual=null;
 
 /* ---------- Tema ---------- */
 function aplicarTema(t){
@@ -320,31 +325,50 @@ function filtrar(){
 }
 $('#btnPrimario').addEventListener('click',()=>{
   if(turmaAtual) modalSessao(turmaAtual,null);
-  else modalAdicionarTurma();
 });
 
-// Item de navegação "Turmas" (é o único): dá-lhe ícone, texto e função de
-// voltar à lista. Estava vazio no HTML, por isso não se percebia o que era.
+// Item de navegação "Escolas" (é o único): ícone, texto e função de voltar
+// ao início. As escolas criam-se no #admin da landing; aqui só se escolhem.
 (function(){
-  const b=$('.nav-link[data-view="turmas"]');
-  b.innerHTML=ic('gente')+'<span class="lbl">Turmas</span>';
-  b.addEventListener('click',mostrarTurmas);
+  const b=$('.nav-link[data-view="escolas"]');
+  b.innerHTML=ic('escola')+'<span class="lbl">Escolas</span>';
+  b.addEventListener('click',mostrarEscolas);
 })();
 
-function mostrarTurmas(){
-  turmaAtual=null;
-  $('#vSessoes').classList.remove('active'); $('#vSelos').classList.remove('active');
-  $('#vTurmas').classList.add('active');
-  $('#hTitulo').textContent='Turmas'; $('#hSub').textContent='As turmas que geres aqui';
-  $('#btnPrimario').innerHTML=ic('mais')+'Adicionar turma';
+/* A hierarquia é Escolas -> Turmas -> Sessões. Só uma vista está ativa. */
+function mostrarVista(id){ document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id)); }
+function rotuloVoltar(){
+  if(!escolaAtual) return 'Turmas';
+  return escolaAtual.slug?('Turmas de '+esc(escolaAtual.nome||escolaAtual.slug)):'Turmas sem escola';
+}
+function voltarATurmas(){ escolaAtual?abrirEscola(escolaAtual):mostrarEscolas(); }
+
+function mostrarEscolas(){
+  escolaAtual=null; turmaAtual=null;
+  mostrarVista('vEscolas');
+  $('#hTitulo').textContent='Escolas'; $('#hSub').textContent='As escolas da plataforma - escolhe uma para ver as turmas';
+  $('#btnPrimario').classList.add('hidden');
   $('#pesquisa').value='';
-  carregarTurmas().then(filtrar);
+  carregarEscolas().then(filtrar);
+}
+function abrirEscola(e){
+  escolaAtual=e; turmaAtual=null;
+  mostrarVista('vTurmas');
+  $('#hTitulo').textContent=e.slug?(e.nome||e.slug):'Sem escola';
+  $('#hSub').textContent=e.slug
+    ? 'Escola '+e.slug+' · '+e.n_turmas+' turma'+(e.n_turmas==1?'':'s')
+    : 'Turmas antigas, ainda sem escola atribuída';
+  $('#btnPrimario').classList.add('hidden');
+  $('#pesquisa').value='';
+  carregarTurmas(e).then(filtrar);
 }
 function abrirTurma(t){
   turmaAtual=t;
-  $('#vTurmas').classList.remove('active'); $('#vSessoes').classList.add('active');
+  mostrarVista('vSessoes');
   $('#hTitulo').textContent=t.nome||('Turma '+t.codigo);
-  $('#hSub').textContent='Turma '+t.codigo+' · '+t.n_formandos+' formandos';
+  $('#hSub').textContent=(escolaAtual&&escolaAtual.slug?(escolaAtual.nome||escolaAtual.slug)+' · ':'')
+    +'Turma '+t.codigo+' · '+t.n_formandos+' formandos';
+  $('#btnPrimario').classList.remove('hidden');
   $('#btnPrimario').innerHTML=ic('mais')+'Nova sessão';
   $('#pesquisa').value='';
   carregarSessoes(t).then(filtrar);
@@ -352,18 +376,49 @@ function abrirTurma(t){
 
 async function arrancar(){
   $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
-  mostrarTurmas();
+  mostrarEscolas();
 }
 
-/* ---------- Turmas ---------- */
-async function carregarTurmas(){
-  try{ geridas=await rpc('repo_geridas',{p_token:sessao.token}); }
+/* ---------- Escolas ---------- */
+async function carregarEscolas(){
+  try{ escolas=await rpc('repo_escolas',{p_token:sessao.token}); }
   catch(e){ return tratar(e); }
+  const ativas=escolas.filter(e=>!e.arquivado), arq=escolas.filter(e=>e.arquivado);
+  const cartao=e=>`
+        <article class="card tc ${e.arquivado?'tc-arq':''}">
+          <div class="tc-meta">
+            <span class="tag">${e.slug?esc(e.slug):'sem escola'}</span>
+            ${e.arquivado?'<span class="pill grey">Arquivada</span>':''}
+          </div>
+          <div class="esc-cab">
+            ${e.logo_url?`<img class="esc-logo" src="${esc(e.logo_url)}" alt="">`:`<span class="esc-logo esc-logo-vazio">${ic('escola')}</span>`}
+            <h3>${esc(e.nome)||esc(e.slug)}</h3>
+          </div>
+          <div class="muted" style="font-size:.8rem">${e.n_turmas} turma${e.n_turmas==1?'':'s'} · ${e.n_geridas} no Repo</div>
+          <div class="tc-foot">
+            ${e.slug?`<a class="btn-sec btn-sm" href="../${esc(e.slug)}" target="_blank" rel="noopener">${ic('link')}Abrir o CRM</a>`:''}
+            <button class="btn btn-sm" data-abrir-escola="${esc(e.slug)}">${ic('gente')}Turmas</button>
+          </div>
+        </article>`;
+  $('#vEscolas').innerHTML = !escolas.length
+    ? `<div class="empty">${ic('escola')}<strong>Ainda não há escolas</strong>
+        <span>As escolas criam-se no painel de administração da plataforma (crm.cr0x.org/#admin).</span></div>`
+    : `<div class="grid">${ativas.map(cartao).join('')}</div>`
+      +(arq.length?`<h3 class="sec-titulo">Arquivadas</h3><div class="grid">${arq.map(cartao).join('')}</div>`:'');
+  document.querySelectorAll('[data-abrir-escola]').forEach(b=>b.addEventListener('click',
+    ()=>abrirEscola(escolas.find(e=>e.slug===b.dataset.abrirEscola))));
+}
 
-  $('#vTurmas').innerHTML = !geridas.length
-    ? `<div class="empty">${ic('gente')}<strong>Ainda não geres nenhuma turma</strong>
-        <span>Carrega em "Adicionar turma" para espelhar uma turma do CRM.</span></div>`
-    : `<div class="grid">${geridas.map(t=>`
+/* ---------- Turmas de uma escola ----------
+   Todas as do CRM: as que já estão no Repo abrem-se; as outras têm "Adicionar". */
+async function carregarTurmas(e){
+  try{ geridas=await rpc('repo_turmas_da_escola',{p_token:sessao.token,p_slug:e.slug||''}); }
+  catch(err){ return tratar(err); }
+  const topo=`<button class="voltar" id="voltarEscolas">${ic('seta')}Todas as escolas</button>`;
+  $('#vTurmas').innerHTML = topo + (!geridas.length
+    ? `<div class="empty">${ic('gente')}<strong>Esta escola ainda não tem turmas</strong>
+        <span>As turmas criam-se no painel de administração da plataforma, dentro da escola.</span></div>`
+    : `<div class="grid">${geridas.map(t=>t.gerida?`
         <article class="card tc">
           <div class="tc-meta"><span class="tag">Turma ${esc(t.codigo)}</span>
             ${t.n_sessoes?`<span class="pill grey">${t.n_sessoes} sess${t.n_sessoes==1?'ão':'ões'}</span>`:''}</div>
@@ -375,14 +430,25 @@ async function carregarTurmas(){
             <button class="btn btn-sm btn-ouro" data-selos="${t.id}">Badges</button>
             <button class="btn btn-sm" data-abrir="${t.id}">Abrir</button>
           </div>
-        </article>`).join('')}</div>`;
+        </article>`:`
+        <article class="card tc tc-fora">
+          <div class="tc-meta"><span class="tag">Turma ${esc(t.codigo)}</span><span class="pill amber">Ainda não está no Repo</span></div>
+          <h3>${esc(t.nome)||'<span class="muted">Sem nome</span>'}</h3>
+          <div class="muted" style="font-size:.8rem">${t.n_formandos} formandos</div>
+          <div class="tc-foot">
+            <button class="btn btn-sm" data-adicionar="${esc(t.codigo)}">${ic('mais')}Adicionar ao Repo</button>
+          </div>
+        </article>`).join('')}</div>`);
 
+  $('#voltarEscolas').addEventListener('click',mostrarEscolas);
   document.querySelectorAll('[data-abrir]').forEach(b=>b.addEventListener('click',
     ()=>abrirTurma(geridas.find(t=>t.id===b.dataset.abrir))));
   document.querySelectorAll('[data-cfg]').forEach(b=>b.addEventListener('click',
     ()=>modalTurma(geridas.find(t=>t.id===b.dataset.cfg))));
   document.querySelectorAll('[data-selos]').forEach(b=>b.addEventListener('click',
     ()=>abrirSelos(geridas.find(t=>t.id===b.dataset.selos))));
+  document.querySelectorAll('[data-adicionar]').forEach(b=>b.addEventListener('click',
+    ()=>modalAdicionarTurma(geridas.find(t=>t.codigo===b.dataset.adicionar))));
 }
 
 function abrirModal(html){
@@ -413,41 +479,25 @@ function uiConfirm({titulo='Confirmar',texto='',ok='Confirmar',perigo=false}){
   });
 }
 
-/* Adicionar turma: escolher do CRM + pasta do Drive */
-async function modalAdicionarTurma(){
-  let crm=[];
-  try{ crm=await rpc('repo_turmas_crm',{p_token:sessao.token}); }
-  catch(e){ return tratar(e); }
-  const disp=crm.filter(t=>!t.gerida);
-
+/* Adicionar ao Repo uma turma da escola: só falta a pasta do Drive. */
+function modalAdicionarTurma(t){
   const f=abrirModal(`<div class="modal">
-    <div class="modal-head"><div><h3>Adicionar turma</h3>
-      <div class="sub">Escolhe uma turma do CRM e indica a pasta do Drive.</div></div></div>
+    <div class="modal-head"><div><h3>Adicionar ao Repo - Turma ${esc(t.codigo)}</h3>
+      <div class="sub">${esc(t.nome||'')}${t.nome?' · ':''}${t.n_formandos} formandos. Indica a pasta do Drive desta turma.</div></div></div>
     <div class="modal-body">
       <div class="field"><label>Pasta do Google Drive (a tua, pessoal)</label>
         <input id="aDrive" placeholder="https://drive.google.com/drive/folders/...">
-        <span class="hint">É para aqui que os links dos formandos vão levar.</span></div>
-      <div class="field"><label>Turma</label>
-        ${disp.length?`<div class="crm-lista">${disp.map(t=>`
-          <label class="crm-row">
-            <input type="radio" name="crmT" value="${esc(t.codigo)}">
-            <div class="crm-info"><strong>${esc(t.nome)||('Turma '+esc(t.codigo))}</strong>
-              <span>${esc(t.codigo)} · ${t.n_formandos} formandos</span></div>
-          </label>`).join('')}</div>`
-        :`<div class="empty" style="padding:20px">${ic('gente')}<span>Todas as turmas do CRM já estão adicionadas.</span></div>`}</div>
+        <span class="hint">É para aqui que os links dos formandos vão levar. Podes mudar depois em Definições.</span></div>
     </div>
     <div class="modal-foot"><span></span>
       <div style="display:flex;gap:10px">
         <button class="btn-sec" data-fechar>Cancelar</button>
-        <button class="btn" id="aAdicionar" ${disp.length?'':'disabled'}>Adicionar</button>
+        <button class="btn" id="aAdicionar">${ic('mais')}Adicionar</button>
       </div></div></div>`);
-
-  f.querySelector('#aAdicionar')?.addEventListener('click',async()=>{
-    const sel=f.querySelector('input[name="crmT"]:checked');
-    if(!sel) return toast('Escolhe uma turma.','err');
+  f.querySelector('#aAdicionar').addEventListener('click',async()=>{
     try{
-      await rpc('repo_turma_adicionar',{p_token:sessao.token,p_codigo:sel.value,p_drive_url:f.querySelector('#aDrive').value.trim()});
-      f.remove(); toast('Turma adicionada.'); carregarTurmas();
+      await rpc('repo_turma_adicionar',{p_token:sessao.token,p_codigo:t.codigo,p_drive_url:f.querySelector('#aDrive').value.trim()});
+      f.remove(); toast('Turma adicionada ao Repo.'); carregarTurmas(escolaAtual);
     }catch(e){ tratar(e); }
   });
 }
@@ -467,7 +517,7 @@ function modalTurma(t){
         ${MARCADORES.map(v=>`<button type="button" class="var-chip" data-var="${v}">${v}</button>`).join('')}</div>
       <div class="form-grid">
         <div class="field full"><label>Assunto</label><input id="tAssunto" value="${esc(t.def_assunto||'')}"></div>
-        <div class="field full"><label>Cabeçalho (faixa verde)</label><input id="tCabecalho" value="${esc(t.def_cabecalho||'')}"></div>
+        <div class="field full"><label>Cabeçalho (faixa azul)</label><input id="tCabecalho" value="${esc(t.def_cabecalho||'')}"></div>
         <div class="field"><label>Saudação</label><input id="tSaudacao" value="${esc(t.def_saudacao||'')}"></div>
         <div class="field"><label>Texto do botão</label><input id="tBotao" value="${esc(t.def_botao||'')}"></div>
         <div class="field full"><label>Rodapé</label><textarea id="tRodape" style="min-height:60px">${esc(t.def_rodape||'')}</textarea></div>
@@ -493,7 +543,7 @@ function modalTurma(t){
         p_botao:f.querySelector('#tBotao').value.trim(),
         p_rodape:f.querySelector('#tRodape').value.trim(),
         p_modulos:f.querySelector('#tModulos').value.trim()});
-      f.remove(); toast('Definições guardadas.'); carregarTurmas();
+      f.remove(); toast('Definições guardadas.'); carregarTurmas(escolaAtual);
     }catch(e){ tratar(e); }
   });
   f.querySelector('#tRemover').addEventListener('click',async()=>{
@@ -501,7 +551,7 @@ function modalTurma(t){
       texto:'As sessões e os registos de acesso vão com ela. Não afeta a turma no CRM.'});
     if(!ok) return;
     try{ await rpc('repo_turma_remover',{p_token:sessao.token,p_id:t.id});
-      f.remove(); toast('Turma removida.'); carregarTurmas(); }catch(e){ tratar(e); }
+      f.remove(); toast('Turma removida.'); carregarTurmas(escolaAtual); }catch(e){ tratar(e); }
   });
 }
 
@@ -515,7 +565,7 @@ async function carregarSessoes(t){
     if((s.enviados||0)<(s.destinatarios||0)) return `<span class="pill amber">Parcial · ${s.enviados}/${s.destinatarios}</span>`;
     return `<span class="pill grey">Enviada · ${dt(s.enviado_em)}</span>`;
   };
-  const topo=`<button class="voltar" id="voltarTurmas">${ic('seta')}Todas as turmas</button>
+  const topo=`<button class="voltar" id="voltarTurmas">${ic('seta')}${rotuloVoltar()}</button>
     <div class="section-head" style="margin-bottom:16px">
       <div><h3>${esc(t.nome||('Turma '+t.codigo))}</h3>
         <div class="sub">${t.drive_url?'Pasta: '+esc(t.drive_url.replace(/^https?:\/\//,'').slice(0,50)):'<span style="color:var(--warn)">Falta a pasta do Drive - define em Definições</span>'}</div></div>
@@ -537,7 +587,7 @@ async function carregarSessoes(t){
           <td class="t-right muted">${s.enviado_em?ic('olho'):ic('lapis')}</td>
         </tr>`;}).join('')}</tbody></table></div>`);
 
-  $('#voltarTurmas').addEventListener('click',mostrarTurmas);
+  $('#voltarTurmas').addEventListener('click',voltarATurmas);
   $('#copiarLink').addEventListener('click',()=>{
     navigator.clipboard?.writeText(LINK_TURMA);
     toast('Link copiado. Os formandos recebem-no por email, personalizado.');
@@ -559,12 +609,10 @@ let selosSess=null, selosEmail=null;
 
 async function abrirSelos(t){
   turmaAtual=t; selosSess=null;
-  $('#vTurmas').classList.remove('active');
-  $('#vSessoes').classList.remove('active');
-  $('#vSelos').classList.add('active');
+  mostrarVista('vSelos');
   $('#hTitulo').textContent='Badges · '+(t.nome||('Turma '+t.codigo));
   $('#hSub').textContent='Turma '+t.codigo+' · '+t.n_formandos+' formandos';
-  $('#btnPrimario').innerHTML=ic('mais')+'Adicionar turma';
+  $('#btnPrimario').classList.add('hidden');
   $('#pesquisa').value='';
   $('#vSelos').innerHTML='<div class="empty"><strong>A preparar…</strong></div>';
   try{
@@ -580,7 +628,7 @@ async function carregarSelos(t){
   catch(e){ return tratar(e); }
 
   const semDestino=lista.filter(x=>!x.destino).length;
-  const topo=`<button class="voltar" id="voltarTurmas2">${ic('seta')}Todas as turmas</button>
+  const topo=`<button class="voltar" id="voltarTurmas2">${ic('seta')}${rotuloVoltar()}</button>
     <div class="section-head" style="margin-bottom:16px">
       <div><h3>Badges de conclusão</h3>
         <div class="sub">Cada formando recebe o link do seu badge em crm.cr0x.org.${
@@ -617,7 +665,7 @@ async function carregarSelos(t){
                  ${x.enviado_em ? '' : `<button class="btn-danger btn-sm" data-trancar="${x.acesso_id}" title="Não aprovado - tranca o envio">Não aprovado</button>`}`}</td>
         </tr>`;}).join('')}</tbody></table></div>`);
 
-  $('#voltarTurmas2').addEventListener('click',mostrarTurmas);
+  $('#voltarTurmas2').addEventListener('click',voltarATurmas);
   document.querySelectorAll('[data-enviar]').forEach(b=>b.addEventListener('click',
     ()=>enviarSelo(t,b.dataset.enviar,b)));
   document.querySelectorAll('[data-reenviar]').forEach(b=>b.addEventListener('click',
@@ -650,7 +698,7 @@ function modalEmailBadge(t){
     <div class="modal-body">
       <div class="grid2">
         <div class="field full"><label>Assunto</label><input id="bAssunto" value="${esc(v.assunto||'')}"></div>
-        <div class="field full"><label>Cabeçalho (faixa verde)</label><input id="bCabecalho" value="${esc(v.cabecalho||'')}"></div>
+        <div class="field full"><label>Cabeçalho (faixa azul)</label><input id="bCabecalho" value="${esc(v.cabecalho||'')}"></div>
         <div class="field"><label>Saudação</label><input id="bSaudacao" value="${esc(v.saudacao||'')}"></div>
         <div class="field"><label>Botão</label><input id="bBotao" value="${esc(v.botao||'')}"></div>
         <div class="field full"><label>Título</label><input id="bTitulo" value="${esc(v.titulo||'')}"></div>
@@ -773,7 +821,7 @@ function modalSessao(t,sess){
             ${MARCADORES.map(v=>`<button type="button" class="var-chip" data-var="${v}">${v}</button>`).join('')}</div>
           <div class="form-grid">
             <div class="field full"><label>Assunto</label><input id="pAssunto" value="${esc(vals.assunto||'')}"></div>
-            <div class="field full"><label>Cabeçalho (faixa verde)</label><input id="pCabecalho" value="${esc(vals.cabecalho||'')}"></div>
+            <div class="field full"><label>Cabeçalho (faixa azul)</label><input id="pCabecalho" value="${esc(vals.cabecalho||'')}"></div>
             <div class="field"><label>Saudação</label><input id="pSaudacao" value="${esc(vals.saudacao||'')}"></div>
             <div class="field"><label>Texto do botão</label><input id="pBotao" value="${esc(vals.botao||'')}"></div>
             <div class="field full"><label>Rodapé</label><textarea id="pRodape" style="min-height:70px">${esc(vals.rodape||'')}</textarea></div>

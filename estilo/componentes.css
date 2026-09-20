@@ -1,5 +1,5 @@
 /* =====================================================================
-   IEFP CRM — COMPONENTES
+   CRM - COMPONENTES
    Base, shell (barra lateral + cabeçalho) e os componentes partilhados
    pela app e pelo repositório: botões, cartões, tabelas, pills, campos,
    estado vazio, modais, toasts e o ecrã de entrada.
@@ -14,7 +14,7 @@ a{text-decoration:none;color:inherit}
 ::-webkit-scrollbar{width:10px;height:10px}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:20px;border:2px solid var(--bg)}
 ::-webkit-scrollbar-thumb:hover{background:var(--muted2)}
-::selection{background:rgba(0,166,81,.22)}
+::selection{background:rgba(0,120,191,.22)}
 :focus-visible{outline:2px solid var(--g600);outline-offset:2px;border-radius:6px}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
 
@@ -86,7 +86,7 @@ a{text-decoration:none;color:inherit}
 .btn,.btn-sec,.btn-ghost,.btn-danger,.icon-btn,.btn-out{border:1px solid transparent;border-radius:10px;cursor:pointer;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:transform .08s,background .15s,box-shadow .15s;white-space:nowrap}
 .btn:active,.btn-sec:active,.icon-btn:active,.btn-danger:active,.btn-ghost:active,.btn-out:active{transform:translateY(1px)}
 .btn{padding:9px 15px;background:linear-gradient(180deg,var(--g600),var(--g800));color:#fff;box-shadow:var(--shadow-primary)}
-.btn:hover{background:linear-gradient(180deg,var(--g700),var(--g900));transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 10px 22px -6px rgba(0,107,60,.55),0 3px 6px -2px rgba(0,90,50,.35)}
+.btn:hover{background:linear-gradient(180deg,var(--g700),var(--g900));transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 10px 22px -6px rgba(0,94,149,.55),0 3px 6px -2px rgba(0,77,122,.35)}
 .btn-sec{padding:9px 14px;background:var(--surface);border-color:var(--border);color:var(--text)}
 .btn-sec:hover{background:var(--surface2);border-color:var(--g300);transform:translateY(-1px);box-shadow:var(--shadow)}
 .btn-ghost{padding:8px 12px;background:transparent;border-color:transparent;color:var(--muted);font-weight:600}
@@ -172,12 +172,12 @@ td .cell-sub{font-size:.78rem;color:var(--muted)}
 .field label{font-size:.8rem;font-weight:700;color:var(--text)}
 .field .hint{font-size:.74rem;color:var(--muted);font-weight:500}
 .field input,.field select,.field textarea{width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--border);background:var(--surface2);transition:border .14s,box-shadow .14s;font-size:.9rem}
-.field input:focus,.field select:focus,.field textarea:focus{outline:0;border-color:var(--g400);box-shadow:0 0 0 3px rgba(0,166,81,.14);background:var(--surface)}
+.field input:focus,.field select:focus,.field textarea:focus{outline:0;border-color:var(--g400);box-shadow:0 0 0 3px rgba(0,120,191,.14);background:var(--surface)}
 .field textarea{resize:vertical;min-height:80px}
 /* combobox de pesquisa (associar por nome/NIPC em vez de dropdown gigante) */
 .combo{position:relative}
 .combo-input{width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--border);background:var(--surface2);font-size:.9rem;transition:border .14s,box-shadow .14s}
-.combo-input:focus{outline:0;border-color:var(--g400);box-shadow:0 0 0 3px rgba(0,166,81,.14);background:var(--surface)}
+.combo-input:focus{outline:0;border-color:var(--g400);box-shadow:0 0 0 3px rgba(0,120,191,.14);background:var(--surface)}
 .combo-menu{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:70;max-height:264px;overflow:auto;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-lg);padding:5px}
 .combo-opt{display:block;width:100%;text-align:left;font:inherit;cursor:pointer;border:0;background:transparent;color:var(--text);padding:8px 10px;border-radius:7px;font-size:.86rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .combo-opt:hover,.combo-opt.active{background:var(--g50);color:var(--g700)}
@@ -289,9 +289,9 @@ td .cell-sub{font-size:.78rem;color:var(--muted)}
    CALENDÁRIO (date picker próprio)
    O calendário nativo do browser NÃO é estilável (é UI do browser, fora
    da página). Quem quiser o nosso carrega o JS do picker, que marca
-   <html class="dp-on"> — só aí o nativo é escondido. Sem essa marca,
+   <html class="dp-on"> - só aí o nativo é escondido. Sem essa marca,
    nada muda (o repo e o manual não são afetados).
-   Namespace .dp-* — tudo aditivo, não altera nenhuma regra existente.
+   Namespace .dp-* - tudo aditivo, não altera nenhuma regra existente.
    ===================================================================== */
 html.dp-on input[type="date"]::-webkit-calendar-picker-indicator{display:none;-webkit-appearance:none}
 html.dp-on input[type="date"]{
