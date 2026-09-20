@@ -133,7 +133,7 @@ Deno.serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: FROM,
+          from: marca.from,
           to: [data.email],
           subject: titulo,
           html,
