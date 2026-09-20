@@ -146,8 +146,16 @@ td .tag{align-self:auto}
 .lnk-copy svg{width:13px;height:13px}
 /* ---- Barra lateral: papel e tinta da landing (crm.cr0x.org), não o azul
    da app. Só aqui no Repo; a app continua com a barra dela. ---- */
-:root{--papel:#efe9dd;--papel-claro:#fdfbf7;--tinta:#171412;--tinta-2:#4a423c;--fraco:#6f655c;--regua:rgba(23,20,18,.16)}
-[data-theme="dark"]{--papel:#171412;--papel-claro:#221e1b;--tinta:#efe9dd;--tinta-2:#cfc6b8;--fraco:#9a9084;--regua:rgba(239,233,221,.14)}
+:root{--papel:#efe9dd;--papel-claro:#fdfbf7;--tinta:#171412;--tinta-2:#4a423c;--fraco:#6f655c;--regua:rgba(23,20,18,.16);
+  /* o conteúdo na mesma família da barra: papel e tinta, com o azul só como acento */
+  --bg:#f6f1e7;--surface:#fffdf9;--surface2:#faf5ec;--surface3:#f2ece1;--border:#e3dbcb;
+  --text:#171412;--muted:#5f574f;--muted2:#6b6058;
+  --shadow:0 1px 2px rgba(60,45,25,.05),0 4px 14px rgba(60,45,25,.07);
+  --shadow-md:0 2px 4px rgba(60,45,25,.07),0 10px 26px -10px rgba(60,45,25,.16);
+  --shadow-lg:0 18px 48px rgba(60,45,25,.18)}
+[data-theme="dark"]{--papel:#171412;--papel-claro:#221e1b;--tinta:#efe9dd;--tinta-2:#cfc6b8;--fraco:#9a9084;--regua:rgba(239,233,221,.14);
+  --bg:#14110f;--surface:#1c1815;--surface2:#232019;--surface3:#2a251f;--border:#342e26;
+  --text:#efe9dd;--muted:#b5aa9c;--muted2:#9a9084}
 .sidebar{background:var(--papel);color:var(--tinta);border-right:1.5px solid var(--regua);
   background-image:radial-gradient(var(--regua) .6px,transparent .7px);background-size:14px 14px}
 .brand-logo{background:var(--papel-claro);border:1.5px solid var(--tinta);box-shadow:none;border-radius:10px}
@@ -667,8 +675,7 @@ async function criarEscolaDasSemEscola(nome){
   if(nova) abrirEscola(nova); else mostrarEscolas();
 }
 function moverSel(t){
-  if(!escolaAtual||escolaAtual.slug) return '';
-  const ops=escolas.filter(s=>s.slug&&!s.arquivado);
+  const ops=escolas.filter(s=>s.slug&&!s.arquivado&&(!escolaAtual||s.slug!==escolaAtual.slug));
   if(!ops.length) return '';
   return `<label class="mover"><span>Mover para</span><select data-mover="${esc(t.codigo)}" aria-label="Mover a turma para uma escola">
     <option value="">escolher a escola…</option>${ops.map(s=>`<option value="${esc(s.slug)}">${esc(s.nome||s.slug)}</option>`).join('')}</select></label>`;
@@ -676,9 +683,12 @@ function moverSel(t){
 async function moverTurma(codigo,slug){
   try{ await rpc('turma_mover',{p_token:sessao.token,p_codigo:codigo,p_slug:slug}); }
   catch(e){ return tratar(e); }
-  toast(`Turma ${codigo} movida.`);
+  const destino=escolas.find(e=>e.slug===slug);
+  toast(`Turma ${codigo} movida para ${destino?(destino.nome||destino.slug):slug}.`);
+  const antes=escolaAtual&&escolaAtual.slug;
   await carregarEscolas();
-  if(escolas.find(e=>e.slug==='')) carregarTurmas(escolaAtual); else mostrarEscolas();
+  const ainda=escolas.find(e=>e.slug===antes);
+  if(ainda) abrirEscola(ainda); else mostrarEscolas();
 }
 
 /* ---------- Turmas de uma escola ----------
