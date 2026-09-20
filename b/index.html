@@ -319,23 +319,35 @@
     if(!B) return;
     bt.disabled=true; var antes=bt.textContent; bt.textContent='A desenhar…';
     var svg=document.querySelector('.topo svg').cloneNode(true);
-    svg.setAttribute('width','712'); svg.setAttribute('height','712');
+    /* a caixa é 200x218 desde que as estrelas subiram: um quadrado
+       esmagava o desenho e cortava-as */
+    svg.setAttribute('width','712'); svg.setAttribute('height','776');
+    /* o ouro é uma regra da folha de estilo da página, e um SVG
+       exportado não a leva. Vai copiada para dentro do clone. */
+    if(B.cumLaude){
+      var st=document.createElementNS('http://www.w3.org/2000/svg','style');
+      st.textContent='[stroke="#171412"]{stroke:url(#ouroG)}[fill="#171412"]{fill:url(#ouroG)}'+
+        '[fill="#0078bf"]{fill:url(#ouroC)}#seloDistincao polygon{fill:url(#ouroG)}';
+      svg.insertBefore(st, svg.firstChild);
+    }
     var img=new Image();
     img.onload=function(){
       var c=document.createElement('canvas'); c.width=1080; c.height=1080;
       var x=c.getContext('2d');
       x.fillStyle='#efe9dd'; x.fillRect(0,0,1080,1080);
-      x.drawImage(img,184,30,712,712);
+      x.drawImage(img,184,6,712,776);
       x.textAlign='center';
       try{ x.letterSpacing='6px'; }catch(e){}
-      x.fillStyle='#0078bf'; x.font="400 26px 'Space Mono',monospace";
+      /* num badge dourado, o azul do rótulo e do filete iam destoar */
+      var acento = B.cumLaude ? '#a8801a' : '#0078bf';
+      x.fillStyle=acento; x.font="400 26px 'Space Mono',monospace";
       x.fillText('CONCLUIU A FORMAÇÃO',540,790);
       try{ x.letterSpacing='0px'; }catch(e){}
       x.fillStyle='#171412'; x.font='800 78px Archivo,sans-serif';
       x.fillText(B.nome,540,872);
       x.fillStyle='#4a423c'; x.font='800 34px Archivo,sans-serif';
       x.fillText(B.curso,540,922);
-      x.fillStyle='#0078bf'; x.fillRect(435,958,210,5);
+      x.fillStyle=acento; x.fillRect(435,958,210,5);
       try{ x.letterSpacing='3px'; }catch(e){}
       x.fillStyle='#8a7f75'; x.font="400 21px 'Space Mono',monospace";
       x.fillText((B.mes+' · crm.cr0x.org').toUpperCase(),540,1012);

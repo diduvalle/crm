@@ -91,9 +91,13 @@ td .tag{align-self:auto}
 .cod-b input:focus{outline:0;border-color:var(--g500)}
 /* O louro do cum laude: um por turma. Apagado enquanto ninguem o tem,
    aceso a dourado em quem o leva. */
-.cl-b{background:none;border:0;padding:4px;border-radius:8px;cursor:pointer;color:var(--fraco);opacity:.45;transition:.14s}
-.cl-b:hover{opacity:1;background:rgba(0,0,0,.05)}
-.cl-b.on{opacity:1;color:#8a6d1f;background:rgba(197,160,63,.16)}
+.cl-b{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border:1px solid var(--regua);
+  border-radius:999px;background:var(--surface);color:var(--fraco);font-size:.74rem;font-weight:700;
+  cursor:pointer;white-space:nowrap;transition:.14s}
+.cl-b svg{width:15px;height:15px;flex:0 0 auto}
+.cl-b:hover{border-color:#c5a03f;color:#8a6d1f;background:#fdf8ea}
+.cl-b.on{border-color:#c5a03f;color:#5c4508;background:linear-gradient(180deg,#f5e6b0,#e6cc72);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.65)}
 .t-center{text-align:center}
 .trocar{border:0;background:none;color:var(--muted2);cursor:pointer;padding:2px;border-radius:6px;display:inline-grid;place-items:center;vertical-align:middle;margin-left:4px}
 .trocar svg{width:14px;height:14px}
@@ -1134,7 +1138,8 @@ async function carregarSelos(t){
           <td class="t-center">${x.destino
               ? '<button class="cl-b'+(x.user_id===selosCumLaude?' on':'')+'" data-cumlaude="'+x.user_id+'"'
                 + ' title="'+(x.user_id===selosCumLaude?'Tirar o cum laude':'Dar o cum laude a esta pessoa')+'"'
-                + ' aria-pressed="'+(x.user_id===selosCumLaude)+'">'+ic('louro')+'</button>'
+                + ' aria-pressed="'+(x.user_id===selosCumLaude)+'">'+ic('louro')
+                + (x.user_id===selosCumLaude?'Cum laude':'Dar')+'</button>'
               : '<span class="muted">-</span>'}</td>
           <td>${x.bloqueado
               ? '<span class="pill red">Não aprovado</span>'
