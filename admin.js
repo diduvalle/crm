@@ -113,7 +113,7 @@
         ? '<p class="ad-nota">Valores de partida para as turmas desta escola. A carga horária e o formador variam de turma para turma - isto é só o que aparece preenchido à partida. ' +
           'As <strong>referências ao curso</strong> são os códigos das UFCD e os números de slide que a app mostra nos módulos e nos glossários: só liga isto se a escola tiver esse curso.</p>'
         : g[0] === 'Emails para a turma'
-        ? '<p class="ad-nota">Saem sempre de <code>crm@cr0x.org</code>, e as respostas vêm para lá. O que muda por escola é só ' +
+        ? '<p class="ad-nota">Saem sempre de <code>crm@crm.cr0x.org</code>, e as respostas vão para <code>crm@cr0x.org</code>. O que muda por escola é só ' +
           'o <strong>nome</strong> que aparece na caixa de entrada de quem recebe: <em>Escola A</em> em vez de <em>Escola B</em>.</p>'
         : '';
       return '<p class="ad-grp">' + g[0] + '</p>' + nota + '<div class="ad-grid">' + g[1].map(function (c) {

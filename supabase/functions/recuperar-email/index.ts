@@ -9,7 +9,9 @@
 // Deploy (Supabase): Edge Functions → criar "recuperar-email" → colar este
 // ficheiro. Desligar "Enforce JWT" (função pública). Secrets necessários:
 //   RESEND_API_KEY   = re_xxx (da conta Resend)
-//   RECOVERY_FROM    = "CRM <crm@cr0x.org>"   (remetente verificado no Resend)
+//   RECOVERY_FROM    = "CRM <crm@crm.cr0x.org>"   (o dominio verificado no
+//                      Resend e o crm.cr0x.org; o cr0x.org pertence a outra
+//                      equipa la dentro e um envio de la e recusado)
 //                      O NOME é só a omissão: quando a turma tem escola,
 //                      quem recebe vê o nome dela.
 // SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY já são injetados automaticamente.

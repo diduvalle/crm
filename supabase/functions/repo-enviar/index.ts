@@ -15,7 +15,7 @@
 // Desligar "Enforce JWT" (a autorização é o token de sessão, validado no SQL).
 // Secrets:
 //   RESEND_API_KEY  = re_xxx
-//   REPO_FROM       = "CRM <crm@cr0x.org>"
+//   REPO_FROM       = "CRM <crm@crm.cr0x.org>"   (o dominio verificado)
 //                     ^ o domínio depois do @ TEM de estar verificado no Resend.
 //                     O NOME é só a omissão: quando a turma tem escola, quem
 //                     recebe vê o nome dela. O endereço é sempre este.
