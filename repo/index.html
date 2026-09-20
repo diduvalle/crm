@@ -52,18 +52,18 @@ td .tag{align-self:auto}
 .esc-logo-vazio{display:grid;place-items:center;color:var(--muted)}
 .esc-logo-vazio svg{width:20px;height:20px}
 .tc-fora{border-style:dashed}
-.tc-arq{opacity:.6}
+.tc-arq{filter:grayscale(1);background:var(--surface2)}
 .sec-titulo{font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:22px 0 10px}
 
 /* CABEÇALHO DE SECÇÃO COM VOLTAR */
 .voltar{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:700;color:var(--muted);background:none;border:0;cursor:pointer;padding:4px 0;margin-bottom:6px}
-.voltar:hover{color:var(--g700)}
+.voltar:hover{color:var(--g-texto)}
 .voltar svg{width:16px;height:16px}
 
 /* EDITOR DE TEXTO RICO */
 .rt-toolbar{display:flex;flex-wrap:wrap;gap:5px;align-items:center;padding:7px 8px;border:1px solid var(--border);border-bottom:0;border-radius:10px 10px 0 0;background:var(--surface2)}
 .rt-tb{height:30px;min-width:30px;padding:0 8px;display:inline-grid;place-items:center;border:1px solid var(--border);border-radius:7px;background:var(--surface);color:var(--text);cursor:pointer;font-size:.92rem;font-weight:700}
-.rt-tb:hover{border-color:var(--g400);background:var(--g50);color:var(--g700)}
+.rt-tb:hover{border-color:var(--g400);background:var(--g50);color:var(--g-texto)}
 .rt-tb svg{width:15px;height:15px}
 .rt-sep{width:1px;height:20px;background:var(--border);margin:0 2px}
 .rt-editor{min-height:120px;max-height:260px;overflow-y:auto;border:1px solid var(--border);border-radius:0 0 10px 10px;padding:12px 14px;background:var(--surface2);color:var(--text);outline:none;font-size:.9rem}
@@ -76,7 +76,7 @@ td .tag{align-self:auto}
 /* MARCADORES */
 .vars{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .var-chip{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:.72rem;font-weight:700;background:var(--surface3);color:var(--muted);border:1px solid var(--border);cursor:pointer;font-family:ui-monospace,monospace}
-.var-chip:hover{border-color:var(--g400);color:var(--g700);background:var(--g50)}
+.var-chip:hover{border-color:var(--g400);color:var(--g-texto);background:var(--g50)}
 
 /* AVISO RGPD */
 .nota-rgpd{display:flex;gap:9px;align-items:flex-start;padding:11px 13px;border-radius:10px;background:var(--warn-bg);color:var(--warn);font-size:.78rem;font-weight:600;line-height:1.45}
@@ -115,7 +115,7 @@ td .tag{align-self:auto}
 
 /* botão de copiar o link pessoal de um formando (dashboard) */
 .lnk-copy{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;vertical-align:middle;margin-left:7px;padding:0}
-.lnk-copy:hover{border-color:var(--g400);color:var(--g700);background:var(--g50)}
+.lnk-copy:hover{border-color:var(--g400);color:var(--g-texto);background:var(--g50)}
 .lnk-copy svg{width:13px;height:13px}
 </style>
 </head>
