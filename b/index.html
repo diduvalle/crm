@@ -113,6 +113,8 @@
   <div class="topo">
     <svg viewBox="0 0 200 200" role="img" aria-label="Badge de conclusão">
   <g transform="rotate(-5 100 100)">
+    <!-- as estrelas ganhas e o louro do cum laude, desenhados ao carregar -->
+    <g id="seloDistincao"></g>
     <circle cx="100" cy="100" r="76" fill="none" stroke="#171412" stroke-width="7"/>
     <circle cx="100" cy="100" r="64" fill="none" stroke="#171412" stroke-width="2.5"/>
     <path id="raSelo" d="M100,100 m-51,0 a51,51 0 1,1 102,0 a51,51 0 1,1 -102,0" fill="none"/>
@@ -235,11 +237,40 @@
     })
     .catch(function(){ document.body.dataset.estado='nao-existe'; });
 
+  /* uma estrela de cinco pontas, centrada em (cx,cy) */
+  function estrela(cx,cy,r){
+    var p=[],i,a,rr;
+    for(i=0;i<10;i++){ a=-Math.PI/2+i*Math.PI/5; rr=i%2?r*0.42:r;
+      p.push((cx+rr*Math.cos(a)).toFixed(2)+','+(cy+rr*Math.sin(a)).toFixed(2)); }
+    return '<polygon points="'+p.join(' ')+'" fill="#171412"/>';
+  }
+  /* um ramo de louro, do lado esquerdo ou direito */
+  function louro(lado){
+    var x=lado<0?30:170, sx=lado<0?1:-1, o='', i, y;
+    o+='<path d="M'+x+',126 Q'+(x+sx*6)+',100 '+(x+sx*2)+',74" fill="none" stroke="#171412" stroke-width="2.4" stroke-linecap="round"/>';
+    for(i=0;i<5;i++){ y=120-i*11;
+      o+='<ellipse cx="'+(x+sx*(7+i*0.8))+'" cy="'+y+'" rx="5.4" ry="2.5" fill="#171412" transform="rotate('+(lado<0?-34+i*7:34-i*7)+' '+(x+sx*(7+i*0.8))+' '+y+')"/>'; }
+    return o;
+  }
+  /* as estrelas em arco no anel de baixo, centradas */
+  function estrelas(n){
+    if(!n) return '';
+    var R=70, passo=13, ini=90-(n-1)*passo/2, o='', i, a;
+    for(i=0;i<n;i++){ a=(ini+i*passo)*Math.PI/180;
+      o+=estrela(100+R*Math.cos(a), 100+R*Math.sin(a), 4.4); }
+    return o;
+  }
   function pintar(d){
     document.title=d.nome+' concluiu '+d.curso;
     txt('#bNome',d.nome); txt('.bNomeTxt',d.nome);
     txt('#bMes',d.mes);   txt('.bMesTxt',d.mes);
     txt('#bContexto',d.contexto); txt('#bCodigo',d.codigo);
+    /* as estrelas ganhas e, se for o caso, o louro do cum laude */
+    var dist=document.getElementById('seloDistincao');
+    if(dist) dist.innerHTML=estrelas(Math.max(0,Math.min(4,+d.estrelas||0)))+
+      (d.cumLaude?louro(-1)+louro(1):'');
+    var cl=document.getElementById('bCumLaude');
+    if(cl) cl.hidden=!d.cumLaude;
     var f=document.querySelector('.pessoa');
     if(f){ f.textContent=d.formador; f.href=d.formadorUrl; }
     document.querySelectorAll('dl dd').forEach(function(e){

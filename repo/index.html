@@ -89,6 +89,12 @@ td .tag{align-self:auto}
 .cod-b{display:flex;align-items:center;gap:6px}
 .cod-b input{width:112px;font:inherit;font-size:.82rem;padding:5px 8px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text)}
 .cod-b input:focus{outline:0;border-color:var(--g500)}
+/* O louro do cum laude: um por turma. Apagado enquanto ninguem o tem,
+   aceso a dourado em quem o leva. */
+.cl-b{background:none;border:0;padding:4px;border-radius:8px;cursor:pointer;color:var(--fraco);opacity:.45;transition:.14s}
+.cl-b:hover{opacity:1;background:rgba(0,0,0,.05)}
+.cl-b.on{opacity:1;color:#8a6d1f;background:rgba(197,160,63,.16)}
+.t-center{text-align:center}
 .trocar{border:0;background:none;color:var(--muted2);cursor:pointer;padding:2px;border-radius:6px;display:inline-grid;place-items:center;vertical-align:middle;margin-left:4px}
 .trocar svg{width:14px;height:14px}
 .trocar:hover{background:var(--surface2);color:var(--text)}
@@ -394,6 +400,7 @@ const MARCADORES=['{nome}','{titulo}','{turma}','{modulo}'];
 
 const I={
   pasta:'M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z',
+  louro:'M12 21c-3-1.6-4.5-4.4-4.5-7.5C7.5 9 9.5 5.5 12 3c2.5 2.5 4.5 6 4.5 10.5 0 3.1-1.5 5.9-4.5 7.5M12 12.5c-1.7-.6-3-1.9-3.6-3.6M12 12.5c1.7-.6 3-1.9 3.6-3.6M12 17c-1.7-.6-3-1.9-3.6-3.6M12 17c1.7-.6 3-1.9 3.6-3.6',
   mail:'M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l9 6 9-6',
   gente:'M16 19v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M9.5 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6M21 19v-2a4 4 0 0 0-3-3.9',
   escola:'M3 21h18M5 21V7l7-4 7 4v14M9 21v-5h6v5M9 11h.01M15 11h.01M9 14h.01M15 14h.01',
@@ -1063,7 +1070,7 @@ async function carregarSessoes(t){
 
    O botão envia a UMA pessoa de cada vez, de propósito: são poucos, e assim
    vê-se o que aconteceu a cada um antes de avançar para o seguinte. ====== */
-let selosSess=null, selosEmail=null;
+let selosSess=null, selosEmail=null, selosCumLaude=null;
 
 async function abrirSelos(t){
   turmaAtual=t; selosSess=null;
@@ -1093,6 +1100,10 @@ async function abrirSelos(t){
 
 async function carregarSelos(t){
   let lista;
+  /* quem tem o cum laude: pergunta-se à parte, para não mexer no repo_selos,
+     que vive no SQL do projeto antigo e é lido pelas duas apps */
+  try{ selosCumLaude=await rpc('badge_cum_laude_de',{p_token:sessao.token,p_repo_turma_id:t.id}); }
+  catch(e){ selosCumLaude=null; }
   try{ lista=await rpc('repo_selos',{p_token:sessao.token,p_repo_turma_id:t.id}); }
   catch(e){ return tratar(e); }
 
@@ -1109,7 +1120,7 @@ async function carregarSelos(t){
     ? `<div class="empty">${ic('gente')}<strong>Sem formandos com email</strong>
         <span>Os badges enviam-se para o email pessoal de cada formando.</span></div>`
     : `<div class="table-wrap"><table><thead><tr>
-        <th>Formando</th><th>Badge</th><th>Estado</th><th>Abriu</th><th></th>
+        <th>Formando</th><th>Badge</th><th title="Um por turma, dado por si">Cum laude</th><th>Estado</th><th>Abriu</th><th></th>
       </tr></thead><tbody>${lista.map(x=>{
         /* o que se mostra e o CODIGO, venha ele da pasta antiga (/b/CODIGO/)
            ou da pagina nova (/b/?c=CODIGO) - o endereco fica no link */
@@ -1120,6 +1131,11 @@ async function carregarSelos(t){
               ? `<a href="${esc(x.destino)}" target="_blank" rel="noopener" class="chip">${curto}</a>`
                 + `<button class="trocar" data-trocar="${esc(x.username)}" title="Trocar o badge desta pessoa">${ic('lapis')}</button>`
               : campoBadge(x.username)}</td>
+          <td class="t-center">${x.destino
+              ? '<button class="cl-b'+(x.user_id===selosCumLaude?' on':'')+'" data-cumlaude="'+x.user_id+'"'
+                + ' title="'+(x.user_id===selosCumLaude?'Tirar o cum laude':'Dar o cum laude a esta pessoa')+'"'
+                + ' aria-pressed="'+(x.user_id===selosCumLaude)+'">'+ic('louro')+'</button>'
+              : '<span class="muted">-</span>'}</td>
           <td>${x.bloqueado
               ? '<span class="pill red">Não aprovado</span>'
               : x.erro
@@ -1159,6 +1175,7 @@ async function carregarSelos(t){
     td.querySelector('[data-cod]').addEventListener('click',()=>guardarBadge(t,b.dataset.trocar,i.value));
     i.addEventListener('keydown',ev=>{ if(ev.key==='Enter'){ ev.preventDefault(); guardarBadge(t,b.dataset.trocar,i.value); } });
   }));
+  document.querySelectorAll('[data-cumlaude]').forEach(b=>b.addEventListener('click',()=>darCumLaude(t, b.dataset.cumlaude)));
   const vb=$('#verEmailBadge');
   if(vb) vb.addEventListener('click',()=>modalEmailBadge(t));
 }
@@ -1178,6 +1195,16 @@ async function guardarBadge(t, username, valor){
   try{ await rpc("repo_selos_definir",{p_token:sessao.token,p_repo_turma_id:t.id,p_pares:{[username]:url}}); }
   catch(e){ return tratar(e); }
   toast("Badge atribuído.");
+  carregarSelos(t);
+}
+/* Um por turma: marcar um tira ao anterior, e marcar o que já o tem
+   tira-o a toda a gente. É uma decisão de quem deu a formação, não um
+   número que se calcule - por isso é aqui, à mão, e não no snapshot. */
+async function darCumLaude(t, userId){
+  const tirar = userId===selosCumLaude;
+  try{ await rpc('badge_cum_laude',{p_token:sessao.token,p_repo_turma_id:t.id,p_user_id:tirar?null:userId}); }
+  catch(e){ return tratar(e); }
+  toast(tirar?'Cum laude retirado.':'Cum laude atribuído.');
   carregarSelos(t);
 }
 async function enviarSelo(t,acessoId,btn){

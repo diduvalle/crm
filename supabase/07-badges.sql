@@ -34,6 +34,15 @@ create table if not exists public.badges (
   criado_em    timestamptz not null default now()
 );
 create unique index if not exists ix_badges_user on public.badges(user_id);
+
+-- As estrelas GANHAM-SE (saem do snapshot da submissao, pelo patamar da
+-- taca do percurso) e o cum laude DA-SE (um por turma, marcado no Repo).
+-- Sao coisas diferentes, e no selo tambem se desenham diferente: as
+-- estrelas em arco no anel de baixo, o cum laude em louro nos lados.
+-- A tabela ja existe em producao, e o "if not exists" de cima nao lhe
+-- acrescenta colunas nenhumas.
+alter table public.badges add column if not exists estrelas  int     not null default 0;
+alter table public.badges add column if not exists cum_laude boolean not null default false;
 alter table public.badges enable row level security;
 
 -- ---------------------------------------------------------------------
@@ -62,7 +71,8 @@ returns json language sql security definer set search_path = public as $$
   select case when b.codigo is null then null else json_build_object(
     'codigo', b.codigo, 'nome', b.nome, 'curso', b.curso, 'formacao', b.formacao,
     'mes', b.mes, 'data', b.data_iso, 'contexto', b.contexto,
-    'formador', b.formador, 'formadorUrl', b.formador_url
+    'formador', b.formador, 'formadorUrl', b.formador_url,
+    'estrelas', b.estrelas, 'cumLaude', b.cum_laude
   ) end
   from public.badges b where b.codigo = trim(p_codigo);
 $$;
@@ -98,14 +108,22 @@ begin
            extract(year from current_date)::text;
 
   for r in
-    select u.id, trim(coalesce(u.nome,'') || ' ' || coalesce(u.apelido,'')) as nome
+    select u.id, trim(coalesce(u.nome,'') || ' ' || coalesce(u.apelido,'')) as nome,
+           -- o patamar da ultima entrega: nivel 0 e 1 nao dao estrela (o
+           -- badge ja e o piso), e dai em diante uma por patamar.
+           -- Entregas anteriores a taca nao trazem 'mapa' e ficam a zero.
+           greatest(0, coalesce((
+             select (sb.payload->'mapa'->>'nivel')::int
+               from submissoes sb
+              where sb.user_id = u.id
+              order by sb.criado_em desc limit 1), 1) - 1) as estrelas
       from utilizadores u
      where u.turma_id = rt.turma_id and u.papel = 'Formando'
        and not exists (select 1 from badges b where b.user_id = u.id)
   loop
     v_cod := _badge_codigo();
-    insert into badges(codigo, user_id, nome, mes, contexto)
-      values (v_cod, r.id, nullif(r.nome,''), v_mes, coalesce(v_ctx,''));
+    insert into badges(codigo, user_id, nome, mes, contexto, estrelas)
+      values (v_cod, r.id, nullif(r.nome,''), v_mes, coalesce(v_ctx,''), r.estrelas);
     v_novos := v_novos + 1;
   end loop;
 
@@ -120,6 +138,39 @@ begin
 end $$;
 revoke all on function public.badges_emitir(uuid, uuid) from public, anon;
 grant execute on function public.badges_emitir(uuid, uuid) to anon, authenticated;
+
+-- ---------------------------------------------------------------------
+-- O cum laude: UM por turma.
+-- ---------------------------------------------------------------------
+-- Nao e automatico de proposito. As estrelas medem-se; isto e uma
+-- decisao de quem deu a formacao, e e por isso que se marca a mao no
+-- Repo. Marcar outro tira ao anterior - ha um so, e passar a haver dois
+-- por engano seria pior do que nao haver nenhum.
+-- Chamar com p_user_id nulo tira o cum laude a turma toda.
+create or replace function public.badge_cum_laude(p_token uuid, p_repo_turma_id uuid, p_user_id uuid)
+returns json language plpgsql security definer set search_path = public as $$
+declare rt public.repo_turmas; v_n int := 0;
+begin
+  perform _repo_root(p_token);
+  select * into rt from repo_turmas where id = p_repo_turma_id;
+  if rt.id is null then raise exception 'TURMA_NAO_EXISTE'; end if;
+
+  update badges b set cum_laude = false
+    from utilizadores u
+   where u.id = b.user_id and u.turma_id = rt.turma_id and b.cum_laude;
+
+  if p_user_id is not null then
+    update badges b set cum_laude = true
+      from utilizadores u
+     where u.id = b.user_id and b.user_id = p_user_id and u.turma_id = rt.turma_id;
+    get diagnostics v_n = row_count;
+    if v_n = 0 then raise exception 'BADGE_NAO_EXISTE'; end if;
+  end if;
+
+  return json_build_object('ok', true, 'cumLaude', p_user_id);
+end $$;
+revoke all on function public.badge_cum_laude(uuid, uuid, uuid) from public, anon;
+grant execute on function public.badge_cum_laude(uuid, uuid, uuid) to anon, authenticated;
 
 notify pgrst, 'reload schema';
 
