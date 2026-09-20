@@ -62,7 +62,9 @@ async function marcaDaTurma(url: string, chave: string, codigo: string, fromOmis
     });
     const e = r.ok ? await r.json() : null;
     if (e) {
-      out.nome = nomeSeguro(e.nome || "");
+      /* o campo "Nome que aparece nos emails" manda; sem ele, o nome
+         da escola - que é o que se via aqui antes */
+      out.nome = nomeSeguro(e.remetenteNome || e.nome || "");
       if (/^#[0-9a-f]{6}$/i.test(e.cor || "")) { out.cor = e.cor; out.cor2 = escurecer(e.cor, 0.34); }
     }
   } catch (_) { /* sem escola: fica o remetente do segredo e o azul */ }

@@ -763,7 +763,15 @@ const INFO={
   leadfunil:{t:'Funil de aquisição',x:'Conversão das EMPRESAS ao longo do ciclo de vida (Lead → MQL → SQL → Cliente). Mostra onde as contas se perdem e a eficácia da qualificação. Complementa o funil de VENDAS (que mede por proposta).',r:'10868 · slide 122 (criar leads / funil)'},
   gatilhos:{t:'Gatilhos comportamentais',x:'Automações despoletadas pelo COMPORTAMENTO do lead - abriu/clicou um email, ficou "quente" (score ≥ 70) ou está sem contacto há N dias - e não só por eventos de ciclo de vida. É a base do nurturing e do marketing automation moderno.',r:'10868 · slide 88 (marketing automatizado)'},
 };
-function infoTip(key){ const d=INFO[key]; if(!d) return ''; return `<span class="infotip" tabindex="0" role="button" aria-label="${esc(d.t)}"><span class="infotip-ic">${ic('info',12)}</span><span class="infotip-pop"><strong>${esc(d.t)}</strong><span class="ix">${esc(d.x)}</span><span class="ref">${ic(/^\s*\d{4,5}\b/.test(d.r||'')?'slides':'book',11)} ${esc(d.r)}</span></span></span>`; }
+function infoTip(key){
+  const d=INFO[key]; if(!d) return '';
+  /* uma referência que comece por um código de curso é do deck; as
+     outras são notas de boa prática e ficam sempre */
+  const ref=d.r||'', doCurso=/^\s*\d{4,5}\b/.test(ref);
+  const linha = (ref && (!doCurso || refsCurso()))
+    ? `<span class="ref">${ic(doCurso?'slides':'book',11)} ${esc(ref)}</span>` : '';
+  return `<span class="infotip" tabindex="0" role="button" aria-label="${esc(d.t)}"><span class="infotip-ic">${ic('info',12)}</span><span class="infotip-pop"><strong>${esc(d.t)}</strong><span class="ix">${esc(d.x)}</span>${linha}</span></span>`;
+}
 /* grelha de glossário reutilizável: [termo, definição, referência ao slide] */
 function glossGrid(arr,hi){ hi=hi||'shield'; return `<div class="gloss-grid">${arr.map(g=>`<div class="gloss"><h4>${ic(hi,15)} ${esc(g[0])}</h4><p>${esc(g[1])}</p>${(g[2]&&refsCurso())?`<p style="margin-top:8px;color:var(--g700);font-weight:700;font-size:.72rem;display:flex;align-items:center;gap:5px;border-top:1px solid var(--border);padding-top:7px">${ic('slides',12)} ${esc(g[2])}</p>`:''}</div>`).join('')}</div>`; }
 /* Glossário CRM (UFCD 10868) - termo, definição, slide do deck DEFAULT */
