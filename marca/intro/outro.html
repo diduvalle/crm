@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<title>Outro CRM</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600&family=Space+Mono:wght@700&display=block">
+<!-- ============ O FECHO DOS VIDEOS ============
+     Quatro segundos e uma ideia so: as tres colunas juntam-se numa, a
+     coluna tomba e estica, e o que fica dela e a PINCELADA por baixo do
+     endereco. A marca torna-se aquilo para onde aponta.
+
+     Nada disto e inventado:
+     - a pincelada e o mesmo <path> que a pagina tem por baixo de "sala
+       de aula". Copiado, nao redesenhado;
+     - o endereco usa o estilo .marca da pagina: Space Mono, maiusculas,
+       entrelinha .24em, em --azul-escuro. E o que esta no canto superior
+       esquerdo de crm.cr0x.org;
+     - a marca e a do cabecalho, toda em --neutra. Sem azul.
+
+     UNIDADES: dentro de um SVG, um translate(31px) do CSS vale 31
+     unidades do viewBox, nao 31 pixeis do ecra. Foi o que partiu a
+     primeira versao deste fecho - as colunas voavam para fora. Por isso
+     tudo o que mexe no desenho usa transform-box:view-box e numeros da
+     grelha do logotipo: as colunas estao a 31 unidades umas das outras.
+     ============================================ -->
+<style>
+  :root{
+    --tinta:#171412; --neutra:#2a2622; --papel:#efe9dd; --azul-escuro:#005e95;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--papel);overflow:hidden}
+  body{display:grid;place-items:center;font-family:"Archivo",system-ui,sans-serif}
+
+  /* A conta que alinha tudo: o SVG tem 230px para 200 unidades (1.15
+     px/un) e um scale de 1.42 sobre o centro. O pe das colunas esta em
+     y=124, logo cai em 10 + (100 + 24*1.42)*1.15 = 164px do topo do
+     palco. E ai que a pincelada e o endereco assentam. */
+  .palco{position:relative;width:660px;height:330px;animation:sai .45s ease 3.55s forwards}
+  .marca{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:230px;height:230px;overflow:visible}
+
+  /* 1. as tres colunas juntam-se numa so */
+  .col,.barra{transform-box:view-box}
+  .c1{animation:junta1 .42s cubic-bezier(.5,0,.3,1) .58s forwards}
+  .c3{animation:junta3 .42s cubic-bezier(.5,0,.3,1) .58s forwards}
+  .barra{animation:apaga .28s ease .58s forwards}
+  @keyframes junta1{to{transform:translateX(31px)}}
+  @keyframes junta3{to{transform:translateX(-31px)}}
+  @keyframes apaga{to{opacity:0}}
+
+  /* 2. a coluna tomba e estica ate ficar um traco.
+        O rotate(5deg) anula a inclinacao da marca, para o traco assentar
+        direito na pincelada. */
+  .pilha{transform-box:view-box;transform-origin:100px 124px;
+         animation:cai .55s cubic-bezier(.55,0,.25,1) 1.00s forwards}
+  @keyframes cai{to{transform:rotate(5deg) scale(8.2,.085);opacity:0}}
+
+  /* 3. a pincelada varre por cima, e substitui o traco */
+  .risco{position:absolute;left:50%;top:150px;transform:translateX(-50%);
+         width:336px;height:20px;clip-path:inset(0 100% 0 0);
+         animation:varre .58s cubic-bezier(.3,.85,.3,1) 1.24s forwards}
+  .risco svg{width:100%;height:100%;display:block;fill:var(--neutra);opacity:.92}
+
+  /* 4. o endereco por cima dela, como na pagina */
+  .endereco{position:absolute;left:0;right:0;top:124px;text-align:center;
+    font-family:"Space Mono",ui-monospace,monospace;font-weight:700;
+    font-size:30px;letter-spacing:.24em;text-transform:uppercase;line-height:1;
+    color:var(--azul-escuro);opacity:0;
+    animation:sobe .5s cubic-bezier(.22,1,.36,1) 1.62s forwards}
+  .assinatura{position:absolute;left:0;right:0;top:194px;text-align:center;
+    font-size:12.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--neutra);opacity:0;
+    animation:tenue .5s ease 2.00s forwards}
+
+  @keyframes entra{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  @keyframes varre{to{clip-path:inset(0 0 0 0)}}
+  @keyframes sobe{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @keyframes tenue{to{opacity:.58}}
+  @keyframes sai{to{opacity:0}}
+  .marca{animation:entra .5s cubic-bezier(.22,1,.36,1) .06s backwards}
+</style>
+</head>
+<body>
+  <div class="palco">
+
+    <svg class="marca" viewBox="0 0 200 200" aria-hidden="true">
+      <g transform="translate(100,100) scale(1.42) translate(-100,-100)">
+        <g class="pilha">
+          <!-- a inclinacao de -5 graus da marca fica aqui dentro, para o
+               rotate(5deg) do tombo a poder anular -->
+          <g transform="rotate(-5 100 100)">
+            <rect class="col c1" x="55" y="77" width="28" height="47" rx="4" fill="none" stroke="#2a2622" stroke-width="3.4"/>
+            <rect class="col c2" x="86" y="77" width="28" height="47" rx="4" fill="none" stroke="#2a2622" stroke-width="3.4"/>
+            <rect class="col c3" x="117" y="77" width="28" height="47" rx="4" fill="#2a2622"/>
+            <rect class="barra" x="60" y="83" width="18" height="3.4" rx="1.7" fill="#2a2622"/>
+            <rect class="barra" x="91" y="83" width="18" height="3.4" rx="1.7" fill="#2a2622"/>
+            <rect class="barra" x="122" y="83" width="18" height="3.4" rx="1.7" fill="#efe9dd"/>
+            <rect class="barra" x="60" y="93" width="18" height="7" rx="2" fill="#2a2622" opacity=".34"/>
+            <rect class="barra" x="60" y="104" width="18" height="7" rx="2" fill="#2a2622" opacity=".34"/>
+            <rect class="barra" x="91" y="93" width="18" height="7" rx="2" fill="#2a2622" opacity=".34"/>
+            <rect class="barra" x="122" y="93" width="18" height="7" rx="2" fill="#efe9dd"/>
+            <rect class="barra" x="122" y="104" width="18" height="7" rx="2" fill="#efe9dd" opacity=".5"/>
+          </g>
+        </g>
+      </g>
+    </svg>
+
+    <div class="risco">
+      <!-- a mesma pincelada que esta por baixo de "sala de aula" -->
+      <svg viewBox="0 0 340 30" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M2.5 17.5c10-3.6 22-5.6 36-6.4 26-1.6 52 1.2 78 2.2 30 1.2 60-0.6 90-2.4 28-1.7 55-3 82-1.1 18 1.3 33 4 47 8.4 3 0.9 3.4 6.6 0.4 7.4-14 3.6-29 4.6-45 4.2-30-0.8-59-4.2-89-4.6-32-0.4-63 2.4-95 3-26 0.5-51-0.6-75-4-10-1.4-19-3.4-27-6.2-3-1-3.1-5.5-2.4-6.5z"/>
+      </svg>
+    </div>
+
+    <div class="endereco" id="endereco">crm.cr0x.org</div>
+    <div class="assinatura" id="assinatura">Plataforma de Formação</div>
+  </div>
+
+  <script>
+    /* outro.html?url=escola.pt&sub=Centro%20de%20Formacao&cor=%23b31e2e */
+    var q = new URLSearchParams(location.search);
+    if (q.get('url')) document.getElementById('endereco').textContent = q.get('url');
+    if (q.get('sub')) document.getElementById('assinatura').textContent = q.get('sub');
+    if (q.get('cor')) document.documentElement.style.setProperty('--azul-escuro', q.get('cor'));
+  </script>
+</body>
+</html>

@@ -40,6 +40,19 @@ icones/
 - **Favicon, ícone de app, avatar de canal** → `crm-app-*`, que já traz a caixa arredondada.
 - **Uma cor só, gravação ou bordado** → `crm-marca-tinta` ou `crm-marca-papel`, que são monocromáticas de raiz.
 
+## A abertura e o fecho dos vídeos
+
+ e , gravados em webm 1080p ao lado deles.
+
+- **A abertura** monta a marca coluna a coluna, a terceira fecha, o nome entra.
+- **O fecho** tem uma ideia só: as três colunas juntam-se numa, a coluna tomba e estica, e o que fica dela é a **pincelada** por baixo do endereço. A marca torna-se aquilo para onde aponta. A pincelada é o mesmo  que a página tem sob *sala de aula*, e o endereço usa o estilo  da página - Space Mono, maiúsculas, , em azul escuro.
+
+Ambos aceitam parâmetros no endereço, para servirem qualquer escola sem se editar o ficheiro:
+
+
+
+> Dentro de um SVG, um  do CSS vale **31 unidades do viewBox**, não 31 píxeis do ecrã. Foi o que partiu a primeira versão do fecho.
+
 ## Regras
 
 - **Ar em volta:** deixar pelo menos a largura de uma coluna (um sexto da largura da marca) livre de tudo.
