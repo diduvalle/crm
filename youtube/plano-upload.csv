@@ -1,0 +1,24 @@
+﻿ordem;ficheiro;titulo;titulo_en;legenda;na_galeria
+1;resumo-pt.mp4;Visão geral;Overview;resumo-pt.vtt;sim
+2;dashboard-pt.mp4;Dashboard & Agenda;Dashboard & Calendar;dashboard-pt.vtt;sim
+3;contactos-pt.mp4;Empresas & Contactos (vista 360º);Companies & Contacts (360° view);contactos-pt.vtt;sim
+4;gestao-leads-pt.mp4;Gestão de leads (ciclo de vida);Lead management (lifecycle);gestao-leads-pt.vtt;sim
+5;produtos-pt.mp4;Produtos;Products;produtos-pt.vtt;sim
+6;propostas-pt.mp4;Propostas - Pipeline (Kanban);Proposals - Pipeline (Kanban);propostas-pt.vtt;sim
+7;criar-proposta-pt.mp4;Criar uma proposta;Create a proposal;criar-proposta-pt.vtt;sim
+8;pdf-pt.mp4;Exportar PDF;Export PDF;pdf-pt.vtt;sim
+9;modelos-pt.mp4;Modelos de Proposta;Proposal Templates;modelos-pt.vtt;sim
+10;campanhas-pt.mp4;Campanhas & Email;Campaigns & Email;campanhas-pt.vtt;sim
+11;automacao-comportamental-pt.mp4;Automação comportamental;Behavioural automation;automacao-comportamental-pt.vtt;sim
+12;analytics-pt.mp4;Analytics;Analytics;analytics-pt.vtt;sim
+13;rgpd-pt.mp4;RGPD;GDPR;rgpd-pt.vtt;sim
+14;alertas-pt.mp4;Alertas;Alerts;alertas-pt.vtt;sim
+15;definicoes-pt.mp4;Definições;Settings;definicoes-pt.vtt;sim
+16;montar-turma-pt.mp4;Montar a turma;Set up the class;montar-turma-pt.vtt;sim
+17;submeter-pt.mp4;Submeter o trabalho;Submit your work;submeter-pt.vtt;sim
+18;recuperar-pt.mp4;Recuperar a palavra-passe;Recover the password;recuperar-pt.vtt;sim
+19;importar-pt.mp4;Importar formandos;Import trainees;importar-pt.vtt;sim
+20;aprovacao-propostas-pt.mp4;Aprovacao propostas;;aprovacao-propostas-pt.vtt;nao
+21;casos-pt.mp4;Casos;;casos-pt.vtt;nao
+22;decisao-pt.mp4;Decisao;;decisao-pt.vtt;nao
+23;jornadas-pt.mp4;Jornadas;;jornadas-pt.vtt;nao
