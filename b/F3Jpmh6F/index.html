@@ -23,7 +23,9 @@
 <style>
   :root{
     --papel:#efe9dd; --tinta:#171412; --azul:#0078bf;
-    --tinta-2:#4a423c; --fraco:#8a7f75; --risco:#d6cdbd;
+    --tinta-2:#4a423c; --fraco:#6f655c; --risco:#d6cdbd;
+    /* o mesmo azul, para texto pequeno: o claro so da 3.9:1 sobre papel */
+    --azul-escuro:#005e95;
   }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
@@ -43,7 +45,7 @@
   .topo svg{width:140px;height:140px;flex:none}
   .eyebrow{
     font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.7rem;
-    letter-spacing:.2em;text-transform:uppercase;color:var(--azul);margin:0 0 10px;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--azul-escuro);margin:0 0 10px;
   }
   h1{
     font-family:Archivo,system-ui,sans-serif;font-weight:800;
@@ -57,7 +59,7 @@
     padding:24px 0;border-top:1.5px solid var(--tinta);border-bottom:1.5px solid var(--tinta);
   }
   dt{
-    font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.66rem;letter-spacing:.14em;
+    font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.72rem;letter-spacing:.14em;
     text-transform:uppercase;color:var(--fraco);padding-top:6px;
   }
   dd{margin:0;font-size:1.02rem}
@@ -79,7 +81,7 @@
   .faq{margin:52px 0 0}
   .faq h2{
     font-family:"JetBrains Mono",monospace;font-size:.7rem;letter-spacing:.2em;
-    text-transform:uppercase;color:var(--azul);margin:0 0 6px;font-weight:600;
+    text-transform:uppercase;color:var(--azul-escuro);margin:0 0 6px;font-weight:600;
   }
   details{border-bottom:1px solid var(--risco)}
   details summary{
@@ -100,7 +102,7 @@
     margin-top:44px;padding-top:20px;border-top:1.5px solid var(--tinta);
     color:var(--fraco);font-size:.87rem;
   }
-  footer a{color:var(--azul);text-decoration:none;border-bottom:1.5px solid var(--azul)}
+  footer a{color:var(--azul-escuro);text-decoration:none;border-bottom:1.5px solid var(--azul-escuro)}
   @media(max-width:520px){ .topo svg{width:104px;height:104px} }
 </style>
 </head>
