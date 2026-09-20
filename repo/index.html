@@ -918,6 +918,16 @@ async function abrirSelos(t){
     const p=await rpc('repo_selos_preparar',{p_token:sessao.token,p_repo_turma_id:t.id});
     selosSess=p&&p.sessao_id; selosEmail=p||null;
   }catch(e){ return tratar(e); }
+
+  /* Emitir os que faltam AO ABRIR: assim chega-se a este ecra com toda a gente
+     ja com o seu badge, e o unico botao a carregar e o "Enviar". Quem ja tem
+     fica como esta - o servidor so cria para quem nao tem. */
+  try{ await rpc('badges_emitir',{p_token:sessao.token,p_repo_turma_id:t.id}); }
+  catch(e){
+    if(/PGRST202|Could not find the function/.test((e&&e.message)||'')) toast('Falta correr o SQL 07-badges.sql no Supabase.','err');
+    else tratar(e);
+  }
+
   carregarSelos(t);
 }
 
