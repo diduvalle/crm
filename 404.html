@@ -1895,6 +1895,7 @@ const SUPA_ERR={
   CODIGO_INVALIDO:'O código da turma tem entre 2 e 24 caracteres: letras, números, ponto ou hífen.',
   TURMA_JA_EXISTE:'Já existe uma turma com esse número.',
   TURMA_NAO_EXISTE:'Turma não encontrada. Confirme o link com o formador.',
+  TURMA_NOUTRA_ESCOLA:'Esta turma não é desta escola. Confirme o endereço com o formador.',
   CREDENCIAIS_INVALIDAS:'Utilizador ou palavra-passe incorretos.',
   PERFIL_GRANDE:'A foto ou a assinatura são grandes demais. Use uma imagem mais pequena.',
   USERNAME_EM_USO:'Esse nome de utilizador já existe nesta turma.',
@@ -1969,7 +1970,12 @@ function restoreSupaSession(){
 }
 // Login numa turma via Supabase
 async function supaLogin(username,password){
-  const data=await supaRpc('login',{p_codigo:TURMA,p_username:username,p_password:password});
+  /* dentro de uma escola entra-se pela porta dela: o login_espaco recusa
+     uma turma que não seja desta escola (TURMA_NOUTRA_ESCOLA). Sem slug
+     no endereço - a app fora da plataforma - vale o login de sempre. */
+  const data=ESPACO_SLUG
+    ? await supaRpc('login_espaco',{p_codigo:TURMA,p_username:username,p_password:password,p_espaco:ESPACO_SLUG})
+    : await supaRpc('login',{p_codigo:TURMA,p_username:username,p_password:password});
   setSupaSession({token:data.token,user:data.user});
   sessionUserId=data.user.id;
   /* a chave depende de quem entrou: migra o que houvesse e recarrega, senao
@@ -1988,12 +1994,21 @@ async function supaCriarTurma(p){
 function supaLogout(){ const t=supaToken(); if(t&&supa()) supaRpc('logout',{p_token:t}).catch(()=>{}); setSupaSession(null); }
 
 /* ---------- Registo de turmas RECENTES neste dispositivo ----------
-   Lista local (não-namespaced) que alimenta o seletor de Turma no login.
-   Sem backend: só conhece as turmas que ESTE browser já visitou/criou. */
-const RECENT_TURMAS_KEY='crm-turmas-recentes';
+   Lista local que alimenta o seletor de Turma no login. Sem backend: só
+   conhece as turmas que ESTE browser já visitou/criou.
+
+   A chave leva o slug da ESCOLA. Era uma só para todo o crm.cr0x.org, e
+   como /iefp e /tp são a mesma origem partilhavam a lista: ao abrir uma
+   escola apareciam atalhos para turmas de outra. A chave antiga vai fora
+   uma vez - não há como saber a que escola pertencia cada código lá
+   dentro, e voltam a aparecer no próximo login. */
+const RECENT_TURMAS_KEY='crm-turmas-recentes'+(ESPACO_SLUG?'::'+ESPACO_SLUG:'');
+try{ if(ESPACO_SLUG) localStorage.removeItem('crm-turmas-recentes'); }catch(e){}
 function recentTurmas(){ try{ const a=JSON.parse(localStorage.getItem(RECENT_TURMAS_KEY)||'[]'); return Array.isArray(a)?a.filter(t=>t&&TURMA_RE.test(t.codigo)):[]; }catch(e){ return []; } }
 function rememberTurma(codigo,nome){
-  codigo=(codigo||'').replace(/\D/g,''); if(codigo.length!==8) return;
+  /* aceitava só 8 dígitos, de quando os números de turma eram todos assim;
+     desde o 02-codigo-turma.sql um código é 'crm-2026' e nunca era guardado */
+  codigo=(codigo||'').trim(); if(!TURMA_RE.test(codigo)) return;
   try{
     let a=recentTurmas().filter(t=>t.codigo!==codigo);
     a.unshift({codigo,nome:(nome||'').trim()||'',ts:todayISO()});
@@ -9233,9 +9248,9 @@ function submitEnterTurma(){
   }
   const go=()=>{ location.href=location.pathname+'?t='+d; };
   const btn=f.querySelector('[data-act="enter-turma"]'); if(btn){ btn.disabled=true; btn.textContent='A verificar…'; }
-  supaRpc('turma_existe',{p_codigo:d}).then(existe=>{
+  supaRpc('turma_existe',ESPACO_SLUG?{p_codigo:d,p_espaco:ESPACO_SLUG}:{p_codigo:d}).then(existe=>{
     if(existe!==false){ go(); }   // existe (true) ou resposta inesperada → avança
-    else { if(err) err.textContent='Turma '+d+' não encontrada. Confirme o número com o formador.'; if(btn){ btn.disabled=false; btn.textContent='Entrar'; } }
+    else { if(err) err.textContent='Turma '+d+' não encontrada nesta escola. Confirme o número com o formador.'; if(btn){ btn.disabled=false; btn.textContent='Entrar'; } }
   }).catch(()=>{ go(); });        // função ainda não criada / rede → não bloquear (cai no login normal)
 }
 /* Consola de Suporte dedicada (ecrã inteiro) - quando há sessão root no Principal. */
