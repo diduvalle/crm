@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<title>CRM - Manual de marca</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Space+Mono:wght@400;700&display=block">
+<style>
+  /* ============ O MANUAL DE MARCA, EM PDF ============
+     Impresso a partir do proprio sistema: as cores vem dos tokens, o
+     logotipo vem da pasta da marca e as maquetes sao capturas reais da
+     app. Nada aqui e uma simulacao desenhada para o documento - se a
+     plataforma mudar, isto reimprime-se e fica certo.
+     =================================================== */
+  :root{
+    --tinta:#171412; --tinta-2:#4a423c; --fraco:#6f655c;
+    --papel:#efe9dd; --papel-2:#f5f1e8; --branco:#fdfbf7;
+    --azul:#0078bf; --azul-escuro:#005e95; --risco:#ddd4c4;
+  }
+  @page{ size:A4; margin:0 }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--branco);color:var(--tinta);
+    font-family:"Archivo",system-ui,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+
+  .pag{width:210mm;height:297mm;padding:20mm 18mm 16mm;position:relative;overflow:hidden;
+    page-break-after:always;background:var(--branco);display:flex;flex-direction:column}
+  .pag:last-child{page-break-after:auto}
+
+  .etq{font:700 9px "Space Mono",monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--fraco)}
+  h1{font-size:44px;font-weight:800;letter-spacing:-.025em;line-height:1.02;margin:6px 0 10px}
+  h2{font-size:22px;font-weight:800;letter-spacing:-.015em;margin:0 0 4px}
+  h3{font-size:12.5px;font-weight:700;margin:0 0 5px}
+  p{font-size:11px;line-height:1.62;color:var(--tinta-2);margin:0 0 9px;max-width:62ch}
+  .peq{font-size:9.5px;color:var(--fraco);line-height:1.5;margin:0}
+  .rodape{position:absolute;left:18mm;right:18mm;bottom:10mm;display:flex;justify-content:space-between;
+    border-top:1px solid var(--risco);padding-top:5px;font:600 8.5px "Archivo";color:var(--fraco)}
+
+  .grade{display:grid;gap:9px}
+  .cx{border:1px solid var(--risco);border-radius:10px;padding:14px;display:grid;place-items:center;gap:8px}
+  .cx img{max-width:100%}
+
+  /* capa */
+  .capa{background:var(--tinta);color:var(--papel);justify-content:space-between}
+  .capa h1{font-size:62px;color:var(--papel)}
+  .capa p{color:rgba(239,233,221,.7);font-size:12px}
+  .capa .etq{color:rgba(239,233,221,.55)}
+
+  /* cores */
+  .amostra{border-radius:10px;padding:13px;min-height:82px;display:flex;flex-direction:column;justify-content:flex-end;
+    font:700 10px "Space Mono",monospace;border:1px solid rgba(23,20,18,.10)}
+  .amostra b{display:block;font:800 12px "Archivo";margin-bottom:2px;letter-spacing:-.01em}
+
+  table{width:100%;border-collapse:collapse;font-size:10px}
+  th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--risco);vertical-align:top}
+  th{font:700 8.5px "Space Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--fraco)}
+
+  .nao{border:1px solid #e6c9c9;background:#fdf4f4;border-radius:10px;padding:12px}
+  .sim{border:1px solid #cfe3d2;background:#f3f9f4;border-radius:10px;padding:12px}
+  .mark{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px}
+  .nao .mark{color:#a33} .sim .mark{color:#2c6b39}
+
+  .maquete{border:1px solid var(--risco);border-radius:12px;overflow:hidden;background:var(--papel-2)}
+  .maquete img{display:block;width:100%}
+  .leg{font:600 9px "Archivo";color:var(--fraco);padding:7px 10px;border-top:1px solid var(--risco);background:var(--branco)}
+
+  .icones{display:grid;grid-template-columns:repeat(10,1fr);gap:9px}
+  .icones img{width:100%;aspect-ratio:1;object-fit:contain}
+  .icones figure{margin:0;display:grid;gap:3px;justify-items:center}
+  .icones figcaption{font:600 6.5px "Space Mono",monospace;color:var(--fraco);letter-spacing:.04em}
+</style>
+</head>
+<body>
+
+<!-- ============ 1. capa ============ -->
+<section class="pag capa">
+  <div>
+    <div class="etq">Manual de marca</div>
+    <h1>CRM</h1>
+    <p>Plataforma de formação em gestão de relação com clientes.<br>A identidade, e como se aplica.</p>
+  </div>
+  <div style="display:grid;place-items:center;flex:1">
+    <img src="http://127.0.0.1:8733/marca/logo/png/crm-marca-papel-1024.png" style="width:300px">
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:flex-end">
+    <div class="etq">crm.cr0x.org</div>
+    <div class="etq" id="data"></div>
+  </div>
+</section>
+
+<!-- ============ 2. a marca ============ -->
+<section class="pag">
+  <div class="etq">01 · A marca</div>
+  <h2>Três colunas, uma acesa</h2>
+  <p>Três lombadas inclinadas cinco graus. Duas em contorno, a terceira cheia, na cor da plataforma. As duas primeiras são o que já se sabe; a terceira é o que se está a fazer agora - é ela que muda de cor quando uma escola põe a sua.</p>
+
+  <div class="grade" style="grid-template-columns:1fr 1fr;margin-top:14px">
+    <div class="cx" style="background:var(--papel)">
+      <img src="http://127.0.0.1:8733/marca/logo/png/crm-marca-cor-1024.png" style="width:210px">
+      <span class="peq">A cores, sobre papel</span>
+    </div>
+    <div class="cx" style="background:var(--tinta)">
+      <img src="http://127.0.0.1:8733/marca/logo/png/crm-marca-papel-1024.png" style="width:210px">
+      <span class="peq" style="color:rgba(239,233,221,.65)">Papel, sobre tinta</span>
+    </div>
+    <div class="cx" style="background:var(--branco)">
+      <img src="http://127.0.0.1:8733/marca/logo/png/crm-marca-tinta-1024.png" style="width:210px">
+      <span class="peq">Tinta, uma cor só</span>
+    </div>
+    <div class="cx" style="background:var(--azul)">
+      <img src="http://127.0.0.1:8733/marca/logo/png/crm-marca-papel-solida-1024.png" style="width:210px">
+      <span class="peq" style="color:rgba(239,233,221,.75)">Sólida, sobre cor</span>
+    </div>
+  </div>
+
+  <h3 style="margin-top:16px">O símbolo, para espaços pequenos</h3>
+  <div class="grade" style="grid-template-columns:repeat(4,1fr)">
+    <div class="cx" style="background:var(--papel)"><img src="http://127.0.0.1:8733/marca/logo/png/crm-app-tinta-512.png" style="width:74px"></div>
+    <div class="cx" style="background:var(--papel)"><img src="http://127.0.0.1:8733/marca/logo/png/crm-app-azul-512.png" style="width:74px"></div>
+    <div class="cx" style="background:var(--tinta)"><img src="http://127.0.0.1:8733/marca/logo/png/crm-app-papel-512.png" style="width:74px"></div>
+    <div class="cx" style="background:var(--branco)"><img src="http://127.0.0.1:8733/marca/logo/png/crm-simbolo-cor-512.png" style="width:74px"></div>
+  </div>
+  <p class="peq" style="margin-top:8px">Abaixo de 24px de altura usa-se sempre o símbolo com caixa: a marca solta perde os contornos e fica um borrão.</p>
+
+  <div class="rodape"><span>CRM · Manual de marca</span><span>01</span></div>
+</section>
+
+<!-- ============ 3. usos ============ -->
+<section class="pag">
+  <div class="etq">02 · Aplicação</div>
+  <h2>Ar, tamanho, e o que não se faz</h2>
+  <p>A marca precisa de uma coluna de ar à volta - um sexto da sua largura. É a única regra de espaçamento, e chega.</p>
+
+  <div class="grade" style="grid-template-columns:1fr 1fr;margin-top:12px">
+    <div class="sim">
+      <div class="mark">Sim</div>
+      <ul style="margin:0;padding-left:16px;font-size:10px;line-height:1.75;color:var(--tinta-2)">
+        <li>A cores sobre papel ou branco.</li>
+        <li>Papel sobre tinta ou fundo escuro.</li>
+        <li>A variante sólida sobre cor ou fotografia.</li>
+        <li>Tinta a uma cor, para gravação ou fax.</li>
+      </ul>
+    </div>
+    <div class="nao">
+      <div class="mark">Não</div>
+      <ul style="margin:0;padding-left:16px;font-size:10px;line-height:1.75;color:var(--tinta-2)">
+        <li>Rodar. A inclinação já faz parte da marca.</li>
+        <li>Esticar, ou mudar a proporção.</li>
+        <li>Recolorir as colunas uma a uma.</li>
+        <li>Pôr sombra, contorno ou gradiente.</li>
+        <li>A versão a cores sobre fundo escuro.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="margin-top:18px">A marca de uma escola</h3>
+  <p>Cada escola tem o seu espaço, e nele o <b>nome</b>, o <b>logótipo</b> e a <b>cor</b> são dela. A plataforma fornece o resto: a tinta, o papel, a tipografia e os ícones. A cor da escola entra onde entra o azul - a terceira coluna, os botões, os links, as chapas.</p>
+  <div class="grade" style="grid-template-columns:repeat(5,1fr);margin-top:6px">
+    <div class="amostra" style="background:#0078bf;color:#fff"><b>Plataforma</b>#0078bf</div>
+    <div class="amostra" style="background:#b31e2e;color:#fff"><b>Exemplo</b>#b31e2e</div>
+    <div class="amostra" style="background:#7a4fbf;color:#fff"><b>Exemplo</b>#7a4fbf</div>
+    <div class="amostra" style="background:#0f7a5a;color:#fff"><b>Exemplo</b>#0f7a5a</div>
+    <div class="amostra" style="background:#b5651d;color:#fff"><b>Exemplo</b>#b5651d</div>
+  </div>
+  <p class="peq" style="margin-top:8px">A app deriva a paleta inteira dessa cor. Uma cor clara de mais deixa o texto branco ilegível - até haver um aviso na configuração, convém escolher uma cor com pelo menos 4,5:1 contra branco.</p>
+
+  <div class="rodape"><span>CRM · Manual de marca</span><span>02</span></div>
+</section>
+
+<!-- ============ 4. cores ============ -->
+<section class="pag">
+  <div class="etq">03 · Cor</div>
+  <h2>Tinta, papel e uma cor de acção</h2>
+  <p>Não há preto nem branco puros. Um <code style="font-family:'Space Mono'">#000000</code> encostado ao creme abre um buraco na página; um <code style="font-family:'Space Mono'">#ffffff</code> sobre creme lê-se como uma mancha mais clara. A marca tem os seus dois extremos e são esses que se usam.</p>
+
+  <div class="grade" style="grid-template-columns:repeat(3,1fr);margin-top:12px">
+    <div class="amostra" style="background:#171412;color:#efe9dd"><b>Tinta</b>#171412</div>
+    <div class="amostra" style="background:#efe9dd;color:#171412"><b>Papel</b>#efe9dd</div>
+    <div class="amostra" style="background:#0078bf;color:#fff"><b>Azul</b>#0078bf</div>
+  </div>
+  <div class="grade" style="grid-template-columns:repeat(5,1fr);margin-top:9px">
+    <div class="amostra" style="background:#4a423c;color:#efe9dd;min-height:60px"><b>Tinta 2</b>#4a423c</div>
+    <div class="amostra" style="background:#6f655c;color:#efe9dd;min-height:60px"><b>Fraco</b>#6f655c</div>
+    <div class="amostra" style="background:#ddd4c4;color:#171412;min-height:60px"><b>Risco</b>#ddd4c4</div>
+    <div class="amostra" style="background:#f5f1e8;color:#171412;min-height:60px"><b>Papel 2</b>#f5f1e8</div>
+    <div class="amostra" style="background:#005e95;color:#fff;min-height:60px"><b>Azul esc.</b>#005e95</div>
+  </div>
+
+  <h3 style="margin-top:18px">Onde cada uma serve</h3>
+  <table>
+    <tr><th>Cor</th><th>Para</th><th>Contraste sobre papel</th></tr>
+    <tr><td><b>Tinta</b></td><td>Texto, títulos, a marca a uma cor</td><td>15,2:1</td></tr>
+    <tr><td><b>Tinta 2</b></td><td>Corpo de texto secundário</td><td>8,1:1</td></tr>
+    <tr><td><b>Fraco</b></td><td>Etiquetas, legendas, ícones inertes</td><td>4,6:1</td></tr>
+    <tr><td><b>Azul</b></td><td>Acção: botões, a coluna acesa</td><td>3,9:1 - só acima de 18px</td></tr>
+    <tr><td><b>Azul escuro</b></td><td>Links e texto pequeno em azul</td><td>4,9:1</td></tr>
+    <tr><td><b>Risco</b></td><td>Linhas, molduras, separadores</td><td>-</td></tr>
+  </table>
+  <p class="peq" style="margin-top:8px">O azul da marca não passa os 4,5:1 exigidos para texto pequeno. Por isso existe o azul escuro: é o mesmo azul, escurecido só o suficiente. Em texto abaixo de 18px usa-se sempre esse.</p>
+
+  <div class="rodape"><span>CRM · Manual de marca</span><span>03</span></div>
+</section>
+
+<!-- ============ 5. tipografia ============ -->
+<section class="pag">
+  <div class="etq">04 · Tipografia</div>
+  <h2>Três fontes, cada uma com o seu trabalho</h2>
+
+  <div style="border:1px solid var(--risco);border-radius:12px;padding:16px;margin-top:12px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <div style="font:800 34px Archivo;letter-spacing:-.02em">Archivo</div>
+      <div class="etq">Interface e títulos</div>
+    </div>
+    <div style="font:400 15px Archivo;color:var(--tinta-2);margin-top:6px">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 €%&amp;</div>
+    <div style="font:600 11px Archivo;color:var(--fraco);margin-top:8px">400 regular · 500 medium · 600 semibold · 700 bold · 800 extrabold</div>
+    <p class="peq" style="margin-top:9px">Uma grotesca estreita que aguenta títulos grandes sem ocupar a linha toda, e continua legível a 11px num botão. É a fonte da app, dos menus, dos rótulos e de tudo o que se clica.</p>
+  </div>
+
+  <div style="border:1px solid var(--risco);border-radius:12px;padding:16px;margin-top:10px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <div style="font:400 34px Newsreader">Newsreader</div>
+      <div class="etq">Texto para ler</div>
+    </div>
+    <div style="font:400 15px Newsreader;color:var(--tinta-2);margin-top:6px">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 €%&amp;</div>
+    <p class="peq" style="margin-top:9px">Só no manual, e só no corpo do texto. Um manual lê-se durante minutos seguidos; uma serifa com contraste baixo cansa menos do que uma grotesca. Nunca em botões, campos ou menus.</p>
+  </div>
+
+  <div style="border:1px solid var(--risco);border-radius:12px;padding:16px;margin-top:10px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <div style="font:700 30px 'Space Mono'">Space Mono</div>
+      <div class="etq">Código e etiquetas</div>
+    </div>
+    <div style="font:400 13px 'Space Mono';color:var(--tinta-2);margin-top:6px">ABCDEFGHIJ abcdefghij 0123456789 {}[]&lt;&gt;/\|</div>
+    <p class="peq" style="margin-top:9px">Código, identificadores, e as etiquetas pequenas em maiúsculas com muito espacejamento. Em blocos de texto, nunca.</p>
+  </div>
+
+  <h3 style="margin-top:14px">O que falta fazer</h3>
+  <p>A app declara <code style="font-family:'Space Mono'">--font:'Inter'</code> e nunca chega a pedir essa fonte, por isso corre na fonte do sistema - diferente em cada computador. O <code style="font-family:'Space Mono'">repo</code> pede Archivo <b>e</b> Inter. São três tipografias diferentes em quatro sítios que deviam ser um só.</p>
+
+  <div class="rodape"><span>CRM · Manual de marca</span><span>04</span></div>
+</section>
+
+<!-- ============ 6. icones ============ -->
+<section class="pag">
+  <div class="etq">05 · Ícones</div>
+  <h2>Traço, uma cor, nunca um emoji</h2>
+  <p>Quarenta e nove ícones de traço, desenhados numa grelha de 24, com espessura 2 e extremidades redondas. Todos usam <code style="font-family:'Space Mono'">currentColor</code>: herdam a cor do texto onde estão, e por isso funcionam em qualquer fundo sem se duplicarem.</p>
+  <p class="peq" style="margin-bottom:12px">Um emoji nunca serve como ícone de interface: muda de desenho conforme o sistema, traz cor que não é da marca, e não se alinha com o texto.</p>
+  <div class="icones" id="icones"></div>
+  <div class="rodape"><span>CRM · Manual de marca</span><span>05</span></div>
+</section>
+
+<!-- ============ 7. maquetes ============ -->
+<section class="pag">
+  <div class="etq">06 · Aplicado</div>
+  <h2>A marca em uso</h2>
+  <p>Capturas da plataforma no ar, não simulações.</p>
+  <div style="display:grid;gap:10px;margin-top:10px">
+    <div class="maquete">
+      <img src="http://127.0.0.1:8733/manual-src/docs/assets/screens/dashboard.png">
+      <div class="leg">A app · o painel de entrada, com a marca neutra da plataforma</div>
+    </div>
+    <div class="maquete">
+      <img src="http://127.0.0.1:8733/marca/intro/frames/f-2400.png">
+      <div class="leg">A abertura dos vídeos · quatro segundos, a marca monta-se e a terceira coluna acende</div>
+    </div>
+  </div>
+  <div class="rodape"><span>CRM · Manual de marca</span><span>06</span></div>
+</section>
+
+<section class="pag">
+  <div class="etq">06 · Aplicado</div>
+  <h2>Documentos e entrada</h2>
+  <div style="display:grid;gap:10px">
+    <div class="maquete">
+      <img src="http://127.0.0.1:8733/manual-src/docs/assets/screens/pdf.png">
+      <div class="leg">Uma proposta · o modelo por omissão usa a cor da marca, e a de uma escola usa a dela</div>
+    </div>
+    <div class="maquete">
+      <img src="http://127.0.0.1:8733/manual-src/docs/assets/screens/hub.png">
+      <div class="leg">A entrada · onde o nome e o logótipo da escola aparecem primeiro</div>
+    </div>
+  </div>
+  <div class="rodape"><span>CRM · Manual de marca</span><span>07</span></div>
+</section>
+
+<script>
+  document.getElementById('data').textContent =
+    new Date().toLocaleDateString('pt-PT', { month:'long', year:'numeric' });
+
+  /* os icones vem da pasta, para o documento nao ter uma lista a parte que
+     se desatualiza sozinha */
+  var NOMES = "dash users box building sparkles calendar doc target chart shield mail cog bell euro trend check flag alert list download upload eye print sun moon send logout layout image text grip trash lock key linkedin info percent book slides support star chat bulb clock chevL chevR chevD heart rotate".split(' ');
+  document.getElementById('icones').innerHTML = NOMES.map(function (n) {
+    return '<figure><img src="http://127.0.0.1:8733/marca/icones/png-tinta/' + n + '.png"><figcaption>' + n + '</figcaption></figure>';
+  }).join('');
+</script>
+</body>
+</html>

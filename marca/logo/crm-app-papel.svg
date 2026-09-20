@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs><mask id="m"><rect width="200" height="200" fill="#fff"/>
+    <g fill="#000" stroke="#000">
+  <g transform="rotate(-5 100 100)">
+    <rect x="30" y="52" width="44" height="96" rx="10" fill="none" stroke="#000" stroke-width="9"/>
+    <rect x="78" y="52" width="44" height="96" rx="10" fill="none" stroke="#000" stroke-width="9"/>
+    <rect x="126" y="52" width="44" height="96" rx="10" fill="#000"/>
+    <rect x="39" y="66" width="26" height="8" rx="4" fill="#000"/>
+    <rect x="87" y="66" width="26" height="8" rx="4" fill="#000"/>
+    <rect x="39" y="86" width="26" height="13" rx="5" fill="#000" opacity=".5"/>
+    <rect x="87" y="86" width="26" height="13" rx="5" fill="#000" opacity=".5"/>
+  </g></g></mask></defs>
+  <rect width="200" height="200" rx="34" fill="#efe9dd" mask="url(#m)"/>
+</svg>

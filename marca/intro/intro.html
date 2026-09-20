@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<title>Intro CRM</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&display=block">
+<!-- ============ A INTRO DOS VIDEOS ============
+     Quatro segundos. A marca monta-se coluna a coluna, a terceira acende
+     na cor da plataforma, e o nome entra por baixo. Nada de mais: a
+     abertura serve para identificar o video, nao para o atrasar.
+
+     A animacao e so CSS com atrasos - nada de bibliotecas. Assim grava-se
+     igual em qualquer maquina, e muda-se a cor ou o nome trocando duas
+     variaveis, que e o que uma escola vai querer fazer.
+
+     O fundo e a tinta da marca, nao preto: encostado ao creme do resto,
+     um preto puro abre um buraco no ecra.
+     ============================================ -->
+<style>
+  :root{
+    --tinta:#171412; --papel:#efe9dd; --azul:#0078bf;
+    --nome:"CRM"; --sub:"Plataforma de Formação";
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--tinta);overflow:hidden}
+  body{display:grid;place-items:center;font-family:"Archivo",system-ui,sans-serif}
+
+  .palco{display:grid;place-items:center;gap:26px;transform:translateY(-6px)}
+
+  /* a marca, com a inclinacao que ja e dela */
+  svg{width:290px;height:290px;overflow:visible}
+  .col{opacity:0;transform-box:fill-box;transform-origin:50% 100%;
+       animation:sobe .52s cubic-bezier(.22,1,.36,1) forwards}
+  .c1{animation-delay:.10s} .c2{animation-delay:.22s}
+  /* a terceira sobe E acende: uma so declaracao, senao a segunda apaga a primeira */
+  .c3{animation:sobe .52s cubic-bezier(.22,1,.36,1) .34s forwards,
+                acende .45s ease .68s forwards}
+  .barra{opacity:0;animation:aparece .3s ease forwards}
+  .b1{animation-delay:.42s} .b2{animation-delay:.48s} .b3{animation-delay:.90s}
+
+  /* a terceira coluna acende depois de assentar */
+
+  .nome{
+    font-size:52px;font-weight:800;letter-spacing:-.02em;color:var(--papel);
+    opacity:0;transform:translateY(10px);
+    animation:entra .5s cubic-bezier(.22,1,.36,1) .80s forwards;
+    line-height:1;text-align:center;
+  }
+  .sub{
+    font-size:14px;font-weight:600;letter-spacing:.20em;text-transform:uppercase;
+    color:var(--papel);opacity:0;
+    animation:subEntra .5s ease .96s forwards;
+    margin-top:12px;text-align:center;
+  }
+  /* um traco que corre por baixo, na cor da plataforma */
+  .risco{height:3px;width:0;background:var(--azul);border-radius:2px;margin:18px auto 0;
+         animation:risca .6s cubic-bezier(.22,1,.36,1) 1.06s forwards}
+
+  /* saida: tudo sobe e esvai, para o corte para o ecra do CRM ser limpo */
+  .palco{animation:sai .42s ease 3.45s forwards}
+
+  @keyframes sobe{from{opacity:0;transform:translateY(26px) scaleY(.82)}to{opacity:1;transform:none}}
+  @keyframes aparece{to{opacity:1}}
+  @keyframes acende{from{fill:#3a342e}to{fill:var(--azul)}}
+  @keyframes entra{to{opacity:1;transform:none}}
+  @keyframes subEntra{to{opacity:.72}}
+  @keyframes risca{to{width:74px}}
+  @keyframes sai{to{opacity:0;transform:translateY(-14px)}}
+</style>
+</head>
+<body>
+  <div class="palco">
+    <svg viewBox="0 0 200 200" aria-hidden="true">
+      <g transform="rotate(-5 100 100)">
+        <rect class="col c1" x="30" y="52" width="44" height="96" rx="10" fill="none" stroke="#efe9dd" stroke-width="9"/>
+        <rect class="col c2" x="78" y="52" width="44" height="96" rx="10" fill="none" stroke="#efe9dd" stroke-width="9"/>
+        <rect class="col c3" x="126" y="52" width="44" height="96" rx="10" fill="#3a342e"/>
+        <rect class="barra b1" x="39" y="66" width="26" height="8" rx="4" fill="#efe9dd"/>
+        <rect class="barra b2" x="87" y="66" width="26" height="8" rx="4" fill="#efe9dd"/>
+        <rect class="barra b1" x="39" y="86" width="26" height="13" rx="5" fill="#efe9dd" opacity=".5"/>
+        <rect class="barra b2" x="87" y="86" width="26" height="13" rx="5" fill="#efe9dd" opacity=".5"/>
+        <!-- as barras da coluna acesa entram com ela, na cor do fundo -->
+        <rect class="barra b3" x="135" y="66" width="26" height="8" rx="4" fill="#171412"/>
+        <rect class="barra b3" x="135" y="86" width="26" height="13" rx="5" fill="#171412" opacity=".55"/>
+      </g>
+    </svg>
+    <div>
+      <div class="nome" id="nome">CRM</div>
+      <div class="sub" id="sub">Plataforma de Formação</div>
+      <div class="risco"></div>
+    </div>
+  </div>
+  <script>
+    /* o nome, o subtitulo e a cor vem do endereco, para a mesma intro
+       servir qualquer escola sem se editar o ficheiro:
+       intro.html?nome=XPTO&sub=Centro%20de%20Formacao&cor=%23b31e2e */
+    var q = new URLSearchParams(location.search);
+    if (q.get('nome')) document.getElementById('nome').textContent = q.get('nome');
+    if (q.get('sub'))  document.getElementById('sub').textContent  = q.get('sub');
+    if (q.get('cor'))  document.documentElement.style.setProperty('--azul', q.get('cor'));
+  </script>
+</body>
+</html>
