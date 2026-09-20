@@ -8,7 +8,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../estilo/tokens.css">
 <link rel="stylesheet" href="../estilo/componentes.css">
 <style>
@@ -16,82 +16,110 @@
    O link é pessoal (o token identifica quem é), por isso não há conta nem
    palavra-passe - e não há pergunta "Nome". O que se escreve vai sendo
    guardado sozinho; submeter é o único passo irreversível.
-   O visual vem de estilo/ - aqui só o que é desta página. */
+
+   O VISUAL É O DO crm.cr0x.org, não o do interior da app: papel, tinta,
+   azul, e as três letras da casa - Archivo nos títulos, Newsreader no que
+   se lê, Space Mono nas etiquetas. É a mesma cara do badge e da página de
+   entrada, porque é tudo material que a mesma pessoa recebe.
+   Os componentes continuam a vir de estilo/ - o que se faz aqui é trocar
+   os valores das cores, uma vez, em cima. */
+:root{
+  --bg:#efe9dd; --surface:#f7f4ed; --surface2:#ebe4d8; --surface3:#e3dbcc;
+  --border:#d6cdbd; --text:#171412; --muted:#6f655c; --muted2:#8a7f75;
+  --g900:#00405f; --g800:#005e95; --g700:#005e95; --g600:#0078bf; --g500:#0078bf;
+  --g400:#4aa3d4; --g300:#8cc2e2; --g200:#cfe4f1; --g100:#e3eef6; --g50:#f2f7fb;
+  --g-texto:#005e95;
+  --shadow:0 1px 2px rgba(23,20,18,.05),0 4px 14px rgba(23,20,18,.07);
+  --shadow-md:0 2px 6px rgba(23,20,18,.07),0 12px 28px -12px rgba(23,20,18,.18);
+  --shadow-primary:inset 0 1px 0 rgba(255,255,255,.18),0 6px 16px -6px rgba(0,94,149,.45);
+  --papel-fundo:#efe9dd; --risco:#d6cdbd;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.55}
+body{font-family:Newsreader,Georgia,serif;font-size:17px;background:var(--bg);color:var(--text);line-height:1.6}
+/* os controlos são de letra sem serifa: num campo, a serifa atrapalha */
+button,input,select,textarea,.btn{font-family:Archivo,system-ui,sans-serif}
 .folha{max-width:760px;margin:0 auto;padding:0 20px 80px}
 
 /* cabeçalho */
 .topo{position:sticky;top:0;z-index:5;background:var(--bg);padding:18px 0 12px;
-  border-bottom:1px solid var(--border);margin-bottom:22px}
+  border-bottom:1.5px solid var(--text);margin-bottom:26px}
 .topo-l{display:flex;align-items:center;gap:12px}
 .marca{width:38px;height:38px;border-radius:10px;background:var(--surface);border:1px solid var(--border);
   padding:5px;flex:none;display:grid;place-items:center}
 .marca img{width:100%;height:100%;object-fit:contain}
-.topo h1{font-size:1.02rem;font-weight:800;line-height:1.3}
-.topo .sub{font-size:.8rem;color:var(--muted);font-weight:500}
+.topo h1{font-family:Archivo,system-ui,sans-serif;font-size:1.06rem;font-weight:800;line-height:1.3;
+  letter-spacing:-.01em}
+.topo .sub{font-family:"Space Mono",ui-monospace,monospace;font-size:.72rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--g800);margin-top:3px}
 .topo-r{margin-left:auto;display:flex;align-items:center;gap:10px;flex:none}
 .barra{height:5px;border-radius:3px;background:var(--surface3);overflow:hidden;margin-top:12px}
 .barra i{display:block;height:100%;background:var(--g600);width:0;transition:width .25s}
-.guardado{font-size:.75rem;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:5px;
+.guardado{font-family:"Space Mono",ui-monospace,monospace;font-size:.72rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:5px;
   opacity:0;transition:opacity .2s}
 .guardado.on{opacity:1}
 .guardado svg{width:13px;height:13px}
 
 /* perguntas */
-.sec{margin:34px 0 6px;padding-top:20px;border-top:2px solid var(--border)}
+.sec{margin:36px 0 8px;padding-top:22px;border-top:1.5px solid var(--text)}
 .sec:first-child{border-top:0;padding-top:0;margin-top:0}
-.sec h2{font-size:1.1rem;font-weight:800}
-.sec p{font-size:.86rem;color:var(--muted)}
+.sec h2{font-family:Archivo,system-ui,sans-serif;font-size:1.22rem;font-weight:800;letter-spacing:-.015em}
+.sec p{font-family:"Space Mono",ui-monospace,monospace;font-size:.72rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--g800);margin-top:5px}
 .perg{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);
-  padding:20px;margin-bottom:14px;box-shadow:var(--shadow)}
-.perg-cab{display:flex;gap:10px;align-items:flex-start;margin-bottom:14px}
+  padding:22px;margin-bottom:14px;box-shadow:var(--shadow)}
+.perg-cab{display:flex;gap:12px;align-items:flex-start;margin-bottom:15px}
 .num{flex:none;width:26px;height:26px;border-radius:8px;background:var(--surface3);color:var(--muted);
-  display:grid;place-items:center;font-size:.78rem;font-weight:800}
-.perg h3{font-size:.95rem;font-weight:700;flex:1;line-height:1.5}
-.pts{flex:none;font-size:.72rem;color:var(--muted);font-weight:700;white-space:nowrap;padding-top:4px}
+  display:grid;place-items:center;font-family:"Space Mono",ui-monospace,monospace;
+  font-size:.74rem;font-weight:700;color:#4a423c}
+.perg h3{font-family:Archivo,system-ui,sans-serif;font-size:1rem;font-weight:700;flex:1;line-height:1.45}
+.pts{flex:none;font-family:"Space Mono",ui-monospace,monospace;font-size:.72rem;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);white-space:nowrap;padding-top:5px}
 .ops{display:flex;flex-direction:column;gap:8px}
-.op{display:flex;gap:11px;align-items:flex-start;padding:11px 13px;border:1px solid var(--border);
-  border-radius:var(--r);cursor:pointer;background:var(--surface);transition:border-color .12s,background .12s}
-.op:hover{border-color:var(--g400);background:var(--g50)}
-.op input{margin-top:3px;flex:none;accent-color:var(--g600);width:16px;height:16px}
-.op span{font-size:.9rem}
+.op{display:flex;gap:11px;align-items:flex-start;padding:12px 14px;border:1px solid var(--border);
+  border-radius:var(--r);cursor:pointer;background:var(--bg);transition:border-color .12s,background .12s}
+.op:hover{border-color:var(--g500);background:var(--g50)}
+.op input{margin-top:4px;flex:none;accent-color:var(--g600);width:16px;height:16px}
+.op span{font-size:1rem;line-height:1.45}
 .op.escolhida{border-color:var(--g600);background:var(--g50)}
 .vf{display:flex;gap:10px}
-.vf .op{flex:1;justify-content:center;align-items:center;font-weight:700}
-.perg textarea{width:100%;min-height:130px;font:inherit;font-size:.92rem;padding:12px 14px;
-  border:1px solid var(--border);border-radius:var(--r);background:var(--surface);color:var(--text);resize:vertical}
+.vf .op{flex:1;justify-content:center;align-items:center}
+.vf .op span{font-family:Archivo,system-ui,sans-serif;font-weight:700;font-size:.95rem}
+.perg textarea{width:100%;min-height:140px;font-size:.95rem;line-height:1.6;padding:13px 15px;
+  border:1px solid var(--border);border-radius:var(--r);background:var(--bg);color:var(--text);resize:vertical}
 .perg textarea:focus{outline:0;border-color:var(--g500);box-shadow:0 0 0 3px var(--g100)}
-.porresponder .num{background:var(--warn-bg);color:var(--warn)}
 
 /* rodapé de submissão */
-.fim{margin-top:26px;padding:22px;background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--rl);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.fim{margin-top:28px;padding:22px;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--rl);display:flex;align-items:center;gap:16px;flex-wrap:wrap;box-shadow:var(--shadow)}
 .fim .txt{flex:1;min-width:200px}
-.fim strong{display:block;font-size:.95rem}
-.fim span{font-size:.82rem;color:var(--muted)}
+.fim strong{display:block;font-family:Archivo,system-ui,sans-serif;font-size:1rem;font-weight:700}
+.fim span{font-size:.92rem;color:var(--muted)}
 
 /* estados e resultado */
 .aviso{max-width:560px;margin:90px auto;text-align:center;padding:0 20px}
 .aviso .marca{margin:0 auto 20px;width:52px;height:52px}
-.aviso h1{font-size:1.3rem;font-weight:800;margin-bottom:8px}
-.aviso p{color:var(--muted);font-size:.92rem}
+.aviso h1{font-family:Archivo,system-ui,sans-serif;font-size:1.5rem;font-weight:800;
+  letter-spacing:-.015em;margin-bottom:10px}
+.aviso p{color:var(--muted);font-size:1rem}
 .nota{display:flex;align-items:center;gap:20px;padding:24px;background:var(--surface);
   border:1px solid var(--border);border-radius:var(--rl);box-shadow:var(--shadow);margin-bottom:24px;flex-wrap:wrap}
-.nota .v{font-size:2.6rem;font-weight:800;line-height:1;color:var(--g700)}
-.nota .de{font-size:.95rem;color:var(--muted);font-weight:600}
+.nota .v{font-family:Archivo,system-ui,sans-serif;font-size:2.8rem;font-weight:800;line-height:1;
+  letter-spacing:-.02em;color:var(--g800)}
+.nota .de{font-family:Archivo,system-ui,sans-serif;font-size:.95rem;color:var(--muted);font-weight:600}
 .nota .pc{margin-left:auto}
 .certo{border-color:var(--ok)}
 .errado{border-color:var(--danger)}
-.op.certa{border-color:var(--ok);background:rgba(15,157,88,.07)}
+.op.certa{border-color:var(--ok);background:rgba(15,157,88,.08)}
 .op.errada{border-color:var(--danger);background:var(--danger-bg)}
-.resp-txt{white-space:pre-wrap;font-size:.9rem;padding:12px 14px;background:var(--surface2);
+.resp-txt{white-space:pre-wrap;font-size:1rem;padding:13px 15px;background:var(--bg);
   border:1px solid var(--border);border-radius:var(--r)}
-.coment{margin-top:12px;padding:12px 14px;border-left:3px solid var(--g500);background:var(--g50);
-  border-radius:0 var(--r) var(--r) 0;font-size:.88rem}
-.coment b{display:block;font-size:.74rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:3px}
+.coment{margin-top:12px;padding:12px 15px;border-left:3px solid var(--g600);background:var(--g50);
+  border-radius:0 var(--r) var(--r) 0;font-size:.96rem}
+.coment b{display:block;font-family:"Space Mono",ui-monospace,monospace;font-size:.72rem;
+  text-transform:uppercase;letter-spacing:.14em;color:var(--g800);margin-bottom:4px;font-weight:700}
 .esconde{display:none!important}
-@media(max-width:600px){ .folha{padding:0 14px 60px} .perg{padding:16px} }
+@media(max-width:600px){ .folha{padding:0 14px 60px} .perg{padding:17px} .topo h1{font-size:.98rem} }
 </style>
 </head>
 <body>

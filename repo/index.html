@@ -9,7 +9,9 @@
   <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<!-- Archivo, Newsreader e Space Mono: as letras do crm.cr0x.org. A Newsreader
+     não se vê no ecrã do Repo - é a imagem dos gráficos que a desenha. -->
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../estilo/tokens.css">
 <link rel="stylesheet" href="../estilo/componentes.css">
 <style>
@@ -2131,14 +2133,22 @@ async function copiarGrafico(i,btn){
   btn.disabled=false; btn.innerHTML=antes;
 }
 
-/* A tela é sempre clara, com as cores da marca, e mede-se antes de se
-   desenhar: o enunciado e as opções podem ocupar as linhas que precisarem. */
+/* A imagem que vai para o slide usa a identidade do crm.cr0x.org - papel,
+   tinta, azul, e as três letras da casa: Archivo no título, Newsreader no
+   texto, Space Mono nas etiquetas. O ecrã do Repo é ferramenta e fica como
+   está; isto é material, e material é tudo igual.
+   Desenhada de raiz e a 2x: nunca leva o tema escuro nem sai esborratada. */
 function desenharGrafico(g){
   const pronto=(document.fonts&&document.fonts.ready)||Promise.resolve();
   return pronto.then(()=>new Promise((res,rej)=>{
-    const E=2, L=900, M=40, COLN=110;          // escala, largura, margem, coluna dos números
+    const E=2, L=900, M=44, COLN=110;          // escala, largura, margem, coluna dos números
     const LARG=L-M*2, BARRA=LARG-COLN;
-    const F=(p,t)=>`${p} ${t}px Inter,Arial,sans-serif`;
+    const PAPEL='#efe9dd', TINTA='#171412', TINTA2='#4a423c', FRACO='#6f655c',
+          AZUL='#0078bf', AZUL_E='#005e95', RISCO='#d6cdbd',
+          TRILHO='#e3dbcc', NEUTRA='#c9bfae', APAGADO='#ddd5c6';
+    const TIT=t=>`800 ${t}px Archivo,system-ui,sans-serif`;
+    const TXT=(p,t)=>`${p} ${t}px Newsreader,Georgia,serif`;
+    const MONO=(p,t)=>`${p} ${t}px "Space Mono",ui-monospace,monospace`;
     const medir=document.createElement('canvas').getContext('2d');
 
     const quebrar=(txt,fonte,max)=>{
@@ -2152,39 +2162,35 @@ function desenharGrafico(g){
       return linhas;
     };
 
-    const tituloL=quebrar(g.num+'. '+g.enunciado,F('700',21),LARG);
-    const ops=g.linhas.map(l=>({...l,linhas:quebrar(l.txt,F('400',15),BARRA-(l.certa?24:0))}));
+    const tituloL=quebrar(g.num+'. '+g.enunciado,TIT(22),LARG);
+    const ops=g.linhas.map(l=>({...l,linhas:quebrar(l.txt,TXT(l.certa?'500':'400',16),BARRA-(l.certa?26:0))}));
 
-    /* O texto assenta na linha de base, por isso sobe ~15px acima do y: sem
+    /* O texto assenta na linha de base, por isso sobe ~16px acima do y: sem
        folga a seguir à barra, a etiqueta seguinte parecia colada à barra de
        cima em vez da sua. Estes números são o mesmo ritmo do desenho. */
-    let H=M+tituloL.length*29+2+34;                        // título + estado
-    ops.forEach(o=>{ H+=o.linhas.length*21+7+14+30; });    // texto + barra + folga
-    H+=28+M;                                               // filete + rodapé
+    let H=M+tituloL.length*30+6+30;                        // título + estado
+    ops.forEach(o=>{ H+=o.linhas.length*22+8+14+30; });    // texto + barra + folga
+    H+=30+M;                                               // filete + rodapé
 
     const c=document.createElement('canvas');
     c.width=L*E; c.height=Math.round(H)*E;
     const x=c.getContext('2d');
     x.scale(E,E);
     x.textBaseline='alphabetic';
+    const espacar=v=>{ try{ x.letterSpacing=v; }catch(e){} };
 
-    const TINTA='#172a36', FRACO='#5f6f7a', TRILHO='#eef3f7',
-          AZUL='#0078bf', VERDE='#0f9d58';
-    x.fillStyle='#ffffff'; x.fillRect(0,0,L,H);
+    x.fillStyle=PAPEL; x.fillRect(0,0,L,H);
 
-    let y=M+21;
-    x.fillStyle=TINTA; x.font=F('700',21);
-    tituloL.forEach(l=>{ x.fillText(l,M,y); y+=29; });
+    let y=M+22;
+    x.fillStyle=TINTA; x.font=TIT(22);
+    tituloL.forEach(l=>{ x.fillText(l,M,y); y+=30; });
 
-    y+=2;
-    const txtPc=g.pc+'% certas';
-    x.font=F('600',14);
-    const largPc=x.measureText(txtPc).width;   // medir ANTES de trocar de fonte
-    x.fillStyle=g.pc>=70?VERDE:(g.pc>=40?'#a1500a':'#c62828');
-    x.fillText(txtPc,M,y);
-    x.font=F('400',14); x.fillStyle=FRACO;
-    x.fillText('  ·  '+g.certos+' de '+g.total+' acertaram',M+largPc,y);
-    y+=34;
+    y+=4;
+    espacar('2px');
+    x.font=MONO('700',11.5); x.fillStyle=AZUL_E;
+    x.fillText((g.pc+'% certas · '+g.certos+' de '+g.total).toUpperCase(),M,y);
+    espacar('0px');
+    y+=30;
 
     const arred=(px,py,pw,ph,r)=>{
       x.beginPath();
@@ -2195,29 +2201,31 @@ function desenharGrafico(g){
     };
 
     ops.forEach(o=>{
-      x.font=F(o.certa?'600':'400',15);
-      x.fillStyle=o.vazia?FRACO:TINTA;
+      x.font=TXT(o.certa?'500':'400',16);
+      x.fillStyle=o.vazia?FRACO:(o.certa?TINTA:TINTA2);
       let esq=M;
       if(o.certa){
         /* o visto desenha-se a traço, para ficar nítido a qualquer tamanho */
-        x.save(); x.strokeStyle=VERDE; x.lineWidth=2; x.lineCap='round'; x.lineJoin='round';
-        x.beginPath(); x.moveTo(M+1,y-5); x.lineTo(M+5,y-1); x.lineTo(M+13,y-11); x.stroke(); x.restore();
-        esq=M+22;
+        x.save(); x.strokeStyle=AZUL; x.lineWidth=2; x.lineCap='round'; x.lineJoin='round';
+        x.beginPath(); x.moveTo(M+1,y-6); x.lineTo(M+6,y-1); x.lineTo(M+15,y-13); x.stroke(); x.restore();
+        esq=M+26;
       }
-      o.linhas.forEach((l,k)=>{ x.fillText(l,esq,y+k*21); });
-      y+=o.linhas.length*21+7;
+      o.linhas.forEach((l,k)=>{ x.fillText(l,esq,y+k*22); });
+      y+=o.linhas.length*22+8;
 
-      x.fillStyle=TRILHO; arred(M,y,BARRA,14,5);
-      if(o.pc>0){ x.fillStyle=o.certa?VERDE:(o.vazia?'#c9d3da':AZUL); arred(M,y,Math.max(6,BARRA*o.pc/100),14,5); }
-      x.fillStyle=o.vazia?FRACO:TINTA; x.font=F('700',13.5);
-      x.fillText(o.n+' · '+o.pc+'%',M+BARRA+14,y+12);
+      x.fillStyle=TRILHO; arred(M,y,BARRA,14,4);
+      if(o.pc>0){ x.fillStyle=o.vazia?APAGADO:(o.certa?AZUL:NEUTRA); arred(M,y,Math.max(6,BARRA*o.pc/100),14,4); }
+      x.fillStyle=o.vazia?FRACO:TINTA; x.font=MONO('700',12.5);
+      x.fillText(o.n+' · '+o.pc+'%',M+BARRA+16,y+12);
       y+=14+30;
     });
 
-    x.fillStyle='#e6ecf1'; x.fillRect(M,y+2,LARG,1);
-    x.fillStyle=FRACO; x.font=F('400',12.5);
-    x.fillText((aplAtual?aplAtual.titulo:'')+(turmaAtual?'  ·  Turma '+turmaAtual.codigo:'')+
-      '  ·  '+g.total+' respostas',M,y+20);
+    x.fillStyle=RISCO; x.fillRect(M,y-8,LARG,1);
+    espacar('1.5px');
+    x.fillStyle=FRACO; x.font=MONO('400',10.5);
+    x.fillText(((aplAtual?aplAtual.titulo:'')+(turmaAtual?'  ·  Turma '+turmaAtual.codigo:'')+
+      '  ·  '+g.total+' respostas  ·  crm.cr0x.org').toUpperCase(),M,y+10);
+    espacar('0px');
 
     c.toBlob(b=>b?res(b):rej(new Error('sem imagem')),'image/png');
   }));
