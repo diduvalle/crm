@@ -33,7 +33,21 @@ icones/
 redes/
   linkedin-capa.html     a receita da capa da pagina do LinkedIn (1128x191)
   linkedin-capa.png      a capa, a 2x - e o que se carrega la
+maquetes/                capturas reais das paginas, usadas no manual
+manual-normas.html       O MANUAL DE NORMAS GRAFICAS (receita)
+CRM-manual-de-normas-graficas.pdf   o mesmo, impresso
 ```
+
+## O manual de normas graficas
+
+`manual-normas.html` e a fonte; o PDF e uma impressao dele. Nao se edita o PDF.
+As maquetes sao capturas reais - nada la dentro e uma simulacao desenhada a parte.
+
+```
+node ferramentas/imprimir-manual.mjs
+```
+
+**Em caso de divergencia entre o PDF e esta pasta, manda esta pasta.**
 
 A capa das redes nao desenha a marca: puxa os SVG de `logo/`. Para a voltar a gerar depois de mexer na receita (ou na marca):
 

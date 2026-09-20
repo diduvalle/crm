@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<title>CRM - Manual de normas gráficas</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,800&family=Inter:wght@400;600;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Space+Mono:wght@400;700&display=block">
+<style>
+/* =====================================================================
+   MANUAL DE NORMAS GRÁFICAS - crm.cr0x.org
+   A4 deitado, uma página por assunto, para imprimir em PDF.
+
+   NADA AQUI É DESENHADO PARA O DOCUMENTO: a marca vem dos SVG de
+   logo/, as cores vêm de estilo/tokens.css e as maquetes são capturas
+   reais das páginas, tiradas por ferramentas/render-capa.mjs e pelo
+   guião que está ao lado. Se a plataforma mudar, reimprime-se e fica
+   certo.
+
+   Reimprimir:  node ferramentas/imprimir-manual.mjs
+   ===================================================================== */
+:root{
+  --papel:#efe9dd; --papel-2:#f5f1e8; --branco:#fdfbf7;
+  --tinta:#171412; --tinta-2:#4a423c; --neutra:#2a2622; --fraco:#6f655c;
+  --azul:#0078bf; --azul-escuro:#005e95; --risco:#d6cdbd;
+}
+@page{ size:A4 landscape; margin:0 }
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#9a9a9a;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact}
+
+.pag{
+  width:297mm;height:210mm;background:var(--branco);color:var(--tinta);
+  font-family:Archivo,system-ui,sans-serif;position:relative;overflow:hidden;
+  padding:13mm 15mm 14mm;page-break-after:always;margin:0 auto 6mm;
+  display:flex;flex-direction:column;
+}
+.pag:last-child{page-break-after:auto}
+@media print{ .pag{margin:0} body{background:none} }
+
+/* cabeçalho, faixa de capítulo e rodapé */
+.etq{font:700 7.5pt "Space Mono",monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--fraco)}
+.faixa{background:var(--tinta);color:var(--papel);padding:2.6mm 4mm;margin:2mm 0 7mm}
+.faixa h2{margin:0;font-size:12pt;font-weight:800;letter-spacing:.02em;text-transform:uppercase}
+.faixa .sub{font:400 8pt Newsreader,Georgia,serif;color:rgba(239,233,221,.72);margin-left:6px}
+/* o conteúdo flutua no meio da página, como num manual impresso */
+.corpo{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center}
+.rodape{position:absolute;left:15mm;right:15mm;bottom:8mm;display:flex;align-items:center;gap:8px;
+  border-top:.4mm solid var(--risco);padding-top:2mm;
+  font:700 7pt "Space Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--fraco)}
+.rodape img{height:4.6mm;margin-left:auto}
+.rodape b{font:800 10pt Archivo;color:var(--tinta);letter-spacing:0;min-width:6mm;text-align:right}
+
+/* texto */
+p{font:400 9.5pt/1.55 Newsreader,Georgia,serif;color:var(--tinta-2);margin:0 0 3mm;max-width:105mm}
+p.larga{max-width:none}
+h3{font:800 10pt Archivo;margin:0 0 1.5mm;letter-spacing:-.01em}
+.nota{font:400 8pt/1.5 Newsreader,Georgia,serif;color:var(--fraco);margin:0}
+strong{font-weight:500;color:var(--tinta)}
+.regra{border-left:.8mm solid var(--azul);padding:1mm 0 1mm 4mm;margin:4mm 0 0}
+.regra p{margin:0;max-width:none;font-size:9pt}
+
+.cols{display:grid;gap:7mm}
+.corpo>.cols{height:100%}   /* só a grelha de topo enche a página */
+.c2{grid-template-columns:1fr 1fr} .c3{grid-template-columns:repeat(3,1fr)} .c4{grid-template-columns:repeat(4,1fr)}
+.c-2-1{grid-template-columns:2fr 1fr} .c-1-2{grid-template-columns:1fr 2fr}
+.meio{display:grid;place-items:center}
+
+/* caixas */
+.cx{border:.3mm solid var(--risco);border-radius:2mm;padding:5mm;display:flex;flex-direction:column;gap:3mm}
+.cx.papel{background:var(--papel)} .cx.tinta{background:var(--tinta);color:var(--papel)}
+.cx.azul{background:var(--azul)} .cx.branca{background:#fff}
+.cx-t{font:700 7pt "Space Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--fraco)}
+.cx.tinta .cx-t,.cx.azul .cx-t{color:rgba(239,233,221,.8)}
+.cx .meio{flex:1}
+.cx img{max-width:100%;max-height:100%}
+
+/* maquetes */
+.maq{border:.3mm solid var(--risco);border-radius:2mm;overflow:hidden;background:#fff;display:flex}
+.maq img{width:100%;height:auto;display:block}
+.leg{font:700 7pt "Space Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--fraco);margin:2mm 0 0}
+
+/* tabelas */
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:2mm 3mm;border-bottom:.25mm solid var(--risco);vertical-align:top;
+  font:400 8.5pt/1.4 Archivo}
+th{font:700 6.8pt "Space Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--fraco)}
+td code{font:400 8pt "Space Mono",monospace;color:var(--tinta)}
+
+/* cores */
+.cor{border-radius:2mm;overflow:hidden;border:.25mm solid rgba(23,20,18,.12);display:flex;flex-direction:column}
+.cor .amostra{height:26mm}
+.cor .dados{padding:3mm;background:#fff;font:400 7.5pt/1.6 "Space Mono",monospace;color:var(--tinta-2)}
+.cor .dados b{display:block;font:800 9.5pt Archivo;color:var(--tinta);margin-bottom:1mm;letter-spacing:-.01em}
+
+/* alfabetos */
+.alfa{font-size:13pt;line-height:1.35;letter-spacing:.01em;color:var(--tinta);word-break:break-all}
+.alfa small{display:block;font:400 7.5pt "Space Mono",monospace;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--fraco);margin-bottom:1.5mm}
+
+/* utilizações incorretas */
+.mal{border:.3mm solid var(--risco);border-radius:2mm;padding:3mm;display:flex;flex-direction:column;gap:2mm;
+  min-height:0;overflow:hidden}
+.mal .t{font:700 6.5pt "Space Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:#a8392f}
+.mal .p{flex:1;display:grid;place-items:center;overflow:hidden;background:var(--papel);border-radius:1mm;padding:2mm}
+.mal img{height:11mm;width:auto}
+
+/* capa */
+.capa{background:var(--tinta);color:var(--papel);justify-content:center;padding:0 22mm}
+.capa .etq{color:rgba(239,233,221,.6)}
+.capa h1{font-size:34pt;font-weight:800;letter-spacing:-.02em;line-height:1;margin:3mm 0 0;color:var(--papel)}
+.capa h1 span{font:700 12pt "Space Mono",monospace;letter-spacing:.1em;vertical-align:super;color:var(--azul)}
+.capa .risco{border-top:.4mm solid rgba(239,233,221,.35);margin:5mm 0;width:150mm}
+.capa .data{font:400 10pt Newsreader,Georgia,serif;color:rgba(239,233,221,.75)}
+.capa .marca-pe{position:absolute;right:22mm;bottom:18mm;display:flex;align-items:center;gap:3mm}
+.capa .marca-pe img{height:9mm}
+.capa .marca-pe span{font:700 8pt "Space Mono",monospace;letter-spacing:.18em;color:rgba(239,233,221,.8)}
+
+/* índice */
+.idx{columns:2;column-gap:14mm;font-size:9.5pt}
+.idx div{break-inside:avoid;display:flex;align-items:baseline;gap:2mm;padding:1.6mm 0;border-bottom:.2mm dotted var(--risco)}
+.idx .n{font:700 8pt "Space Mono",monospace;color:var(--azul-escuro);min-width:7mm}
+.idx .t{font-weight:600}
+.idx .pg{margin-left:auto;font:700 8pt "Space Mono",monospace;color:var(--fraco)}
+.idx .cap{border:0;margin-top:3mm;font:700 7pt "Space Mono",monospace;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--fraco);padding-bottom:0}
+
+/* medidas */
+.medida{position:relative;display:inline-block}
+.protecao{position:relative;padding:14mm;background:
+  repeating-linear-gradient(45deg,rgba(0,120,191,.06) 0 2mm,transparent 2mm 4mm);border:.25mm dashed var(--azul)}
+.protecao img{display:block;height:18mm}
+.cota{position:absolute;font:700 7pt "Space Mono",monospace;color:var(--azul-escuro)}
+.ico-grelha{display:grid;grid-template-columns:repeat(7,1fr);gap:7mm;align-items:center;justify-items:center}
+.ico-grelha img{width:9mm;height:9mm;opacity:.92}
+</style>
+</head>
+<body>
+
+<!-- ============================ 1. CAPA ============================ -->
+<section class="pag capa">
+  <span class="etq">crm.cr0x.org</span>
+  <div class="risco"></div>
+  <h1>MANUAL DE NORMAS GRÁFICAS <span>V1.0</span></h1>
+  <div class="risco"></div>
+  <p class="data">Setembro, 2026</p>
+  <div class="marca-pe">
+    <img src="logo/crm-marca-papel.svg" alt="">
+    <span>crm.cr0x.org</span>
+  </div>
+</section>
+
+<!-- ============================ 2. ÍNDICE ============================ -->
+<section class="pag">
+  <span class="etq">Manual de normas gráficas</span>
+  <div class="faixa"><h2>Índice</h2></div>
+  <div class="corpo">
+    <div class="idx">
+      <div class="cap">A marca</div>
+      <div><span class="n">01</span><span class="t">Introdução e quem mantém</span><span class="pg">3</span></div>
+      <div><span class="n">02</span><span class="t">Identidade visual</span><span class="pg">4</span></div>
+      <div><span class="n">03</span><span class="t">Versões da marca</span><span class="pg">5</span></div>
+      <div><span class="n">04</span><span class="t">Área de proteção e dimensões mínimas</span><span class="pg">6</span></div>
+      <div class="cap">O sistema</div>
+      <div><span class="n">05</span><span class="t">Tipografia</span><span class="pg">7</span></div>
+      <div><span class="n">06</span><span class="t">Cores</span><span class="pg">8</span></div>
+      <div><span class="n">07</span><span class="t">Comportamento cromático</span><span class="pg">9</span></div>
+      <div><span class="n">08</span><span class="t">Utilizações incorretas</span><span class="pg">10</span></div>
+      <div><span class="n">09</span><span class="t">Ícones</span><span class="pg">11</span></div>
+      <div class="cap">Aplicações</div>
+      <div><span class="n">10</span><span class="t">A plataforma e o Repositório</span><span class="pg">12</span></div>
+      <div><span class="n">11</span><span class="t">A entrada e o manual</span><span class="pg">13</span></div>
+      <div><span class="n">12</span><span class="t">Email</span><span class="pg">14</span></div>
+      <div><span class="n">13</span><span class="t">O que o formando recebe</span><span class="pg">15</span></div>
+      <div><span class="n">14</span><span class="t">Redes e slides</span><span class="pg">16</span></div>
+      <div class="cap">Governo da marca</div>
+      <div><span class="n">15</span><span class="t">A marca por escola</span><span class="pg">17</span></div>
+      <div><span class="n">16</span><span class="t">Onde vive cada ficheiro</span><span class="pg">18</span></div>
+      <div><span class="n">17</span><span class="t">Versão, manutenção e contacto</span><span class="pg">19</span></div>
+    </div>
+  </div>
+  <footer class="rodape"><span>Manual de normas gráficas</span><img src="logo/crm-marca.svg" alt=""><b>2</b></footer>
+</section>
+
+<!-- ============================ 3. INTRODUÇÃO ============================ -->
+<section class="pag">
+  <span class="etq">Manual de normas gráficas</span>
+  <div class="faixa"><h2>01 · Introdução</h2></div>
+  <div class="corpo cols c-2-1">
+    <div>
+      <p>Este manual estabelece as normas da identidade visual do <strong>crm.cr0x.org</strong> - a plataforma onde um CRM inteiro é usado como sala de aula. Aplica-se a tudo o que leva a marca: a própria plataforma, o repositório de sessões, o manual, os emails, os badges de conclusão, os materiais de apresentação e as redes.</p>
+      <p>A identidade não é decorativa. Uma parte do que aqui está - os badges, as credenciais, os emails - é material que fica no currículo de quem passou pela formação. A coerência entre o que se envia e o que se verifica <strong>é o que torna um badge credível</strong>.</p>
+      <h3>A regra que explica todas as outras</h3>
+      <p>A marca <strong>não se redesenha: gera-se</strong>. Todas as formas saem dos ficheiros em <code>marca/logo/</code> e todas as cores saem de <code>estilo/tokens.css</code>. Não existe neste documento nenhuma cor escrita à mão nem nenhuma forma desenhada de novo. Se a marca mudar, muda-se lá e reimprime-se isto.</p>
+      <div class="regra">
+        <p><strong>Nunca</strong> reconstruir a marca a partir deste PDF, de uma captura de ecrã ou de memória. Usar sempre o ficheiro original.</p>
+      </div>
+    </div>
+    <div class="cx papel">
+      <span class="cx-t">Quem mantém</span>
+      <div style="font:800 12pt Archivo">Diogo du Valle</div>
+      <p style="font-size:8.5pt;margin:0">Formador e autor da plataforma.<br>Dúvidas sobre este manual ou pedidos de ficheiros:</p>
+      <div style="font:700 8.5pt 'Space Mono',monospace;color:var(--azul-escuro)">crm@cr0x.org</div>
+      <div style="margin-top:auto">
+        <span class="cx-t">Versão</span>
+        <div style="font:400 9pt Newsreader,serif;color:var(--tinta-2)">V1.0 · Setembro de 2026</div>
+      </div>
+    </div>
+  </div>
+  <footer class="rodape"><span>Manual de normas gráficas</span><img src="logo/crm-marca.svg" alt=""><b>3</b></footer>
+</section>
+
+<!-- ============================ 4. IDENTIDADE VISUAL ============================ -->
+<section class="pag">
+  <span class="etq">Manual de normas gráficas</span>
+  <div class="faixa"><h2>02 · Identidade visual</h2></div>
+  <div class="corpo cols c-1-2">
+    <div>
+      <p>A marca é <strong>um quadro de trabalho visto de cima</strong>: três colunas, como as de um funil de vendas ou de um quadro de tarefas. Duas estão por fazer, em contorno; <strong>a terceira está cheia</strong> - é o trabalho feito.</p>
+      <p>É a ideia da plataforma numa forma só: não se aprende um CRM a ver, aprende-se a mexer até a coluna ficar cheia.</p>
+      <h3>Não há assinatura tipográfica</h3>
+      <p>A marca é apenas o símbolo. Quando é preciso escrever o nome ao lado, escreve-se <strong>crm.cr0x.org</strong> em Space Mono, em maiúsculas espaçadas - nunca desenhado, nunca noutra letra.</p>
+      <div class="regra"><p>A inclinação de <strong>5 graus</strong> faz parte da marca. Não se endireita.</p></div>
+    </div>
+    <div class="cx" style="justify-content:center;align-items:center">
+      <img src="logo/crm-marca.svg" alt="" style="height:52mm">
+      <span class="cx-t" style="margin-top:4mm">A marca · proporção 102:63</span>
+    </div>
+  </div>
+  <footer class="rodape"><span>Manual de normas gráficas</span><img src="logo/crm-marca.svg" alt=""><b>4</b></footer>
+</section>
+
+<!-- ============================ 5. VERSÕES ============================ -->
+<section class="pag">
+  <span class="etq">Manual de normas gráficas</span>
+  <div class="faixa"><h2>03 · Versões da marca <span class="sub">qual usar, e onde</span></h2></div>
+  <div class="corpo">
+    <div class="cols c4" style="height:52mm;margin-bottom:6mm">
+      <div class="cx"><span class="cx-t">Principal</span><div class="meio"><img src="logo/crm-marca.svg" style="height:16mm"></div></div>
+      <div class="cx tinta"><span class="cx-t">Sobre fundo escuro</span><div class="meio"><img src="logo/crm-marca-papel.svg" style="height:16mm"></div></div>
+      <div class="cx"><span class="cx-t">Uma cor</span><div class="meio"><img src="logo/crm-marca-tinta.svg" style="height:16mm"></div></div>
+      <div class="cx papel"><span class="cx-t">Sólida · fundos pequenos</span><div class="meio"><img src="logo/crm-marca-solida.svg" style="height:16mm"></div></div>
+    </div>
+    <div class="cols c4" style="height:52mm">
+      <div class="cx"><span class="cx-t">Símbolo · tela quadrada</span><div class="meio"><img src="logo/crm-simbolo.svg" style="height:22mm"></div></div>
+      <div class="cx"><span class="cx-t">Ícone de aplicação</span><div class="meio"><img src="logo/crm-app-tinta.svg" style="height:22mm"></div></div>
+      <div class="cx"><span class="cx-t">Favicon · 16 e 32px</span><div class="meio"><img src="logo/crm-favicon-reduzido.svg" style="height:22mm"></div></div>
+      <div class="cx"><span class="cx-t">Badge · só aqui</span><div class="meio"><img src="logo/crm-marca-badge.svg" style="height:16mm"></div></div>
+    </div>
+    <div class="regra" style="margin-top:5mm">
+      <p>A versão <strong>badge</strong> - com a terceira coluna a azul - existe <strong>só na página do badge e no selo</strong>. Em todo o resto, a marca é de uma cor só. O <strong>favicon reduzido</strong> perde as barras interiores porque a 16px elas viram ruído.</p>
+    </div>
+  </div>
+  <footer class="rodape"><span>Manual de normas gráficas</span><img src="logo/crm-marca.svg" alt=""><b>5</b></footer>
+</section>
+
+<!-- ============================ 6. PROTEÇÃO E MÍNIMOS ============================ -->
+<section class="pag">
+  <span class="etq">Manual de normas gráficas</span>
+  <div class="faixa"><h2>04 · Área de proteção e dimensões mínimas</h2></div>
+  <div class="corpo cols c2">
+    <div>
+      <h3>Área de proteção</h3>
+      <p>A margem mínima à volta da marca é a <strong>largura de uma coluna (X)</strong>. Dentro dela não entra texto, nem outro logótipo, nem o limite da página.</p>
+      <div style="margin:5mm 0">
+        <div class="protecao" style="display:inline-block">
+          <img src="logo/crm-marca.svg" alt="">
+        </div>
+        <p class="nota" style="margin-top:2mm">A zona tracejada é a área de proteção: <strong>X</strong> de cada lado, onde X é a largura de uma coluna da própria marca.</p>
+      </div>
+    </div>
+    <div>
+      <h3>Dimensões mínimas</h3>
+      <p>Abaixo destes tamanhos a marca perde as barras interiores e deixa de se ler. Nunca reduzir mais.</p>
+      <table style="margin-top:3mm">
+        <tr><th>Versão</th><th>Impressão</th><th>Digital</th></tr>
+        <tr><td>Marca</td><td><code>24 mm</code> de largura</td><td><code>90 px</code></td></tr>
+        <tr><td>Símbolo</td><td><code>12 mm</code></td><td><code>48 px</code></td></tr>
+        <tr><td>Ícone de aplicação</td><td>-</td><td><code>32 px</code></td></tr>
+        <tr><td>Favicon reduzido</td><td>-</td><td><code>16 px</code></td></tr>
+      </table>
+      <div class="cols c3" style="margin-top:6mm;align-items:end">
+        <div><img src="logo/crm-marca.svg" style="width:24mm"><p class="leg">24 mm</p></div>
+        <div><img src="logo/crm-simbolo.svg" style="width:12mm"><p class="leg">12 mm</p></div>
+        <div><img src="logo/crm-favicon-reduzido.svg" style="width:8mm"><p class="leg">favicon</p></div>
+      </div>
+      <div class="regra" style="margin-top:6mm"><p>Quando o espaço obriga a ir abaixo do mínimo da marca, <strong>troca-se de versão</strong> - símbolo ou favicon reduzido - em vez de encolher a que lá está.</p></div>
+    </div>
+  </div>
+  <footer class="rodape"><span>Manual de normas gráficas</span><img src="logo/crm-marca.svg" alt=""><b>6</b></footer>
+</section>
+
+<!-- ============================ 7. TIPOGRAFIA ============================ -->
+<section class="pag">
+  <span class="etq">Manual de normas gráficas</span>
+  <div class="faixa"><h2>05 · Tipografia <span class="sub">quatro letras, cada uma com o seu trabalho</span></h2></div>
+  <div class="corpo cols c2" style="gap:9mm">
+    <div>
+      <div class="alfa" style="font-family:Archivo;font-weight:800">
+        <small>Archivo · títulos, botões e etiquetas</small>
+        ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz 1234567890
+      </div>
+      <p class="nota" style="margin:2mm 0 6mm">Pesos 800 (títulos), 700 (subtítulos e botões) e 600 (etiquetas). O itálico 800 usa-se só para destacar uma palavra dentro de um título.</p>
+
+      <div class="alfa" style="font-family:Newsreader">
+        <small>Newsreader · texto corrido</small>
+        ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz 1234567890
+      </div>
+      <p class="nota" style="margin:2mm 0 6mm">Pesos 400 e 500. É a letra do que se lê com tempo: a entrada, as perguntas de um teste, os textos deste manual.</p>
+
+      <div class="alfa" style="font-family:'Space Mono',monospace;font-size:11pt">
+        <small>Space Mono · etiquetas, códigos e números</small>
+        ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz 1234567890
+      </div>
+      <p class="nota" style="margin:2mm 0 0">Sempre em <strong>maiúsculas</strong>, com espaçamento entre letras de .14 a .24em. Nunca em texto corrido.</p>
+    </div>
+    <div>
+      <div class="alfa" style="font-family:Inter;font-size:12pt">
+        <small>Inter · o interior da plataforma</small>
+        ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz 1234567890
+      </div>
+      <p class="nota" style="margin:2mm 0 6mm">A aplicação e o repositório - as ferramentas de trabalho - usam Inter, que aguenta interfaces densas e tabelas. Vem de <code>estilo/tokens.css</code>.</p>
+
+      <h3>A divisão que não se troca</h3>
+      <table>
+        <tr><th>Onde</th><th>Letra</th></tr>
+        <tr><td>Entrada, manual, badge, teste, emails, slides</td><td>Archivo · Newsreader · Space Mono</td></tr>
+        <tr><td>Plataforma e repositório (por dentro)</td><td>Inter</td></tr>
+      </table>
+      <p style="margin-top:3mm">É de propósito: <strong>o que a pessoa recebe</strong> tem a cara da casa; <strong>a ferramenta onde trabalha</strong> tem a cara de uma ferramenta.</p>
+
+      <div class="regra"><p>A serifa <strong>nunca</strong> entra num controlo - botão, campo, caixa de seleção. Num campo, a serifa atrapalha a leitura rápida.</p></div>
+      <p class="nota" style="margin-top:5mm">Todas são de licença aberta (SIL Open Font License) e carregam-se do Google Fonts. Alternativas do sistema, por esta ordem: <code>system-ui</code> para a Archivo e a Inter, <code>Georgia</code> para a Newsreader, <code>ui-monospace</code> para a Space Mono.</p>
+    </div>
+  </div>
+  <footer class="rodape"><span>Manual de normas gráficas</span><img src="logo/crm-marca.svg" alt=""><b>7</b></footer>
+</section>
+
+<!-- ============================ 8. CORES ============================ -->
+<section class="pag">
+  <span class="etq">Manual de normas gráficas</span>
+  <div class="faixa"><h2>06 · Cores</h2></div>
+  <div class="corpo">
+    <div class="cols c4" style="height:auto">
+      <div class="cor">
+        <div class="amostra" style="background:#efe9dd"></div>
+        <div class="dados"><b>Papel</b>HEX #efe9dd<br>RGB 239 233 221<br>CMYK 0 3 8 6</div>
+      </div>
+      <div class="cor">
+        <div class="amostra" style="background:#171412"></div>
+        <div class="dados"><b>Tinta</b>HEX #171412<br>RGB 23 20 18<br>CMYK 0 13 22 91</div>
+      </div>
+      <div class="cor">
+        <div class="amostra" style="background:#2a2622"></div>
+        <div class="dados"><b>Neutra</b>HEX #2a2622<br>RGB 42 38 34<br>CMYK 0 10 19 84</div>
+      </div>
+      <div class="cor">
+        <div class="amostra" style="background:#0078bf"></div>
+        <div class="dados"><b>Azul</b>HEX #0078bf<br>RGB 0 120 191<br>CMYK 100 37 0 25</div>
+      </div>
+    </div>
+    <div class="cols c2" style="margin-top:6mm;height:auto">
+      <div>
+        <h3>O que cada uma faz</h3>
+        <table>
+          <tr><td><strong>Papel</strong></td><td>o fundo. Usa-se em vez de branco: um branco puro ao lado do creme lê-se como uma mancha.</td></tr>
+          <tr><td><strong>Tinta</strong></td><td>o texto. Usa-se em vez de preto: um preto ao lado do creme lê-se como um buraco.</td></tr>
+          <tr><td><strong>Neutra</strong></td><td><strong>a cor da marca.</strong> O logótipo é todo nesta, incluindo a terceira coluna.</td></tr>
+          <tr><td><strong>Azul</strong></td><td>ação: botões, ligações, a coluna cheia do badge. <strong>Não entra na marca.</strong></td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>Azul escuro, para texto pequeno</h3>
+        <p>O azul da marca sobre papel dá <strong>3,9:1</strong> - abaixo do mínimo legível. Em texto pequeno e em etiquetas usa-se <code>#005e95</code> (RGB 0 94 149 · CMYK 100 37 0 42), que dá 5,6:1 e é o mesmo azul, só mais fundo.</p>
+        <div class="regra"><p>Não há referência <strong>Pantone</strong>: esta marca nasceu em ecrã e vive em ecrã. Para impressão a cores diretas, aproximar pelo CMYK indicado e conferir prova.</p></div>
+        <p class="nota" style="margin-top:4mm">Cinzentos de apoio, para texto secundário sobre papel: <code>#4a423c</code> e <code>#6f655c</code>. Filete e separadores: <code>#d6cdbd</code>.</p>
+      </div>
+    </div>
+  </div>
+  <footer class="rodape"><span>Manual de normas gráficas</span><img src="logo/crm-marca.svg" alt=""><b>8</b></footer>
+</section>
+
+<!-- ============================ 9. COMPORTAMENTO CROMÁTICO ============================ -->
+<section class="pag">
+  <span class="etq">Manual de normas gráficas</span>
+  <div class="faixa"><h2>07 · Comportamento cromático</h2></div>
+  <div class="corpo">
+    <div class="cols c4" style="height:64mm">
+      <div class="cx papel"><span class="cx-t">Sobre papel · preferencial</span><div class="meio"><img src="logo/crm-marca.svg" style="height:15mm"></div></div>
+      <div class="cx tinta"><span class="cx-t">Sobre tinta</span><div class="meio"><img src="logo/crm-marca-papel.svg" style="height:15mm"></div></div>
+      <div class="cx azul"><span class="cx-t">Sobre a cor da escola</span><div class="meio"><img src="logo/crm-marca-papel.svg" style="height:15mm"></div></div>
+      <div class="cx" style="background:url('../background.png') center/cover;border:0">
+        <span class="cx-t" style="color:var(--tinta-2)">Sobre imagem</span>
+        <div class="meio"><img src="logo/crm-marca.svg" style="height:15mm"></div>
+      </div>
+    </div>
+    <div class="cols c2" style="margin-top:7mm">
+      <div>
+        <p>Sobre <strong>papel</strong> usa-se sempre a versão principal. É a situação normal e não há razão para fugir dela.</p>
+        <p>Sobre <strong>tinta</strong> ou sobre a <strong>cor de uma escola</strong>, usa-se a versão em papel - a uma cor só. A marca nunca leva contorno para se destacar.</p>
+      </div>
+      <div>
+        <p>Sobre <strong>imagem</strong>, a marca só entra onde o fundo for calmo e o contraste chegar. Se não chegar, põe-se um véu por baixo - nunca se altera a marca.</p>
+        <div class="regra"><p>O contraste entre a marca e o fundo nunca deve ser inferior a <strong>3:1</strong>. Na dúvida, mede-se.</p></div>
+      </div>
+    </div>
+  </div>
+  <footer class="rodape"><span>Manual de normas gráficas</span><img src="logo/crm-marca.svg" alt=""><b>9</b></footer>
+</section>
+
+<!-- ============================ 10. UTILIZAÇÕES INCORRETAS ============================ -->
+<section class="pag">
+  <span class="etq">Manual de normas gráficas</span>
+  <div class="faixa"><h2>08 · Utilizações incorretas</h2></div>
+  <div class="corpo">
+    <div class="cols c3" style="grid-template-rows:repeat(3,1fr);height:132mm">
+      <div class="mal"><span class="t">Esticar ou espremer</span><div class="p"><img src="logo/crm-marca.svg" style="transform:scaleX(2)"></div></div>
+      <div class="mal"><span class="t">Endireitar ou rodar</span><div class="p"><img src="logo/crm-marca.svg" style="transform:rotate(18deg)"></div></div>
+      <div class="mal"><span class="t">Pintar a marca de azul</span><div class="p"><img src="logo/crm-marca.svg" style="filter:invert(36%) sepia(94%) saturate(1600%) hue-rotate(180deg)"></div></div>
+      <div class="mal"><span class="t">Usar a versão do badge fora do badge</span><div class="p"><img src="logo/crm-marca-badge.svg"></div></div>
+      <div class="mal"><span class="t">Sombras, contornos ou transparências</span><div class="p"><img src="logo/crm-marca.svg" style="opacity:.4;filter:drop-shadow(1mm 1mm 0 rgba(0,0,0,.35))"></div></div>
+      <div class="mal"><span class="t">Fundo sem contraste</span><div class="p" style="background:#35302a"><img src="logo/crm-marca.svg"></div></div>
+      <div class="mal"><span class="t">Escrever o nome noutra letra</span>
+        <div class="p"><span style="font:700 12pt Georgia,serif">crm.cr0x.org</span></div></div>
+      <div class="mal"><span class="t">Encostar texto à marca</span>
+        <div class="p" style="display:flex;gap:1mm;align-items:center"><img src="logo/crm-marca.svg" style="height:7mm"><span style="font:800 9pt Archivo">Plataforma</span></div></div>
+      <div class="mal"><span class="t">Emoji no lugar de um ícone</span>
+        <div class="p"><span style="font-size:15pt">📊 📈 ✅</span></div></div>
+    </div>
+    <div class="regra" style="margin-top:5mm"><p>Esta lista não é exaustiva. A regra geral é uma só: <strong>a marca usa-se como está no ficheiro</strong>. Tudo o que a altere - proporção, ângulo, cor, elementos, efeitos - está errado.</p></div>
+  </div>
+  <footer class="rodape"><span>Manual de normas gráficas</span><img src="logo/crm-marca.svg" alt=""><b>10</b></footer>
+</section>
+
+<!-- ============================ 11. ÍCONES ============================ -->
+<section class="pag">
+  <span class="etq">Manual de normas gráficas</span>
+  <div class="faixa"><h2>09 · Ícones</h2></div>
+  <div class="corpo cols c-2-1">
+    <div>
+      <div class="ico-grelha" id="grelhaIcones"></div>
+    </div>
+    <div>
+      <p>Os ícones da interface são <strong>a traço, de uma cor só</strong>, desenhados na mesma grelha de 24 pixéis, com espessura <strong>1,8</strong> e pontas redondas.</p>
+      <p>Herdam sempre a cor do texto onde estão (<code>currentColor</code>) - por isso funcionam em papel, em tinta e em qualquer cor de escola sem se tocar neles.</p>
+      <h3>Nunca um emoji</h3>
+      <p>Um emoji é colorido, muda de desenho conforme o sistema e não se alinha com o texto. Onde faltar um ícone, <strong>desenha-se mais um</strong> na mesma grelha.</p>
+      <div class="regra"><p>Um ícone nunca substitui uma etiqueta num botão de ação. Acompanha-a.</p></div>
+      <p class="nota" style="margin-top:4mm">Os 49 ícones estão em <code>marca/icones/svg/</code> e no conjunto <code>I</code> dentro da aplicação.</p>
+    </div>
+  </div>
+  <footer class="rodape"><span>Manual de normas gráficas</span><img src="logo/crm-marca.svg" alt=""><b>11</b></footer>
+</section>
+
+<!-- ============================ 12. A PLATAFORMA E O REPO ============================ -->
+<section class="pag">
+  <span class="etq">Manual de normas gráficas</span>
+  <div class="faixa"><h2>10 · A plataforma e o Repositório <span class="sub">as ferramentas</span></h2></div>
+  <div class="corpo">
+    <div class="cols c2" style="height:104mm">
+      <div><div class="maq"><img src="maquetes/app.png" alt=""></div><p class="leg">Entrada na plataforma</p></div>
+      <div><div class="maq"><img src="maquetes/repo.png" alt=""></div><p class="leg">Repositório de sessões</p></div>
+    </div>
+    <div class="cols c2" style="margin-top:5mm">
+      <div>
+        <p>Por dentro, a plataforma e o repositório são <strong>ferramentas de trabalho</strong>: fundo claro neutro, azul de ação, Inter, tabelas densas. É o ambiente onde se está horas seguidas.</p>
+      </div>
+      <div>
+        <div class="regra"><p>As cores da interface vivem <strong>todas</strong> em <code>estilo/tokens.css</code>, e os componentes em <code>estilo/componentes.css</code>. Não se escreve uma cor à mão dentro de uma página.</p></div>
+      </div>
+    </div>
+  </div>
+  <footer class="rodape"><span>Manual de normas gráficas</span><img src="logo/crm-marca.svg" alt=""><b>12</b></footer>
+</section>
+
+<!-- ============================ 13. ENTRADA E MANUAL ============================ -->
+<section class="pag">
+  <span class="etq">Manual de normas gráficas</span>
+  <div class="faixa"><h2>11 · A entrada e o manual <span class="sub">a cara pública</span></h2></div>
+  <div class="corpo">
+    <div class="cols c2" style="height:104mm">
+      <div><div class="maq"><img src="maquetes/entrada.png" alt=""></div><p class="leg">crm.cr0x.org</p></div>
+      <div><div class="maq"><img src="maquetes/manual.png" alt=""></div><p class="leg">crm.cr0x.org/manual</p></div>
+    </div>
+    <div class="cols c2" style="margin-top:5mm">
+      <div>
+        <p>A entrada é <strong>papel, tinta e três letras</strong>. Fundo creme com grelha de pontos, objetos da marca a boiar, títulos em Archivo com a pincelada, texto em Newsreader.</p>
+      </div>
+      <div>
+        <p>O manual da plataforma segue a mesma identidade, com o conteúdo em cartão de papel sobre o fundo creme.</p>
+      </div>
+    </div>
+  </div>
+  <footer class="rodape"><span>Manual de normas gráficas</span><img src="logo/crm-marca.svg" alt=""><b>13</b></footer>
+</section>
+
+<!-- ============================ 14. EMAIL ============================ -->
+<section class="pag">
+  <span class="etq">Manual de normas gráficas</span>
+  <div class="faixa"><h2>12 · Email</h2></div>
+  <div class="corpo cols c-1-2">
+    <div>
+      <p>Todos os emails da plataforma - convite, avaliação, badge, recuperação de acesso - saem do <strong>mesmo cartão</strong>: faixa de cor no topo, saudação, título, texto, um botão, e um rodapé que avisa o que fica registado.</p>
+      <h3>A cor é da escola</h3>
+      <p>A faixa e o botão tomam <strong>a cor da escola</strong> a que a turma pertence; sem escola, o azul da plataforma. O nome do remetente também é o da escola. O endereço é sempre o mesmo.</p>
+      <div class="regra"><p>Um email nunca leva imagens carregadas de fora nem tipos de letra próprios: a caixa de entrada não os garante. Cor, texto e um botão - mais nada.</p></div>
+      <p class="nota" style="margin-top:4mm">O desenho vive em dois sítios, de propósito: nas Edge Functions (Repo, badges, testes) e na aplicação (convites e exercícios). Mexer num obriga a mexer no outro.</p>
+    </div>
+    <div><div class="maq"><img src="maquetes/email.png" alt=""></div><p class="leg">O cartão, com o azul da plataforma</p></div>
+  </div>
+  <footer class="rodape"><span>Manual de normas gráficas</span><img src="logo/crm-marca.svg" alt=""><b>14</b></footer>
+</section>
+
+<!-- ============================ 15. O QUE O FORMANDO RECEBE ============================ -->
+<section class="pag">
+  <span class="etq">Manual de normas gráficas</span>
+  <div class="faixa"><h2>13 · O que o formando recebe</h2></div>
+  <div class="corpo">
+    <div class="cols c2" style="height:100mm">
+      <div><div class="maq"><img src="maquetes/teste.png" alt=""></div><p class="leg">Avaliação · crm.cr0x.org/t</p></div>
+      <div><div class="maq"><img src="maquetes/badge.png" alt=""></div><p class="leg">Badge · crm.cr0x.org/b</p></div>
+    </div>
+    <div class="cols c2" style="margin-top:5mm">
+      <div>
+        <p>Estas páginas <strong>não são a ferramenta</strong> - são material. Por isso têm a identidade do site, e não a da aplicação: papel, tinta, Archivo e Newsreader.</p>
+      </div>
+      <div>
+        <div class="regra"><p>O badge é <strong>um registo, não um diploma</strong>. A página diz sempre, por escrito, que confirma a conclusão de um módulo e que não substitui o certificado da entidade formadora. Essa frase não se retira.</p></div>
+      </div>
+    </div>
+  </div>
+  <footer class="rodape"><span>Manual de normas gráficas</span><img src="logo/crm-marca.svg" alt=""><b>15</b></footer>
+</section>
+
+<!-- ============================ 16. REDES E SLIDES ============================ -->
+<section class="pag">
+  <span class="etq">Manual de normas gráficas</span>
+  <div class="faixa"><h2>14 · Redes e slides</h2></div>
+  <div class="corpo">
+    <div style="display:grid;grid-template-columns:1fr;gap:4mm">
+      <div><div class="maq"><img src="maquetes/capa-linkedin.png" alt=""></div><p class="leg">Capa de rede social · 1128 × 191</p></div>
+    </div>
+    <div class="cols c-1-2" style="margin-top:5mm">
+      <div><div class="maq"><img src="maquetes/og.png" alt=""></div><p class="leg">Pré-visualização de ligação · 1200 × 630</p></div>
+      <div>
+        <div class="cols c2">
+          <div><div class="maq"><img src="maquetes/grafico.png" alt=""></div><p class="leg">Resultados, para slides</p></div>
+          <div>
+            <p>As imagens que saem da plataforma para fora - capas, pré-visualizações, gráficos de resultados - são <strong>desenhadas com os mesmos valores</strong> e exportadas a 2x.</p>
+            <div class="regra"><p>Uma imagem para slide nasce <strong>sempre clara</strong>. O tema escuro é da ferramenta e não sai dela.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="rodape"><span>Manual de normas gráficas</span><img src="logo/crm-marca.svg" alt=""><b>16</b></footer>
+</section>
+
+<!-- ============================ 17. A MARCA POR ESCOLA ============================ -->
+<section class="pag">
+  <span class="etq">Manual de normas gráficas</span>
+  <div class="faixa"><h2>15 · A marca por escola</h2></div>
+  <div class="corpo cols c2">
+    <div>
+      <p>Cada escola tem o seu espaço em <code>crm.cr0x.org/nome-da-escola</code>, com identidade própria à volta da plataforma. O que muda é pouco e está definido:</p>
+      <table style="margin-top:3mm">
+        <tr><th>Muda</th><th>Onde aparece</th></tr>
+        <tr><td>Nome da escola</td><td>entrada do espaço, remetente dos emails, contexto do badge</td></tr>
+        <tr><td>Cor da escola</td><td>faixa e botão dos emails, destaques do espaço</td></tr>
+        <tr><td>Logótipo da escola</td><td>entrada do espaço e barra lateral</td></tr>
+      </table>
+      <div class="regra"><p>A cor da escola <strong>substitui o azul</strong> - nunca a tinta, nunca o papel, nunca a marca.</p></div>
+    </div>
+    <div>
+      <h3>O que nunca muda</h3>
+      <p>A marca do CRM, as quatro letras, o papel e a tinta, a forma dos ícones, o desenho do badge e do email. Uma escola veste o espaço; <strong>não veste a plataforma</strong>.</p>
+      <h3>Porquê</h3>
+      <p>Um badge emitido pela escola A e outro pela escola B têm de se ler como a mesma coisa: quem os recebe não conhece as duas escolas, conhece o sítio onde se verificam. <strong>A confiança está na coerência</strong>, não na personalização.</p>
+      <div class="cols c3" style="margin-top:6mm;height:26mm">
+        <div class="cx" style="background:#0078bf;padding:3mm"><span class="cx-t">Plataforma</span></div>
+        <div class="cx" style="background:#00722d;padding:3mm"><span class="cx-t">Escola A</span></div>
+        <div class="cx" style="background:#7a2e8e;padding:3mm"><span class="cx-t">Escola B</span></div>
+      </div>
+      <p class="nota" style="margin-top:2mm">Exemplos de cores de escola. Cada uma tem de manter 4,5:1 sobre papel quando levar texto por cima.</p>
+    </div>
+  </div>
+  <footer class="rodape"><span>Manual de normas gráficas</span><img src="logo/crm-marca.svg" alt=""><b>17</b></footer>
+</section>
+
+<!-- ============================ 18. ASSETS ============================ -->
+<section class="pag">
+  <span class="etq">Manual de normas gráficas</span>
+  <div class="faixa"><h2>16 · Onde vive cada ficheiro</h2></div>
+  <div class="corpo cols c2">
+    <div>
+      <pre style="font:400 8pt/1.7 'Space Mono',monospace;color:var(--tinta-2);margin:0">marca/
+  logo/
+    crm-marca.svg          A MARCA
+    crm-marca-tinta|papel  a uma cor
+    crm-marca-solida.svg   interior cheio
+    crm-marca-badge.svg    só para o badge
+    crm-simbolo-*.svg      tela quadrada
+    crm-app-*.svg          ícone de aplicação
+    crm-favicon*.svg       favicon
+    png/                   o mesmo, 64 a 1024
+  icones/svg/              os 49 ícones
+  redes/                   capas e a sua receita
+  maquetes/                as capturas deste manual
+  manual-normas.html       este documento
+estilo/
+  tokens.css               AS CORES
+  componentes.css          os componentes</pre>
+    </div>
+    <div>
+      <h3>As duas fontes da verdade</h3>
+      <p>Toda a <strong>forma</strong> sai de <code>marca/logo/</code>. Toda a <strong>cor</strong> sai de <code>estilo/tokens.css</code>. Uma página que precise de uma cor liga a folha de estilos; não copia o valor.</p>
+      <h3>Como se reimprime este manual</h3>
+      <p>As maquetes são capturas reais, tiradas outra vez a cada reimpressão. Nada aqui é uma simulação desenhada à parte.</p>
+      <pre style="font:400 8pt/1.7 'Space Mono',monospace;color:var(--tinta-2);margin:0;background:var(--papel);padding:3mm;border-radius:2mm">node ferramentas/imprimir-manual.mjs</pre>
+      <div class="regra" style="margin-top:5mm"><p>Pedidos de ficheiros noutro formato - EPS, PDF vetorial, versões para bordado ou gravação - fazem-se a partir dos SVG originais. <strong>Nunca a partir de um PNG.</strong></p></div>
+    </div>
+  </div>
+  <footer class="rodape"><span>Manual de normas gráficas</span><img src="logo/crm-marca.svg" alt=""><b>18</b></footer>
+</section>
+
+<!-- ============================ 19. VERSÃO E CONTACTO ============================ -->
+<section class="pag">
+  <span class="etq">Manual de normas gráficas</span>
+  <div class="faixa"><h2>17 · Versão, manutenção e contacto</h2></div>
+  <div class="corpo cols c2">
+    <div>
+      <h3>Versão</h3>
+      <table>
+        <tr><th>Versão</th><th>Data</th><th>O que mudou</th></tr>
+        <tr><td>V1.0</td><td>Set. 2026</td><td>Primeira edição como manual de normas.</td></tr>
+      </table>
+      <h3 style="margin-top:6mm">Quando se atualiza</h3>
+      <p>Sempre que mudar uma forma, uma cor, uma letra ou uma aplicação nova entrar. A versão sobe uma décima; uma alteração à própria marca sobe um número inteiro.</p>
+      <div class="regra"><p>Este PDF é uma <strong>impressão</strong> do sistema, não o sistema. Em caso de divergência entre o que aqui está e o que está em <code>marca/</code> e <code>estilo/tokens.css</code>, <strong>manda o repositório</strong>.</p></div>
+    </div>
+    <div class="cx papel" style="justify-content:center">
+      <span class="cx-t">Contacto</span>
+      <div style="font:800 14pt Archivo;letter-spacing:-.01em">Diogo du Valle</div>
+      <p style="margin:0;font-size:9pt">Formador e autor da plataforma</p>
+      <div style="font:700 9.5pt 'Space Mono',monospace;color:var(--azul-escuro);margin-top:2mm">crm@cr0x.org</div>
+      <div style="font:700 9.5pt 'Space Mono',monospace;color:var(--azul-escuro)">crm.cr0x.org</div>
+      <div style="margin-top:6mm"><img src="logo/crm-marca.svg" style="height:11mm"></div>
+    </div>
+  </div>
+  <footer class="rodape"><span>Manual de normas gráficas</span><img src="logo/crm-marca.svg" alt=""><b>19</b></footer>
+</section>
+
+<script>
+/* A grelha de ícones não é uma imagem: são os próprios ficheiros de
+   marca/icones/svg/, para nunca ficar desatualizada. */
+(function(){
+  var nomes=[
+    'dash','users','box','building','sparkles','calendar','doc','target','chart','shield',
+    'mail','cog','bell','euro','trend','check','flag','alert','list','download',
+    'upload','eye','print','sun','moon','send','logout','layout','image','text',
+    'grip','trash','lock','key','linkedin','info','percent','book','slides','support',
+    'star','chat','bulb','clock','chevL','chevR','chevD','heart','rotate'
+  ];
+  var g=document.getElementById('grelhaIcones');
+  if(!g) return;
+  nomes.forEach(function(n){
+    var i=document.createElement('img');
+    i.src='icones/svg/'+n+'.svg'; i.alt='';
+    i.onerror=function(){ i.remove(); };
+    g.appendChild(i);
+  });
+})();
+</script>
+</body>
+</html>
