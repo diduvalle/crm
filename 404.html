@@ -5117,7 +5117,7 @@ function loadEmailJS(){
     document.head.appendChild(s);
   });
 }
-function emailParams(o){ const s=state.settings; return { to_email:o.toEmail||'', to_name:o.toName||'', subject:o.subject||'', message:o.message||'', from_name:o.fromName||s.entidade||'', reply_to:o.replyTo||s.email||'', cc:o.cc||'', bcc:o.bcc||'' }; }
+function emailParams(o){ const s=state.settings; return { to_email:o.toEmail||'', to_name:o.toName||'', subject:o.subject||'', message:o.message||'', from_name:o.fromName||s.entidade||brandName()||'', reply_to:o.replyTo||s.email||'', cc:o.cc||'', bcc:o.bcc||'' }; }
 function sendViaEmailJS(o){ const c=emailjsCfg(); return loadEmailJS().then(ej=>ej.send(c.serviceId, c.templateId, emailParams(o), {publicKey:c.publicKey})); }
 /* ---------- Convite de formando: password determinística + email de boas-vindas ---------- */
 function fmdInitials(nome,apelido){ const p=((nome||'')+' '+(apelido||'')).trim().split(/\s+/).filter(Boolean); return ((((p[0]||'')[0]||'')+((p[1]||'')[0]||''))||'XX').toUpperCase(); }
@@ -5154,7 +5154,7 @@ function sendInvite(f,pwd){ if(!realSendOn()) return Promise.resolve({sent:false
   if(!emails.length) return Promise.resolve({sent:false,reason:'noemail'});
   const tpl=buildInviteTpl(f,pwd);   // EmailJS trata {{message}} como TEXTO → enviamos texto (não HTML)
   const toName=((f.nome||'')+' '+(f.apelido||'')).trim()||f.username;
-  return Promise.all(emails.map(em=>sendViaEmailJS({toEmail:em,toName,subject:tpl.assunto,message:inviteBodyText(tpl)})))
+  return Promise.all(emails.map(em=>sendViaEmailJS({toEmail:em,toName,subject:tpl.assunto,message:inviteBodyText(tpl),fromName:brandName()})))
     .then(()=>({sent:true,count:emails.length})).catch(e=>({sent:false,reason:(typeof supaMsg==='function'?supaMsg(e):String(e&&e.text||e))})); }
 function formInv(){ const els=document.querySelectorAll('#modalForm [data-inv]'); const o={}; els.forEach(el=>o[el.dataset.inv]=el.value); return o; }
 function invitePreviewHTML(){ const f={nome:'Maria',apelido:'Silva',username:'1234567',email:'1234567@exemplo.pt'};
@@ -5189,7 +5189,7 @@ function sendTestEmailJS(){
   if(!emailjsActive()){ toast('Configure primeiro','Preencha os 3 campos e ative o modo real','warn'); return; }
   const to=(currentUser()&&currentUser().email)||state.settings.email||''; if(!to){ toast('Sem destinatário','Defina o email da entidade','warn'); return; }
   toast('A enviar teste…','via EmailJS','info');
-  sendViaEmailJS({toEmail:to,toName:'Teste',subject:'Teste - '+brandName(),message:'Este é um email de teste enviado pela plataforma via EmailJS. Se o recebeu, a configuração está correta.'})
+  sendViaEmailJS({fromName:brandName(),toEmail:to,toName:'Teste',subject:'Teste - '+brandName(),message:'Este é um email de teste enviado pela plataforma via EmailJS. Se o recebeu, a configuração está correta.'})
     .then(()=>toast('Teste enviado',`Verifique a caixa de ${to}`))
     .catch(err=>toast('Falha no teste',String(err&&(err.text||err.message)||err),'err'));
 }
