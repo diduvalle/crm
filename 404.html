@@ -2870,7 +2870,7 @@ function casoBodyHTML(){
     </tbody></table></div>`;
 }
 views.casos = () => {
-  const filtroE = state._casoEstado||'';
+  const filtroE = state._casoEstado==null?'abertos':state._casoEstado;   /* o mesmo valor por omissão do casoBodyHTML */
   const abertos=casosAbertos();
   const emRisco=abertos.filter(c=>['risco','violado'].includes(casoSla(c).estado)).length;
   const csat=csatMedia(); const nps=npsScore();
