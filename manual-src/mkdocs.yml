@@ -13,7 +13,7 @@ theme:
   custom_dir: overrides
   language: pt-BR
   logo: assets/logo.png
-  favicon: assets/favicon.png
+  favicon: assets/favicon.svg
   font:
     text: Newsreader
     code: Space Mono
