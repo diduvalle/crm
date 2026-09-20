@@ -14,12 +14,20 @@
 (function () {
   'use strict';
 
-  /* chave do vídeo -> id no canal. Preenchido depois do upload.
-     Enquanto estiver vazio, o bloco mostra que o vídeo ainda não subiu em
-     vez de mostrar um leitor partido. */
+  /* chave do vídeo -> id no canal, POR LÍNGUA: a app foi gravada em
+     português e em inglês, e são vídeos diferentes. Sem isto, quem
+     lesse o manual em inglês via a interface em português.
+
+     Preenchido pelo subir.mjs depois do upload. Enquanto estiver vazio,
+     o bloco diz que o vídeo ainda não subiu em vez de mostrar um leitor
+     partido. */
   var IDS = {
-    // 'resumo': 'xxxxxxxxxxx',
-    // 'dashboard': 'xxxxxxxxxxx',
+    pt: {
+      // 'resumo': 'xxxxxxxxxxx',
+    },
+    en: {
+      // 'resumo': 'xxxxxxxxxxx',
+    }
   };
 
   var TXT = {
@@ -37,8 +45,11 @@
     var chave = fig.getAttribute('data-video');
     if (!chave) return;
     if (fig.querySelector('.vfachada')) return;   /* ja montada */
-    var t = TXT[lingua(fig)];
-    var id = IDS[chave];
+    var lg = lingua(fig);
+    var t = TXT[lg];
+    /* sem versão na língua da página, usa-se a portuguesa - é melhor um
+       vídeo em português do que nenhum */
+    var id = (IDS[lg] && IDS[lg][chave]) || IDS.pt[chave];
     var legenda = fig.querySelector('figcaption');
     var titulo = legenda ? legenda.textContent.trim() : chave;
     var poster = fig.getAttribute('data-poster') || '';
