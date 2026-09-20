@@ -1,12 +1,15 @@
 # Marca CRM
 
-Tudo aqui é gerado a partir do `favicon.svg` da plataforma e do `estilo/tokens.css`. Não há nenhuma cor nem nenhuma forma desenhada de novo: se a marca mudar, muda lá e volta a gerar-se.
+Tudo aqui é gerado a partir do logótipo que está em **crm.cr0x.org** - o SVG embutido no cabeçalho do `index.html`, o mesmo que o badge usa - e do `estilo/tokens.css`.
+
+> O `favicon.svg` **não** é a fonte. É um desenho antigo, com colunas mais largas e outra grelha, e foi o erro da primeira versão desta pasta. Não há nenhuma cor nem nenhuma forma desenhada de novo: se a marca mudar, muda lá e volta a gerar-se.
 
 ## As três cores
 
 | | Hex | Onde |
 |---|---|---|
 | **Tinta** | `#171412` | o tom mais escuro da marca. Usa-se em vez de preto - um `#000000` ao lado do creme lê-se como um buraco |
+| **Neutra** | `#2a2622` | a tinta do quadro. É esta que o logótipo do cabeçalho usa, e não a tinta |
 | **Papel** | `#efe9dd` | o creme do fundo. Usa-se em vez de branco - um `#ffffff` sobre creme aparece como uma mancha mais clara |
 | **Azul** | `#0078bf` | a cor de acção. É a terceira coluna da marca, e é a cor que uma escola substitui quando põe a sua |
 
@@ -16,7 +19,7 @@ O azul é o único que muda por escola. A tinta e o papel são da plataforma e f
 
 ```
 logo/
-  crm-marca-*.svg        a marca sozinha (proporção 167:126)
+  crm-marca-*.svg        a marca sozinha (proporção 102:63)
   crm-marca-*-solida.svg a mesma, com o interior das colunas preenchido
   crm-simbolo-*.svg      a marca centrada em tela quadrada
   crm-app-*.svg          a caixa arredondada com a marca recortada
