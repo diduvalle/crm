@@ -5,9 +5,10 @@
    Mexer nas cores faz-se lá, e muda a app, o repositório e isto.
    =========================================================== */
 @import url("tokens.css");
-/* o Material carrega Newsreader e Space Mono pelo mkdocs.yml; o Archivo
-   dos titulos tem de vir a parte, e um @import so vale no topo. */
-@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&display=swap");
+/* As fontes do site inteiro, pedidas aqui e nao pelo mkdocs.yml: o
+   carregador do Material so traz 300/400/700, e isto usa 500, 600 e
+   800. Um @import so vale no topo do ficheiro. */
+@import url("https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,800&family=Space+Mono:wght@400;700&display=swap");
 
 /* --- Cor primária (verde IEFP) --- */
 [data-md-color-primary="custom"] {
@@ -650,7 +651,7 @@ html[lang^="en"] .md-header .md-select > .md-header__button.md-icon::after { con
   --crm-g50:  #f2f8fc;
   --crm-accent: var(--pl-azul);
 
-  --md-text-font: "Newsreader";
+  --md-text-font: "Archivo";
   --md-code-font: "Space Mono";
 }
 

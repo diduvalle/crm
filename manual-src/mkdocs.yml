@@ -14,9 +14,10 @@ theme:
   language: pt-BR
   logo: assets/logo.png
   favicon: assets/favicon.svg
-  font:
-    text: Newsreader
-    code: Space Mono
+  # As fontes vêm do extra.css, com os pesos que o manual usa mesmo.
+  # O carregador do MkDocs so traz 300/400/700, e aqui usam-se 500,
+  # 600 e 800. Trazia tambem o Newsreader, que o extra.css tapava todo.
+  font: false
   features:
     - navigation.sections
     - navigation.expand

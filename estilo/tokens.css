@@ -17,7 +17,10 @@
   --shadow-lg:0 18px 48px rgba(0,45,75,.16);
   --shadow-primary:inset 0 1px 0 rgba(255,255,255,.22),0 6px 16px -5px rgba(0,94,149,.5),0 2px 4px -1px rgba(0,77,122,.32);
   --r:12px;--rl:18px;--rs:9px;--sidebar:268px;--header:64px;
-  --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,system-ui,sans-serif;
+  /* uma só família para tudo o que se lê e se clica, e uma monoespaçada
+     para código e etiquetas. Quem muda aqui, muda em todo o lado. */
+  --font:'Archivo',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mono:'Space Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
 /* [data-theme] é como as apps marcam o tema; [data-md-color-scheme] é como o
    MkDocs Material o marca (no <body>). Os dois apontam aos mesmos valores. */

@@ -8,7 +8,9 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,800&family=Space+Mono:wght@400;700&display=swap">
 <link rel="stylesheet" href="../estilo/tokens.css">
 <link rel="stylesheet" href="../estilo/componentes.css">
 <style>
@@ -18,8 +20,8 @@
    guardado sozinho; submeter é o único passo irreversível.
 
    O VISUAL É O DO crm.cr0x.org, não o do interior da app: papel, tinta,
-   azul, e as três letras da casa - Archivo nos títulos, Newsreader no que
-   se lê, Space Mono nas etiquetas. É a mesma cara do badge e da página de
+   azul, e as letras da casa - Archivo em tudo o que se lê e se clica, e
+   Space Mono nas etiquetas. É a mesma cara do badge e da página de
    entrada, porque é tudo material que a mesma pessoa recebe.
    Os componentes continuam a vir de estilo/ - o que se faz aqui é trocar
    os valores das cores, uma vez, em cima. */
@@ -35,7 +37,7 @@
   --papel-fundo:#efe9dd; --risco:#d6cdbd;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Newsreader,Georgia,serif;font-size:17px;background:var(--bg);color:var(--text);line-height:1.6}
+body{font-family:'Archivo',system-ui,sans-serif;font-size:17px;background:var(--bg);color:var(--text);line-height:1.6}
 /* os controlos são de letra sem serifa: num campo, a serifa atrapalha */
 button,input,select,textarea,.btn{font-family:Archivo,system-ui,sans-serif}
 .folha{max-width:760px;margin:0 auto;padding:0 20px 80px}

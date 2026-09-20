@@ -233,16 +233,16 @@
     </div>
     <div style="font:400 15px Archivo;color:var(--tinta-2);margin-top:6px">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 €%&amp;</div>
     <div style="font:600 11px Archivo;color:var(--fraco);margin-top:8px">400 regular · 500 medium · 600 semibold · 700 bold · 800 extrabold</div>
-    <p class="peq" style="margin-top:9px">Uma grotesca estreita que aguenta títulos grandes sem ocupar a linha toda, e continua legível a 11px num botão. É a fonte da app, dos menus, dos rótulos e de tudo o que se clica.</p>
+    <p class="peq" style="margin-top:9px">Uma grotesca estreita que aguenta títulos grandes sem ocupar a linha toda, e continua legível a 11px num botão. É a fonte de tudo: da app, do manual, dos menus, dos rótulos, do corpo do texto e de tudo o que se clica. Não há segunda fonte de texto.</p>
   </div>
 
   <div style="border:1px solid var(--risco);border-radius:12px;padding:16px;margin-top:10px">
     <div style="display:flex;justify-content:space-between;align-items:baseline">
-      <div style="font:400 34px Newsreader">Newsreader</div>
-      <div class="etq">Texto para ler</div>
+      <div style="font:400 34px Newsreader;color:var(--fraco)">Newsreader</div>
+      <div class="etq">Saiu do sistema</div>
     </div>
     <div style="font:400 15px Newsreader;color:var(--tinta-2);margin-top:6px">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 €%&amp;</div>
-    <p class="peq" style="margin-top:9px">Só no manual, e só no corpo do texto. Um manual lê-se durante minutos seguidos; uma serifa com contraste baixo cansa menos do que uma grotesca. Nunca em botões, campos ou menus.</p>
+    <p class="peq" style="margin-top:9px">Foi a serifa do corpo do manual e da página de entrada. <b>Deixou de se usar.</b> A razão era boa - uma serifa cansa menos num texto longo -, mas fazia o manual e a entrada parecerem outro produto a quem vinha da app. Uma casa, uma letra. Fica aqui só para se saber que saiu, e porquê.</p>
   </div>
 
   <div style="border:1px solid var(--risco);border-radius:12px;padding:16px;margin-top:10px">
@@ -254,8 +254,8 @@
     <p class="peq" style="margin-top:9px">Código, identificadores, e as etiquetas pequenas em maiúsculas com muito espacejamento. Em blocos de texto, nunca.</p>
   </div>
 
-  <h3 style="margin-top:14px">O que falta fazer</h3>
-  <p>A app declara <code style="font-family:'Space Mono'">--font:'Inter'</code> e nunca chega a pedir essa fonte, por isso corre na fonte do sistema - diferente em cada computador. O <code style="font-family:'Space Mono'">repo</code> pede Archivo <b>e</b> Inter. São três tipografias diferentes em quatro sítios que deviam ser um só.</p>
+  <h3 style="margin-top:14px">Onde vive</h3>
+  <p>A fonte é um token: <code style="font-family:'Space Mono'">--font</code> e <code style="font-family:'Space Mono'">--mono</code> em <code style="font-family:'Space Mono'">estilo/tokens.css</code>. Todas as páginas pedem <b>a mesma linha</b> ao Google Fonts - a app, a entrada, o repositório, o manual, a avaliação e os selos. Quem quiser trocar a letra da casa troca num sítio.</p>
 
   <div class="rodape"><span>CRM · Manual de marca</span><span>04</span></div>
 </section>

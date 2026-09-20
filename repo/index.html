@@ -8,10 +8,11 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<!-- Archivo, Newsreader e Space Mono: as letras do crm.cr0x.org. A Newsreader
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,800&family=Space+Mono:wght@400;700&display=swap">
+<!-- Archivo e Space Mono: as letras do crm.cr0x.org. A Archivo
      não se vê no ecrã do Repo - é a imagem dos gráficos que a desenha. -->
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../estilo/tokens.css">
 <link rel="stylesheet" href="../estilo/componentes.css">
 <style>
@@ -133,7 +134,7 @@ td .tag{align-self:auto}
 
 /* MARCADORES */
 .vars{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.var-chip{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:.72rem;font-weight:700;background:var(--surface3);color:var(--muted);border:1px solid var(--border);cursor:pointer;font-family:ui-monospace,monospace}
+.var-chip{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:.72rem;font-weight:700;background:var(--surface3);color:var(--muted);border:1px solid var(--border);cursor:pointer;font-family:'Space Mono',ui-monospace,monospace}
 .var-chip:hover{border-color:var(--g400);color:var(--g-texto);background:var(--g50)}
 
 /* AVISO RGPD */
@@ -2134,7 +2135,7 @@ async function copiarGrafico(i,btn){
 }
 
 /* A imagem que vai para o slide usa a identidade do crm.cr0x.org - papel,
-   tinta, azul, e as três letras da casa: Archivo no título, Newsreader no
+   tinta, azul, e as letras da casa: Archivo no texto e no título, Space Mono no
    texto, Space Mono nas etiquetas. O ecrã do Repo é ferramenta e fica como
    está; isto é material, e material é tudo igual.
    Desenhada de raiz e a 2x: nunca leva o tema escuro nem sai esborratada. */
@@ -2147,7 +2148,7 @@ function desenharGrafico(g){
           AZUL='#0078bf', AZUL_E='#005e95', RISCO='#d6cdbd',
           TRILHO='#e3dbcc', NEUTRA='#c9bfae', APAGADO='#ddd5c6';
     const TIT=t=>`800 ${t}px Archivo,system-ui,sans-serif`;
-    const TXT=(p,t)=>`${p} ${t}px Newsreader,Georgia,serif`;
+    const TXT=(p,t)=>`${p} ${t}px Archivo,system-ui,sans-serif`;
     const MONO=(p,t)=>`${p} ${t}px "Space Mono",ui-monospace,monospace`;
     const medir=document.createElement('canvas').getContext('2d');
 
