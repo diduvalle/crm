@@ -36,6 +36,15 @@ jobs:
       - name: Trazer os tokens partilhados para o manual
         run: cp estilo/tokens.css manual-src/docs/stylesheets/tokens.css
 
+      # O Pulso responde com o manual: uma entrada por secção, FAQ e
+      # glossário, geradas daqui. Regenera-se sempre que o manual muda,
+      # para o assistente nunca ficar a citar uma versão antiga.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Regenerar a base do Pulso a partir do manual
+        run: node ferramentas/pulso-base.mjs
+
       - name: Construir o manual (-> /manual)
         run: mkdocs build --strict --config-file manual-src/mkdocs.yml
 
@@ -43,9 +52,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add manual
+          git add manual pulso-base.json
           if git diff --staged --quiet; then
-            echo "Sem alterações no manual."
+            echo "Sem alterações no manual nem na base do Pulso."
           else
             git commit -m "build: manual [skip ci]"
             git push
