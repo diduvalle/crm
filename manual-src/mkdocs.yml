@@ -82,6 +82,9 @@ plugins:
             "2.1 Do zero à 1.ª proposta": "2.1 From zero to your first proposal"
             "2.2 Montar a turma (10 min)": "2.2 Set up your class (10 min)"
             "3. Para o Formador": "3. For the Trainer"
+            "4.2 A taça do percurso": "4.2 Your journey trophy"
+            "4.3 Submeter o trabalho": "4.3 Submit your work"
+            "4.4 Recuperar a password": "4.4 Recover your password"
             "3.1 Gerir a turma": "3.1 Manage the class"
             "3.1.1 Importar (Excel)": "3.1.1 Import (Excel)"
             "3.1.2 Adicionar à mão": "3.1.2 Add manually"
@@ -91,8 +94,6 @@ plugins:
             "3.3 Email & Marca": "3.3 Email & Branding"
             "4. Para o Formando": "4. For the Trainee"
             "4.1 Trabalhar no CRM": "4.1 Working in the CRM"
-            "4.2 Submeter o trabalho": "4.2 Submit your work"
-            "4.3 Recuperar a password": "4.3 Recover your password"
             "5. Funcionalidades": "5. Features"
             "5.0 Visão geral": "5.0 Overview"
             "5.1 Dashboard & Agenda": "5.1 Dashboard & Calendar"
@@ -179,8 +180,9 @@ nav:
       - 3.3 Email & Marca: formador/email-marca.md
   - 4. Para o Formando:
       - 4.1 Trabalhar no CRM: formando/trabalhar.md
-      - 4.2 Submeter o trabalho: formando/submeter.md
-      - 4.3 Recuperar a password: formando/recuperar.md
+      - 4.2 A taça do percurso: formando/taca.md
+      - 4.3 Submeter o trabalho: formando/submeter.md
+      - 4.4 Recuperar a password: formando/recuperar.md
   - 5. Funcionalidades:
       - 5.0 Visão geral: modulos/index.md
       - 5.1 Dashboard & Agenda: modulos/dashboard-agenda.md

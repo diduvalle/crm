@@ -47,25 +47,36 @@ Instruction answers carry the **How to** badge, so there is no doubt about what 
 
     The answers are **hand-written**, like everything else here: Pulso does not summarise the manual, nor read it. It **points** at it.
 
-### How-to - what is covered
+### How-to - where the answers come from
 
-Twenty-two questions, across the whole journey:
+**Pulso answers with the manual.** It does not summarise or interpret
+it: a tool reads these pages and produces one entry per section, one per
+frequent question and one per glossary term - around **200** - with the
+heading as the question, the first sentence as the answer, and the link
+landing **on the right anchor**. When the manual changes, the base is
+rebuilt automatically: Pulso never quotes an old version.
 
-- **Records** - create a company, a contact, a product
-- **Proposals** - create, add catalogue lines, export PDF, send (online proposal), move status on the Kanban
-- **Templates** - the proposal builder, email templates and tags
-- **Marketing** - campaigns and automations
-- **GDPR** - record a consent, answer a data subject request
-- **Data** - CSV import, sample generator, merging duplicates, custom fields
-- **Settings** - brand and appearance, sales targets
-- **Learner** - submit your work, recover your password
+On top of that, the **hand-written** answers remain, and they win
+whenever they match better - a heading is less specific than a sentence
+someone wrote for that exact question.
 
-If you write *"how…"* and it does not recognise the phrase, it still sends you to the **manual** instead of shrugging. An out-of-scope question - *"what is the capital of Australia"* - still gets only *"I don't know"*: the manual is not an excuse.
+- **Numbers** - 24 questions about your data
+- **How-to** - the hand-written ones, plus the whole manual
+- **What is** - the glossary, also from the manual
 
-!!! note "Write freely"
-    You do not have to get the verb right. The matching trims verb endings on both sides, so different conjugations land on the same answer.
+### Three things that make it less stubborn
 
----
+- **It handles typos.** *"how do I creat a propsal"* still answers.
+  Words are compared by edit distance, and an approximate match is
+  always worth less than an exact one - it never invents an answer out
+  of a resemblance.
+- **It knows where you are.** On a tie, the open module wins: *"open"*
+  in Proposals means proposals, in the Calendar it means tasks.
+- **It understands "this".** With a company record open, *"how is this
+  company doing?"* answers about that one, without typing the name.
+
+Every answer carries two **next** shortcuts, so the following question
+is one click away.
 
 ### The glossary
 

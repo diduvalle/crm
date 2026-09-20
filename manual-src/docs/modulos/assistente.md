@@ -47,25 +47,36 @@ As respostas de instruções trazem o selo **Como se faz**, para não haver dúv
 
     As respostas são **escritas à mão**, como tudo o resto: o Pulso não resume o manual nem o lê. **Aponta** para ele.
 
-### Como se faz - o que está coberto
+### Como se faz - de onde vêm as respostas
 
-Vinte e duas perguntas, ao longo do percurso todo:
+**O Pulso responde com o manual.** Não o resume nem o interpreta: uma
+ferramenta lê estas páginas e produz uma entrada por secção, uma por
+pergunta frequente e uma por termo do glossário - cerca de **200** - com
+o título como pergunta, a primeira frase como resposta, e a ligação a
+cair **na âncora certa** da página. Quando o manual muda, a base é
+refeita sozinha: o Pulso nunca cita uma versão antiga.
 
-- **Registos** - criar empresa, contacto, produto
-- **Propostas** - criar, pôr linhas do catálogo, exportar PDF, enviar (proposta online), mudar o estado no Kanban
-- **Modelos** - construtor da proposta, modelos de email e as tags
-- **Marketing** - campanhas e automações
-- **RGPD** - registar consentimento, responder a um pedido de titular
-- **Dados** - importar CSV, gerador de exemplos, fundir duplicados, campos personalizados
-- **Definições** - marca e aparência, metas de vendas
-- **Formando** - submeter o trabalho, recuperar a palavra-passe
+Por cima disso continuam as respostas **escritas à mão**, que ganham
+sempre que batem melhor - são mais específicas do que um título de
+secção.
 
-Se escrever *"como…"* e ele não reconhecer, manda-o na mesma ao **manual** em vez de encolher os ombros. Já uma pergunta fora do âmbito - *"qual a capital da Austrália"* - continua a dar só *"não sei"*: o manual não serve de desculpa.
+- **Números** - 24 perguntas aos teus dados
+- **Como se faz** - as escritas à mão, mais o manual inteiro
+- **O que é** - o glossário, também do manual
 
-!!! note "Escreva à vontade"
-    Não é preciso acertar no verbo. *"como crio"*, *"como se cria"*, *"como faço"* e *"criar"* dão todos a mesma resposta - a correspondência corta a terminação dos verbos dos dois lados.
+### Três coisas que o tornam menos teimoso
 
----
+- **Aguenta gralhas.** *"quantas propsotas tenho em aberto"* responde
+  na mesma. Compara-se palavra a palavra pela distância de edição, e
+  uma correspondência aproximada vale sempre menos do que uma exata -
+  nunca inventa uma resposta só por parecença.
+- **Sabe onde estás.** Em empate, ganha o módulo do ecrã aberto:
+  *"em aberto"* nas Propostas são propostas, na Agenda são tarefas.
+- **Percebe "esta".** Com a ficha de uma empresa aberta, *"como está
+  esta empresa?"* responde sobre ela, sem escreveres o nome.
+
+Toda a resposta traz dois atalhos **a seguir**, para a pergunta
+seguinte estar a um clique.
 
 ### O glossário
 
