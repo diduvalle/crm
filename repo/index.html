@@ -43,11 +43,18 @@ td .tag{align-self:auto}
 .tc-drive{display:flex;align-items:center;gap:7px;font-size:.82rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tc-drive svg{flex:none;width:16px;height:16px}
 .tc-drive.falta{color:var(--warn)}
-.tc-foot{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:14px;border-top:1px solid var(--border)}
+/* Cinco botões não cabem numa linha de cartão: em vez de se espremerem (o
+   "Badges" chegou a sair cortado e o "Abrir" a desaparecer), passam à linha. */
+.tc-foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:auto;padding-top:14px;border-top:1px solid var(--border)}
+.tc-foot>.btn,.tc-foot>.btn-sec{flex:none}
+/* onde a linha parte: em cima o que é da turma, em baixo para onde se vai */
+.quebra{flex-basis:100%;height:0;margin:-4px 0}
 /* o dourado do badge: so existe aqui, nao entra no sistema de estilos */
 .btn-ouro{background:#d4af37;border-color:#d4af37;color:#241d0a}
 .btn-ouro:hover{background:#c8a42d;border-color:#c8a42d}
-.tc-foot .btn{margin-left:auto}
+/* o principal do cartão encosta à direita; com quebra de linha, fica sozinho
+   e alinhado à direita na linha de baixo */
+.tc-foot>.btn:last-child{margin-left:auto}
 /* cartão de escola */
 .esc-cab{display:flex;align-items:center;gap:10px}
 .esc-logo{width:40px;height:40px;border-radius:10px;object-fit:contain;background:#fff;border:1px solid var(--border);flex:none;padding:3px}
@@ -806,6 +813,7 @@ async function carregarTurmas(e){
           <div class="tc-foot">
             <button class="tc-lixo" data-apagar-turma="${esc(t.codigo)}" title="Apagar a turma do CRM">${ic('lixo')}</button>
             <button class="btn-sec btn-sm" data-cfg="${t.id}">${ic('cog')}Definições</button>
+            <span class="quebra"></span>
             <button class="btn-sec btn-sm" data-avals="${t.id}">${ic('papel')}Avaliações</button>
             <button class="btn btn-sm btn-ouro" data-selos="${t.id}">Badges</button>
             <button class="btn btn-sm" data-abrir="${t.id}">Abrir</button>
