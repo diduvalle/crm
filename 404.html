@@ -4166,7 +4166,7 @@ function cbotScoreAprox(ks,q){
   });
   return n;
 }
-function cbotScore(ks,q){ const e=cbotScoreExato(ks,q); return e>0?e:cbotScoreAprox(ks,q); }
+function cbotScore(ks,q){ return Math.max(cbotScoreExato(ks,q), cbotScoreAprox(ks,q)); }
 function cbotScoreExato(ks,q){ let n=0; const qr=cbotRaizes(q); const qs=" "+qr.join(" ")+" ";
   ks.forEach(k=>{ const kk=cbotNorm(k);
     /* 1. a frase tal e qual - o sinal mais forte */
@@ -4225,7 +4225,10 @@ function cbotResponde(txt){
   const q=cbotNorm(txt);
   let melhor=null, pts=0;
   CBOT_META.forEach(i=>{ const p=cbotScore(i.k,q); if(p>pts){pts=p;melhor=i;} });
-  CBOT.forEach(i=>{ if(!can(i.mod)) return; const p=cbotScore(i.k,q); if(p>pts){pts=p;melhor=i;} });
+  /* em empate ganha o ecrã onde a pessoa está: "em aberto" em Propostas
+     são propostas, na Agenda são tarefas */
+  const vAqui=currentView();
+  CBOT.forEach(i=>{ if(!can(i.mod)) return; let p=cbotScore(i.k,q); if(p>0&&i.mod===vAqui) p+=1; if(p>pts){pts=p;melhor=i;} });
   /* CBOT ja foi percorrido acima - aqui so a segunda leva de numeros */
   CBOT_NUM2.forEach(i=>{ if(i.mod&&!can(i.mod)) return; const p=cbotScore(i.k,q); if(p>pts){pts=p;melhor=i;} });
   CBOT_AJUDA.concat(CBOT_AJUDA2,CBOT_AJUDA3,CBOT_AJUDA4).forEach(i=>{ if(i.mod&&!can(i.mod)) return; const p=cbotScore(i.k,q); if(p>pts){pts=p;melhor=Object.assign({ajuda:1},i);} });
