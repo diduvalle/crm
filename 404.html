@@ -5083,6 +5083,18 @@ function hasSignature(u){ u=u||currentUser(); if(!u||!u.assinatura) return false
 function currentSigHTML(cliente,proposta){ const u=currentUser(); if(!hasSignature(u)) return ''; const html=`<div style="font-family:${esc(u.assinaturaFont||'Inter, sans-serif')};font-size:${esc(u.assinaturaSize||'14px')};color:#15302a;line-height:1.5">${u.assinatura}</div>`; return mergeCtx(html,cliente,proposta); }
 function sigHtmlToText(html){ if(!html) return ''; return html.replace(/<br\s*\/?>/gi,'\n').replace(/<\/(div|p|h[1-6])>/gi,'\n').replace(/<img[^>]*>/gi,'').replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\n{3,}/g,'\n\n').trim(); }
 function sigInsertImage(input){ const f=input.files&&input.files[0]; if(!f) return; const r=new FileReader(); r.onload=ev=>{ const im=new Image(); im.onload=()=>{ const max=240; let w=im.width,h=im.height; if(w>max){ h=Math.round(h*max/w); w=max; } const cv=document.createElement('canvas'); cv.width=w; cv.height=h; cv.getContext('2d').drawImage(im,0,0,w,h); const ed=$('#sigEditor'); if(ed){ const img=document.createElement('img'); img.src=cv.toDataURL('image/png'); img.style.maxWidth='240px'; ed.appendChild(img); ed.appendChild(document.createElement('br')); } }; im.src=ev.target.result; }; r.readAsDataURL(f); input.value=''; }
+// Moldura neutra, para os emails que NAO vem de um modelo desenhado: o
+// convite, o email de teste e os avisos de entrega. E o mesmo desenho que
+// estava no template do EmailJS - veio para ca para o envio e a
+// pre-visualizacao saírem do mesmo sitio. O EmailJS passa a ser so um cano
+// ({{{message}}}), e quem manda no aspeto e a app, que e onde vive a cor da
+// escola.
+function emailTextoHTML(texto, titulo){
+  return `<div style="max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #e2e6ea;border-radius:12px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+    <div style="padding:18px 26px;border-bottom:1px solid #edf0f3;font-size:15px;font-weight:700;color:#172a36">${esc(titulo||'')}</div>
+    <div style="padding:24px 26px;white-space:pre-line;font-size:15px;line-height:1.62;color:#25333d">${esc(texto||'')}</div>
+  </div>`;
+}
 function emailHTML(tpl, cliente, proposta, sigHTML){
   const cor=tpl.cor||corBase(); const nl=x=>esc(mergeCtx(x,cliente,proposta)).replace(/\n/g,'<br>');
   const logo=tpl.mostrarLogo!==false?`<img src="${logoSrc()}" style="height:32px;margin-bottom:12px" onerror="this.style.display='none'">`:'';
@@ -5154,7 +5166,7 @@ function sendInvite(f,pwd){ if(!realSendOn()) return Promise.resolve({sent:false
   if(!emails.length) return Promise.resolve({sent:false,reason:'noemail'});
   const tpl=buildInviteTpl(f,pwd);   // EmailJS trata {{message}} como TEXTO → enviamos texto (não HTML)
   const toName=((f.nome||'')+' '+(f.apelido||'')).trim()||f.username;
-  return Promise.all(emails.map(em=>sendViaEmailJS({toEmail:em,toName,subject:tpl.assunto,message:inviteBodyText(tpl),fromName:brandName()})))
+  return Promise.all(emails.map(em=>sendViaEmailJS({toEmail:em,toName,subject:tpl.assunto,message:emailTextoHTML(inviteBodyText(tpl),brandName()),fromName:brandName()})))
     .then(()=>({sent:true,count:emails.length})).catch(e=>({sent:false,reason:(typeof supaMsg==='function'?supaMsg(e):String(e&&e.text||e))})); }
 function formInv(){ const els=document.querySelectorAll('#modalForm [data-inv]'); const o={}; els.forEach(el=>o[el.dataset.inv]=el.value); return o; }
 function invitePreviewHTML(){ const f={nome:'Maria',apelido:'Silva',username:'1234567',email:'1234567@exemplo.pt'};
@@ -5189,7 +5201,7 @@ function sendTestEmailJS(){
   if(!emailjsActive()){ toast('Configure primeiro','Preencha os 3 campos e ative o modo real','warn'); return; }
   const to=(currentUser()&&currentUser().email)||state.settings.email||''; if(!to){ toast('Sem destinatário','Defina o email da entidade','warn'); return; }
   toast('A enviar teste…','via EmailJS','info');
-  sendViaEmailJS({fromName:brandName(),toEmail:to,toName:'Teste',subject:'Teste - '+brandName(),message:'Este é um email de teste enviado pela plataforma via EmailJS. Se o recebeu, a configuração está correta.'})
+  sendViaEmailJS({fromName:brandName(),toEmail:to,toName:'Teste',subject:'Teste - '+brandName(),message:emailTextoHTML('Este é um email de teste enviado pela plataforma via EmailJS. Se o recebeu, a configuração está correta.',brandName())})
     .then(()=>toast('Teste enviado',`Verifique a caixa de ${to}`))
     .catch(err=>toast('Falha no teste',String(err&&(err.text||err.message)||err),'err'));
 }
@@ -5561,13 +5573,14 @@ async function mailSend(){
   const subj=mergeCtx(mailDraft.subject,c,null);
   const sigT=sigHtmlToText((currentUser()||{}).assinatura);
   const msg=mergeCtx(mailDraft.message,c,null)+(sigT?'\n\n'+mergeCtx(sigT,c,null):'');
+  const htmlEnvio=mailPreviewHTML();   // o MESMO que a pre-visualizacao mostra
   const ev=sendEmail({clienteId:c?c.id:null, paraNome:c?`${c.nome} ${c.apelido||''}`.trim():to, paraEmail:to, templateId:null, assunto:subj, mensagem:msg, origem:'Manual'});
   const real=realSendOn(); ev.modo=real?'real':'simulado'; if(mailDraft.cc)ev.cc=mailDraft.cc; if(mailDraft.bcc)ev.bcc=mailDraft.bcc;
   const _cc=mailDraft.cc, _bcc=mailDraft.bcc;
   mailDraft=defaultMailDraft(); applyMailTemplate(); save(); render();
   if(real){
     toast('A enviar email real…','via EmailJS','info');
-    sendViaEmailJS({toEmail:to,toName:ev.paraNome,subject:subj,message:msg,cc:_cc,bcc:_bcc})
+    sendViaEmailJS({toEmail:to,toName:ev.paraNome,subject:subj,message:htmlEnvio,cc:_cc,bcc:_bcc})
       .then(()=>{ ev.estado='Enviado'; save(); toast('Email enviado',`Para ${to}`); render(); })
       .catch(err=>{ ev.estado='Falhou'; save(); toast('Falha no envio real',String(err&&(err.text||err.message)||err),'err'); render(); });
   } else { toast('Email registado',`Para ${ev.paraNome} (simulado)`); }
@@ -5716,7 +5729,7 @@ async function doSendEmail(openMail){
   save(); closeModal(); render();
   if(real){
     toast('A enviar email real…','via EmailJS','info');
-    sendViaEmailJS({toEmail:cli.email,toName:ev.paraNome,subject:ev.assunto,message:body,cc:_cc,bcc:_bcc})
+    sendViaEmailJS({toEmail:cli.email,toName:ev.paraNome,subject:ev.assunto,message:emailHTML(tpl,cli,prop,currentSigHTML(cli,prop)),cc:_cc,bcc:_bcc})
       .then(()=>{ ev.estado='Enviado'; save(); toast('Email real enviado',`Para ${ev.paraEmail}`); render(); })
       .catch(err=>{ ev.estado='Falhou'; save(); toast('Falha no envio real',String(err&&(err.text||err.message)||err),'err'); render(); });
     return;
@@ -7750,7 +7763,7 @@ function sendSubmitWork(){
       const sigT=sigHtmlToText(u.assinatura);
       const body=`${msg||'(sem mensagem)'}\n\n---\nRESUMO DO TRABALHO\n${resumoTrabalho()}\n\nEntrega ${res.enviados}/${res.limite} · ${(u.nome||'')} ${(u.apelido||'')}${TURMA?' · Turma '+TURMA:''} · ${todayISO()}\n\n${sigT}`;
       const fromName=(`${(u.nome||'').trim()} ${(u.apelido||'').trim()}`.trim()||u.username||'Formando')+' ('+brandName()+')';
-      sendViaEmailJS({toEmail:to,toName:'Formador',subject,message:body,fromName,replyTo:u.email||''}).catch(()=>{});
+      sendViaEmailJS({toEmail:to,toName:'Formador',subject,message:emailTextoHTML(body,fromName),fromName,replyTo:u.email||''}).catch(()=>{});
       /* cópia para o próprio: o comprovativo é dele, não do formador.
          email2 é o pessoal; se não houver, vai para o institucional. */
       const meu=(u.email2||'').trim()||(u.email||'').trim();
@@ -7759,7 +7772,7 @@ function sendSubmitWork(){
           `Submetido em ${dPT(todayISO())} às ${pad(new Date().getHours(),2)}:${pad(new Date().getMinutes(),2)}`+
           (TURMA?` · Turma ${TURMA}`:'')+`\n\n---\nO QUE FOI ENTREGUE\n${resumoTrabalho()}\n\n`+
           `Esta é a sua cópia. O trabalho ficou registado no servidor - se este email não chegasse, a entrega continuaria válida.`;
-        sendViaEmailJS({toEmail:meu,toName:(u.nome||'')+' '+(u.apelido||''),subject:'A sua entrega ficou registada',message:corpo,fromName:brandName(),replyTo:to}).catch(()=>{});
+        sendViaEmailJS({toEmail:meu,toName:(u.nome||'')+' '+(u.apelido||''),subject:'A sua entrega ficou registada',message:emailTextoHTML(corpo,brandName()),fromName:brandName(),replyTo:to}).catch(()=>{});
       }
     }
   }).catch(e=>{ const sv2=$('[data-act="modal-save"]'); if(sv2){ sv2.disabled=false; sv2.textContent='Submeter trabalho'; } toast('Não foi possível submeter',supaMsg(e),'err'); });

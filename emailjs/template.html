@@ -2,32 +2,29 @@
      TEMPLATE DO EMAILJS  (template_8rfnjxa, serviço service_l6a25qr)
      =====================================================================
      Este ficheiro NÃO é carregado por nada: o template vive no painel do
-     EmailJS. Está aqui para existir em sítio nenhum ser o painel, que é
-     onde se perde. Ao mudar lá, mudar aqui também.
+     EmailJS. Está aqui para o desenho não existir só lá. Ao mudar no
+     painel, mudar aqui também.
 
-     PORQUE É NEUTRO
-     O mesmo template serve quatro coisas com donos diferentes:
-       1. o convite do formando (remetente = a escola),
-       2. o email de teste das Definições,
-       3. os emails do EXERCÍCIO - o formando a escrever ao cliente
-          fictício (remetente = a empresa inventada por ele),
-       4. os avisos de entrega de trabalho.
-     Por isso não leva logótipo, nem cor de marca, nem o nome da
-     plataforma: quem diz quem envia é o {{from_name}}. Um template com a
-     marca da escola faria a proposta comercial de um formando chegar ao
-     "cliente" com o logótipo do IEFP em cima.
+     O TEMPLATE É UM CANO, NÃO UMA MOLDURA
+     Repara nas TRÊS chavetas: {{{message}}} insere o HTML como está, sem
+     escapar. É isso que faz o desenho viajar - o modelo de email que o
+     formando desenha nos "Modelos" (cor, logótipo, botão) chega mesmo ao
+     cliente, em vez de ser achatado a texto.
 
-     A QUEBRA DE LINHA
-     O {{message}} chega em TEXTO SIMPLES com \n (vem do inviteBodyText e
-     do editor de mensagem da app). O `white-space:pre-line` é o que faz
-     os parágrafos existirem - sem ele chega tudo numa linha só.
+     PORQUE ASSIM
+     Antes, a moldura vivia aqui e o corpo vivia na app: a pré-visualização
+     dizia "Como o cliente vai ver" e mostrava outra coisa, porque o que
+     saía era só texto embrulhado nesta moldura. Agora a app manda o email
+     inteiro - `emailHTML()` para os modelos desenhados, `emailTextoHTML()`
+     para o convite, o teste e os avisos - e a pré-visualização mostra
+     exatamente a mesma função. Não podem divergir.
 
-     VARIÁVEIS que a app envia (emailParams no 404.html):
-       to_email  to_name  subject  message  from_name  reply_to  cc  bcc
+     Também por isto o template não tem marca nenhuma: o mesmo envio serve
+     o convite da escola E os emails do exercício, onde quem assina é a
+     empresa fictícia do formando.
+
+     CAMPOS DO TOPO (no painel, à direita - não estão neste ficheiro):
+       To Email {{to_email}} · From Name {{from_name}} · Reply To {{reply_to}}
+       Subject {{subject}} · Cc {{cc}} · Bcc {{bcc}}
      ===================================================================== -->
-<div style="margin:0;padding:24px 12px;background:#f2f4f6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
-  <div style="max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #e2e6ea;border-radius:12px">
-    <div style="padding:18px 26px;border-bottom:1px solid #edf0f3;font-size:15px;font-weight:700;color:#172a36">{{from_name}}</div>
-    <div style="padding:24px 26px;white-space:pre-line;font-size:15px;line-height:1.62;color:#25333d">{{message}}</div>
-  </div>
-</div>
+<div style="margin:0;padding:24px 12px;background:#f2f4f6">{{{message}}}</div>
