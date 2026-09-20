@@ -8,6 +8,7 @@
 <link rel="icon" href="../favicon.png">
 <link rel="apple-touch-icon" href="../apple-touch-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../estilo/tokens.css">
 <link rel="stylesheet" href="../estilo/componentes.css">
 <style>
@@ -117,6 +118,47 @@ td .tag{align-self:auto}
 .lnk-copy{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;vertical-align:middle;margin-left:7px;padding:0}
 .lnk-copy:hover{border-color:var(--g400);color:var(--g-texto);background:var(--g50)}
 .lnk-copy svg{width:13px;height:13px}
+/* ---- Barra lateral: papel e tinta da landing (crm.cr0x.org), não o azul
+   da app. Só aqui no Repo; a app continua com a barra dela. ---- */
+:root{--papel:#efe9dd;--papel-claro:#fdfbf7;--tinta:#171412;--tinta-2:#4a423c;--fraco:#6f655c;--regua:rgba(23,20,18,.16)}
+[data-theme="dark"]{--papel:#171412;--papel-claro:#221e1b;--tinta:#efe9dd;--tinta-2:#cfc6b8;--fraco:#9a9084;--regua:rgba(239,233,221,.14)}
+.sidebar{background:var(--papel);color:var(--tinta);border-right:1.5px solid var(--regua);
+  background-image:radial-gradient(var(--regua) .6px,transparent .7px);background-size:14px 14px}
+.brand-logo{background:var(--papel-claro);border:1.5px solid var(--tinta);box-shadow:none;border-radius:10px}
+.brand-txt h1{font-family:Archivo,system-ui,sans-serif;font-weight:800;letter-spacing:-.01em;color:var(--tinta)}
+.brand-txt p{font-family:"Space Mono",ui-monospace,monospace;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--fraco)}
+.nav-search{background:var(--papel-claro);border:1px solid var(--regua)}
+.nav-search input{color:var(--tinta)} .nav-search input::placeholder{color:var(--fraco)} .nav-search svg{color:var(--fraco)}
+.nav-group{font-family:"Space Mono",ui-monospace,monospace;font-size:.7rem;letter-spacing:.2em;color:var(--g600);font-weight:400}
+.nav-link{font-family:Archivo,system-ui,sans-serif;font-weight:600;color:var(--tinta-2)}
+.nav-link:hover{background:rgba(23,20,18,.06);color:var(--tinta)}
+[data-theme="dark"] .nav-link:hover{background:rgba(239,233,221,.08)}
+.nav-link.active{background:var(--papel-claro);color:var(--tinta);box-shadow:inset 0 0 0 1px var(--regua)}
+.nav-link.active::before{left:-2px;width:3px;height:60%;background:var(--g600);border-radius:2px}
+.nav::-webkit-scrollbar-thumb{background:var(--regua)}
+.nav-foot{border-top:1.5px solid var(--regua)}
+.profile{background:var(--papel-claro);border:1px solid var(--regua)}
+.profile-txt strong{font-family:Archivo,system-ui,sans-serif;color:var(--tinta)} .profile-txt span{color:var(--fraco)}
+.avatar{background:var(--tinta);color:var(--papel)}
+.profile .sair{background:transparent;border-color:var(--regua);color:var(--tinta-2)} .profile .sair:hover{background:var(--tinta);color:var(--papel)}
+.made-by{color:var(--fraco);font-family:"Space Mono",ui-monospace,monospace;font-size:.7rem} .made-by:hover{color:var(--tinta)}
+.legal-link{color:var(--fraco);opacity:1;font-family:"Space Mono",ui-monospace,monospace;font-size:.7rem}
+/* as escolas na barra: um item por escola, lápis ao passar o rato para mudar o nome */
+.nav-escola{position:relative;padding-right:34px}
+.nav-esc-ini,.nav-esc-logo{width:22px;height:22px;flex:0 0 auto;border-radius:6px;display:grid;place-items:center;font-family:Archivo,system-ui,sans-serif;font-weight:800;font-size:inherit;line-height:1;background:var(--tinta);color:var(--papel)}
+.nav-esc-logo{object-fit:contain;background:var(--papel-claro);border:1px solid var(--regua);padding:2px}
+.nav-escola .lbl{overflow:hidden;text-overflow:ellipsis}
+.lapis{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:26px;height:26px;border:0;border-radius:7px;background:transparent;color:var(--fraco);display:grid;place-items:center;cursor:pointer;opacity:0;transition:opacity .12s,background .12s}
+.lapis svg{width:14px;height:14px}
+.nav-escola:hover .lapis,.lapis:focus-visible{opacity:1}
+.lapis:hover{background:var(--papel-claro);color:var(--tinta)}
+.nav-esc-input{flex:1;min-width:0;font:inherit;font-family:Archivo,system-ui,sans-serif;font-weight:600;font-size:.88rem;padding:3px 7px;border:1.5px solid var(--g600);border-radius:7px;background:var(--papel-claro);color:var(--tinta);outline:0}
+.nav-escola.a-editar{padding-right:12px}
+.nav-vazio{padding:8px 12px;font-size:.78rem;color:var(--fraco);font-family:"Space Mono",ui-monospace,monospace}
+.app.nav-collapsed .nav-escola{padding-right:0} .app.nav-collapsed .lapis{display:none}
+/* mover uma turma sem escola para uma escola */
+.mover{display:flex;align-items:center;gap:8px;font-size:.78rem;color:var(--muted);font-weight:600}
+.mover select{flex:1;min-width:0;font:inherit;font-size:.8rem;padding:5px 8px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text)}
 </style>
 </head>
 <body>
@@ -157,6 +199,8 @@ td .tag{align-self:auto}
     <nav class="nav">
       <div class="nav-group">Gestão</div>
       <button class="nav-link active" data-view="escolas"></button>
+      <div class="nav-group">Escolas</div>
+      <div id="navEscolas"></div>
     </nav>
     <div class="nav-foot">
       <div class="profile">
@@ -349,6 +393,7 @@ function mostrarEscolas(){
   $('#hTitulo').textContent='Escolas'; $('#hSub').textContent='As escolas da plataforma - escolhe uma para ver as turmas';
   $('#btnPrimario').classList.add('hidden');
   $('#pesquisa').value='';
+  marcarNavEscola();
   carregarEscolas().then(filtrar);
 }
 function abrirEscola(e){
@@ -360,6 +405,7 @@ function abrirEscola(e){
     : 'Turmas antigas, ainda sem escola atribuída';
   $('#btnPrimario').classList.add('hidden');
   $('#pesquisa').value='';
+  marcarNavEscola();
   carregarTurmas(e).then(filtrar);
 }
 function abrirTurma(t){
@@ -407,6 +453,76 @@ async function carregarEscolas(){
       +(arq.length?`<h3 class="sec-titulo">Arquivadas</h3><div class="grid">${arq.map(cartao).join('')}</div>`:'');
   document.querySelectorAll('[data-abrir-escola]').forEach(b=>b.addEventListener('click',
     ()=>abrirEscola(escolas.find(e=>e.slug===b.dataset.abrirEscola))));
+  pintarNavEscolas();
+}
+
+/* ---------- As escolas na barra lateral ----------
+   Um item por escola (as arquivadas não), com lápis ao passar o rato: o nome
+   vira campo, Enter guarda pela espaco_guardar, Esc desiste. O grupo "Sem
+   escola" não é uma escola - não tem nome para mudar; o que se faz é mover
+   as turmas dele para uma escola (seletor em cada cartão). */
+function pintarNavEscolas(){
+  const n=$('#navEscolas'); if(!n) return;
+  const vivas=escolas.filter(e=>!e.arquivado);
+  n.innerHTML=vivas.map(e=>`
+    <div class="nav-link nav-escola" data-escola="${esc(e.slug)}" title="${esc(e.nome||e.slug||'Turmas sem escola')}">
+      ${e.logo_url?`<img class="nav-esc-logo" src="${esc(e.logo_url)}" alt="">`
+                  :`<span class="nav-esc-ini">${e.slug?esc((e.nome||e.slug).trim().charAt(0).toUpperCase()):'?'}</span>`}
+      <span class="lbl">${e.slug?esc(e.nome||e.slug):'Sem escola'}</span>
+      ${e.slug?`<button class="lapis" data-renomear="${esc(e.slug)}" title="Mudar o nome">${ic('lapis')}</button>`:''}
+    </div>`).join('')||'<div class="nav-vazio">Ainda sem escolas</div>';
+  n.querySelectorAll('.nav-escola').forEach(el=>el.addEventListener('click',ev=>{
+    if(ev.target.closest('.lapis, input')) return;
+    abrirEscola(escolas.find(e=>e.slug===el.dataset.escola));
+  }));
+  n.querySelectorAll('[data-renomear]').forEach(b=>b.addEventListener('click',ev=>{
+    ev.stopPropagation();
+    editarNomeEscola(escolas.find(e=>e.slug===b.dataset.renomear), b.closest('.nav-escola'));
+  }));
+  marcarNavEscola();
+}
+function marcarNavEscola(){
+  document.querySelectorAll('.nav-escola').forEach(el=>
+    el.classList.toggle('active', !!escolaAtual && el.dataset.escola===escolaAtual.slug));
+  $('.nav-link[data-view="escolas"]').classList.toggle('active', !escolaAtual);
+}
+function editarNomeEscola(e,el){
+  const lbl=el.querySelector('.lbl'); const antes=e.nome||e.slug;
+  const inp=document.createElement('input');
+  inp.className='nav-esc-input'; inp.value=antes; inp.maxLength=60; inp.setAttribute('aria-label','Nome da escola');
+  lbl.replaceWith(inp); el.classList.add('a-editar'); inp.focus(); inp.select();
+  let feito=false;
+  const termina=async guardar=>{
+    if(feito) return; feito=true;
+    const nome=inp.value.trim();
+    if(!guardar||!nome||nome===antes){ pintarNavEscolas(); return; }
+    try{
+      await rpc('espaco_guardar',{p_token:sessao.token,p_id:e.id,p_dados:{slug:e.slug,nome}});
+      e.nome=nome; toast('Nome guardado.');
+      if(escolaAtual&&escolaAtual.slug===e.slug) $('#hTitulo').textContent=nome;
+      if($('#vEscolas').classList.contains('active')) carregarEscolas(); else pintarNavEscolas();
+    }catch(err){ tratar(err); pintarNavEscolas(); }
+  };
+  inp.addEventListener('keydown',ev=>{
+    if(ev.key==='Enter'){ ev.preventDefault(); termina(true); }
+    if(ev.key==='Escape'){ ev.preventDefault(); termina(false); }
+  });
+  inp.addEventListener('blur',()=>termina(true));
+  inp.addEventListener('click',ev=>ev.stopPropagation());
+}
+function moverSel(t){
+  if(!escolaAtual||escolaAtual.slug) return '';
+  const ops=escolas.filter(s=>s.slug&&!s.arquivado);
+  if(!ops.length) return '';
+  return `<label class="mover"><span>Mover para</span><select data-mover="${esc(t.codigo)}" aria-label="Mover a turma para uma escola">
+    <option value="">escolher a escola…</option>${ops.map(s=>`<option value="${esc(s.slug)}">${esc(s.nome||s.slug)}</option>`).join('')}</select></label>`;
+}
+async function moverTurma(codigo,slug){
+  try{ await rpc('turma_mover',{p_token:sessao.token,p_codigo:codigo,p_slug:slug}); }
+  catch(e){ return tratar(e); }
+  toast(`Turma ${codigo} movida.`);
+  await carregarEscolas();
+  if(escolas.find(e=>e.slug==='')) carregarTurmas(escolaAtual); else mostrarEscolas();
 }
 
 /* ---------- Turmas de uma escola ----------
@@ -425,6 +541,7 @@ async function carregarTurmas(e){
           <h3>${esc(t.nome)||'<span class="muted">Sem nome</span>'}</h3>
           <div class="tc-drive ${t.drive_url?'':'falta'}">${ic('pasta')}${t.drive_url?esc(t.drive_url.replace(/^https?:\/\//,'').slice(0,42)):'Falta a pasta do Drive'}</div>
           <div class="muted" style="font-size:.8rem">${t.n_formandos} formandos · último envio: ${t.ultimo_envio?dt(t.ultimo_envio):'nunca'}</div>
+          ${moverSel(t)}
           <div class="tc-foot">
             <button class="btn-sec btn-sm" data-cfg="${t.id}">${ic('cog')}Definições</button>
             <button class="btn btn-sm btn-ouro" data-selos="${t.id}">Badges</button>
@@ -435,6 +552,7 @@ async function carregarTurmas(e){
           <div class="tc-meta"><span class="tag">Turma ${esc(t.codigo)}</span><span class="pill amber">Ainda não está no Repo</span></div>
           <h3>${esc(t.nome)||'<span class="muted">Sem nome</span>'}</h3>
           <div class="muted" style="font-size:.8rem">${t.n_formandos} formandos</div>
+          ${moverSel(t)}
           <div class="tc-foot">
             <button class="btn btn-sm" data-adicionar="${esc(t.codigo)}">${ic('mais')}Adicionar ao Repo</button>
           </div>
@@ -449,6 +567,8 @@ async function carregarTurmas(e){
     ()=>abrirSelos(geridas.find(t=>t.id===b.dataset.selos))));
   document.querySelectorAll('[data-adicionar]').forEach(b=>b.addEventListener('click',
     ()=>modalAdicionarTurma(geridas.find(t=>t.codigo===b.dataset.adicionar))));
+  document.querySelectorAll('[data-mover]').forEach(s=>s.addEventListener('change',
+    ()=>{ if(s.value) moverTurma(s.dataset.mover,s.value); }));
 }
 
 function abrirModal(html){
