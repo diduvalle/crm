@@ -105,7 +105,10 @@
     var id = (IDS[lg] && IDS[lg][chave]) || IDS.pt[chave];
     var legenda = fig.querySelector('figcaption');
     var titulo = legenda ? legenda.textContent.trim() : chave;
-    var poster = fig.getAttribute('data-poster') || '';
+    /* sem data-poster, tenta-se a capa com o nome da chave: é o que a
+       galeria usa, onde as figuras só trazem a chave */
+    var poster = fig.getAttribute('data-poster') ||
+      ('/manual/assets/screens/' + chave + '.png');
 
     var cx = document.createElement('div');
     cx.className = 'vfachada';
