@@ -85,6 +85,10 @@ td .tag{align-self:auto}
 .tc-lixo svg{width:15px;height:15px}
 .tc:hover .tc-lixo,.tc-lixo:focus-visible{opacity:1}
 .tc-lixo:hover{background:var(--danger-bg);color:var(--danger)}
+/* nas linhas da tabela o lixo está sempre à vista - nao ha o hover do
+   cartao a revela-lo, e um icone escondido nunca se descobre */
+.t-acoes{display:flex;align-items:center;justify-content:flex-end;gap:2px}
+.t-acoes .tc-lixo{opacity:1}
 /* atribuir o badge de cada formando */
 .cod-b{display:flex;align-items:center;gap:6px}
 .cod-b input{width:112px;font:inherit;font-size:.82rem;padding:5px 8px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text)}
@@ -1932,13 +1936,42 @@ async function carregarAvaliacoes(t){
           <td>${estado(a)}</td>
           <td>${a.entregues}/${a.destinatarios}</td>
           <td>${a.media!=null?nm(a.media)+' / '+nm(a.pontos_total):'<span class="muted">-</span>'}</td>
-          <td class="t-right muted">${ic('olho')}</td>
+          <td class="t-right"><div class="t-acoes"><button class="tc-lixo" data-apagar-apl="${a.id}" title="Apagar esta avaliação">${ic('lixo')}</button><span class="muted" style="display:grid;place-items:center;width:30px">${ic('olho')}</span></div></td>
         </tr>`).join('')}</tbody></table></div>`);
 
   $('#voltarTurmas3').addEventListener('click',voltarATurmas);
   $('#aplicarTeste').addEventListener('click',()=>modalAplicar(t));
   document.querySelectorAll('[data-apl]').forEach(r=>r.addEventListener('click',
     ()=>abrirAplicacao(aplicacoes.find(a=>a.id===r.dataset.apl))));
+  document.querySelectorAll('[data-apagar-apl]').forEach(b=>b.addEventListener('click',ev=>{
+    ev.stopPropagation();   /* senao abria a aplicacao por baixo */
+    apagarAplicacao(aplicacoes.find(a=>a.id===b.dataset.apagarApl), t);
+  }));
+}
+
+/* Aplicar um teste por engano - ou tres vezes seguidas - nao tinha
+   volta. A funcao no servidor ja existia; faltava por-lhe um botao.
+   O aviso pesa conforme o que se perde: sem entregas nao se perde
+   trabalho de ninguem e basta confirmar; com entregas vao atras as
+   respostas e as notas, e ai pede-se o codigo. */
+async function apagarAplicacao(a,t){
+  if(!a) return;
+  const n=+a.entregues||0;
+  const ok = n
+    ? await uiConfirmCodigo({titulo:`Apagar "${a.titulo}"?`,ok:'Apagar a avaliação',
+        texto:`<strong>Apaga esta avaliação da turma e não se desfaz.</strong>
+          <ul class="perda">
+            <li>${plural(n,'entrega','entregas')}, com tudo o que os formandos responderam</li>
+            <li>as notas e os comentários já dados</li>
+            <li>os links pessoais desta avaliação deixam de abrir</li>
+          </ul>`})
+    : await uiConfirm({titulo:`Apagar "${a.titulo}"?`,ok:'Apagar',perigo:true,
+        texto:'Ainda ninguém entregou, por isso não se perde trabalho de ninguém. Os links pessoais desta avaliação deixam de abrir.'});
+  if(!ok) return;
+  try{ await rpc('teste_aplicacao_apagar',{p_token:sessao.token,p_aplicacao_id:a.id}); }
+  catch(e){ if(faltaSql(e,'09-testes.sql')) return; return tratar(e); }
+  toast('Avaliação apagada.');
+  carregarAvaliacoes(t);
 }
 
 async function modalAplicar(t){
