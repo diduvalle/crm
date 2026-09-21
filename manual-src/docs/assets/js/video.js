@@ -51,6 +51,7 @@
       'retencao': 'Xn2vwlDL41c',
       'rgpd': '3dPSFJnO0nI',
       'submeter': 'nSjEZ0at-hU',
+      'web-to-lead': 'Xu097I1onDo',
     },
     en: {
       'alertas': 'fNp3qt_2zHE',
@@ -79,7 +80,9 @@
       'recuperar': 'ktxptFvwDXU',
       'resumo': '7J5YXRBeZ9w',
       'retencao': 'SwshKZimhZ8',
+      'rgpd': 'XhIsCB_27eE',
       'submeter': 'wXxey56F-f8',
+      'web-to-lead': '_wAPfsFMzvc',
     }
   };
 
