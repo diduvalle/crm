@@ -111,6 +111,10 @@
 #bSelo.ouro [fill="#171412"]{fill:url(#ouroG)}
 #bSelo.ouro [fill="#0078bf"]{fill:url(#ouroC)}
 #bSelo.ouro #seloDistincao polygon{fill:url(#ouroG)}
+/* Num badge cum laude o rótulo acompanha o emblema. #6b4f08 e o stop
+   escuro do proprio gradiente: dourado, e 6,3:1 sobre o papel - o ouro
+   claro ficava em 3:1 e aquela linha e a mais dificil de ler do badge. */
+body.cumlaude .eyebrow{color:#6b4f08}
 </style>
 </head>
 <body data-estado="a-carregar">
@@ -282,8 +286,7 @@
     if(dist) dist.innerHTML=estrelas(Math.max(0,Math.min(4,+d.estrelas||0)));
     var selo=document.getElementById('bSelo');
     if(selo) selo.classList.toggle('ouro', !!d.cumLaude);
-    var cl=document.getElementById('bCumLaude');
-    if(cl) cl.hidden=!d.cumLaude;
+    document.body.classList.toggle('cumlaude', !!d.cumLaude);
     var f=document.querySelector('.pessoa');
     if(f){ f.textContent=d.formador; f.href=d.formadorUrl; }
     document.querySelectorAll('dl dd').forEach(function(e){
@@ -339,7 +342,7 @@
       x.textAlign='center';
       try{ x.letterSpacing='6px'; }catch(e){}
       /* num badge dourado, o azul do rótulo e do filete iam destoar */
-      var acento = B.cumLaude ? '#a8801a' : '#0078bf';
+      var acento = B.cumLaude ? '#6b4f08' : '#005e95';
       x.fillStyle=acento; x.font="400 26px 'Space Mono',monospace";
       x.fillText('CONCLUIU A FORMAÇÃO',540,790);
       try{ x.letterSpacing='0px'; }catch(e){}
