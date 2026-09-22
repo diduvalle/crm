@@ -2,6 +2,19 @@
 <html lang="pt-PT" data-theme="light">
 <head>
 <meta charset="UTF-8">
+<script>
+/* REDE POR BAIXO DO LINK DO BADGE - ler antes de mexer.
+   Isto só corre quando /b/<codigo>/ NAO existe como pasta: se existir,
+   o servidor serve essa pasta e nunca chega aqui. E a janela entre
+   emitir um badge e o CI escrever a pagina dele.
+   Mandamos a pessoa para a pagina dinamica, que nao depende de
+   ficheiro nenhum. replace() e nao href: nao deixa um passo morto no
+   historico do browser, para o botao "voltar" nao ficar preso. */
+(function(){
+  var m = location.pathname.match(/^\/b\/([A-Za-z0-9]{6,16})\/?$/);
+  if (m) location.replace('/b/?c=' + encodeURIComponent(m[1]));
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CRM - Plataforma de Formação</title>
 <meta name="description" content="Plataforma pedagógica de CRM e Proteção de Dados (RGPD).">
