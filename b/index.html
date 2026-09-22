@@ -10,7 +10,6 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Badge de conclusão · Formação prática em CRM">
 <meta property="og:description" content="Prática completa de um CRM: empresas e contactos, propostas e pipeline, campanhas, apoio ao cliente e conformidade com o RGPD.">
-<meta property="og:url" content="https://crm.cr0x.org/b/">
 <meta property="og:image" content="https://crm.cr0x.org/b/selo.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -292,7 +291,9 @@ body.cumlaude .eyebrow{color:#6b4f08}
     document.querySelectorAll('dl dd').forEach(function(e){
       if(e.previousElementSibling && e.previousElementSibling.textContent==='Formação') e.textContent=d.formacao;
     });
-    var url=location.origin+'/b/?c='+encodeURIComponent(d.codigo);
+    /* A pasta, nao a query: e o endereco que o LinkedIn preserva e onde
+       vive a pagina com o nome desta pessoa. */
+    var url=location.origin+'/b/'+encodeURIComponent(d.codigo)+'/';
     var add=document.getElementById('bAdicionar');
     if(add){ var dt=new Date(d.data+'T00:00:00Z');
       add.href='https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME'

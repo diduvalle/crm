@@ -72,7 +72,10 @@ const modelo = fs.readFileSync(path.join(MOLDES, 'modelo.html'), 'utf8');
 const quadrado = fs.readFileSync(path.join(MOLDES, 'quadrado.html'), 'utf8');
 const seloGenerico = fs.readFileSync(path.join(MOLDES, 'selo.png'));
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const preencher = (t, v) => t.replace(/\{\{(NOME|CODIGO|MES|DATA_ISO|CONTEXTO|SLUG)\}\}/g, (m, k) => v[k]);
+/* As marcas das distincoes (ESTRELAS, CLASSE_OURO, CLASSE_BODY) sao
+   opcionais: quem nao as der fica sem elas, em vez de as ver escritas
+   a letra na pagina. */
+const preencher = (t, v) => t.replace(/\{\{([A-Z_]+)\}\}/g, (m, k) => (k in v ? v[k] : ''));
 
 const browser = await chromium.launch(process.env.CHROME ? { executablePath: process.env.CHROME } : {});
 const pagina = await browser.newPage({ viewport: { width: 1080, height: 1080 }, deviceScaleFactor: 1 });

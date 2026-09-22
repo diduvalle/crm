@@ -104,13 +104,34 @@
   }
   footer a{color:var(--azul-escuro);text-decoration:none;border-bottom:1.5px solid var(--azul-escuro)}
   @media(max-width:520px){ .topo svg{width:104px;height:104px} }
+/* As cores do selo sao atributos de apresentacao; uma classe troca-as
+   todas de uma vez, sem um segundo desenho para manter. */
+#bSelo.ouro [stroke="#171412"]{stroke:url(#ouroG)}
+#bSelo.ouro [fill="#171412"]{fill:url(#ouroG)}
+#bSelo.ouro [fill="#0078bf"]{fill:url(#ouroC)}
+#bSelo.ouro #seloDistincao polygon{fill:url(#ouroG)}
+/* Num badge cum laude o rotulo acompanha o emblema. #6b4f08 e o stop
+   escuro do proprio gradiente: dourado, e 6,3:1 sobre o papel. */
+body.cumlaude .eyebrow{color:#6b4f08}
 </style>
 </head>
-<body>
+<body class="{{CLASSE_BODY}}">
 <div class="folha">
 
   <div class="topo">
-    <svg viewBox="0 0 200 200" role="img" aria-label="Badge de conclusão">
+    <svg id="bSelo" class="{{CLASSE_OURO}}" viewBox="0 -18 200 218" role="img" aria-label="Badge de conclusão">
+  <defs>
+    <!-- userSpaceOnUse: a rampa atravessa o selo inteiro, em vez de
+         cada peca ter o seu brilho -->
+    <linearGradient id="ouroG" gradientUnits="userSpaceOnUse" x1="100" y1="18" x2="100" y2="182">
+      <stop offset="0" stop-color="#d4af37"/><stop offset=".45" stop-color="#a8801a"/><stop offset="1" stop-color="#6b4f08"/>
+    </linearGradient>
+    <linearGradient id="ouroC" gradientUnits="userSpaceOnUse" x1="100" y1="70" x2="100" y2="130">
+      <stop offset="0" stop-color="#a8801a"/><stop offset="1" stop-color="#6b4f08"/>
+    </linearGradient>
+  </defs>
+  <!-- as estrelas ganhas, por cima e FORA do grupo rodado -->
+  <g id="seloDistincao">{{ESTRELAS}}</g>
   <g transform="rotate(-5 100 100)">
     <circle cx="100" cy="100" r="76" fill="none" stroke="#171412" stroke-width="7"/>
     <circle cx="100" cy="100" r="64" fill="none" stroke="#171412" stroke-width="2.5"/>

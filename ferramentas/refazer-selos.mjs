@@ -37,7 +37,12 @@ const modelo = fs.readFileSync(path.join(MOLDES, 'modelo.html'), 'utf8');
 
 /* o selo redondo vive dentro da página de verificação; tira-se de lá e
    desenha-se sozinho sobre papel, que é o que a imagem sempre foi */
-const svg = (modelo.match(/<svg viewBox="0 0 200 200"[\s\S]*?<\/svg>/) || [])[0];
+/* O molde passou a trazer marcas por preencher ({{ESTRELAS}}, a classe
+   do ouro). Esta ferramenta refaz o selo GENERICO - o que e igual para
+   toda a gente - por isso as marcas saem vazias: sem estrelas, sem ouro.
+   Se ficassem, apareciam escritas a letra dentro do desenho. */
+const svg = ((modelo.match(/<svg id="bSelo"[\s\S]*?<\/svg>/) || [])[0] || '')
+  .replace(/\{\{(ESTRELAS|CLASSE_OURO|CLASSE_BODY)\}\}/g, '');
 if (!svg) { console.error('não achei o selo dentro do modelo.html'); process.exit(1); }
 /* a original sangra em cima e em baixo: o selo e maior do que a folha */
 const PX = Number(process.env.SELO_PX || 980);

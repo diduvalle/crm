@@ -1,0 +1,69 @@
+name: Paginas dos badges
+
+# Escreve a pasta b/<codigo>/ dos badges que ainda nao a tem.
+#
+# PORQUE E PRECISO
+# Os badges emitidos pelo Repo vivem no Supabase e sao desenhados por
+# JavaScript. Um leitor de links nao corre JavaScript: sem um ficheiro
+# real, o LinkedIn nao le o nome da pessoa - e o endereco do badge nem
+# sequer responde, porque nada existe nesse caminho.
+#
+# Corre sozinho de meia em meia hora e nao toca nas pastas que ja
+# existem: os links que ja foram para o LinkedIn continuam a apontar
+# para os mesmos ficheiros.
+
+on:
+  schedule:
+    # de 30 em 30 minutos. O GitHub atrasa agendamentos quando esta com
+    # carga, por isso ha sempre o botao manual para quando ha pressa.
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "ferramentas/badges-em-falta.mjs"
+      - "ferramentas/badges/**"
+      - ".github/workflows/badges.yml"
+
+permissions:
+  contents: write
+
+# Duas corridas ao mesmo tempo escreveriam a mesma pasta e chocavam no push.
+concurrency:
+  group: badges
+  cancel-in-progress: false
+
+jobs:
+  gerar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # O selo e as imagens desenham-se num browser: o mesmo caminho da
+      # pagina ao vivo, em vez de um segundo desenho para manter.
+      - name: Instalar o browser
+        run: |
+          npm install --no-save playwright@1.47.2
+          npx playwright install --with-deps chromium
+
+      - name: Gerar as pastas em falta
+        env:
+          SUPABASE_URL: https://qgfzbyhfyqvmmmdiqycu.supabase.co
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: node ferramentas/badges-em-falta.mjs
+
+      - name: Publicar as pastas novas
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add b/
+          if git diff --staged --quiet; then
+            echo "Nenhum badge novo."
+          else
+            git commit -m "badges: paginas dos badges novos [skip ci]"
+            git push
+          fi
