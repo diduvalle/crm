@@ -37,7 +37,12 @@ jobs:
   gerar:
     runs-on: ubuntu-latest
     steps:
+      # ref: main de proposito. Uma corrida manual traria o SHA de quando
+      # se carregou no botao, e regeneraria pastas que outra corrida ja
+      # escreveu - so para depois nao conseguir empurrar.
       - uses: actions/checkout@v4
+        with:
+          ref: main
 
       - uses: actions/setup-node@v4
         with:
@@ -63,7 +68,15 @@ jobs:
           git add b/
           if git diff --staged --quiet; then
             echo "Nenhum badge novo."
-          else
-            git commit -m "badges: paginas dos badges novos [skip ci]"
-            git push
+            exit 0
           fi
+          git commit -m "badges: paginas dos badges novos [skip ci]"
+          # Se outra corrida empurrou entretanto, poe-te atras dela e
+          # tenta outra vez, em vez de desistir com tudo feito.
+          for tentativa in 1 2 3; do
+            if git push; then exit 0; fi
+            echo "push recusado, a integrar o que chegou (tentativa $tentativa)"
+            git fetch origin main
+            git rebase -X ours origin/main || { git rebase --abort; exit 1; }
+          done
+          exit 1
