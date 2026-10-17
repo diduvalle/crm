@@ -310,6 +310,30 @@ td .tag{align-self:auto}
   border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text)}
 .nota-fim{display:flex;align-items:center;gap:10px;font-size:.92rem;font-weight:800}
 .nota-fim .v{font-size:1.5rem;color:var(--g700)}
+/* ---------- Formandos ---------- */
+.f-aviso{display:flex;align-items:center;gap:12px;padding:12px 14px;margin-bottom:14px;border:1px solid var(--border);border-left:3px solid var(--warn);border-radius:var(--r);background:var(--warn-bg)}
+.f-aviso>svg{color:var(--warn);flex:none}
+.f-aviso>div{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+.f-aviso span{font-size:.82rem;color:var(--muted)}
+.f-barra{margin-bottom:10px}
+.f-barra .field select{width:auto;min-width:190px}
+.f-conta{font-size:.8rem;margin:0 0 10px}
+.f-sub{font-size:.8rem;font-weight:700;margin:18px 0 8px}
+.f-forms{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.f-forms li{display:flex;justify-content:space-between;gap:12px;padding:9px 12px;border:1px solid var(--border);border-radius:9px;font-size:.86rem}
+.f-forms li span{color:var(--muted);white-space:nowrap}
+.f-resumo{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:.92rem}
+.f-resumo strong{display:inline-block;min-width:2.2em}
+.f-resumo .aviso{color:var(--warn)}
+.f-erros{margin-top:16px;padding:12px 14px;border-radius:9px;background:var(--danger-bg);color:var(--danger);font-size:.84rem}
+.f-erros ul{margin:6px 0 0;padding-left:18px}
+.f-par{padding:14px 0;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.f-par:last-child{border-bottom:0}
+.f-par-l{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%}
+.f-par-c{display:flex;flex-direction:column;gap:6px;padding:12px;border:1px solid var(--border);border-radius:var(--r);font-size:.86rem;min-width:0}
+.f-par-c ul{margin:2px 0 4px;padding-left:16px}
+.f-par-c .btn-sec{align-self:flex-start;margin-top:auto}
+@media(max-width:640px){ .f-par-l{grid-template-columns:1fr} .f-forms li{flex-direction:column} .f-barra .field select{min-width:0;width:100%} }
 </style>
 </head>
 <body>
@@ -351,6 +375,7 @@ td .tag{align-self:auto}
       <div class="nav-group">Gestão</div>
       <button class="nav-link active" data-view="escolas"></button>
       <button class="nav-link" data-view="testes"></button>
+      <button class="nav-link" data-view="formandos"></button>
       <div class="nav-group">Escolas</div>
       <div id="navEscolas"></div>
     </nav>
@@ -392,6 +417,7 @@ td .tag{align-self:auto}
       <section class="view" id="vTeste"></section>
       <section class="view" id="vAvals"></section>
       <section class="view" id="vApl"></section>
+      <section class="view" id="vFormandos"></section>
     </div>
   </div>
 </div>
@@ -484,7 +510,8 @@ const ERROS={
   CHAVE_POR_CONFIRMAR:'Confirma as respostas certas do teste antes de o aplicares a uma turma.',
   TESTE_VAZIO:'Este teste ainda não tem perguntas.',
   SEM_TITULO:'Falta o título do teste.',
-  SEM_SESSAO:'Esta aplicação perdeu a sessão de envio. Aplica o teste outra vez.'
+  SEM_SESSAO:'Esta aplicação perdeu a sessão de envio. Aplica o teste outra vez.',
+  EMAIL_DE_OUTRO:'Esse email já é de outra pessoa da lista.'
 };
 function toast(msg,tipo){
   const t=document.createElement('div');
@@ -548,6 +575,9 @@ $('#btnPrimario').addEventListener('click',()=>{
   const bt=$('.nav-link[data-view="testes"]');
   bt.innerHTML=ic('papel')+'<span class="lbl">Testes</span>';
   bt.addEventListener('click',mostrarTestes);
+  const bf=$('.nav-link[data-view="formandos"]');
+  bf.innerHTML=ic('gente')+'<span class="lbl">Formandos</span>';
+  bf.addEventListener('click',mostrarFormandos);
 })();
 
 /* A hierarquia é Escolas -> Turmas -> Sessões. Só uma vista está ativa. */
@@ -767,8 +797,10 @@ function marcarNavEscola(){
   document.querySelectorAll('.nav-escola').forEach(el=>
     el.classList.toggle('active', !!escolaAtual && el.dataset.escola===escolaAtual.slug));
   const emTestes=!!document.querySelector('#vTestes.active, #vTeste.active');
-  $('.nav-link[data-view="escolas"]').classList.toggle('active', !escolaAtual && !emTestes);
+  const emFormandos=!!document.querySelector('#vFormandos.active');
+  $('.nav-link[data-view="escolas"]').classList.toggle('active', !escolaAtual && !emTestes && !emFormandos);
   const bt=$('.nav-link[data-view="testes"]'); if(bt) bt.classList.toggle('active', emTestes);
+  const bf=$('.nav-link[data-view="formandos"]'); if(bf) bf.classList.toggle('active', emFormandos);
 }
 function editarNomeEscola(e,el){
   const lbl=el.querySelector('.lbl'); const antes=e.nome||e.slug;
@@ -2424,6 +2456,352 @@ function csvPauta(a){
   el.href=u; el.download='pauta-'+slugDe(a.titulo)+'.csv'; el.click();
   URL.revokeObjectURL(u);
   toast('Pauta descarregada.');
+}
+
+/* =========================================================
+   FORMANDOS - quem já fez formação contigo
+   =========================================================
+   Uma pessoa = um email. A chave ignora maiúsculas e, num Gmail, os
+   pontos e o que vem depois de "+" - como o próprio Gmail, que entrega
+   esses endereços todos na mesma caixa. Cada pessoa tem a lista das
+   formações que fez: curso, entidade, datas.
+
+   As pessoas entram por um Excel, cujo modelo se descarrega aqui. O
+   servidor corre primeiro em ensaio, e a pré-visualização mostra o que
+   se vai gravar - contado pela mesma função que depois grava.
+
+   Nomes parecidos NUNCA se juntam sozinhos: dois "João Silva" podem ser
+   duas pessoas. Ficam em "Possíveis repetidos" e quem decide é o
+   formador. Quando diz que são pessoas diferentes, o Repo não volta a
+   perguntar.
+   ========================================================= */
+let formandos=[], fDistintos=new Set(), fFiltro={curso:'',entidade:'',repetentes:false};
+
+/* A mesma chave do servidor (_formando_chave em 11-formandos.sql). Aqui
+   só serve para a pré-visualização saber quem já existe. */
+function chaveEmail(e){
+  e=String(e||'').trim().toLowerCase();
+  const i=e.indexOf('@'); if(i<0) return e;
+  const loc=e.slice(0,i), dom=e.slice(i+1).split('@')[0];
+  if(dom==='gmail.com'||dom==='googlemail.com') return loc.split('+')[0].replace(/\./g,'')+'@gmail.com';
+  return e;
+}
+const normNome=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase()
+  .replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ').trim();
+const nomeTodo=f=>(String(f.nome||'')+' '+String(f.apelido||'')).trim();
+const dataPT=d=>{ if(!d) return ''; const p=String(d).slice(0,10).split('-'); return p[2]+'/'+p[1]+'/'+p[0]; };
+const periodo=c=>c.inicio?(dataPT(c.inicio)+(c.fim?' a '+dataPT(c.fim):'')):'sem data';
+
+/* A mesma distância de edição que o Pulso usa para as gralhas. */
+function distEdicao(a,b){
+  if(a===b) return 0; const la=a.length, lb=b.length;
+  if(Math.abs(la-lb)>2) return 3;
+  const d=[]; for(let i=0;i<=la;i++){ d[i]=[i]; } for(let j=1;j<=lb;j++) d[0][j]=j;
+  for(let i=1;i<=la;i++){ for(let j=1;j<=lb;j++){
+    const c=a[i-1]===b[j-1]?0:1;
+    let v=Math.min(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1]+c);
+    if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1]) v=Math.min(v, d[i-2][j-2]+1);
+    d[i][j]=v; } }
+  return d[la][lb];
+}
+/* Dois nomes são um "possível repetido" se:
+   - são iguais, sem acentos nem maiúsculas;
+   - têm o mesmo primeiro e o mesmo último nome: "Ana Silva" e "Ana Rita
+     Silva". Nos nomes portugueses, quantos se escrevem varia muito;
+   - ou diferem numa gralha: 1 letra, ou 2 em nomes compridos. */
+function nomesParecidos(a,b){
+  const A=normNome(a), B=normNome(b);
+  if(!A||!B) return false;
+  if(A===B) return true;
+  const pa=A.split(' '), pb=B.split(' ');
+  if(pa.length>1&&pb.length>1&&pa[0]===pb[0]&&pa[pa.length-1]===pb[pb.length-1]
+     &&pa[pa.length-1].length>=3) return true;
+  const n=Math.max(A.length,B.length);
+  if(n<8) return false;
+  return distEdicao(A,B)<=(n>=14?2:1);
+}
+const parKey=(a,b)=>a<b?a+'|'+b:b+'|'+a;
+function paresRepetidos(){
+  const out=[];
+  for(let i=0;i<formandos.length;i++) for(let j=i+1;j<formandos.length;j++){
+    const a=formandos[i], b=formandos[j];
+    if(fDistintos.has(parKey(a.id,b.id))) continue;
+    if(nomesParecidos(nomeTodo(a),nomeTodo(b))) out.push([a,b]);
+  }
+  return out;
+}
+
+/* ---------- A lista ---------- */
+function mostrarFormandos(){
+  escolaAtual=null; turmaAtual=null;
+  mostrarVista('vFormandos');
+  accaoPrimaria=escolherFicheiroFormandos;
+  $('#hTitulo').textContent='Formandos';
+  $('#hSub').textContent='Quem já fez formação contigo. Uma pessoa, um email.';
+  $('#btnPrimario').classList.remove('hidden');
+  $('#btnPrimario').innerHTML=ic('cima')+'Carregar ficheiro';
+  $('#pesquisa').value='';
+  marcarNavEscola();
+  carregarFormandos();
+}
+async function carregarFormandos(){
+  let d;
+  try{ d=await rpc('formandos_listar',{p_token:sessao.token}); }
+  catch(e){ if(faltaSql(e,'11-formandos.sql')) return; return tratar(e); }
+  formandos=d.formandos||[];
+  fDistintos=new Set((d.distintos||[]).map(p=>parKey(p[0],p[1])));
+  pintarFormandos();
+}
+function pintarFormandos(){
+  const v=$('#vFormandos');
+  const modelo=`<a class="btn-sec" href="modelo-formandos.xlsx" download>${ic('baixo')}Descarregar o modelo</a>`;
+  if(!formandos.length){
+    v.innerHTML=`<div class="empty">${ic('gente')}<strong>Ainda não há formandos</strong>
+      <span>Descarrega o modelo, preenche-o no Excel e carrega-o aqui. Uma linha por pessoa em cada formação.</span>
+      <div class="toolbar" style="justify-content:center;margin-top:6px">${modelo}
+        <button class="btn" id="fCarregar0">${ic('cima')}Carregar ficheiro</button></div></div>`;
+    $('#fCarregar0').addEventListener('click',escolherFicheiroFormandos);
+    return;
+  }
+  const pt=(a,b)=>a.localeCompare(b,'pt');
+  const cursos=[...new Set(formandos.flatMap(f=>f.formacoes.map(c=>c.curso)))].sort(pt);
+  const entidades=[...new Set(formandos.flatMap(f=>f.formacoes.map(c=>c.entidade)))].sort(pt);
+  /* um filtro que deixou de existir (apagou-se a última pessoa desse
+     curso) volta a "todos", em vez de mostrar uma lista vazia sem razão */
+  if(fFiltro.curso&&!cursos.includes(fFiltro.curso)) fFiltro.curso='';
+  if(fFiltro.entidade&&!entidades.includes(fFiltro.entidade)) fFiltro.entidade='';
+  const lista=formandos.filter(f=>
+    (!fFiltro.curso||f.formacoes.some(c=>c.curso===fFiltro.curso)) &&
+    (!fFiltro.entidade||f.formacoes.some(c=>c.entidade===fFiltro.entidade)) &&
+    (!fFiltro.repetentes||f.formacoes.length>=2));
+  const nRep=formandos.filter(f=>f.formacoes.length>=2).length;
+  const pares=paresRepetidos();
+  const opc=(vals,sel,todos)=>`<option value="">${todos}</option>`
+    +vals.map(x=>`<option${x===sel?' selected':''}>${esc(x)}</option>`).join('');
+
+  v.innerHTML=`
+    ${pares.length?`<div class="f-aviso">${ic('alerta')}
+      <div><strong>${pares.length===1?'1 possível repetido':pares.length+' possíveis repetidos'}</strong>
+        <span>Nomes parecidos com emails diferentes. Vê se são a mesma pessoa.</span></div>
+      <button class="btn-sec" id="fVerRep">Ver</button></div>`:''}
+    <div class="toolbar f-barra">
+      <div class="field"><select id="fCurso" aria-label="Curso">${opc(cursos,fFiltro.curso,'Todos os cursos')}</select></div>
+      <div class="field"><select id="fEnt" aria-label="Entidade">${opc(entidades,fFiltro.entidade,'Todas as entidades')}</select></div>
+      <button class="chip${fFiltro.repetentes?' active':''}" id="fRep" aria-pressed="${fFiltro.repetentes}">Com 2 ou mais formações · ${nRep}</button>
+      <span style="flex:1"></span>
+      ${modelo}
+    </div>
+    <div class="muted f-conta">${lista.length===formandos.length
+      ? formandos.length+(formandos.length===1?' formando':' formandos')
+      : lista.length+' de '+formandos.length+' formandos'}</div>
+    ${lista.length?`<div class="table-wrap"><table><thead><tr>
+        <th>Nome</th><th>Email</th><th>Formações</th><th>Última</th>
+      </tr></thead><tbody>${lista.map(f=>{
+        const ult=f.formacoes[0];   /* o servidor ordena da mais recente para a mais antiga */
+        return `<tr class="clickable" data-formando="${f.id}">
+          <td><div class="cell-main">${esc(nomeTodo(f))}</div>${f.notas?`<div class="cell-sub">${esc(f.notas.split('\n')[0])}</div>`:''}</td>
+          <td>${esc(f.email)}</td>
+          <td>${f.formacoes.length>=2?`<span class="pill blue">${f.formacoes.length} formações</span>`:'<span class="muted">1</span>'}</td>
+          <td>${ult?`<div class="cell-main" style="font-weight:600">${esc(ult.curso)}</div><div class="cell-sub">${esc(ult.entidade)} · ${periodo(ult)}</div>`:''}</td>
+        </tr>`;}).join('')}</tbody></table></div>`
+      :`<div class="empty">${ic('gente')}<strong>Ninguém com estes filtros</strong></div>`}`;
+
+  $('#fCurso').addEventListener('change',e=>{ fFiltro.curso=e.target.value; pintarFormandos(); });
+  $('#fEnt').addEventListener('change',e=>{ fFiltro.entidade=e.target.value; pintarFormandos(); });
+  $('#fRep').addEventListener('click',()=>{ fFiltro.repetentes=!fFiltro.repetentes; pintarFormandos(); });
+  if(pares.length) $('#fVerRep').addEventListener('click',()=>modalRepetidos(pares));
+  v.querySelectorAll('[data-formando]').forEach(r=>r.addEventListener('click',
+    ()=>fichaFormando(formandos.find(f=>f.id===r.dataset.formando))));
+  filtrar();   /* a pesquisa da barra lateral continua a valer depois de mudar um filtro */
+}
+
+/* ---------- A ficha ---------- */
+function fichaFormando(f){
+  if(!f) return;
+  const n=f.formacoes.length;
+  const fm=abrirModal(`<div class="modal" style="width:min(620px,100%)">
+    <div class="modal-head"><div><h3>${esc(nomeTodo(f))}</h3>
+      <div class="sub">${n===1?'1 formação contigo':n+' formações contigo'} · na lista desde ${dataPT(String(f.criado_em).slice(0,10))}</div></div></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field"><label>Nome</label><input id="fhNome" value="${esc(f.nome)}"></div>
+        <div class="field"><label>Apelido</label><input id="fhAp" value="${esc(f.apelido)}"></div>
+        <div class="field full"><label>Email</label><input id="fhEmail" type="email" value="${esc(f.email)}"></div>
+        <div class="field full"><label>Notas</label><textarea id="fhNotas" placeholder="O que te ajuda a lembrar desta pessoa">${esc(f.notas)}</textarea></div>
+      </div>
+      <h4 class="f-sub">Formações</h4>
+      <ul class="f-forms">${f.formacoes.map(c=>`<li><strong>${esc(c.curso)}</strong><span>${esc(c.entidade)} · ${periodo(c)}</span></li>`).join('')}</ul>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-danger" data-apagar>${ic('lixo')}Apagar</button>
+      <div style="display:flex;gap:10px"><button class="btn-sec" data-fechar>Cancelar</button>
+        <button class="btn" data-gravar>Gravar</button></div></div></div>`);
+  fm.querySelector('[data-gravar]').addEventListener('click',async()=>{
+    const dados={nome:fm.querySelector('#fhNome').value, apelido:fm.querySelector('#fhAp').value,
+      email:fm.querySelector('#fhEmail').value, notas:fm.querySelector('#fhNotas').value};
+    try{ await rpc('formando_gravar',{p_token:sessao.token,p_id:f.id,p_dados:dados}); }
+    catch(e){ return tratar(e); }
+    fm.remove(); toast('Ficha gravada.'); carregarFormandos();
+  });
+  fm.querySelector('[data-apagar]').addEventListener('click',async()=>{
+    const ok=await uiConfirm({titulo:'Apagar '+nomeTodo(f)+'?',ok:'Apagar',perigo:true,
+      texto:'Sai da lista com as formações que tinha registadas. Não se desfaz.'});
+    if(!ok) return;
+    try{ await rpc('formando_apagar',{p_token:sessao.token,p_id:f.id}); }
+    catch(e){ return tratar(e); }
+    fm.remove(); toast('Apagado.'); carregarFormandos();
+  });
+}
+
+/* ---------- Carregar o Excel ---------- */
+/* O leitor de Excel só se descarrega quando é preciso. */
+let xlsxPromessa=null;
+function carregarXlsx(){
+  if(window.XLSX) return Promise.resolve(window.XLSX);
+  if(!xlsxPromessa) xlsxPromessa=new Promise((ok,falha)=>{
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+    s.onload=()=>ok(window.XLSX);
+    s.onerror=()=>{ xlsxPromessa=null; falha(new Error('Não consegui carregar o leitor de Excel. Verifica a ligação e tenta outra vez.')); };
+    document.head.appendChild(s);
+  });
+  return xlsxPromessa;
+}
+function escolherFicheiroFormandos(){
+  const inp=document.createElement('input');
+  inp.type='file'; inp.accept='.xlsx,.xls';
+  inp.addEventListener('change',()=>{ if(inp.files[0]) lerFicheiroFormandos(inp.files[0]); });
+  inp.click();
+}
+/* Datas: o Excel guarda-as como número de dias. Lê-se esse número em vez
+   de pedir ao leitor um objecto Date, que chega com o fuso horário e
+   pode cair no dia anterior. Também se aceita texto dd/mm/aaaa. */
+function dataDeCelula(XLSX,v){
+  if(v===''||v==null) return '';
+  if(typeof v==='number'){
+    const d=XLSX.SSF.parse_date_code(v); if(!d) return '';
+    return d.y+'-'+String(d.m).padStart(2,'0')+'-'+String(d.d).padStart(2,'0');
+  }
+  const s=String(v).trim();
+  const m=s.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);
+  if(m) return m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0');
+  const iso=s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return iso?iso[1]+'-'+iso[2]+'-'+iso[3]:'';
+}
+const CAMPOS_FORMANDO=['nome','apelido','email','curso','entidade','inicio','fim','notas'];
+async function lerFicheiroFormandos(file){
+  let XLSX;
+  try{ XLSX=await carregarXlsx(); }catch(e){ return toast(e.message,'err'); }
+  const linhas=[];
+  try{
+    const wb=XLSX.read(await file.arrayBuffer(),{type:'array'});
+    const folha=wb.Sheets['Formandos']||wb.Sheets[wb.SheetNames[0]];
+    const tab=XLSX.utils.sheet_to_json(folha,{header:1,raw:true,defval:''});
+    /* as colunas procuram-se pelo título e não pela posição: trocar a
+       ordem no Excel não estraga nada */
+    const cab=(tab[0]||[]).map(h=>normNome(h).replace(/ /g,''));
+    const col={}; CAMPOS_FORMANDO.forEach(k=>{ const i=cab.indexOf(k); if(i>=0) col[k]=i; });
+    if(col.email==null||col.nome==null)
+      return toast('Este ficheiro não parece o modelo: faltam as colunas Nome e Email.','err');
+    for(let r=1;r<tab.length;r++){
+      const t=tab[r]; const val=k=>col[k]==null?'':t[col[k]];
+      if(t.every(c=>String(c).trim()==='')) continue;
+      linhas.push({linha:r+1, nome:String(val('nome')).trim(), apelido:String(val('apelido')).trim(),
+        email:String(val('email')).trim(), curso:String(val('curso')).trim(),
+        entidade:String(val('entidade')).trim(), inicio:dataDeCelula(XLSX,val('inicio')),
+        fim:dataDeCelula(XLSX,val('fim')), notas:String(val('notas')).trim()});
+    }
+  }catch(e){ return toast('Não consegui ler o ficheiro. Confirma que é o modelo, gravado como .xlsx.','err'); }
+  if(!linhas.length) return toast('O ficheiro não tem linhas preenchidas.','warn');
+
+  let ensaio;
+  try{ ensaio=await rpc('formandos_importar',{p_token:sessao.token,p_linhas:linhas,p_ensaio:true}); }
+  catch(e){ if(faltaSql(e,'11-formandos.sql')) return; return tratar(e); }
+  modalImportar(file.name,linhas,ensaio);
+}
+function modalImportar(nomeFicheiro,linhas,res){
+  /* quantas pessoas NOVAS deste ficheiro têm nome parecido com alguém
+     que já está na lista - resolvem-se depois, em "Possíveis repetidos" */
+  const chaves=new Set(formandos.map(f=>chaveEmail(f.email)));
+  const novas=new Map();
+  linhas.forEach(l=>{ const k=chaveEmail(l.email); if(l.email&&!chaves.has(k)&&!novas.has(k)) novas.set(k,l); });
+  let suspeitos=0;
+  novas.forEach(l=>{ const nl=(l.nome+' '+l.apelido).trim();
+    if(formandos.some(f=>nomesParecidos(nomeTodo(f),nl))) suspeitos++; });
+  const erros=res.erros||[];
+  const nl=linhas.length, pn=res.pessoas_novas, pe=res.pessoas_existentes, fn=res.formacoes_novas;
+  const f=abrirModal(`<div class="modal" style="width:min(560px,100%)">
+    <div class="modal-head"><div><h3>Carregar ${esc(nomeFicheiro)}</h3>
+      <div class="sub">${nl} ${nl===1?'linha lida':'linhas lidas'}. Ainda não se gravou nada.</div></div></div>
+    <div class="modal-body">
+      <ul class="f-resumo">
+        <li><strong>${pn}</strong> ${pn===1?'pessoa nova':'pessoas novas'}</li>
+        <li><strong>${pe}</strong> ${pe===1?'já existia':'já existiam'} - juntam-se as formações</li>
+        <li><strong>${fn}</strong> ${fn===1?'formação nova':'formações novas'}</li>
+        ${suspeitos?`<li class="aviso"><strong>${suspeitos}</strong> com nome parecido a alguém da lista - vês depois de gravar, em "Possíveis repetidos"</li>`:''}
+      </ul>
+      ${erros.length?`<div class="f-erros"><strong>${erros.length===1?'1 linha fica':erros.length+' linhas ficam'} de fora</strong>
+        <ul>${erros.slice(0,30).map(x=>`<li>Linha ${esc(x.linha)}: ${esc(x.motivo)}</li>`).join('')}${erros.length>30?`<li>… e mais ${erros.length-30}</li>`:''}</ul></div>`:''}
+    </div>
+    <div class="modal-foot"><span></span>
+      <div style="display:flex;gap:10px"><button class="btn-sec" data-fechar>Cancelar</button>
+        <button class="btn" data-gravar${res.validas?'':' disabled'}>Gravar</button></div></div></div>`);
+  f.querySelector('[data-gravar]').addEventListener('click',async e=>{
+    const b=e.currentTarget; b.disabled=true; b.textContent='A gravar…';
+    let r;
+    try{ r=await rpc('formandos_importar',{p_token:sessao.token,p_linhas:linhas,p_ensaio:false}); }
+    catch(err){ b.disabled=false; b.textContent='Gravar'; return tratar(err); }
+    f.remove();
+    toast('Gravado: '+r.pessoas_novas+(r.pessoas_novas===1?' nova, ':' novas, ')
+      +r.pessoas_existentes+(r.pessoas_existentes===1?' atualizada.':' atualizadas.'));
+    carregarFormandos();
+  });
+}
+
+/* ---------- Possíveis repetidos ---------- */
+function modalRepetidos(pares){
+  let resta=pares.slice(), mudou=false;
+  const f=abrirModal(`<div class="modal" style="width:min(760px,100%)">
+    <div class="modal-head"><div><h3>Possíveis repetidos</h3>
+      <div class="sub">Nomes parecidos, emails diferentes. Só tu sabes se são a mesma pessoa.</div></div></div>
+    <div class="modal-body" id="fRepCorpo"></div>
+    <div class="modal-foot"><span></span><button class="btn-sec" data-fechar>Fechar</button></div></div>`);
+  const cartao=(p,outro)=>`<div class="f-par-c">
+      <strong>${esc(nomeTodo(p))}</strong>
+      <span class="muted">${esc(p.email)}</span>
+      <ul>${p.formacoes.map(c=>`<li>${esc(c.curso)} <span class="muted">· ${esc(c.entidade)} · ${periodo(c)}</span></li>`).join('')}</ul>
+      <button class="btn-sec" data-fica="${p.id}" data-sai="${outro.id}">Mesma pessoa - fica este email</button>
+    </div>`;
+  function pinta(){
+    const corpo=f.querySelector('#fRepCorpo');
+    if(!resta.length){ corpo.innerHTML=`<div class="empty">${ic('ok')}<strong>Não há mais repetidos por ver</strong></div>`; return; }
+    corpo.innerHTML=resta.map(([a,b],i)=>`<div class="f-par">
+        <div class="f-par-l">${cartao(a,b)}${cartao(b,a)}</div>
+        <button class="chip" data-distintos="${i}">São pessoas diferentes</button></div>`).join('');
+    corpo.querySelectorAll('[data-fica]').forEach(b=>b.addEventListener('click',async()=>{
+      const idFica=b.dataset.fica, idSai=b.dataset.sai;
+      try{ await rpc('formandos_juntar',{p_token:sessao.token,p_fica:idFica,p_sai:idSai}); }
+      catch(e){ return tratar(e); }
+      mudou=true;
+      /* acertar o que está no ecrã: a ficha que fica ganha as formações
+         da outra, e a que saiu desaparece de todos os pares em que entrava */
+      const fica=formandos.find(x=>x.id===idFica), sai=formandos.find(x=>x.id===idSai);
+      if(fica&&sai){ const ids=new Set(fica.formacoes.map(c=>c.id));
+        sai.formacoes.forEach(c=>{ if(!ids.has(c.id)) fica.formacoes.push(c); }); }
+      resta=resta.filter(([x,y])=>x.id!==idSai&&y.id!==idSai);
+      toast('Juntas numa só ficha.'); pinta();
+    }));
+    corpo.querySelectorAll('[data-distintos]').forEach(b=>b.addEventListener('click',async()=>{
+      const i=+b.dataset.distintos, [x,y]=resta[i];
+      try{ await rpc('formandos_distintos_marcar',{p_token:sessao.token,p_a:x.id,p_b:y.id}); }
+      catch(e){ return tratar(e); }
+      mudou=true; resta.splice(i,1); pinta();
+    }));
+  }
+  pinta();
+  /* ao fechar, a lista lá atrás acerta-se com o que se decidiu */
+  const obs=new MutationObserver(()=>{ if(!document.body.contains(f)){ obs.disconnect(); if(mudou) carregarFormandos(); } });
+  obs.observe(document.body,{childList:true});
 }
 
 /* ---------- Arranque ---------- */
