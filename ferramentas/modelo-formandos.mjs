@@ -93,16 +93,27 @@ const tituloLista = (cel, t) => {
   cel.font = F({ bold: true, color: { argb: 'FFFFFFFF' } });
   cel.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: AZUL } };
 };
-tituloLista(wl.getCell('A1'), 'Entidades');
+tituloLista(wl.getCell('A1'), 'Escolas e entidades');
 tituloLista(wl.getCell('C1'), 'Cursos');
 ['IEFP', 'Turismo de Portugal'].forEach((v, i) => { const c = wl.getCell(2 + i, 1); c.value = v; c.font = F(); });
 /* Só os dois cursos que se sabe ao certo. Os nomes completos e os do
    Turismo de Portugal acrescenta-os quem os dá. */
 ['UFCD 10868', 'UFCD 10870'].forEach((v, i) => { const c = wl.getCell(2 + i, 3); c.value = v; c.font = F(); });
-for (let r = 2; r <= 300; r++) { wl.getCell(r, 1).font = F(); wl.getCell(r, 3).font = F(); }
-wl.getCell('E1').value = 'Acrescenta aqui, por baixo dos que já existem. Escreve cada curso sempre da mesma maneira: é pelo nome que o Repo os reconhece.';
-wl.getCell('E1').font = F({ italic: true, color: { argb: CINZA } });
+/* a zona onde se escreve fica pintada: vê-se logo onde vai a escola nova */
+const zona = { type: 'pattern', pattern: 'solid', fgColor: { argb: PAPEL } };
+for (let r = 2; r <= 300; r++) {
+  wl.getCell(r, 3).font = F(); wl.getCell(r, 3).fill = zona;
+  if (r <= 100) { wl.getCell(r, 1).font = F(); wl.getCell(r, 1).fill = zona; }
+}
+wl.getCell('E1').value = 'Foste convidado para uma escola nova, ou vais dar um curso novo? Escreve-o aqui, por baixo dos que já existem.';
+wl.getCell('E1').font = F({ bold: true });
 wl.getCell('E1').alignment = { wrapText: true, vertical: 'top' };
+wl.mergeCells('E1:E3'); wl.mergeCells('E4:E7');
+wl.getCell('E4').value = 'Sem linhas em branco pelo meio: a lista pára na primeira célula vazia. Escreve cada nome sempre da mesma maneira, porque é pelo nome que o Repo os reconhece.';
+wl.getCell('E4').font = F({ italic: true, color: { argb: CINZA } });
+wl.getCell('E4').alignment = { wrapText: true, vertical: 'top' };
+/* a zona pintada não pode virar dez páginas em branco ao imprimir */
+wl.pageSetup.printArea = 'A1:E30';
 wl.getColumn(5).width = 46;
 
 /* ================= Instruções ================= */
@@ -118,7 +129,7 @@ linha('Como preencher', { bold: true, size: 14 });
 r++;
 linha('1. Preenche só a folha Formandos, a partir da linha 2. Não mudes os títulos nem o nome das folhas.');
 linha('2. Uma linha = uma pessoa numa formação. Se alguém fez três formações contigo, aparece em três linhas. É assim mesmo: o Repo junta-as pelo email.');
-linha('3. Curso e Entidade escolhem-se da lista. Se faltar algum, acrescenta-o primeiro na folha Listas.');
+linha('3. Curso e Entidade escolhem-se da lista. Escola ou curso novo? Acrescenta-o primeiro na folha Listas.');
 linha('4. Para várias pessoas do mesmo curso, preenche o Curso, a Entidade e as datas na primeira linha e arrasta para baixo.');
 linha('5. Pode ser uma formação por ficheiro ou todas no mesmo. Os dois funcionam.');
 linha('6. Grava como .xlsx e carrega no Repo, em Formandos.');
@@ -149,7 +160,7 @@ linha('Este exemplo é só para mostrar o formato: não o copies para a folha Fo
 
 /* impressas, as folhas cabem na largura de uma pagina: sem isto a
    das instrucoes partia-se ao meio */
-for (const folha of [ws, wl, wi]) folha.pageSetup = { orientation: 'landscape', fitToPage: true, fitToWidth: 1, fitToHeight: 0, paperSize: 9 };
+for (const folha of [ws, wl, wi]) Object.assign(folha.pageSetup, { orientation: 'landscape', fitToPage: true, fitToWidth: 1, fitToHeight: 0, paperSize: 9 });   /* acrescentar, não substituir: substituir apagava a área de impressão da folha Listas */
 
 /* a folha que se preenche abre primeiro */
 wb.views = [{ activeTab: 0 }];

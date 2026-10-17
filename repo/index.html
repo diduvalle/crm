@@ -2554,13 +2554,14 @@ async function carregarFormandos(){
 }
 function pintarFormandos(){
   const v=$('#vFormandos');
-  const modelo=`<a class="btn-sec" href="modelo-formandos.xlsx" download>${ic('baixo')}Descarregar o modelo</a>`;
+  const modelo=`<button class="btn-sec" data-modelo>${ic('baixo')}Descarregar o modelo</button>`;
   if(!formandos.length){
     v.innerHTML=`<div class="empty">${ic('gente')}<strong>Ainda não há formandos</strong>
       <span>Descarrega o modelo, preenche-o no Excel e carrega-o aqui. Uma linha por pessoa em cada formação.</span>
       <div class="toolbar" style="justify-content:center;margin-top:6px">${modelo}
         <button class="btn" id="fCarregar0">${ic('cima')}Carregar ficheiro</button></div></div>`;
     $('#fCarregar0').addEventListener('click',escolherFicheiroFormandos);
+    v.querySelectorAll('[data-modelo]').forEach(b=>b.addEventListener('click',descarregarModelo));
     return;
   }
   const pt=(a,b)=>a.localeCompare(b,'pt');
@@ -2610,6 +2611,7 @@ function pintarFormandos(){
   $('#fEnt').addEventListener('change',e=>{ fFiltro.entidade=e.target.value; pintarFormandos(); });
   $('#fRep').addEventListener('click',()=>{ fFiltro.repetentes=!fFiltro.repetentes; pintarFormandos(); });
   if(pares.length) $('#fVerRep').addEventListener('click',()=>modalRepetidos(pares));
+  v.querySelectorAll('[data-modelo]').forEach(b=>b.addEventListener('click',descarregarModelo));
   v.querySelectorAll('[data-formando]').forEach(r=>r.addEventListener('click',
     ()=>fichaFormando(formandos.find(f=>f.id===r.dataset.formando))));
   filtrar();   /* a pesquisa da barra lateral continua a valer depois de mudar um filtro */
@@ -2666,6 +2668,50 @@ function carregarXlsx(){
     document.head.appendChild(s);
   });
   return xlsxPromessa;
+}
+/* O modelo descarregado já traz, na folha Listas, todas as escolas e
+   cursos que estão no Repo. Sem isto, cada modelo novo voltava só com
+   IEFP e Turismo de Portugal, e uma escola acrescentada à mão perdia-se
+   no ficheiro seguinte. Parte-se do modelo publicado e só se escrevem
+   as duas listas: as regras e o desenho ficam os do ficheiro. */
+let exceljsPromessa=null;
+function carregarExcelJS(){
+  if(window.ExcelJS) return Promise.resolve(window.ExcelJS);
+  if(!exceljsPromessa) exceljsPromessa=new Promise((ok,falha)=>{
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js';
+    s.onload=()=>ok(window.ExcelJS);
+    s.onerror=()=>{ exceljsPromessa=null; falha(new Error('sem ExcelJS')); };
+    document.head.appendChild(s);
+  });
+  return exceljsPromessa;
+}
+/* "iefp" e "IEFP" são a mesma escola: fica a primeira forma escrita */
+function listaSemRepetir(base,vals){
+  const m=new Map();
+  base.concat(vals).forEach(v=>{ const k=String(v||'').trim(); if(k&&!m.has(k.toLowerCase())) m.set(k.toLowerCase(),k); });
+  return [...m.values()].sort((x,y)=>x.localeCompare(y,'pt'));
+}
+async function descarregarModelo(e){
+  const b=e&&e.currentTarget; if(b) b.disabled=true;
+  try{
+    const escolas=listaSemRepetir(['IEFP','Turismo de Portugal'], formandos.flatMap(f=>f.formacoes.map(c=>c.entidade)));
+    const cursos=listaSemRepetir(['UFCD 10868','UFCD 10870'], formandos.flatMap(f=>f.formacoes.map(c=>c.curso)));
+    const ExcelJS=await carregarExcelJS();
+    const buf=await (await fetch('modelo-formandos.xlsx',{cache:'no-store'})).arrayBuffer();
+    const wb=new ExcelJS.Workbook(); await wb.xlsx.load(buf);
+    const wl=wb.getWorksheet('Listas');
+    for(let r=2;r<=100;r++) wl.getCell(r,1).value=escolas[r-2]??null;
+    for(let r=2;r<=300;r++) wl.getCell(r,3).value=cursos[r-2]??null;
+    const out=await wb.xlsx.writeBuffer();
+    const u=URL.createObjectURL(new Blob([out],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+    const a=document.createElement('a'); a.href=u; a.download='modelo-formandos.xlsx'; a.click();
+    setTimeout(()=>URL.revokeObjectURL(u),2000);
+  }catch(err){
+    /* se a biblioteca não carregar, vai o modelo base: traz as listas
+       iniciais, e as escolas acrescentam-se à mão na folha Listas */
+    location.href='modelo-formandos.xlsx';
+  }finally{ if(b) b.disabled=false; }
 }
 function escolherFicheiroFormandos(){
   const inp=document.createElement('input');
