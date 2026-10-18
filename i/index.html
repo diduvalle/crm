@@ -54,15 +54,31 @@ body{font-family:'Archivo',system-ui,sans-serif;font-size:17px;background:#efe9d
     mostra('Link incompleto','Este link não está completo. Experimenta abri-lo outra vez a partir do email.');
     return;
   }
-  fetch(SUPA_URL+'/rest/v1/rpc/campanha_clique',{method:'POST',
-    headers:{apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json'},
-    body:JSON.stringify(botao===null?{p_token:token}:{p_token:token,p_botao:botao})})
-  .then(function(r){ return r.json(); })
-  .then(function(d){
-    if(d&&d.link&&/^https?:\/\//i.test(d.link)){ location.replace(d.link); return; }
-    mostra('Link inválido','Este link já não é válido.');
-  })
-  .catch(function(){ mostra('Não foi possível ligar','Tenta outra vez daqui a pouco.'); });
+  /* Conta-se UMA vez, e só quando a página está mesmo à vista. A app do
+     Gmail (e o Chrome) pré-carregam o link em segundo plano ao tocar-lhe:
+     a página corria duas vezes - no pré-carregamento e ao abrir - e cada
+     clique contava 2. O mesmo para os leitores de links que abrem a
+     página escondida: esses nunca contam. */
+  var feito=false;
+  function registar(){
+    if(feito) return; feito=true;
+    fetch(SUPA_URL+'/rest/v1/rpc/campanha_clique',{method:'POST',
+      headers:{apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify(botao===null?{p_token:token}:{p_token:token,p_botao:botao})})
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      if(d&&d.link&&/^https?:\/\//i.test(d.link)){ location.replace(d.link); return; }
+      mostra('Link inválido','Este link já não é válido.');
+    })
+    .catch(function(){ mostra('Não foi possível ligar','Tenta outra vez daqui a pouco.'); });
+  }
+  if(document.prerendering){
+    document.addEventListener('prerenderingchange',registar,{once:true});
+  }else if(document.visibilityState==='hidden'){
+    document.addEventListener('visibilitychange',function v(){
+      if(document.visibilityState==='visible'){ document.removeEventListener('visibilitychange',v); registar(); }
+    });
+  }else registar();
 })();
 </script>
 </body>
