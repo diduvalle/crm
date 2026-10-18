@@ -2963,6 +2963,9 @@ function modalRepetidos(pares){
 let campanhas=[], campAtual=null;
 const SITE_CAMP='https://crm.cr0x.org';
 const CORPO_INICIAL='Olá {nome},\n\n';
+/* A zona de testes: "Para quem: Teste" manda a campanha só para aqui. O
+   mesmo endereço está em _campanha_email_teste() no 12-campanhas.sql. */
+const EMAIL_TESTE='luiz.vale@gmail.com';
 
 /* As opções de "Para quem" saem das formações que estão nos Formandos. */
 async function garantirFormandos(){
@@ -2983,12 +2986,14 @@ function opcoesFiltro(){
 }
 function chaveFiltro(f){
   f=f||{tipo:'todos'};
+  if(f.tipo==='teste') return 'teste';
   if(f.tipo==='curso') return 'curso:'+f.curso;
   if(f.tipo==='entidade') return 'entidade:'+f.entidade;
   if(f.tipo==='turma') return 'turma:'+f.formacao_id;
   return 'todos';
 }
 function filtroDeChave(k){
+  if(k==='teste') return {tipo:'teste'};
   const i=k.indexOf(':'); if(i<0) return {tipo:'todos'};
   const t=k.slice(0,i), v=k.slice(i+1);
   if(t==='curso') return {tipo:'curso',curso:v};
@@ -2998,6 +3003,7 @@ function filtroDeChave(k){
 }
 function descreverFiltro(f){
   f=f||{tipo:'todos'};
+  if(f.tipo==='teste') return 'Teste · '+EMAIL_TESTE;
   if(f.tipo==='curso') return f.curso;
   if(f.tipo==='entidade') return f.entidade;
   if(f.tipo==='turma'){
@@ -3065,7 +3071,7 @@ async function carregarCampanhas(){
           <td><div class="cell-main">${esc(c.assunto||'(sem assunto)')}</div>
               <div class="cell-sub">${c.enviada_em?'enviada '+dt(c.enviada_em):'editada '+dt(c.atualizada_em)}</div></td>
           <td>${esc(descreverFiltro(c.filtro))}</td>
-          <td>${estado(c)}${c.erros?` <span class="pill red">${c.erros} com erro</span>`:''}</td>
+          <td>${c.filtro&&c.filtro.tipo==='teste'?'<span class="pill purple">Teste</span> ':''}${estado(c)}${c.erros?` <span class="pill red">${c.erros} com erro</span>`:''}</td>
           <td>${c.n?c.clicaram:'<span class="muted">-</span>'}</td>
           <td>${c.n?c.sairam:'<span class="muted">-</span>'}</td>
         </tr>`).join('')}</tbody></table></div>`;
@@ -3120,6 +3126,7 @@ function pintarCampanha(){
         </div>
         <div class="field"><label>Para quem</label>
           <select id="cPara"${dis}>
+            <optgroup label="Zona de testes"><option value="teste"${sel('teste')}>Teste - só para ${EMAIL_TESTE}</option></optgroup>
             <option value="todos"${sel('todos')}>Toda a gente</option>
             ${op.cursos.length?`<optgroup label="Quem fez o curso">${op.cursos.map(x=>`<option value="curso:${esc(x)}"${sel('curso:'+x)}>${esc(x)}</option>`).join('')}</optgroup>`:''}
             ${op.turmas.length?`<optgroup label="Quem esteve na turma">${op.turmas.map(t=>`<option value="turma:${t.id}"${sel('turma:'+t.id)}>${esc(t.curso)} · ${periodo(t)}</option>`).join('')}</optgroup>`:''}
@@ -3136,7 +3143,7 @@ function pintarCampanha(){
         ${trava?'<div class="hint camp-trava">Já saíram emails desta campanha: o texto e os destinatários ficam como foram enviados.</div>':''}
       </div>
       <div class="camp-ver">
-        <div class="camp-ver-cab"><strong id="cVerAssunto">${esc(c.assunto||'(sem assunto)')}</strong><span>como chega à Ana</span></div>
+        <div class="camp-ver-cab"><strong id="cVerAssunto">${esc(c.assunto||'(sem assunto)')}</strong><span id="cVerQuem">como chega à Ana</span></div>
         <iframe id="cVer" title="Pré-visualização do email" sandbox></iframe>
       </div>
     </div>
@@ -3154,13 +3161,16 @@ function pintarCampanha(){
     botao_link:$('#cBotaoL').value, filtro:filtroDeChave($('#cPara').value)});
   const ver=()=>{
     const d=Object.assign({},c,trava?{}:ler());
-    $('#cVer').srcdoc=emailHTML(d,{nome:'Ana',inscrever:'#',sair:'#'});
+    const quem=(d.filtro&&d.filtro.tipo==='teste')?'Diogo':'Ana';
+    $('#cVer').srcdoc=emailHTML(d,{nome:quem,inscrever:'#',sair:'#'});
+    $('#cVerQuem').textContent='como chega '+(quem==='Diogo'?'ao Diogo':'à Ana');
     $('#cVerAssunto').textContent=d.assunto||'(sem assunto)';
   };
   let tContar=null;
   const contar=()=>{ if(trava||n&&chaveFiltro(c.filtro)===$('#cPara').value) return;
     clearTimeout(tContar); tContar=setTimeout(async()=>{
       try{ const r=await rpc('campanha_destinatarios',{p_token:sessao.token,p_filtro:filtroDeChave($('#cPara').value)});
+        if(r.teste){ $('#cQuantos').textContent='Vai só para '+r.teste+'. Zona de testes: não chega a nenhum formando.'; return; }
         $('#cQuantos').textContent='Vai para '+r.n+(r.n===1?' pessoa':' pessoas')
           +(r.sairam?' ('+r.sairam+(r.sairam===1?' saiu':' saíram')+' da lista e fica'+(r.sairam===1?'':'m')+' de fora).':'.');
       }catch(e){ if(!faltaSql(e,'12-campanhas.sql')) tratar(e); } },250); };

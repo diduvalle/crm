@@ -14,6 +14,11 @@
 --  link de Inscrever e o de sair da lista levam-no, por isso sabe-se
 --  QUEM clicou e QUEM saiu - não só quantos.
 --
+--  ZONA DE TESTES: o filtro {"tipo":"teste"} manda a campanha a UM só
+--  endereço, o de _campanha_email_teste(). Faz o caminho todo, com um
+--  envio sem formando por trás - sair da lista numa campanha de teste
+--  não tira ninguém de lado nenhum.
+--
 --  Estados de uma campanha:
 --    rascunho  -> a escrever-se
 --    preparada -> os destinatários ficaram fixados, um envio por pessoa
@@ -90,8 +95,12 @@ begin
   return json_build_object('ok', true);
 end $$;
 
+-- O endereço da zona de testes. Num sítio só: mudá-lo é mudar aqui.
+create or replace function public._campanha_email_teste()
+returns text language sql immutable as $$ select 'luiz.vale@gmail.com'::text $$;
+
 -- Quem recebe ------------------------------------------------------------
---   filtro: {"tipo":"todos"} | {"tipo":"curso","curso":"..."}
+--   filtro: {"tipo":"todos"} | {"tipo":"teste"} | {"tipo":"curso","curso":"..."}
 --         | {"tipo":"turma","formacao_id":"..."} | {"tipo":"entidade","entidade":"..."}
 --   Quem saiu da lista NUNCA entra, seja qual for o filtro.
 create or replace function public._campanha_alvo(p_filtro jsonb)
@@ -115,6 +124,9 @@ create or replace function public.campanha_destinatarios(p_token uuid, p_filtro 
 returns json language plpgsql security definer set search_path = public as $$
 begin
   perform _repo_root(p_token);
+  if p_filtro->>'tipo' = 'teste' then
+    return json_build_object('n', 1, 'sairam', 0, 'teste', _campanha_email_teste());
+  end if;
   return (select json_build_object('n', count(*) filter (where not saiu),
                                    'sairam', count(*) filter (where saiu))
             from _campanha_alvo(p_filtro));
@@ -209,9 +221,14 @@ begin
   if c.id is null then raise exception 'NAO_ENCONTRADO'; end if;
   if c.assunto = '' or c.corpo = '' then raise exception 'DADOS_EM_FALTA'; end if;
   if c.estado = 'rascunho' then
-    insert into campanha_envios(campanha_id, formando_id, email, nome)
-      select c.id, a.id, a.email, a.nome from _campanha_alvo(c.filtro) a where not a.saiu
-    on conflict do nothing;
+    if c.filtro->>'tipo' = 'teste' then
+      insert into campanha_envios(campanha_id, formando_id, email, nome)
+        values (c.id, null, _campanha_email_teste(), 'Diogo');
+    else
+      insert into campanha_envios(campanha_id, formando_id, email, nome)
+        select c.id, a.id, a.email, a.nome from _campanha_alvo(c.filtro) a where not a.saiu
+      on conflict do nothing;
+    end if;
     if not exists (select 1 from campanha_envios where campanha_id = c.id) then
       raise exception 'SEM_DESTINATARIOS';
     end if;
