@@ -2517,7 +2517,9 @@ function distEdicao(a,b){
    - são iguais, sem acentos nem maiúsculas;
    - têm o mesmo primeiro e o mesmo último nome: "Ana Silva" e "Ana Rita
      Silva". Nos nomes portugueses, quantos se escrevem varia muito;
-   - ou diferem numa gralha: 1 letra, ou 2 em nomes compridos. */
+   - ou diferem numa gralha, nome a nome: o mesmo número de nomes, e
+     cada um igual ou com 1 letra trocada (2 nos compridos). Comparar o
+     nome todo de uma vez juntava "Ana Ferreira" e "Joana Ferreira". */
 function nomesParecidos(a,b){
   const A=normNome(a), B=normNome(b);
   if(!A||!B) return false;
@@ -2525,9 +2527,22 @@ function nomesParecidos(a,b){
   const pa=A.split(' '), pb=B.split(' ');
   if(pa.length>1&&pb.length>1&&pa[0]===pb[0]&&pa[pa.length-1]===pb[pb.length-1]
      &&pa[pa.length-1].length>=3) return true;
-  const n=Math.max(A.length,B.length);
-  if(n<8) return false;
-  return distEdicao(A,B)<=(n>=14?2:1);
+  if(pa.length!==pb.length) return false;
+  /* Mário/Maria, Paulo/Paula, Luís/Luísa: uma letra de diferença, mas
+     são nomes diferentes - o masculino e o feminino, não uma gralha */
+  const genero=(x,y)=>(x.length===y.length&&x.slice(0,-1)===y.slice(0,-1)&&/[oa]$/.test(x)&&/[oa]$/.test(y))
+    ||x+'a'===y||y+'a'===x;
+  let total=0;
+  for(let i=0;i<pa.length;i++){
+    if(pa[i]===pb[i]) continue;
+    if(genero(pa[i],pb[i])) return false;
+    const n=Math.max(pa[i].length,pb[i].length);
+    if(n<6) return false;   /* nomes curtos só contam iguais: Pires/Peres, Marta/Maria são outros nomes */
+    const d=distEdicao(pa[i],pb[i]);
+    if(d>(n>=8?2:1)) return false;
+    total+=d;
+  }
+  return total>0&&total<=2;
 }
 const parKey=(a,b)=>a<b?a+'|'+b:b+'|'+a;
 function paresRepetidos(){
