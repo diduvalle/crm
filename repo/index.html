@@ -2734,6 +2734,26 @@ function dataDeCelula(XLSX,v){
   const iso=s.match(/^(\d{4})-(\d{2})-(\d{2})/);
   return iso?iso[1]+'-'+iso[2]+'-'+iso[3]:'';
 }
+/* As listas do IEFP trazem o nome completo numa só coluna e em
+   maiúsculas. Para se poder colar a coluna NOME tal como vem, o nome
+   parte-se e acerta-se aqui: com o Apelido em branco, o primeiro nome
+   fica no Nome e o resto no Apelido; se o nome vier todo em maiúsculas
+   (ou todo em minúsculas), passa a "Ana Margarida dos Santos Mendes".
+   Um nome já escrito com maiúsculas e minúsculas fica como está. */
+const PARTICULAS=new Set(['da','de','do','das','dos','e','d']);
+function acertarNome(nome,apelido){
+  let n=String(nome||'').replace(/\s+/g,' ').trim(), a=String(apelido||'').replace(/\s+/g,' ').trim();
+  if(!a&&n.includes(' ')){ const i=n.indexOf(' '); a=n.slice(i+1); n=n.slice(0,i); }
+  const todo=(n+' '+a).trim();
+  const soMaiusculas=todo===todo.toUpperCase()&&todo!==todo.toLowerCase();
+  const soMinusculas=todo===todo.toLowerCase()&&todo!==todo.toUpperCase();
+  if(!soMaiusculas&&!soMinusculas) return [n,a];
+  const cap=w=>w.split('-').map(x=>x.charAt(0).toUpperCase()+x.slice(1)).join('-');
+  const ws=todo.toLowerCase().split(' ');
+  const t=ws.map((w,i)=>i>0&&i<ws.length-1&&PARTICULAS.has(w)?w:cap(w));
+  const k=n?n.split(' ').length:0;   /* a divisão Nome/Apelido fica onde estava */
+  return [t.slice(0,k).join(' '), t.slice(k).join(' ')];
+}
 const CAMPOS_FORMANDO=['nome','apelido','email','curso','entidade','inicio','fim','notas'];
 async function lerFicheiroFormandos(file){
   let XLSX;
@@ -2752,7 +2772,8 @@ async function lerFicheiroFormandos(file){
     for(let r=1;r<tab.length;r++){
       const t=tab[r]; const val=k=>col[k]==null?'':t[col[k]];
       if(t.every(c=>String(c).trim()==='')) continue;
-      linhas.push({linha:r+1, nome:String(val('nome')).trim(), apelido:String(val('apelido')).trim(),
+      const [nm,ap]=acertarNome(val('nome'),val('apelido'));
+      linhas.push({linha:r+1, nome:nm, apelido:ap,
         email:String(val('email')).trim(), curso:String(val('curso')).trim(),
         entidade:String(val('entidade')).trim(), inicio:dataDeCelula(XLSX,val('inicio')),
         fim:dataDeCelula(XLSX,val('fim')), notas:String(val('notas')).trim()});

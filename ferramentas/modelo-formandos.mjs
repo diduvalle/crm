@@ -26,7 +26,7 @@ wb.created = new Date();
 /* ================= Formandos: a folha que se preenche ================= */
 const ws = wb.addWorksheet('Formandos', { views: [{ state: 'frozen', ySplit: 1 }] });
 const COLS = [
-  { key: 'nome',     titulo: 'Nome',     largura: 18, nota: 'Obrigatório. Só o primeiro nome, ou os nomes próprios.' },
+  { key: 'nome',     titulo: 'Nome',     largura: 18, nota: 'Obrigatório. Podes colar aqui o nome completo, mesmo em maiúsculas, e deixar o Apelido em branco: o Repo parte-o e acerta-o ao carregar.' },
   { key: 'apelido',  titulo: 'Apelido',  largura: 22, nota: 'O apelido, ou os apelidos.' },
   { key: 'email',    titulo: 'Email',    largura: 32, nota: 'Obrigatório. O email pessoal. É por aqui que o Repo reconhece quem já fez formação contigo.' },
   { key: 'curso',    titulo: 'Curso',    largura: 30, nota: 'Obrigatório. Escolhe da lista. Se não estiver lá, acrescenta-o primeiro na folha Listas.' },
@@ -131,8 +131,9 @@ linha('1. Preenche só a folha Formandos, a partir da linha 2. Não mudes os tí
 linha('2. Uma linha = uma pessoa numa formação. Se alguém fez três formações contigo, aparece em três linhas. É assim mesmo: o Repo junta-as pelo email.');
 linha('3. Curso e Entidade escolhem-se da lista. Escola ou curso novo? Acrescenta-o primeiro na folha Listas.');
 linha('4. Para várias pessoas do mesmo curso, preenche o Curso, a Entidade e as datas na primeira linha e arrasta para baixo.');
-linha('5. Pode ser uma formação por ficheiro ou todas no mesmo. Os dois funcionam.');
-linha('6. Grava como .xlsx e carrega no Repo, em Formandos.');
+linha('5. Se a lista tem o nome completo numa só coluna (como as do IEFP), cola-o todo no Nome e deixa o Apelido em branco. Maiúsculas não fazem mal: o Repo parte o nome e acerta-o ao carregar.');
+linha('6. Pode ser uma formação por ficheiro ou todas no mesmo. Os dois funcionam.');
+linha('7. Grava como .xlsx e carrega no Repo, em Formandos.');
 r++;
 linha('Obrigatórios: Nome, Email, Curso, Entidade. O resto ajuda, mas pode ficar em branco.', { bold: true });
 r++;
