@@ -3545,8 +3545,14 @@ function pintarCampanha(){
   verJa(); contar();
 
   $('#voltarCamp').addEventListener('click',mostrarCampanhas);
+  /* Gravar uma campanha já preparada recomeça a preparação: os códigos
+     pessoais mudam e o ficheiro já descarregado deixa de servir (os
+     emails sairiam com links que o Repo já não conhece). Pergunta-se. */
+  const avisoFicheiro=async()=>!n||await uiConfirm({titulo:'Esta campanha já estava preparada',ok:'Gravar na mesma',
+    texto:'O ficheiro que descarregaste deixa de servir: os emails desse ficheiro já não ficavam registados aqui.<br><br>Depois de gravar, carrega outra vez em <strong>Preparar envio</strong> e usa o ficheiro novo.'});
   if($('#cGravar')) $('#cGravar').addEventListener('click',async()=>{
-    const id=await gravarCampanha(c.id,ler()); if(!id) return; toast('Gravada.'); abrirCampanha(id); });
+    if(!(await avisoFicheiro())) return;
+    const id=await gravarCampanha(c.id,ler()); if(!id) return; toast(n?'Gravada. Prepara outra vez antes de enviar.':'Gravada.'); abrirCampanha(id); });
   if($('#cDuplicar')) $('#cDuplicar').addEventListener('click',()=>{
     campAtual={id:null,assunto:trava?c.assunto:$('#cAssunto').value,conteudo:JSON.parse(JSON.stringify(k)),
       filtro:trava?c.filtro:filtroDeChave($('#cPara').value),estado:'rascunho',envios:[]};
@@ -3584,7 +3590,8 @@ async function prepararCampanha(dados,retomar){
     const av=problemasEmail(dados.assunto,dados.conteudo);
     if(av.length) return toast(av[0],'err');
     const ok=await uiConfirm({titulo:'Preparar o envio?',ok:'Preparar',
-      texto:$('#cQuantos').textContent+'<br><br>Os destinatários ficam fixos. O Repo descarrega um ficheiro com um email para cada pessoa, que envias pelo Outlook.'});
+      texto:$('#cQuantos').textContent+'<br><br>Os destinatários ficam fixos. O Repo descarrega um ficheiro com um email para cada pessoa, que envias pelo Outlook.'
+        +((c.envios||[]).length?'<br><br>O ficheiro que descarregaste antes deixa de servir: usa só o novo.':'')});
     if(!ok) return;
   }
   let id=c.id;

@@ -76,7 +76,7 @@ function Cabecalho {
   Write-Host ''
   Write-Host ('  Campanha : ' + $l.assunto)
   Write-Host ('  Para     : ' + $n + $(if ($n -eq 1) { ' pessoa' } else { ' pessoas' }) +
-    $(if ($feitos) { '  (' + $feitos + ' já enviados)' } else { '' }))
+    $(if ($feitos) { '  (' + $feitos + $(if ($feitos -eq 1) { ' já enviado)' } else { ' já enviados)' }) } else { '' }))
   Write-Host ('  Sai de   : ' + $conta.SmtpAddress)
   Write-Host ('  Preparada: ' + (Get-Item $Lote).LastWriteTime.ToString('dd/MM/yyyy HH:mm'))
   Write-Host ''
@@ -95,13 +95,25 @@ function Novo([string]$para, [string]$assunto, [string]$html, [string]$nome = ''
   $m.HTMLBody = $html
   return $m
 }
+function Repo([string]$funcao, $dados) {
+  $corpo = $dados | ConvertTo-Json -Compress
+  Invoke-RestMethod -Method Post -Uri ($l.supa_url + '/rest/v1/rpc/' + $funcao) `
+    -Headers @{ apikey = $l.supa_key; Authorization = ('Bearer ' + $l.supa_key) } `
+    -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($corpo))
+}
 function Marcar([string]$token, [bool]$ok, [string]$erro) {
-  $corpo = @{ p_token = $token; p_ok = $ok; p_erro = $erro } | ConvertTo-Json -Compress
   try {
-    Invoke-RestMethod -Method Post -Uri ($l.supa_url + '/rest/v1/rpc/campanha_envio_marcar') `
-      -Headers @{ apikey = $l.supa_key; Authorization = ('Bearer ' + $l.supa_key) } `
-      -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($corpo)) | Out-Null
+    $r = Repo 'campanha_envio_marcar' @{ p_token = $token; p_ok = $ok; p_erro = $erro }
+    if (-not $r.ok) { Write-Host '   (o email saiu, mas o Repo não o reconheceu: o ficheiro já não é o da campanha)' -ForegroundColor Yellow }
   } catch { Write-Host ('   (o email saiu, mas não consegui avisar o Repo: ' + $_.Exception.Message + ')') -ForegroundColor Yellow }
+}
+# O ficheiro ainda é o da campanha? Se a campanha foi gravada outra vez
+# no Repo depois de preparada, os códigos de cada pessoa mudaram: os
+# emails deste ficheiro sairiam com links que já não registam nada.
+# Pergunta-se ao Repo pelo código do primeiro email (só lê).
+function FicheiroValido {
+  try { return [bool](Repo 'campanha_sair_ver' @{ p_token = @($l.mensagens)[0].token }).ok }
+  catch { return $null }   # sem internet: não se sabe
 }
 
 function FazerRascunho {
@@ -146,9 +158,20 @@ if ($Menu) {
     Clear-Host
     Cabecalho
     $falta = $n - (JaEnviados).Count
+    $valido = FicheiroValido
+    if ($valido -eq $false) {
+      Write-Host '  ESTE FICHEIRO JÁ NÃO SERVE.' -ForegroundColor Red
+      Write-Host '  A campanha foi mudada no Repo depois de o descarregares. No Repo, abre-a' -ForegroundColor Red
+      Write-Host '  e carrega em "Preparar envio" para descarregar o ficheiro novo.' -ForegroundColor Red
+      Write-Host ''
+    } elseif ($null -eq $valido) {
+      Write-Host '  Não consegui falar com o Repo (sem internet?). Só envio quando conseguir.' -ForegroundColor Yellow
+      Write-Host ''
+    }
     Write-Host '  1  Ver o rascunho no Outlook (não envia nada)'
     Write-Host ('  2  Enviar um teste para ' + $paraTeste)
-    if ($falta -gt 0) { Write-Host ('  3  Enviar a ' + $falta + $(if ($falta -eq 1) { ' pessoa' } else { ' pessoas' })) }
+    if (-not $valido) { Write-Host '  3  (enviar: só com um ficheiro válido)' -ForegroundColor DarkGray; $falta = 0 }
+    elseif ($falta -gt 0) { Write-Host ('  3  Enviar a ' + $falta + $(if ($falta -eq 1) { ' pessoa' } else { ' pessoas' })) }
     else { Write-Host '  3  (já foi enviada a toda a gente)' -ForegroundColor DarkGray }
     Write-Host '  0  Sair'
     Write-Host ''
@@ -164,6 +187,7 @@ if ($Menu) {
         if ($c.Trim() -ceq 'ENVIAR') { Write-Host ''; FazerEnvio }
         else { Write-Host '  Não enviei nada.' }
       }
+      elseif ($o -eq '3') { Write-Host '  Com este ficheiro não há nada para enviar.' }
       else { Write-Host '  Escolhe 1, 2, 3 ou 0.' }
     } catch { Write-Host ('  Correu mal: ' + $_.Exception.Message) -ForegroundColor Red }
     Write-Host ''
@@ -185,4 +209,7 @@ if (-not $Confirmo) {
   Write-Host 'Para enviar mesmo, corre outra vez com -Enviar -Confirmo.'
   return
 }
+$valido = FicheiroValido
+if ($valido -eq $false) { Write-Host 'Este ficheiro já não serve: a campanha foi mudada no Repo depois de preparada. Prepara outra vez.' -ForegroundColor Red; return }
+if ($null -eq $valido) { Write-Host 'Não consegui falar com o Repo. Não enviei nada.' -ForegroundColor Yellow; return }
 FazerEnvio
