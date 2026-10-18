@@ -4,6 +4,11 @@
 --  Correr uma vez no SQL Editor do Supabase, DEPOIS do 11-formandos.sql.
 --  É idempotente: pode voltar a correr-se sem estragar nada.
 --
+--  ATENÇÃO: depois do 13-campanhas-conteudo.sql, se voltares a correr
+--  este, corre o 13 logo a seguir. Este repõe as versões antigas de
+--  campanha_ler/gravar/preparar/clique, e o construtor de email deixava
+--  de gravar e de contar os cliques por formação.
+--
 --  O EMAIL NÃO SAI DAQUI. Sai do Outlook do formador, pela conta do
 --  Turismo de Portugal (Microsoft 365), que nenhum servidor nosso pode
 --  usar sem autorização da informática deles. O Repo escreve o email,
