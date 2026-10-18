@@ -54,12 +54,15 @@ if (-not $conta) { throw 'A conta do Turismo de Portugal não está no Outlook c
 Write-Host ('Sai de   : ' + $conta.SmtpAddress)
 Write-Host ''
 
-function Novo([string]$para, [string]$assunto, [string]$html) {
+function Novo([string]$para, [string]$assunto, [string]$html, [string]$nome = '') {
   $m = $ol.CreateItem(0)
   # SendUsingAccount por InvokeMember: a atribuição directa às vezes não
   # pega no PowerShell, e o email sairia pela conta por omissão
   [void]$m.GetType().InvokeMember('SendUsingAccount', [Reflection.BindingFlags]::SetProperty, $null, $m, @($conta))
-  $m.To = $para
+  # Destinatário com nome ("Ana <ana@...>") e resolvido: com o endereço
+  # solto no .To, o Outlook punha-o entre plicas no nome
+  $r = $m.Recipients.Add($(if ($nome) { $nome + ' <' + $para + '>' } else { $para }))
+  [void]$r.Resolve()
   $m.Subject = $assunto
   $m.HTMLBody = $html
   return $m
@@ -107,7 +110,7 @@ foreach ($msg in $l.mensagens) {
   $i++
   if ($feitos -contains $msg.email) { $saltados++; continue }
   try {
-    $m = Novo $msg.email $l.assunto $msg.html
+    $m = Novo $msg.email $l.assunto $msg.html $msg.nome
     $m.Send()
     Add-Content -Encoding UTF8 $registo $msg.email
     $ok++
