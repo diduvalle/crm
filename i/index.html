@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>A abrir a inscrição</title>
 <meta name="robots" content="noindex">
+<!-- a página tem versão escura própria: assim o browser não a escurece à força -->
+<meta name="color-scheme" content="light dark">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,6 +23,11 @@ body{font-family:'Archivo',system-ui,sans-serif;font-size:17px;background:#efe9d
 .aviso h1{font-size:1.5rem;font-weight:800;letter-spacing:-.015em;margin:0 0 10px}
 .aviso p{color:#6f655c;margin:0}
 .aviso a{color:#005e95}
+@media (prefers-color-scheme:dark){
+  body{background:#1b1916;color:#f1ece3}
+  .aviso p{color:#b3a99c}
+  .aviso a{color:#8cc2e2}
+}
 </style>
 </head>
 <body>
