@@ -3028,7 +3028,7 @@ function emailHTML(c,p){
   const F='font-family:Arial,Helvetica,sans-serif;';
   const botao=(c.botao_texto&&c.botao_link)
     ? `<tr><td style="padding:6px 32px 10px"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
-<td bgcolor="#0078bf" style="border-radius:8px;background:#0078bf"><a href="${esc(p.inscrever)}" style="${F}display:inline-block;padding:13px 26px;font-size:16px;font-weight:bold;color:#ffffff;text-decoration:none;border-radius:8px">${esc(c.botao_texto)}</a></td>
+<td bgcolor="#0078bf" style="border-radius:8px;background:#0078bf;padding:13px 26px"><a href="${esc(p.inscrever)}" style="${F}display:inline-block;font-size:16px;font-weight:bold;color:#ffffff;text-decoration:none">${esc(c.botao_texto)}</a></td>
 </tr></table></td></tr>` : '';
   return `<!DOCTYPE html><html lang="pt"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(c.assunto||'')}</title></head>
 <body style="margin:0;padding:0;background:#efe9dd">
@@ -3219,6 +3219,7 @@ async function prepararCampanha(dados,retomar){
   const base=retomar?c:Object.assign({},c,dados);
   const lote={
     versao:1, campanha_id:id, assunto:base.assunto, supa_url:SUPA_URL, supa_key:SUPA_KEY,
+    email_teste:EMAIL_TESTE,   /* o rascunho e o teste do programa vão para aqui */
     html_teste:emailHTML(base,{nome:'Diogo',inscrever:SITE_CAMP+'/i/?t=teste',sair:SITE_CAMP+'/s/?t=teste'}),
     mensagens:p.envios.map(e=>({email:e.email,nome:e.nome,token:e.token,
       html:emailHTML(base,{nome:e.nome,inscrever:SITE_CAMP+'/i/?t='+e.token,sair:SITE_CAMP+'/s/?t='+e.token})}))

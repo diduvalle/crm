@@ -13,7 +13,9 @@
 
   COMO USAR (por esta ordem)
     .\enviar-campanha.ps1 -Rascunho          abre o email no Outlook, sem enviar
-    .\enviar-campanha.ps1 -Teste             envia UM, só para a própria conta
+    .\enviar-campanha.ps1 -Teste             envia UM, só para a zona de testes
+  O rascunho e o teste vão para o endereço de teste que vem no ficheiro
+  (luiz.vale@gmail.com); -Para outro@endereco muda-o.
     .\enviar-campanha.ps1 -Enviar -Confirmo  envia a toda a gente da campanha
   Sem -Lote, usa o campanha-*.json mais recente das Transferências.
   Sem nenhum modo, só diz o que está no ficheiro e por que conta sairia.
@@ -24,6 +26,7 @@
 #>
 param(
   [string]$Lote,
+  [string]$Para,
   [switch]$Rascunho,
   [switch]$Teste,
   [switch]$Enviar,
@@ -42,7 +45,7 @@ $l = Get-Content -Raw -Encoding UTF8 $Lote | ConvertFrom-Json
 $n = @($l.mensagens).Count
 Write-Host ''
 Write-Host ('Campanha : ' + $l.assunto)
-Write-Host ('Ficheiro : ' + (Split-Path $Lote -Leaf) + '  (' + $n + ' emails)')
+Write-Host ('Ficheiro : ' + (Split-Path $Lote -Leaf) + '  (' + $n + $(if ($n -eq 1) { ' email)' } else { ' emails)' }))
 
 $ol = New-Object -ComObject Outlook.Application
 $conta = $null
@@ -70,17 +73,21 @@ function Marcar([string]$token, [bool]$ok, [string]$erro) {
   } catch { Write-Host ('   (o email saiu, mas não consegui avisar o Repo: ' + $_.Exception.Message + ')') -ForegroundColor Yellow }
 }
 
+# O rascunho e o teste vão para a zona de testes (o endereço vem no
+# ficheiro); ficheiros antigos, sem ele, vão para a própria conta.
+$paraTeste = if ($Para) { $Para } elseif ($l.email_teste) { $l.email_teste } else { $conta.SmtpAddress }
+
 if ($Rascunho) {
-  $m = Novo $conta.SmtpAddress ('[RASCUNHO] ' + $l.assunto) $l.html_teste
+  $m = Novo $paraTeste ('[RASCUNHO] ' + $l.assunto) $l.html_teste
   $m.Save()
   $m.Display()
   Write-Host 'Abri o email no Outlook, sem o enviar. Fecha a janela quando acabares de ver.'
   return
 }
 if ($Teste) {
-  $m = Novo $conta.SmtpAddress ('[TESTE] ' + $l.assunto) $l.html_teste
+  $m = Novo $paraTeste ('[TESTE] ' + $l.assunto) $l.html_teste
   $m.Send()
-  Write-Host ('Enviei um email de teste para ' + $conta.SmtpAddress + '. Os links dele não registam nada.')
+  Write-Host ('Enviei um email de teste para ' + $paraTeste + '. Os links dele não registam nada.')
   return
 }
 if (-not $Enviar) {
