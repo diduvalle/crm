@@ -368,6 +368,9 @@ td .tag{align-self:auto}
 .camp-f-cab{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:.86rem}
 .camp-f-acc{display:flex;gap:2px}
 .camp-f-acc svg{width:15px;height:15px}
+.camp-f-datas{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 120px}
+.camp-f .hint[data-fq]{margin-top:-4px}
+@media(max-width:640px){ .camp-f-datas{grid-template-columns:1fr 1fr} }
 .camp-avisos{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
 .camp-avisos:empty{display:none}
 .camp-avisos li{display:flex;gap:8px;align-items:flex-start;font-size:.8rem;color:var(--warn);background:var(--warn-bg);padding:8px 10px;border-radius:var(--rs)}
@@ -3099,7 +3102,14 @@ function descreverFiltro(f){
    Um email é uma estrutura, não um texto solto: abertura, uma ou mais
    formações (cada uma com o seu botão e o seu link de inscrição), fecho,
    LinkedIn e rodapé. Todo o texto é teu, incluindo a frase de sair. */
-function formacaoVazia(){ return {titulo:'',quando:'',onde:'',texto:'',botao:'Quero inscrever-me',link:''}; }
+function formacaoVazia(){ return {titulo:'',inicio:'',fim:'',horas:'',texto:'',botao:'Quero inscrever-me',link:''}; }
+/* As datas guardam-se aaaa-mm-dd (o que o calendário dá) e escrevem-se
+   dd/mm/aaaa. As formações são sempre online. */
+function quandoFormacao(f){
+  const a=dataPT(f.inicio), b=dataPT(f.fim), h=parseInt(f.horas,10);
+  const datas=a&&b&&a!==b?'De '+a+' a '+b:a?(b?a:'Início a '+a):(b?'Até '+b:'');
+  return [datas,h>0?h+(h===1?' hora':' horas'):'','Online'].filter(Boolean);
+}
 function conteudoInicial(){
   return {
     preheader:'',
@@ -3157,7 +3167,7 @@ const textoSimples=s=>esc(String(s||'').replace(/\s+/g,' ').trim()).replace(/[ \
 function mjmlDe(k,assunto){
   const tem=s=>String(s||'').trim()!=='';
   const formacoes=(k.formacoes||[]).map((f,i)=>{
-    const meta=[f.quando,f.onde].filter(tem).map(x=>textoEmail(x,false)).join(' &middot; ');
+    const meta=quandoFormacao(f).map(esc).join(' &middot; ');
     return `
     <mj-section padding="8px 32px">
       <mj-column background-color="#f6f2ea" border-radius="10px" padding="18px 20px">
@@ -3234,12 +3244,13 @@ function emailPorPessoa(html,nome,token){
 function problemasEmail(assunto,k){
   const p=[];
   if(!String(assunto||'').trim()) p.push('Falta o assunto.');
-  const textos=[k.cabecalho,k.abertura,k.fecho,k.rodape].concat((k.formacoes||[]).flatMap(f=>[f.titulo,f.quando,f.onde,f.texto]));
+  const textos=[k.cabecalho,k.abertura,k.fecho,k.rodape].concat((k.formacoes||[]).flatMap(f=>[f.titulo,f.texto]));
   if(!textos.some(s=>/\[[^\]\n]+\](?!\()/.test(String(s||''))))
     p.push('Falta o link para sair da lista: escreve no rodapé o texto entre [ ], por exemplo [sai da lista].');
   (k.formacoes||[]).forEach((f,i)=>{
     const nome='A formação '+(i+1)+(f.titulo.trim()?' ('+f.titulo.trim()+')':'');
     if(f.botao.trim()&&!/^https?:\/\/\S+$/i.test(f.link.trim())) p.push(nome+' tem botão mas não tem link de inscrição (começa por https://).');
+    if(f.inicio&&f.fim&&f.fim<f.inicio) p.push(nome+' acaba antes de começar: confirma as datas.');
   });
   if(String(k.linkedin||'').trim()&&!/^https?:\/\/\S+$/i.test(k.linkedin.trim())) p.push('O link do LinkedIn tem de começar por https://');
   return p;
@@ -3382,7 +3393,7 @@ function campanhaTravada(){ return (campAtual.envios||[]).some(e=>e.estado!=='po
 
 /* Um campo do formulário. `k` é o nome no conteúdo; `i`, a formação. */
 function campoCamp(rot,k,v,o={}){
-  const at=`data-ck="${k}"${o.i!=null?` data-ci="${o.i}"`:''}${o.dis||''}${o.ph?` placeholder="${esc(o.ph)}"`:''}`;
+  const at=`data-ck="${k}"${o.i!=null?` data-ci="${o.i}"`:''}${o.dis||''}${o.ph?` placeholder="${esc(o.ph)}"`:''}${o.tipo?` type="${o.tipo}"`:''}${o.mais||''}`;
   return `<div class="field"><label>${rot}</label>${o.linhas
     ?`<textarea rows="${o.linhas}" ${at}>${esc(v)}</textarea>`:`<input ${at} value="${esc(v)}">`}${o.dica?`<span class="hint">${o.dica}</span>`:''}</div>`;
 }
@@ -3469,10 +3480,12 @@ function pintarCampanha(){
           <button class="btn-ghost btn-xs" data-fmover="${i}" data-dir="1" title="Descer"${i===nf-1?' disabled':''}>${ic('baixo')}</button>
           <button class="btn-ghost btn-xs" data-ftirar="${i}" title="Tirar esta formação">${ic('lixo')}</button></div>`}</div>
         ${campoCamp('Título','titulo',f.titulo,{i,dis,ph:'Front Office - Nível 2'})}
-        <div class="form-grid">
-          ${campoCamp('Quando','quando',f.quando,{i,dis,ph:'janeiro 2026 · terças e quintas, 19h-22h'})}
-          ${campoCamp('Onde','onde',f.onde,{i,dis,ph:'Escola do Turismo de Portugal, Lisboa'})}
+        <div class="form-grid camp-f-datas">
+          ${campoCamp('Início','inicio',f.inicio,{i,dis,tipo:'date'})}
+          ${campoCamp('Fim','fim',f.fim,{i,dis,tipo:'date'})}
+          ${campoCamp('Total de horas','horas',f.horas,{i,dis,tipo:'number',mais:' min="1" step="1" inputmode="numeric"',ph:'50'})}
         </div>
+        <span class="hint" data-fq="${i}">No email: ${esc(quandoFormacao(f).join(' · '))}</span>
         ${campoCamp('Texto','texto',f.texto,{i,dis,linhas:3})}
         <div class="form-grid">
           ${campoCamp('Texto do botão','botao',f.botao,{i,dis,dica:'Em branco, não há botão.'})}
@@ -3493,6 +3506,7 @@ function pintarCampanha(){
   $('#vCampanha .camp-form').addEventListener('input',ev=>{
     const el=ev.target; if(!el.dataset||!el.dataset.ck) return;
     if(el.dataset.ci!=null) k.formacoes[+el.dataset.ci][el.dataset.ck]=el.value; else k[el.dataset.ck]=el.value;
+    if(el.dataset.ci!=null){ const q=document.querySelector('[data-fq="'+el.dataset.ci+'"]'); if(q) q.textContent='No email: '+quandoFormacao(k.formacoes[+el.dataset.ci]).join(' · '); }
     ver();
   });
 
