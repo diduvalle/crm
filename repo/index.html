@@ -3614,13 +3614,13 @@ async function prepararCampanha(dados,retomar){
     <div class="modal-head"><div><h3>Pronto a enviar</h3>
       <div class="sub">${lote.mensagens.length} ${lote.mensagens.length===1?'email preparado':'emails preparados'}, um para cada pessoa.</div></div></div>
     <div class="modal-body camp-passos">
-      <p>Descarreguei <strong>${esc(nome)}</strong> para a tua pasta Transferências. Agora, pela ordem:</p>
+      <p>Agora, no Ambiente de trabalho, faz duplo clique em <strong>Enviar campanha</strong>. Abre um menu:</p>
       <ol>
-        <li><strong>Rascunho</strong>: cria o email no Outlook sem o enviar, para o veres.</li>
-        <li><strong>Teste</strong>: envia um só, para ti.</li>
-        <li><strong>Enviar</strong>: um a um, pela conta do Turismo de Portugal.</li>
+        <li><strong>1</strong> - vês o email no Outlook, sem o enviar.</li>
+        <li><strong>2</strong> - envias um teste só para ti (${esc(EMAIL_TESTE)}).</li>
+        <li><strong>3</strong> - envias a toda a gente, um a um, pela conta do Turismo de Portugal. Pede para escreveres ENVIAR antes.</li>
       </ol>
-      <p class="hint">O programa é o <code>enviar-campanha.ps1</code>. Os emails enviados vão aparecendo aqui na campanha.</p>
+      <p class="hint">O programa vai buscar sozinho o ficheiro que acabei de descarregar (${esc(nome)}): não precisas de o abrir. Os emails enviados vão aparecendo aqui na campanha.</p>
     </div>
     <div class="modal-foot"><span></span><button class="btn" data-fechar>Percebi</button></div></div>`);
   abrirCampanha(id);
