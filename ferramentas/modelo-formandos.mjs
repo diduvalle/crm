@@ -31,8 +31,8 @@ const COLS = [
   { key: 'email',    titulo: 'Email',    largura: 32, nota: 'Obrigatório. O email pessoal. É por aqui que o Repo reconhece quem já fez formação contigo.' },
   { key: 'curso',    titulo: 'Curso',    largura: 30, nota: 'Obrigatório. Escolhe da lista. Se não estiver lá, acrescenta-o primeiro na folha Listas.' },
   { key: 'entidade', titulo: 'Entidade', largura: 22, nota: 'Obrigatório. Escolhe da lista (folha Listas).' },
-  { key: 'inicio',   titulo: 'Início',   largura: 12, nota: 'Data de início da formação, dd/mm/aaaa.' },
-  { key: 'fim',      titulo: 'Fim',      largura: 12, nota: 'Data de fim. Opcional.' },
+  { key: 'inicio',   titulo: 'Início',   largura: 16, nota: 'O mês da turma. Basta o mês: escreve 01/2026 ou janeiro 2026.' },
+  { key: 'fim',      titulo: 'Fim',      largura: 16, nota: 'Opcional. O mês em que acabou, se não for o mesmo do início.' },
   { key: 'notas',    titulo: 'Notas',    largura: 36, nota: 'Opcional. O que te ajudar a lembrar da pessoa.' },
 ];
 ws.columns = COLS.map(c => ({ key: c.key, width: c.largura }));
@@ -58,8 +58,9 @@ const LISTA_ENTIDADES = 'OFFSET(Listas!$A$2,0,0,MAX(1,COUNTA(Listas!$A$2:$A$100)
 for (let r = 2; r <= N + 1; r++) {
   const row = ws.getRow(r);
   for (let c = 1; c <= COLS.length; c++) row.getCell(c).font = F();
-  row.getCell(6).numFmt = 'dd/mm/yyyy';
-  row.getCell(7).numFmt = 'dd/mm/yyyy';
+  /* as turmas gerem-se pelo mês: mostra-se o mês, não o dia */
+  row.getCell(6).numFmt = 'mmmm yyyy';
+  row.getCell(7).numFmt = 'mmmm yyyy';
 
   row.getCell(3).dataValidation = {
     type: 'custom', allowBlank: true, showErrorMessage: true, errorStyle: 'warning',
@@ -118,7 +119,7 @@ wl.getColumn(5).width = 46;
 
 /* ================= Instruções ================= */
 const wi = wb.addWorksheet('Instruções');
-wi.columns = [{ width: 4 }, { width: 18 }, { width: 18 }, { width: 28 }, { width: 18 }, { width: 20 }, { width: 12 }, { width: 12 }, { width: 22 }];
+wi.columns = [{ width: 4 }, { width: 18 }, { width: 18 }, { width: 28 }, { width: 18 }, { width: 20 }, { width: 16 }, { width: 16 }, { width: 22 }];
 let r = 2;
 const linha = (txt, estilo = {}) => {
   const c = wi.getCell(r, 2); c.value = txt; c.font = F(estilo);
@@ -139,7 +140,7 @@ linha('Obrigatórios: Nome, Email, Curso, Entidade. O resto ajuda, mas pode fica
 r++;
 linha('Exemplo de uma linha preenchida', { bold: true });
 const ex = [['Nome', 'Apelido', 'Email', 'Curso', 'Entidade', 'Início', 'Fim', 'Notas'],
-            ['Ana', 'Martins', 'ana.martins@email.pt', 'UFCD 10868', 'IEFP', new Date(Date.UTC(2026, 8, 14)), new Date(Date.UTC(2026, 9, 30)), 'Turma da manhã']];
+            ['Ana', 'Martins', 'ana.martins@email.pt', 'UFCD 10868', 'IEFP', new Date(Date.UTC(2026, 8, 1)), new Date(Date.UTC(2026, 9, 1)), 'Turma da manhã']];
 ex.forEach((vals, k) => {
   vals.forEach((v, i) => {
     const c = wi.getCell(r, 2 + i);
@@ -150,7 +151,7 @@ ex.forEach((vals, k) => {
     } else {
       c.font = F({ italic: true, color: { argb: CINZA } });
       c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: PAPEL } };
-      if (v instanceof Date) c.numFmt = 'dd/mm/yyyy';
+      if (v instanceof Date) c.numFmt = 'mmmm yyyy';
     }
     c.border = { bottom: { style: 'thin', color: { argb: LINHA } } };
   });

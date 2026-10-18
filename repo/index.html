@@ -2490,7 +2490,16 @@ const normNome=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerC
   .replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ').trim();
 const nomeTodo=f=>(String(f.nome||'')+' '+String(f.apelido||'')).trim();
 const dataPT=d=>{ if(!d) return ''; const p=String(d).slice(0,10).split('-'); return p[2]+'/'+p[1]+'/'+p[0]; };
-const periodo=c=>c.inicio?(dataPT(c.inicio)+(c.fim?' a '+dataPT(c.fim):'')):'sem data';
+/* as turmas gerem-se pelo mês: "janeiro 2026", "setembro a outubro 2026" */
+const MESES_PT=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+const mesAno=d=>{ const p=String(d).slice(0,10).split('-'); return MESES_PT[+p[1]-1]+' '+p[0]; };
+const periodo=c=>{
+  if(!c.inicio) return 'sem data';
+  const a=mesAno(c.inicio); if(!c.fim) return a;
+  const b=mesAno(c.fim); if(a===b) return a;
+  const [ma,ya]=a.split(' '), [mb,yb]=b.split(' ');
+  return ya===yb ? ma+' a '+mb+' '+yb : a+' a '+b;
+};
 
 /* A mesma distância de edição que o Pulso usa para as gralhas. */
 function distEdicao(a,b){
@@ -2722,17 +2731,28 @@ function escolherFicheiroFormandos(){
 /* Datas: o Excel guarda-as como número de dias. Lê-se esse número em vez
    de pedir ao leitor um objecto Date, que chega com o fuso horário e
    pode cair no dia anterior. Também se aceita texto dd/mm/aaaa. */
+/* Fica sempre o MÊS (o primeiro dia dele): as turmas gerem-se pelo mês.
+   Aceita uma data do Excel, "12/01/2026", "01/2026", "2026-01" ou
+   "janeiro 2026" - e o dia, se vier, deita-se fora. */
+const MESES_CHAVE=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
 function dataDeCelula(XLSX,v){
   if(v===''||v==null) return '';
+  let y=0,m=0,r;
   if(typeof v==='number'){
     const d=XLSX.SSF.parse_date_code(v); if(!d) return '';
-    return d.y+'-'+String(d.m).padStart(2,'0')+'-'+String(d.d).padStart(2,'0');
+    y=d.y; m=d.m;
+  }else{
+    const s=String(v).trim();
+    if((r=s.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/))){ y=+r[3]; m=+r[2]; }
+    else if((r=s.match(/^(\d{4})-(\d{1,2})(?:-\d{1,2})?/))){ y=+r[1]; m=+r[2]; }
+    else if((r=s.match(/^(\d{1,2})[\/.-](\d{4})$/))){ y=+r[2]; m=+r[1]; }
+    else{
+      const z=normNome(s), i=MESES_CHAVE.findIndex(k=>z.startsWith(k)), a=z.match(/(\d{4})/);
+      if(i>=0&&a){ m=i+1; y=+a[1]; }
+    }
   }
-  const s=String(v).trim();
-  const m=s.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);
-  if(m) return m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0');
-  const iso=s.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  return iso?iso[1]+'-'+iso[2]+'-'+iso[3]:'';
+  if(!y||m<1||m>12) return '';
+  return y+'-'+String(m).padStart(2,'0')+'-01';
 }
 /* As listas do IEFP trazem o nome completo numa só coluna e em
    maiúsculas. Para se poder colar a coluna NOME tal como vem, o nome
