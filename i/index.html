@@ -34,7 +34,11 @@ body{font-family:'Archivo',system-ui,sans-serif;font-size:17px;background:#efe9d
 (function(){
   var SUPA_URL='https://qgfzbyhfyqvmmmdiqycu.supabase.co';
   var SUPA_KEY='sb_publishable_atlEEoeN4-CWY8mD7KQNsw_m1cXjdIE';
-  var token=new URLSearchParams(location.search).get('t')||'';
+  var q=new URLSearchParams(location.search);
+  var token=q.get('t')||'';
+  /* b = qual dos botões do email (uma formação cada); sem b, é um email
+     antigo, de um botão só */
+  var botao=/^\d{1,2}$/.test(q.get('b')||'')?parseInt(q.get('b'),10):null;
   function mostra(t,p){ document.getElementById('t').textContent=t; document.getElementById('p').innerHTML=p; }
   if(token==='teste'){
     mostra('Isto é um teste','Num email a sério, este botão regista que a pessoa clicou e leva-a à página de inscrição.');
@@ -46,7 +50,7 @@ body{font-family:'Archivo',system-ui,sans-serif;font-size:17px;background:#efe9d
   }
   fetch(SUPA_URL+'/rest/v1/rpc/campanha_clique',{method:'POST',
     headers:{apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json'},
-    body:JSON.stringify({p_token:token})})
+    body:JSON.stringify(botao===null?{p_token:token}:{p_token:token,p_botao:botao})})
   .then(function(r){ return r.json(); })
   .then(function(d){
     if(d&&d.link&&/^https?:\/\//i.test(d.link)){ location.replace(d.link); return; }

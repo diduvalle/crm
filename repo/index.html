@@ -357,6 +357,31 @@ td .tag{align-self:auto}
 .camp-sub{font-size:.95rem;font-weight:700;margin:24px 0 10px}
 .camp-passos ol{margin:10px 0 12px 20px;display:flex;flex-direction:column;gap:6px}
 .camp-passos p{margin:0 0 6px}
+/* o construtor de email */
+.camp-regras{font-size:.78rem;color:var(--muted);line-height:1.6;padding:10px 12px;border-radius:var(--rs);background:var(--surface2)}
+.camp-regras code{font-family:var(--mono);font-size:.72rem;color:var(--text)}
+.camp-bloco{display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--border);padding-top:14px}
+.camp-bloco h4{margin:0;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.camp-bloco-cab{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#cFormacoes{display:flex;flex-direction:column;gap:12px}
+.camp-f{display:flex;flex-direction:column;gap:10px;padding:12px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface2)}
+.camp-f-cab{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:.86rem}
+.camp-f-acc{display:flex;gap:2px}
+.camp-f-acc svg{width:15px;height:15px}
+.camp-avisos{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.camp-avisos:empty{display:none}
+.camp-avisos li{display:flex;gap:8px;align-items:flex-start;font-size:.8rem;color:var(--warn);background:var(--warn-bg);padding:8px 10px;border-radius:var(--rs)}
+.camp-avisos svg{width:15px;height:15px;flex:none;margin-top:2px}
+.camp-ver-cab{align-items:center}
+.camp-ver-t{display:flex;flex-direction:column;min-width:0}
+.camp-largura{display:flex;gap:4px;flex:none}
+.camp-largura .btn-xs{border-color:var(--border)}
+.camp-largura .btn-xs.on{background:var(--g50);border-color:var(--g300);color:var(--g-texto)}
+.camp-ver-moldura{background:#efe9dd}
+.camp-ver iframe{height:min(780px,calc(100vh - 90px))}
+.camp-ver iframe.tel{width:375px;max-width:100%;margin:0 auto;border-left:1px solid #d9d0c2;border-right:1px solid #d9d0c2}
+.camp-numeros-f>div{background:var(--surface2)}
+.camp-numeros-f strong{font-size:1.15rem}
 .f-saida{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;padding:10px 12px;border:1px solid var(--border);border-radius:9px;font-size:.86rem}
 .f-saida span{color:var(--muted)}
 @media(max-width:1000px){ .camp-ed{grid-template-columns:1fr} .camp-ver{position:static} }
@@ -3015,12 +3040,14 @@ function modalRepetidos(pares){
    um a um. Por cada link levar o token da pessoa, sabe-se QUEM clicou e
    QUEM saiu, e não só quantos.
    ========================================================= */
-let campanhas=[], campAtual=null;
+let campanhas=[], campAtual=null, campLargura='pc';
 const SITE_CAMP='https://crm.cr0x.org';
-const CORPO_INICIAL='Olá {nome},\n\n';
 /* A zona de testes: "Para quem: Teste" manda a campanha só para aqui. O
    mesmo endereço está em _campanha_email_teste() no 12-campanhas.sql. */
 const EMAIL_TESTE='luiz.vale@gmail.com';
+/* O ícone do LinkedIn vai como PNG num endereço completo: o Outlook e o
+   Gmail não mostram SVG, nem imagens com caminho relativo. */
+const LINKEDIN_ICONE=SITE_CAMP+'/repo/img/linkedin.png';
 
 /* As opções de "Para quem" saem das formações que estão nos Formandos. */
 async function garantirFormandos(){
@@ -3068,19 +3095,163 @@ function descreverFiltro(f){
   return 'Toda a gente';
 }
 
-/* ---------- O email ----------
-   Tabelas e estilos em linha: é o que o Outlook do destinatário (que
-   desenha emails com o motor do Word) e o Gmail respeitam. Letra Arial,
-   porque nenhum cliente de email garante a letra da casa. */
-function corpoEmailHTML(texto,nome){
-  const ligar=s=>s.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" style="color:#005e95">$1</a>');
-  /* "Olá {nome}," passa a "Olá Ana,"; sem nome fica "Olá," em vez de "Olá ," */
-  const t=esc(String(texto||'')).replace(/[ \t]*\{nome\}/g, nome?' '+esc(nome):'').replace(/^ /gm,'');
-  return t.split(/\n\s*\n/).map(p=>p.trim()).filter(Boolean)
-    .map(p=>'<p style="margin:0 0 16px">'+ligar(p).replace(/\n/g,'<br>')+'</p>').join('');
+/* ---------- O conteúdo do email ----------
+   Um email é uma estrutura, não um texto solto: abertura, uma ou mais
+   formações (cada uma com o seu botão e o seu link de inscrição), fecho,
+   LinkedIn e rodapé. Todo o texto é teu, incluindo a frase de sair. */
+function formacaoVazia(){ return {titulo:'',quando:'',onde:'',texto:'',botao:'Quero inscrever-me',link:''}; }
+function conteudoInicial(){
+  return {
+    preheader:'',
+    cabecalho:'Diogo Vale · Formador',
+    abertura:'Olá {nome},\n\n',
+    formacoes:[formacaoVazia()],
+    fecho:'Até breve,\nDiogo Vale',
+    linkedin:'https://www.linkedin.com/in/ldvale/',
+    linkedin_texto:'Diogo Vale no LinkedIn',
+    rodape:'Recebes este email porque fizeste formação comigo. Se não quiseres receber mais, [sai da lista].'
+  };
 }
-function emailHTML(c,p){
+/* As campanhas de antes do construtor (texto + um botão) abrem já nele */
+function conteudoDe(c){
+  if(c.conteudo){
+    const k=Object.assign(conteudoInicial(),JSON.parse(JSON.stringify(c.conteudo)));
+    k.formacoes=(k.formacoes||[]).map(f=>Object.assign(formacaoVazia(),f));
+    return k;
+  }
+  const k=conteudoInicial();
+  k.abertura=c.corpo||k.abertura; k.fecho='';
+  k.formacoes=(c.botao_texto||c.botao_link)?[Object.assign(formacaoVazia(),{botao:c.botao_texto||'',link:c.botao_link||''})]:[];
+  return k;
+}
+const primeiroNome=n=>String(n||'').trim().split(/\s+/)[0]||'';
+
+/* As regras de escrita, iguais em todos os campos:
+     {nome}            o primeiro nome da pessoa
+     **assim**         negrito
+     [texto](https://) um link
+     [texto]           o link para sair da lista
+     linha em branco   novo parágrafo
+   Os links soltos (https://...) ficam clicáveis sozinhos. */
+function textoEmail(s,paragrafos){
+  const guarda=[], marca=h=>{ guarda.push(h); return '\x01'+(guarda.length-1)+'\x01'; };
+  const A='style="color:#005e95;text-decoration:underline"';
+  let t=esc(String(s||'')).replace(/[ \t]*\{nome\}/g,'%%NOME%%');
+  t=t.replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g,(m,a,u)=>marca('<a href="'+u+'" '+A+'>'+a+'</a>'));
+  t=t.replace(/\[([^\]\n]+)\]/g,(m,a)=>marca('<a href="%%SAIR%%" style="color:inherit;text-decoration:underline">'+a+'</a>'));
+  t=t.replace(/https?:\/\/[^\s<\x01]+/g,u=>{ const fim=(u.match(/[.,;:!?)]+$/)||[''])[0]; u=u.slice(0,u.length-fim.length);
+    return marca('<a href="'+u+'" '+A+'>'+u+'</a>')+fim; });
+  t=t.replace(/\*\*([^*\n]+)\*\*/g,'<strong>$1</strong>');
+  const volta=x=>x.replace(/\x01(\d+)\x01/g,(m,i)=>guarda[+i]);
+  if(!paragrafos) return volta(t.trim().replace(/\n/g,'<br>'));
+  const ps=t.split(/\n\s*\n/).map(p=>p.trim()).filter(Boolean);
+  return volta(ps.map((p,i)=>'<p style="margin:0'+(i<ps.length-1?' 0 14px':'')+'">'+p.replace(/\n/g,'<br>')+'</p>').join(''));
+}
+/* Texto simples (o preheader): sem HTML, só o {nome} */
+const textoSimples=s=>esc(String(s||'').replace(/\s+/g,' ').trim()).replace(/[ \t]*\{nome\}/g,'%%NOME%%');
+
+/* O MJML escreve o HTML de email a sério: tabelas, os comentários que o
+   Outlook do Windows precisa, e uma versão que encolhe no telemóvel. As
+   marcas %%NOME%%, %%LINK_0%%, %%SAIR%%... trocam-se depois, por pessoa:
+   compila-se uma vez e não 250. */
+function mjmlDe(k,assunto){
+  const tem=s=>String(s||'').trim()!=='';
+  const formacoes=(k.formacoes||[]).map((f,i)=>{
+    const meta=[f.quando,f.onde].filter(tem).map(x=>textoEmail(x,false)).join(' &middot; ');
+    return `
+    <mj-section padding="8px 32px">
+      <mj-column background-color="#f6f2ea" border-radius="10px" padding="18px 20px">
+        ${tem(f.titulo)?`<mj-text font-size="19px" font-weight="bold" line-height="1.3" padding="0 0 4px">${textoEmail(f.titulo,false)}</mj-text>`:''}
+        ${meta?`<mj-text font-size="14px" color="#6f655c" padding="0 0 8px">${meta}</mj-text>`:''}
+        ${tem(f.texto)?`<mj-text font-size="15px" padding="0 0 4px">${textoEmail(f.texto,true)}</mj-text>`:''}
+        ${tem(f.botao)?`<mj-button href="%%LINK_${i}%%" padding="12px 0 0">${esc(f.botao.trim())}</mj-button>`:''}
+      </mj-column>
+    </mj-section>`;
+  }).join('');
+  const linkedin=tem(k.linkedin)?`
+        <mj-social mode="horizontal" align="left" padding="16px 0 0" icon-size="24px">
+          <mj-social-element src="${esc(LINKEDIN_ICONE)}" href="${esc(k.linkedin.trim())}" alt="LinkedIn" background-color="transparent"
+            color="#005e95" font-size="14px" padding="0" icon-padding="0" text-padding="0 0 0 8px">${esc(k.linkedin_texto||'')}</mj-social-element>
+        </mj-social>`:'';
+  return `<mjml lang="pt">
+  <mj-head>
+    <mj-title>${esc(assunto||'')}</mj-title>
+    ${tem(k.preheader)?`<mj-preview>${textoSimples(k.preheader)}</mj-preview>`:''}
+    <mj-attributes>
+      <mj-all font-family="Arial, Helvetica, sans-serif"></mj-all>
+      <mj-text font-size="16px" line-height="1.6" color="#171412" padding="0"></mj-text>
+      <mj-button background-color="#0078bf" color="#ffffff" font-size="16px" font-weight="bold" border-radius="8px" inner-padding="13px 26px" align="left"></mj-button>
+    </mj-attributes>
+  </mj-head>
+  <mj-body width="600px" background-color="#efe9dd">
+    <mj-section padding="0"><mj-column><mj-spacer height="24px"></mj-spacer></mj-column></mj-section>
+    <mj-wrapper background-color="#ffffff" border-radius="12px" padding="28px 0 26px">
+      <mj-section padding="0 32px 6px">
+        <mj-column>
+          ${tem(k.cabecalho)?`<mj-text font-size="12px" letter-spacing="2px" text-transform="uppercase" color="#005e95" font-weight="bold" padding="0 0 18px">${textoEmail(k.cabecalho,false)}</mj-text>`:''}
+          ${tem(k.abertura)?`<mj-text padding="0 0 8px">${textoEmail(k.abertura,true)}</mj-text>`:''}
+        </mj-column>
+      </mj-section>${formacoes}
+      <mj-section padding="16px 32px 0">
+        <mj-column>
+          ${tem(k.fecho)?`<mj-text>${textoEmail(k.fecho,true)}</mj-text>`:''}${linkedin}
+          ${tem(k.rodape)?`<mj-divider border-color="#e6dfd3" border-width="1px" padding="24px 0 16px"></mj-divider>
+          <mj-text font-size="12px" line-height="1.5" color="#8a7f75">${textoEmail(k.rodape,true)}</mj-text>`:''}
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+    <mj-section padding="0"><mj-column><mj-spacer height="24px"></mj-spacer></mj-column></mj-section>
+  </mj-body>
+</mjml>`;
+}
+/* O MJML (1,3 MB) só se descarrega quando se abre uma campanha */
+let mjmlPromessa=null;
+function carregarMjml(){
+  if(typeof window.mjml==='function') return Promise.resolve(window.mjml);
+  if(!mjmlPromessa) mjmlPromessa=new Promise((ok,falha)=>{
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/mjml-browser@4.18.0/lib/index.js';
+    s.onload=()=>typeof window.mjml==='function'?ok(window.mjml):falha(new Error('Não consegui preparar o desenhador de email.'));
+    s.onerror=()=>{ mjmlPromessa=null; falha(new Error('Não consegui carregar o desenhador de email. Verifica a ligação e tenta outra vez.')); };
+    document.head.appendChild(s);
+  });
+  return mjmlPromessa;
+}
+async function compilarEmail(k,assunto){
+  const f=await carregarMjml();
+  return f(mjmlDe(k,assunto),{validationLevel:'soft'}).html;
+}
+/* Uma versão por pessoa. Sem nome, "Olá {nome}," fica "Olá," e não
+   "Olá ,". Sem token (pré-visualização) os links não vão a lado nenhum. */
+function emailPorPessoa(html,nome,token){
+  const n=primeiroNome(nome);
+  const link=i=>token?SITE_CAMP+'/i/?t='+token+'&amp;b='+i:'#';
+  return html.replace(/%%NOME%%/g,n?' '+esc(n):'')
+    .replace(/%%LINK_(\d+)%%/g,(m,i)=>link(i))
+    .replace(/%%SAIR%%/g,token?SITE_CAMP+'/s/?t='+token:'#');
+}
+/* O que impede o envio. Vazio = pode seguir. */
+function problemasEmail(assunto,k){
+  const p=[];
+  if(!String(assunto||'').trim()) p.push('Falta o assunto.');
+  const textos=[k.cabecalho,k.abertura,k.fecho,k.rodape].concat((k.formacoes||[]).flatMap(f=>[f.titulo,f.quando,f.onde,f.texto]));
+  if(!textos.some(s=>/\[[^\]\n]+\](?!\()/.test(String(s||''))))
+    p.push('Falta o link para sair da lista: escreve no rodapé o texto entre [ ], por exemplo [sai da lista].');
+  (k.formacoes||[]).forEach((f,i)=>{
+    const nome='A formação '+(i+1)+(f.titulo.trim()?' ('+f.titulo.trim()+')':'');
+    if(f.botao.trim()&&!/^https?:\/\/\S+$/i.test(f.link.trim())) p.push(nome+' tem botão mas não tem link de inscrição (começa por https://).');
+  });
+  if(String(k.linkedin||'').trim()&&!/^https?:\/\/\S+$/i.test(k.linkedin.trim())) p.push('O link do LinkedIn tem de começar por https://');
+  return p;
+}
+
+/* As campanhas antigas (um texto e um botão) ainda se mostram como
+   foram enviadas, quando já não se podem mudar. */
+function emailHTMLAntigo(c,p){
   const F='font-family:Arial,Helvetica,sans-serif;';
+  const corpo=esc(String(c.corpo||'')).replace(/[ \t]*\{nome\}/g,p.nome?' '+esc(p.nome):'').replace(/^ /gm,'')
+    .split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean)
+    .map(x=>'<p style="margin:0 0 16px">'+x.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" style="color:#005e95">$1</a>').replace(/\n/g,'<br>')+'</p>').join('');
   const botao=(c.botao_texto&&c.botao_link)
     ? `<tr><td style="padding:6px 32px 10px"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
 <td bgcolor="#0078bf" style="border-radius:8px;background:#0078bf;padding:13px 26px"><a href="${esc(p.inscrever)}" style="${F}display:inline-block;font-size:16px;font-weight:bold;color:#ffffff;text-decoration:none">${esc(c.botao_texto)}</a></td>
@@ -3090,7 +3261,7 @@ function emailHTML(c,p){
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#efe9dd"><tr><td align="center" style="padding:28px 12px">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:12px">
 <tr><td style="${F}padding:28px 32px 4px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#005e95;font-weight:bold">Diogo Vale · Formador</td></tr>
-<tr><td style="${F}padding:14px 32px 2px;font-size:16px;line-height:1.6;color:#171412">${corpoEmailHTML(c.corpo,p.nome)}</td></tr>
+<tr><td style="${F}padding:14px 32px 2px;font-size:16px;line-height:1.6;color:#171412">${corpo}</td></tr>
 ${botao}
 <tr><td style="${F}padding:22px 32px 28px;font-size:12px;line-height:1.5;color:#8a7f75">Recebes este email porque fizeste formação comigo. Se não quiseres receber mais, <a href="${esc(p.sair)}" style="color:#8a7f75">sai da lista</a>.</td></tr>
 </table></td></tr></table></body></html>`;
@@ -3142,9 +3313,11 @@ async function abrirCampanha(id){
     try{ campAtual=await rpc('campanha_ler',{p_token:sessao.token,p_id:id}); }
     catch(e){ if(faltaSql(e,'12-campanhas.sql')) return; return tratar(e); }
   }else{
-    campAtual={id:null,assunto:'',corpo:CORPO_INICIAL,botao_texto:'Quero inscrever-me',botao_link:'',
-      filtro:{tipo:'todos'},estado:'rascunho',envios:[]};
+    campAtual={id:null,assunto:'',conteudo:conteudoInicial(),filtro:{tipo:'todos'},estado:'rascunho',envios:[]};
   }
+  mostrarEditorCampanha();
+}
+function mostrarEditorCampanha(){
   lembrar(campAtual.id?'campanha/'+encodeURIComponent(campAtual.id):'campanhas');
   mostrarVista('vCampanha');
   accaoPrimaria=null;
@@ -3154,21 +3327,33 @@ async function abrirCampanha(id){
   marcarNavEscola();
   pintarCampanha();
 }
+const tituloFormacao=(k,i)=>{ const f=k&&k.formacoes&&k.formacoes[i]; return (f&&f.titulo.trim())||'Formação '+(i+1); };
 /* Os números e a lista de destinatários desenham-se à parte do resto: o
    botão "Actualizar" refresca só isto, sem mexer no que se está a
    escrever no formulário. Quem saiu da lista fica com o email riscado. */
 function pintarDestinatarios(quando){
   const envios=(campAtual&&campAtual.envios)||[];
+  const k=campAtual&&campAtual.conteudo;
+  const nf=k&&k.formacoes?k.formacoes.length:0;
   const n=envios.length, env=envios.filter(e=>e.estado==='enviado').length,
         err=envios.filter(e=>e.estado==='erro').length, cli=envios.filter(e=>e.cliques>0).length,
         sai=envios.filter(e=>e.saiu_em).length;
+  /* quem clicou em cada formação (pessoas, não cliques) */
+  const porF=[...Array(nf)].map((_,i)=>envios.filter(e=>e.cliques_botoes&&+e.cliques_botoes[i]>0).length);
   const num=$('#cNumeros'), dest=$('#cDest'); if(!num||!dest) return;
   num.innerHTML=n?`<div class="camp-numeros">
       <div><strong>${env}/${n}</strong><span>enviados</span></div>
-      <div><strong>${cli}</strong><span>clicaram em Inscrever</span></div>
+      <div><strong>${cli}</strong><span>clicaram para se inscrever</span></div>
       <div><strong>${sai}</strong><span>saíram da lista</span></div>
       ${err?`<div class="mau"><strong>${err}</strong><span>com erro</span></div>`:''}
-    </div>`:'';
+    </div>${nf>1?`<div class="camp-numeros camp-numeros-f">${porF.map((x,i)=>`<div><strong>${x}</strong><span>${esc(tituloFormacao(k,i))}</span></div>`).join('')}</div>`:''}`:'';
+  const clicou=e=>{
+    if(!e.cliques) return '<span class="muted">-</span>';
+    const cb=e.cliques_botoes||{};
+    if(nf<2||!Object.keys(cb).length) return `<span class="pill blue">${e.cliques}×</span>`;
+    return Object.keys(cb).sort((a,b)=>a-b).filter(i=>+cb[i]>0)
+      .map(i=>`<span class="pill blue" title="${esc(tituloFormacao(k,+i))}">${esc(tituloFormacao(k,+i).slice(0,22))} · ${cb[i]}×</span>`).join(' ');
+  };
   dest.innerHTML=n?`<div class="camp-sub-cab"><h3 class="camp-sub">Destinatários</h3>
       <div class="toolbar">${quando?`<span class="muted">actualizado às ${quando}</span>`:''}
         <button class="btn-sec" id="cActualizar">${ic('refrescar')}Actualizar</button></div></div>
@@ -3178,39 +3363,67 @@ function pintarDestinatarios(quando){
       <td>${e.saiu_em?`<span class="saiu-email" title="Saiu da lista">${esc(e.email)}</span>`:esc(e.email)}</td>
       <td>${e.estado==='enviado'?`<span class="pill green">Enviado</span> <span class="cell-sub">${dt(e.enviado_em)}</span>`
         :e.estado==='erro'?`<span class="pill red" title="${esc(e.erro)}">Erro</span>`:'<span class="pill grey">Por enviar</span>'}</td>
-      <td>${e.cliques?`<span class="pill blue">${e.cliques}×</span>`:'<span class="muted">-</span>'}</td>
+      <td>${clicou(e)}</td>
       <td>${e.saiu_em?'<span class="pill amber">Saiu</span>':'<span class="muted">-</span>'}</td>
     </tr>`).join('')}</tbody></table></div>`:'';
   const b=$('#cActualizar'); if(b) b.addEventListener('click',async()=>{
     b.disabled=true;
+    const antes=campanhaTravada();
     try{ const r=await rpc('campanha_ler',{p_token:sessao.token,p_id:campAtual.id});
       campAtual.envios=r.envios; campAtual.estado=r.estado; campAtual.enviada_em=r.enviada_em; }
     catch(e){ b.disabled=false; return tratar(e); }
+    /* entretanto saíram emails: o formulário já não se pode gravar, por
+       isso redesenha-se travado (não se perde nada que se pudesse guardar) */
+    if(!antes&&campanhaTravada()) pintarCampanha();
     pintarDestinatarios(new Date().toLocaleTimeString('pt-PT'));
   });
 }
 function campanhaTravada(){ return (campAtual.envios||[]).some(e=>e.estado!=='por_enviar'); }
+
+/* Um campo do formulário. `k` é o nome no conteúdo; `i`, a formação. */
+function campoCamp(rot,k,v,o={}){
+  const at=`data-ck="${k}"${o.i!=null?` data-ci="${o.i}"`:''}${o.dis||''}${o.ph?` placeholder="${esc(o.ph)}"`:''}`;
+  return `<div class="field"><label>${rot}</label>${o.linhas
+    ?`<textarea rows="${o.linhas}" ${at}>${esc(v)}</textarea>`:`<input ${at} value="${esc(v)}">`}${o.dica?`<span class="hint">${o.dica}</span>`:''}</div>`;
+}
 function pintarCampanha(){
-  const c=campAtual, trava=campanhaTravada(), op=opcoesFiltro(), k=chaveFiltro(c.filtro);
-  const sel=v=>v===k?' selected':'';
+  const c=campAtual, trava=campanhaTravada(), op=opcoesFiltro(), kf=chaveFiltro(c.filtro);
+  const antiga=trava&&!c.conteudo;          /* enviada antes do construtor */
+  const k=conteudoDe(c); c.rasc=k;
+  const sel=v=>v===kf?' selected':'';
   const dis=trava?' disabled':'';
   const envios=c.envios||[];
-  const n=envios.length, env=envios.filter(e=>e.estado==='enviado').length,
-        err=envios.filter(e=>e.estado==='erro').length, cli=envios.filter(e=>e.cliques>0).length,
-        sai=envios.filter(e=>e.saiu_em).length;
+  const n=envios.length, env=envios.filter(e=>e.estado==='enviado').length;
   $('#vCampanha').innerHTML=`
     <button class="voltar" id="voltarCamp">${ic('seta')}Campanhas</button>
     <div id="cNumeros"></div>
     <div class="camp-ed">
       <div class="card card-pad camp-form">
-        <div class="field"><label>Assunto</label><input id="cAssunto" value="${esc(c.assunto)}"${dis} placeholder="Nova turma de Front Office em janeiro"></div>
-        <div class="field"><label>Texto</label>
-          <textarea id="cCorpo" rows="12"${dis}>${esc(c.corpo)}</textarea>
-          <span class="hint">{nome} é o primeiro nome de cada pessoa. Uma linha em branco separa os parágrafos. Os links escritos ficam clicáveis.</span></div>
-        <div class="form-grid">
-          <div class="field"><label>Texto do botão</label><input id="cBotaoT" value="${esc(c.botao_texto)}"${dis}></div>
-          <div class="field"><label>Link da inscrição</label><input id="cBotaoL" value="${esc(c.botao_link)}"${dis} placeholder="https://..."></div>
+        ${antiga?'<div class="hint camp-trava">Campanha enviada antes do construtor de email: fica como foi.</div>':`
+        <div class="camp-regras">Em qualquer texto: <code>{nome}</code> é o primeiro nome da pessoa · <code>**assim**</code> fica a negrito ·
+          <code>[texto](https://...)</code> é um link · <code>[texto]</code> é o link para sair da lista · uma linha em branco separa parágrafos.</div>
+        <div class="field"><label>Assunto</label><input id="cAssunto" value="${esc(c.assunto)}"${dis} placeholder="Novas turmas em janeiro"></div>
+        ${campoCamp('Texto de pré-visualização','preheader',k.preheader,{dis,ph:'Duas formações a começar, e uma delas é à noite.',
+          dica:'A frase cinzenta que aparece a seguir ao assunto, na caixa de entrada. Não aparece no email.'})}
+        <div class="camp-bloco"><h4>Abertura</h4>
+          ${campoCamp('Cabeçalho','cabecalho',k.cabecalho,{dis,dica:'A linha pequena, em maiúsculas, no topo.'})}
+          ${campoCamp('Texto','abertura',k.abertura,{dis,linhas:6})}
         </div>
+        <div class="camp-bloco"><div class="camp-bloco-cab"><h4>Formações</h4>
+          ${trava?'':`<button class="btn-sec btn-sm" id="cMaisF">${ic('mais')}Acrescentar formação</button>`}</div>
+          <div id="cFormacoes"></div>
+        </div>
+        <div class="camp-bloco"><h4>Fecho</h4>
+          ${campoCamp('Texto','fecho',k.fecho,{dis,linhas:3})}
+          <div class="form-grid">
+            ${campoCamp('Link do LinkedIn','linkedin',k.linkedin,{dis,ph:'https://www.linkedin.com/in/...',dica:'Em branco, o ícone não aparece.'})}
+            ${campoCamp('Texto ao lado do ícone','linkedin_texto',k.linkedin_texto,{dis})}
+          </div>
+        </div>
+        <div class="camp-bloco"><h4>Rodapé</h4>
+          ${campoCamp('Texto','rodape',k.rodape,{dis,linhas:3,dica:'O que estiver entre [ ] é o link para sair da lista. Tem de existir.'})}
+        </div>`}
+        <div class="camp-bloco"><h4>Envio</h4>
         <div class="field"><label>Para quem</label>
           <select id="cPara"${dis}>
             <optgroup label="Zona de testes"><option value="teste"${sel('teste')}>Teste - só para ${EMAIL_TESTE}</option></optgroup>
@@ -3220,8 +3433,13 @@ function pintarCampanha(){
             ${op.escolas.length?`<optgroup label="Quem fez formação na escola">${op.escolas.map(x=>`<option value="entidade:${esc(x)}"${sel('entidade:'+x)}>${esc(x)}</option>`).join('')}</optgroup>`:''}
           </select>
           <span class="hint" id="cQuantos">${n?`Preparada para ${n} pessoas.`:'A contar…'}</span></div>
+        </div>
+        <ul class="camp-avisos" id="cAvisos"></ul>
         <div class="camp-accoes">
-          ${c.id?`<button class="btn-danger" id="cApagar">${ic('lixo')}Apagar</button>`:'<span></span>'}
+          <div class="camp-accoes-d">
+            ${c.id?`<button class="btn-danger" id="cApagar">${ic('lixo')}Apagar</button>`:''}
+            ${c.id&&!antiga?`<button class="btn-ghost" id="cDuplicar">${ic('copiar')}Duplicar</button>`:''}
+          </div>
           <div class="camp-accoes-d">
             ${trava?'':`<button class="btn-sec" id="cGravar">Gravar</button>`}
             ${trava&&env===n?'':`<button class="btn" id="cPreparar">${ic('baixo')}${n&&!trava?'Preparar outra vez':(trava?'Descarregar o que falta enviar':'Preparar envio')}</button>`}
@@ -3230,22 +3448,76 @@ function pintarCampanha(){
         ${trava?'<div class="hint camp-trava">Já saíram emails desta campanha: o texto e os destinatários ficam como foram enviados.</div>':''}
       </div>
       <div class="camp-ver">
-        <div class="camp-ver-cab"><strong id="cVerAssunto">${esc(c.assunto||'(sem assunto)')}</strong><span id="cVerQuem">como chega à Ana</span></div>
-        <iframe id="cVer" title="Pré-visualização do email" sandbox></iframe>
+        <div class="camp-ver-cab"><div class="camp-ver-t"><strong id="cVerAssunto">${esc(c.assunto||'(sem assunto)')}</strong><span id="cVerQuem">como chega à Ana</span></div>
+          <div class="camp-largura" role="group" aria-label="Largura">
+            <button class="btn-ghost btn-xs${campLargura==='pc'?' on':''}" data-larg="pc">Computador</button>
+            <button class="btn-ghost btn-xs${campLargura==='tel'?' on':''}" data-larg="tel">Telemóvel</button></div></div>
+        <div class="camp-ver-moldura"><iframe id="cVer" class="${campLargura==='tel'?'tel':''}" title="Pré-visualização do email" sandbox></iframe></div>
       </div>
     </div>
     <div id="cDest"></div>`;
   pintarDestinatarios();
 
-  const ler=()=>({assunto:$('#cAssunto').value, corpo:$('#cCorpo').value, botao_texto:$('#cBotaoT').value,
-    botao_link:$('#cBotaoL').value, filtro:filtroDeChave($('#cPara').value)});
-  const ver=()=>{
-    const d=Object.assign({},c,trava?{}:ler());
-    const quem=(d.filtro&&d.filtro.tipo==='teste')?'Diogo':'Ana';
-    $('#cVer').srcdoc=emailHTML(d,{nome:quem,inscrever:'#',sair:'#'});
-    $('#cVerQuem').textContent='como chega '+(quem==='Diogo'?'ao Diogo':'à Ana');
-    $('#cVerAssunto').textContent=d.assunto||'(sem assunto)';
+  /* As formações: cada uma com o seu botão e o seu link de inscrição */
+  const pintarFormacoes=()=>{
+    const box=$('#cFormacoes'); if(!box) return;
+    const nf=k.formacoes.length;
+    box.innerHTML=!nf?'<div class="hint">Sem formações, o email fica só com o texto.</div>'
+      :k.formacoes.map((f,i)=>`<div class="camp-f">
+        <div class="camp-f-cab"><strong>Formação ${i+1}</strong>${trava?'':`<div class="camp-f-acc">
+          <button class="btn-ghost btn-xs" data-fmover="${i}" data-dir="-1" title="Subir"${i===0?' disabled':''}>${ic('cima')}</button>
+          <button class="btn-ghost btn-xs" data-fmover="${i}" data-dir="1" title="Descer"${i===nf-1?' disabled':''}>${ic('baixo')}</button>
+          <button class="btn-ghost btn-xs" data-ftirar="${i}" title="Tirar esta formação">${ic('lixo')}</button></div>`}</div>
+        ${campoCamp('Título','titulo',f.titulo,{i,dis,ph:'Front Office - Nível 2'})}
+        <div class="form-grid">
+          ${campoCamp('Quando','quando',f.quando,{i,dis,ph:'janeiro 2026 · terças e quintas, 19h-22h'})}
+          ${campoCamp('Onde','onde',f.onde,{i,dis,ph:'Escola do Turismo de Portugal, Lisboa'})}
+        </div>
+        ${campoCamp('Texto','texto',f.texto,{i,dis,linhas:3})}
+        <div class="form-grid">
+          ${campoCamp('Texto do botão','botao',f.botao,{i,dis,dica:'Em branco, não há botão.'})}
+          ${campoCamp('Link da inscrição','link',f.link,{i,dis,ph:'https://...'})}
+        </div>
+      </div>`).join('');
+    box.querySelectorAll('[data-fmover]').forEach(b=>b.addEventListener('click',()=>{
+      const i=+b.dataset.fmover, j=i+(+b.dataset.dir); const [x]=k.formacoes.splice(i,1); k.formacoes.splice(j,0,x);
+      pintarFormacoes(); ver(); }));
+    box.querySelectorAll('[data-ftirar]').forEach(b=>b.addEventListener('click',()=>{
+      k.formacoes.splice(+b.dataset.ftirar,1); pintarFormacoes(); ver(); }));
   };
+  if(!antiga) pintarFormacoes();
+  if($('#cMaisF')) $('#cMaisF').addEventListener('click',()=>{
+    k.formacoes.push(formacaoVazia()); pintarFormacoes(); ver();
+    const ult=[...document.querySelectorAll('#cFormacoes [data-ck="titulo"]')].pop(); if(ult) ult.focus(); });
+  /* um só ouvinte para todos os campos, os de agora e os que vierem */
+  $('#vCampanha .camp-form').addEventListener('input',ev=>{
+    const el=ev.target; if(!el.dataset||!el.dataset.ck) return;
+    if(el.dataset.ci!=null) k.formacoes[+el.dataset.ci][el.dataset.ck]=el.value; else k[el.dataset.ck]=el.value;
+    ver();
+  });
+
+  const ler=()=>({assunto:$('#cAssunto').value, corpo:'', botao_texto:'', botao_link:'',
+    conteudo:JSON.parse(JSON.stringify(k)), filtro:filtroDeChave($('#cPara').value)});
+  let tVer=null, nVer=0;
+  const ver=()=>{ clearTimeout(tVer); tVer=setTimeout(verJa,120); };
+  const verJa=async()=>{
+    const assunto=antiga||trava?c.assunto:$('#cAssunto').value;
+    const teste=filtroDeChave($('#cPara').value).tipo==='teste';
+    const quem=teste?'Diogo':'Ana';
+    $('#cVerQuem').textContent='como chega '+(teste?'ao Diogo':'à Ana');
+    $('#cVerAssunto').textContent=assunto||'(sem assunto)';
+    const av=antiga?[]:problemasEmail(assunto,k);
+    $('#cAvisos').innerHTML=trava?'':av.map(x=>`<li>${ic('alerta')}${esc(x)}</li>`).join('');
+    if(antiga){ $('#cVer').srcdoc=emailHTMLAntigo(c,{nome:quem,inscrever:'#',sair:'#'}); return; }
+    const eu=++nVer;
+    try{ const h=await compilarEmail(k,assunto); if(eu===nVer) $('#cVer').srcdoc=emailPorPessoa(h,quem,null); }
+    catch(e){ if(eu===nVer) $('#cVer').srcdoc='<p style="font-family:Arial;padding:24px;color:#8a7f75">'+esc(e.message)+'</p>'; }
+  };
+  document.querySelectorAll('[data-larg]').forEach(b=>b.addEventListener('click',()=>{
+    campLargura=b.dataset.larg;
+    document.querySelectorAll('[data-larg]').forEach(x=>x.classList.toggle('on',x===b));
+    $('#cVer').classList.toggle('tel',campLargura==='tel');
+  }));
   let tContar=null;
   const contar=()=>{ if(trava||n&&chaveFiltro(c.filtro)===$('#cPara').value) return;
     clearTimeout(tContar); tContar=setTimeout(async()=>{
@@ -3254,18 +3526,18 @@ function pintarCampanha(){
         $('#cQuantos').textContent='Vai para '+r.n+(r.n===1?' pessoa':' pessoas')
           +(r.sairam?' ('+r.sairam+(r.sairam===1?' saiu':' saíram')+' da lista e fica'+(r.sairam===1?'':'m')+' de fora).':'.');
       }catch(e){ if(!faltaSql(e,'12-campanhas.sql')) tratar(e); } },250); };
-  ['#cAssunto','#cCorpo','#cBotaoT','#cBotaoL'].forEach(s=>$(s).addEventListener('input',ver));
+  if($('#cAssunto')) $('#cAssunto').addEventListener('input',ver);
   $('#cPara').addEventListener('change',()=>{ ver(); contar(); });
-  ver(); contar();
+  verJa(); contar();
 
   $('#voltarCamp').addEventListener('click',mostrarCampanhas);
-  const gravar=async()=>{
-    try{ const r=await rpc('campanha_gravar',{p_token:sessao.token,p_id:c.id,p_dados:ler()}); return r.id; }
-    catch(e){ if(e.message==='JA_ENVIADA'){ toast('Já saíram emails desta campanha: não se pode mudar.','err'); return null; }
-      if(faltaSql(e,'12-campanhas.sql')) return null; tratar(e); return null; }
-  };
   if($('#cGravar')) $('#cGravar').addEventListener('click',async()=>{
-    const id=await gravar(); if(!id) return; toast('Gravada.'); abrirCampanha(id); });
+    const id=await gravarCampanha(c.id,ler()); if(!id) return; toast('Gravada.'); abrirCampanha(id); });
+  if($('#cDuplicar')) $('#cDuplicar').addEventListener('click',()=>{
+    campAtual={id:null,assunto:trava?c.assunto:$('#cAssunto').value,conteudo:JSON.parse(JSON.stringify(k)),
+      filtro:trava?c.filtro:filtroDeChave($('#cPara').value),estado:'rascunho',envios:[]};
+    mostrarEditorCampanha(); toast('Cópia por gravar: muda o que precisares.');
+  });
   if($('#cApagar')) $('#cApagar').addEventListener('click',async()=>{
     const ok=await uiConfirm({titulo:'Apagar esta campanha?',ok:'Apagar',perigo:true,
       texto:n?'Apaga também o registo de quem a recebeu, clicou e saiu. As pessoas que saíram da lista continuam fora dela.':'Não se desfaz.'});
@@ -3275,34 +3547,50 @@ function pintarCampanha(){
   if($('#cPreparar')) $('#cPreparar').addEventListener('click',()=>prepararCampanha(trava?null:ler(),trava));
 }
 
+/* Grava e confirma que o Supabase guardou o conteúdo: sem o
+   13-campanhas-conteudo.sql, o email gravava-se vazio sem ninguém dar
+   por isso. */
+async function gravarCampanha(id,dados){
+  let r;
+  try{ r=await rpc('campanha_gravar',{p_token:sessao.token,p_id:id,p_dados:dados}); }
+  catch(e){ if(e.message==='JA_ENVIADA'){ toast('Já saíram emails desta campanha: não se pode mudar.','err'); return null; }
+    if(faltaSql(e,'12-campanhas.sql')) return null; tratar(e); return null; }
+  try{ const l=await rpc('campanha_ler',{p_token:sessao.token,p_id:r.id});
+    if(!('conteudo' in l)||!l.conteudo){ toast('Falta correr o 13-campanhas-conteudo.sql no Supabase (SQL Editor): sem ele o email não fica gravado.','err'); return null; } }
+  catch(e){ tratar(e); return null; }
+  return r.id;
+}
+
 /* Preparar: grava, fixa os destinatários e descarrega o ficheiro que o
    programa do PC envia. Numa campanha já com emails enviados, descarrega
    só os que faltam - é assim que se retoma um envio interrompido. */
 async function prepararCampanha(dados,retomar){
   const c=campAtual;
   if(!retomar){
-    if(!dados.assunto.trim()||!dados.corpo.trim()) return toast('Falta o assunto ou o texto.','err');
-    if(dados.botao_texto.trim()&&!/^https?:\/\//i.test(dados.botao_link.trim()))
-      return toast('O link da inscrição tem de começar por https://','err');
+    const av=problemasEmail(dados.assunto,dados.conteudo);
+    if(av.length) return toast(av[0],'err');
     const ok=await uiConfirm({titulo:'Preparar o envio?',ok:'Preparar',
       texto:$('#cQuantos').textContent+'<br><br>Os destinatários ficam fixos. O Repo descarrega um ficheiro com um email para cada pessoa, que envias pelo Outlook.'});
     if(!ok) return;
   }
   let id=c.id;
-  if(!retomar){
-    try{ const r=await rpc('campanha_gravar',{p_token:sessao.token,p_id:c.id,p_dados:dados}); id=r.id; }
-    catch(e){ return tratar(e); }
-  }
+  if(!retomar){ id=await gravarCampanha(c.id,dados); if(!id) return; }
   let p;
   try{ p=await rpc('campanha_preparar',{p_token:sessao.token,p_id:id}); }
   catch(e){ if(e.message==='SEM_DESTINATARIOS') return toast('Ninguém recebe com este "Para quem".','err'); return tratar(e); }
   const base=retomar?c:Object.assign({},c,dados);
+  /* compila-se uma vez; cada pessoa só troca o nome e os links */
+  let molde=null;
+  if(base.conteudo){
+    try{ molde=await compilarEmail(base.conteudo,base.assunto); }catch(e){ return toast(e.message,'err'); }
+  }
+  const html=(nome,token)=>molde?emailPorPessoa(molde,nome,token)
+    :emailHTMLAntigo(base,{nome:primeiroNome(nome),inscrever:SITE_CAMP+'/i/?t='+token,sair:SITE_CAMP+'/s/?t='+token});
   const lote={
-    versao:1, campanha_id:id, assunto:base.assunto, supa_url:SUPA_URL, supa_key:SUPA_KEY,
+    versao:2, campanha_id:id, assunto:base.assunto, supa_url:SUPA_URL, supa_key:SUPA_KEY,
     email_teste:EMAIL_TESTE,   /* o rascunho e o teste do programa vão para aqui */
-    html_teste:emailHTML(base,{nome:'Diogo',inscrever:SITE_CAMP+'/i/?t=teste',sair:SITE_CAMP+'/s/?t=teste'}),
-    mensagens:p.envios.map(e=>({email:e.email,nome:e.nome,token:e.token,
-      html:emailHTML(base,{nome:e.nome,inscrever:SITE_CAMP+'/i/?t='+e.token,sair:SITE_CAMP+'/s/?t='+e.token})}))
+    html_teste:html('Diogo','teste'),
+    mensagens:p.envios.map(e=>({email:e.email,nome:e.nome,token:e.token,html:html(e.nome,e.token)}))
   };
   const nome='campanha-'+slugDe(base.assunto||'email').slice(0,40)+'-'+new Date().toISOString().slice(0,10)+'.json';
   const u=URL.createObjectURL(new Blob([JSON.stringify(lote)],{type:'application/json'}));
