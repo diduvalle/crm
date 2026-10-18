@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sair da lista</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="../estilo/tokens.css">
+<link rel="stylesheet" href="../estilo/componentes.css">
+<style>
+/* SAIR DA LISTA
+   Chega-se aqui pelo link no fundo de um email de campanha. O link é
+   pessoal (o token diz quem é), por isso não se pede email nem conta.
+   Abrir a página NÃO tira ninguém da lista: os filtros de segurança do
+   correio abrem os links sozinhos, e uma pessoa sairia sem querer. Só
+   o botão tira. Mesmo papel e tinta da página dos testes. */
+:root{
+  --bg:#efe9dd; --surface:#f7f4ed; --surface2:#ebe4d8; --border:#d6cdbd;
+  --text:#171412; --muted:#6f655c; --g800:#005e95; --g600:#0078bf;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Archivo',system-ui,sans-serif;font-size:17px;background:var(--bg);color:var(--text);line-height:1.6}
+.aviso{max-width:520px;margin:90px auto;text-align:center;padding:0 20px}
+.aviso .marca{margin:0 auto 20px;width:52px;height:52px}
+.aviso h1{font-size:1.5rem;font-weight:800;letter-spacing:-.015em;margin-bottom:10px}
+.aviso p{color:var(--muted);font-size:1rem}
+.aviso p strong{color:var(--text)}
+.aviso .btn{margin-top:22px}
+.esconde{display:none}
+</style>
+</head>
+<body>
+<div class="aviso" id="aviso">
+  <div class="marca"><img src="/favicon.svg" alt=""></div>
+  <h1 id="t">Um momento</h1>
+  <p id="p">A confirmar o teu pedido…</p>
+  <button class="btn esconde" id="sair">Sair da lista</button>
+</div>
+<noscript><div class="aviso"><h1>Ative o JavaScript</h1><p>Esta página precisa de JavaScript.</p></div></noscript>
+<script>
+(function(){
+  var SUPA_URL='https://qgfzbyhfyqvmmmdiqycu.supabase.co';
+  var SUPA_KEY='sb_publishable_atlEEoeN4-CWY8mD7KQNsw_m1cXjdIE';
+  var token=new URLSearchParams(location.search).get('t')||'';
+  var $=function(s){ return document.querySelector(s); };
+  function mostra(t,p){ $('#t').textContent=t; $('#p').innerHTML=p; }
+  function rpc(nome,args){
+    return fetch(SUPA_URL+'/rest/v1/rpc/'+nome,{method:'POST',
+      headers:{apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify(args)}).then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); });
+  }
+  var esc=function(s){ return String(s).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
+
+  /* o email de teste leva t=teste: mostra-se o que aconteceria, sem tocar em nada */
+  if(token==='teste'){
+    mostra('Isto é um teste','Num email a sério, este link tira a pessoa da lista - depois de ela carregar no botão.');
+    return;
+  }
+  if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(token)){
+    mostra('Link incompleto','Este link não está completo. Experimenta abri-lo outra vez a partir do email.');
+    return;
+  }
+  rpc('campanha_sair_ver',{p_token:token}).then(function(d){
+    if(!d||!d.ok){ mostra('Link inválido','Este link já não é válido.'); return; }
+    if(d.ja_saiu){ mostra('Já saíste da lista','Não vais receber mais emails sobre formações em <strong>'+esc(d.email)+'</strong>.'); return; }
+    mostra('Sair da lista','Deixas de receber os emails sobre novas formações em <strong>'+esc(d.email)+'</strong>.');
+    var b=$('#sair'); b.classList.remove('esconde');
+    b.addEventListener('click',function(){
+      b.disabled=true; b.textContent='A tirar…';
+      rpc('campanha_sair',{p_token:token}).then(function(r){
+        b.classList.add('esconde');
+        if(r&&r.ok) mostra('Pronto','Já não vais receber mais emails sobre formações. Se mudares de ideias, basta responderes a um dos emails.');
+        else mostra('Não foi possível','Tenta outra vez daqui a pouco.');
+      }).catch(function(){ b.disabled=false; b.textContent='Sair da lista'; mostra('Não foi possível ligar','Tenta outra vez daqui a pouco.'); });
+    });
+  }).catch(function(){ mostra('Não foi possível ligar','Tenta outra vez daqui a pouco.'); });
+})();
+</script>
+</body>
+</html>

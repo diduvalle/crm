@@ -334,6 +334,27 @@ td .tag{align-self:auto}
 .f-par-c ul{margin:2px 0 4px;padding-left:16px}
 .f-par-c .btn-sec{align-self:flex-start;margin-top:auto}
 @media(max-width:640px){ .f-par-l{grid-template-columns:1fr} .f-forms li{flex-direction:column} .f-barra .field select{min-width:0;width:100%} }
+/* ---------- Campanhas ---------- */
+.camp-numeros{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 16px}
+.camp-numeros>div{flex:1;min-width:140px;padding:14px 16px;border:1px solid var(--border);border-radius:var(--r);background:var(--surface)}
+.camp-numeros strong{display:block;font-size:1.5rem;font-weight:800;line-height:1.15}
+.camp-numeros span{font-size:.8rem;color:var(--muted)}
+.camp-numeros .mau strong{color:var(--danger)}
+.camp-ed{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}
+.camp-form{display:flex;flex-direction:column;gap:14px}
+.camp-accoes{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:4px;flex-wrap:wrap}
+.camp-accoes-d{display:flex;gap:10px;flex-wrap:wrap}
+.camp-ver{position:sticky;top:12px;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;background:#efe9dd}
+.camp-ver-cab{display:flex;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--surface);font-size:.86rem}
+.camp-ver-cab strong{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.camp-ver-cab span{color:var(--muted);white-space:nowrap}
+.camp-ver iframe{display:block;width:100%;height:640px;border:0;background:#efe9dd}
+.camp-sub{font-size:.95rem;font-weight:700;margin:24px 0 10px}
+.camp-passos ol{margin:10px 0 12px 20px;display:flex;flex-direction:column;gap:6px}
+.camp-passos p{margin:0 0 6px}
+.f-saida{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;padding:10px 12px;border:1px solid var(--border);border-radius:9px;font-size:.86rem}
+.f-saida span{color:var(--muted)}
+@media(max-width:1000px){ .camp-ed{grid-template-columns:1fr} .camp-ver{position:static} }
 </style>
 </head>
 <body>
@@ -376,6 +397,7 @@ td .tag{align-self:auto}
       <button class="nav-link active" data-view="escolas"></button>
       <button class="nav-link" data-view="testes"></button>
       <button class="nav-link" data-view="formandos"></button>
+      <button class="nav-link" data-view="campanhas"></button>
       <div class="nav-group">Escolas</div>
       <div id="navEscolas"></div>
     </nav>
@@ -418,6 +440,8 @@ td .tag{align-self:auto}
       <section class="view" id="vAvals"></section>
       <section class="view" id="vApl"></section>
       <section class="view" id="vFormandos"></section>
+      <section class="view" id="vCampanhas"></section>
+      <section class="view" id="vCampanha"></section>
     </div>
   </div>
 </div>
@@ -511,7 +535,8 @@ const ERROS={
   TESTE_VAZIO:'Este teste ainda não tem perguntas.',
   SEM_TITULO:'Falta o título do teste.',
   SEM_SESSAO:'Esta aplicação perdeu a sessão de envio. Aplica o teste outra vez.',
-  EMAIL_DE_OUTRO:'Esse email já é de outra pessoa da lista.'
+  EMAIL_DE_OUTRO:'Esse email já é de outra pessoa da lista.',
+  SEM_DESTINATARIOS:'Ninguém recebe com este "Para quem".'
 };
 function toast(msg,tipo){
   const t=document.createElement('div');
@@ -578,6 +603,9 @@ $('#btnPrimario').addEventListener('click',()=>{
   const bf=$('.nav-link[data-view="formandos"]');
   bf.innerHTML=ic('gente')+'<span class="lbl">Formandos</span>';
   bf.addEventListener('click',mostrarFormandos);
+  const bc=$('.nav-link[data-view="campanhas"]');
+  bc.innerHTML=ic('mail')+'<span class="lbl">Campanhas</span>';
+  bc.addEventListener('click',mostrarCampanhas);
 })();
 
 /* A hierarquia é Escolas -> Turmas -> Sessões. Só uma vista está ativa. */
@@ -798,7 +826,9 @@ function marcarNavEscola(){
     el.classList.toggle('active', !!escolaAtual && el.dataset.escola===escolaAtual.slug));
   const emTestes=!!document.querySelector('#vTestes.active, #vTeste.active');
   const emFormandos=!!document.querySelector('#vFormandos.active');
-  $('.nav-link[data-view="escolas"]').classList.toggle('active', !escolaAtual && !emTestes && !emFormandos);
+  const emCampanhas=!!document.querySelector('#vCampanhas.active, #vCampanha.active');
+  $('.nav-link[data-view="escolas"]').classList.toggle('active', !escolaAtual && !emTestes && !emFormandos && !emCampanhas);
+  const bcm=$('.nav-link[data-view="campanhas"]'); if(bcm) bcm.classList.toggle('active', emCampanhas);
   const bt=$('.nav-link[data-view="testes"]'); if(bt) bt.classList.toggle('active', emTestes);
   const bf=$('.nav-link[data-view="formandos"]'); if(bf) bf.classList.toggle('active', emFormandos);
 }
@@ -2475,7 +2505,7 @@ function csvPauta(a){
    formador. Quando diz que são pessoas diferentes, o Repo não volta a
    perguntar.
    ========================================================= */
-let formandos=[], fDistintos=new Set(), fFiltro={curso:'',entidade:'',repetentes:false};
+let formandos=[], fDistintos=new Set(), fFiltro={curso:'',entidade:'',repetentes:false,saiu:false};
 
 /* A mesma chave do servidor (_formando_chave em 11-formandos.sql). Aqui
    só serve para a pré-visualização saber quem já existe. */
@@ -2598,8 +2628,10 @@ function pintarFormandos(){
   const lista=formandos.filter(f=>
     (!fFiltro.curso||f.formacoes.some(c=>c.curso===fFiltro.curso)) &&
     (!fFiltro.entidade||f.formacoes.some(c=>c.entidade===fFiltro.entidade)) &&
-    (!fFiltro.repetentes||f.formacoes.length>=2));
+    (!fFiltro.repetentes||f.formacoes.length>=2) &&
+    (!fFiltro.saiu||f.saiu_em));
   const nRep=formandos.filter(f=>f.formacoes.length>=2).length;
+  const nSaiu=formandos.filter(f=>f.saiu_em).length;
   const pares=paresRepetidos();
   const opc=(vals,sel,todos)=>`<option value="">${todos}</option>`
     +vals.map(x=>`<option${x===sel?' selected':''}>${esc(x)}</option>`).join('');
@@ -2613,6 +2645,7 @@ function pintarFormandos(){
       <div class="field"><select id="fCurso" aria-label="Curso">${opc(cursos,fFiltro.curso,'Todos os cursos')}</select></div>
       <div class="field"><select id="fEnt" aria-label="Entidade">${opc(entidades,fFiltro.entidade,'Todas as entidades')}</select></div>
       <button class="chip${fFiltro.repetentes?' active':''}" id="fRep" aria-pressed="${fFiltro.repetentes}">Com 2 ou mais formações · ${nRep}</button>
+      ${nSaiu||fFiltro.saiu?`<button class="chip${fFiltro.saiu?' active':''}" id="fSaiu" aria-pressed="${fFiltro.saiu}">Saíram da lista · ${nSaiu}</button>`:''}
       <span style="flex:1"></span>
       ${modelo}
     </div>
@@ -2624,7 +2657,7 @@ function pintarFormandos(){
       </tr></thead><tbody>${lista.map(f=>{
         const ult=f.formacoes[0];   /* o servidor ordena da mais recente para a mais antiga */
         return `<tr class="clickable" data-formando="${f.id}">
-          <td><div class="cell-main">${esc(nomeTodo(f))}</div>${f.notas?`<div class="cell-sub">${esc(f.notas.split('\n')[0])}</div>`:''}</td>
+          <td><div class="cell-main">${esc(nomeTodo(f))}</div>${f.notas?`<div class="cell-sub">${esc(f.notas.split('\n')[0])}</div>`:''}${f.saiu_em?'<div class="cell-sub"><span class="pill grey">Saiu da lista</span></div>':''}</td>
           <td>${esc(f.email)}</td>
           <td>${f.formacoes.length>=2?`<span class="pill blue">${f.formacoes.length} formações</span>`:'<span class="muted">1</span>'}</td>
           <td>${ult?`<div class="cell-main" style="font-weight:600">${esc(ult.curso)}</div><div class="cell-sub">${esc(ult.entidade)} · ${periodo(ult)}</div>`:''}</td>
@@ -2634,6 +2667,7 @@ function pintarFormandos(){
   $('#fCurso').addEventListener('change',e=>{ fFiltro.curso=e.target.value; pintarFormandos(); });
   $('#fEnt').addEventListener('change',e=>{ fFiltro.entidade=e.target.value; pintarFormandos(); });
   $('#fRep').addEventListener('click',()=>{ fFiltro.repetentes=!fFiltro.repetentes; pintarFormandos(); });
+  if($('#fSaiu')) $('#fSaiu').addEventListener('click',()=>{ fFiltro.saiu=!fFiltro.saiu; pintarFormandos(); });
   if(pares.length) $('#fVerRep').addEventListener('click',()=>modalRepetidos(pares));
   v.querySelectorAll('[data-modelo]').forEach(b=>b.addEventListener('click',descarregarModelo));
   v.querySelectorAll('[data-formando]').forEach(r=>r.addEventListener('click',
@@ -2655,6 +2689,8 @@ function fichaFormando(f){
         <div class="field full"><label>Email</label><input id="fhEmail" type="email" value="${esc(f.email)}"></div>
         <div class="field full"><label>Notas</label><textarea id="fhNotas" placeholder="O que te ajuda a lembrar desta pessoa">${esc(f.notas)}</textarea></div>
       </div>
+      <div class="f-saida"><span>${f.saiu_em?'Saiu da lista em '+dataPT(String(f.saiu_em).slice(0,10))+'. Não recebe as campanhas.':'Recebe as campanhas.'}</span>
+        <button class="btn-sec" data-saida>${f.saiu_em?'Voltar a pôr na lista':'Tirar da lista'}</button></div>
       <h4 class="f-sub">Formações</h4>
       <ul class="f-forms">${f.formacoes.map(c=>`<li><strong>${esc(c.curso)}</strong><span>${esc(c.entidade)} · ${periodo(c)}</span></li>`).join('')}</ul>
     </div>
@@ -2668,6 +2704,12 @@ function fichaFormando(f){
     try{ await rpc('formando_gravar',{p_token:sessao.token,p_id:f.id,p_dados:dados}); }
     catch(e){ return tratar(e); }
     fm.remove(); toast('Ficha gravada.'); carregarFormandos();
+  });
+  /* sair da lista à mão: quem pede por resposta ao email, ou quem volta */
+  fm.querySelector('[data-saida]').addEventListener('click',async()=>{
+    try{ await rpc('formando_saida',{p_token:sessao.token,p_id:f.id,p_saiu:!f.saiu_em}); }
+    catch(e){ if(faltaSql(e,'12-campanhas.sql')) return; return tratar(e); }
+    fm.remove(); toast(f.saiu_em?'Voltou à lista.':'Saiu da lista.'); carregarFormandos();
   });
   fm.querySelector('[data-apagar]').addEventListener('click',async()=>{
     const ok=await uiConfirm({titulo:'Apagar '+nomeTodo(f)+'?',ok:'Apagar',perigo:true,
@@ -2904,6 +2946,291 @@ function modalRepetidos(pares){
   /* ao fechar, a lista lá atrás acerta-se com o que se decidiu */
   const obs=new MutationObserver(()=>{ if(!document.body.contains(f)){ obs.disconnect(); if(mudou) carregarFormandos(); } });
   obs.observe(document.body,{childList:true});
+}
+
+/* =========================================================
+   CAMPANHAS - anunciar formações a quem já fez formação contigo
+   =========================================================
+   O email NÃO sai do Repo. Sai do Outlook do formador, pela conta do
+   Turismo de Portugal (Microsoft 365), que nenhum servidor nosso pode
+   usar sem autorização da informática deles. O Repo escreve o email,
+   escolhe a quem, e prepara uma versão por pessoa - "Olá Ana", e um link
+   de Inscrever e outro de sair da lista só dela - num ficheiro que o
+   programa do PC (ferramentas/enviar-campanha.ps1) envia pelo Outlook,
+   um a um. Por cada link levar o token da pessoa, sabe-se QUEM clicou e
+   QUEM saiu, e não só quantos.
+   ========================================================= */
+let campanhas=[], campAtual=null;
+const SITE_CAMP='https://crm.cr0x.org';
+const CORPO_INICIAL='Olá {nome},\n\n';
+
+/* As opções de "Para quem" saem das formações que estão nos Formandos. */
+async function garantirFormandos(){
+  if(formandos.length) return true;
+  try{ const d=await rpc('formandos_listar',{p_token:sessao.token}); formandos=d.formandos||[];
+    fDistintos=new Set((d.distintos||[]).map(p=>parKey(p[0],p[1]))); return true; }
+  catch(e){ if(faltaSql(e,'11-formandos.sql')) return false; tratar(e); return false; }
+}
+function opcoesFiltro(){
+  const cursos=new Map(), escolas=new Map(), turmas=new Map();
+  formandos.forEach(f=>f.formacoes.forEach(c=>{
+    cursos.set(c.curso.toLowerCase(),c.curso); escolas.set(c.entidade.toLowerCase(),c.entidade);
+    turmas.set(c.id,c);
+  }));
+  const pt=(a,b)=>a.localeCompare(b,'pt');
+  return { cursos:[...cursos.values()].sort(pt), escolas:[...escolas.values()].sort(pt),
+    turmas:[...turmas.values()].sort((a,b)=>pt(a.curso,b.curso)||String(b.inicio||'').localeCompare(String(a.inicio||''))) };
+}
+function chaveFiltro(f){
+  f=f||{tipo:'todos'};
+  if(f.tipo==='curso') return 'curso:'+f.curso;
+  if(f.tipo==='entidade') return 'entidade:'+f.entidade;
+  if(f.tipo==='turma') return 'turma:'+f.formacao_id;
+  return 'todos';
+}
+function filtroDeChave(k){
+  const i=k.indexOf(':'); if(i<0) return {tipo:'todos'};
+  const t=k.slice(0,i), v=k.slice(i+1);
+  if(t==='curso') return {tipo:'curso',curso:v};
+  if(t==='entidade') return {tipo:'entidade',entidade:v};
+  if(t==='turma') return {tipo:'turma',formacao_id:v};
+  return {tipo:'todos'};
+}
+function descreverFiltro(f){
+  f=f||{tipo:'todos'};
+  if(f.tipo==='curso') return f.curso;
+  if(f.tipo==='entidade') return f.entidade;
+  if(f.tipo==='turma'){
+    const c=opcoesFiltro().turmas.find(t=>t.id===f.formacao_id);
+    return c?c.curso+' · '+periodo(c):'Uma turma que já não existe';
+  }
+  return 'Toda a gente';
+}
+
+/* ---------- O email ----------
+   Tabelas e estilos em linha: é o que o Outlook do destinatário (que
+   desenha emails com o motor do Word) e o Gmail respeitam. Letra Arial,
+   porque nenhum cliente de email garante a letra da casa. */
+function corpoEmailHTML(texto,nome){
+  const ligar=s=>s.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" style="color:#005e95">$1</a>');
+  /* "Olá {nome}," passa a "Olá Ana,"; sem nome fica "Olá," em vez de "Olá ," */
+  const t=esc(String(texto||'')).replace(/[ \t]*\{nome\}/g, nome?' '+esc(nome):'').replace(/^ /gm,'');
+  return t.split(/\n\s*\n/).map(p=>p.trim()).filter(Boolean)
+    .map(p=>'<p style="margin:0 0 16px">'+ligar(p).replace(/\n/g,'<br>')+'</p>').join('');
+}
+function emailHTML(c,p){
+  const F='font-family:Arial,Helvetica,sans-serif;';
+  const botao=(c.botao_texto&&c.botao_link)
+    ? `<tr><td style="padding:6px 32px 10px"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+<td bgcolor="#0078bf" style="border-radius:8px;background:#0078bf"><a href="${esc(p.inscrever)}" style="${F}display:inline-block;padding:13px 26px;font-size:16px;font-weight:bold;color:#ffffff;text-decoration:none;border-radius:8px">${esc(c.botao_texto)}</a></td>
+</tr></table></td></tr>` : '';
+  return `<!DOCTYPE html><html lang="pt"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(c.assunto||'')}</title></head>
+<body style="margin:0;padding:0;background:#efe9dd">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#efe9dd"><tr><td align="center" style="padding:28px 12px">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:12px">
+<tr><td style="${F}padding:28px 32px 4px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#005e95;font-weight:bold">Diogo Vale · Formador</td></tr>
+<tr><td style="${F}padding:14px 32px 2px;font-size:16px;line-height:1.6;color:#171412">${corpoEmailHTML(c.corpo,p.nome)}</td></tr>
+${botao}
+<tr><td style="${F}padding:22px 32px 28px;font-size:12px;line-height:1.5;color:#8a7f75">Recebes este email porque fizeste formação comigo. Se não quiseres receber mais, <a href="${esc(p.sair)}" style="color:#8a7f75">sai da lista</a>.</td></tr>
+</table></td></tr></table></body></html>`;
+}
+
+/* ---------- A lista ---------- */
+function mostrarCampanhas(){
+  escolaAtual=null; turmaAtual=null;
+  mostrarVista('vCampanhas');
+  accaoPrimaria=()=>abrirCampanha(null);
+  $('#hTitulo').textContent='Campanhas';
+  $('#hSub').textContent='Emails para quem já fez formação contigo. Saem do teu Outlook, um a um.';
+  $('#btnPrimario').classList.remove('hidden');
+  $('#btnPrimario').innerHTML=ic('mais')+'Nova campanha';
+  $('#pesquisa').value='';
+  marcarNavEscola();
+  carregarCampanhas();
+}
+async function carregarCampanhas(){
+  if(!(await garantirFormandos())) return;
+  try{ campanhas=await rpc('campanhas_listar',{p_token:sessao.token}); }
+  catch(e){ if(faltaSql(e,'12-campanhas.sql')) return; return tratar(e); }
+  const estado=c=>c.estado==='enviada'?'<span class="pill green">Enviada</span>'
+    :c.estado==='preparada'?`<span class="pill amber">A enviar · ${c.enviados}/${c.n}</span>`
+    :'<span class="pill grey">Rascunho</span>';
+  $('#vCampanhas').innerHTML = !campanhas.length
+    ? `<div class="empty">${ic('mail')}<strong>Ainda não há campanhas</strong>
+        <span>Escreve o email, escolhe para quem, e o Repo prepara uma versão para cada pessoa.</span></div>`
+    : `<div class="table-wrap"><table><thead><tr>
+        <th>Assunto</th><th>Para</th><th>Estado</th><th>Clicaram</th><th>Saíram</th>
+      </tr></thead><tbody>${campanhas.map(c=>`
+        <tr class="clickable" data-camp="${c.id}">
+          <td><div class="cell-main">${esc(c.assunto||'(sem assunto)')}</div>
+              <div class="cell-sub">${c.enviada_em?'enviada '+dt(c.enviada_em):'editada '+dt(c.atualizada_em)}</div></td>
+          <td>${esc(descreverFiltro(c.filtro))}</td>
+          <td>${estado(c)}${c.erros?` <span class="pill red">${c.erros} com erro</span>`:''}</td>
+          <td>${c.n?c.clicaram:'<span class="muted">-</span>'}</td>
+          <td>${c.n?c.sairam:'<span class="muted">-</span>'}</td>
+        </tr>`).join('')}</tbody></table></div>`;
+  document.querySelectorAll('[data-camp]').forEach(r=>r.addEventListener('click',()=>abrirCampanha(r.dataset.camp)));
+  filtrar();
+}
+
+/* ---------- O editor ---------- */
+async function abrirCampanha(id){
+  if(!(await garantirFormandos())) return;
+  if(id){
+    try{ campAtual=await rpc('campanha_ler',{p_token:sessao.token,p_id:id}); }
+    catch(e){ if(faltaSql(e,'12-campanhas.sql')) return; return tratar(e); }
+  }else{
+    campAtual={id:null,assunto:'',corpo:CORPO_INICIAL,botao_texto:'Quero inscrever-me',botao_link:'',
+      filtro:{tipo:'todos'},estado:'rascunho',envios:[]};
+  }
+  mostrarVista('vCampanha');
+  accaoPrimaria=null;
+  $('#btnPrimario').classList.add('hidden');
+  $('#hTitulo').textContent=campAtual.id?'Campanha':'Nova campanha';
+  $('#hSub').textContent='Escreve o email e escolhe para quem. A pré-visualização mostra-o como vai chegar.';
+  marcarNavEscola();
+  pintarCampanha();
+}
+function campanhaTravada(){ return (campAtual.envios||[]).some(e=>e.estado!=='por_enviar'); }
+function pintarCampanha(){
+  const c=campAtual, trava=campanhaTravada(), op=opcoesFiltro(), k=chaveFiltro(c.filtro);
+  const sel=v=>v===k?' selected':'';
+  const dis=trava?' disabled':'';
+  const envios=c.envios||[];
+  const n=envios.length, env=envios.filter(e=>e.estado==='enviado').length,
+        err=envios.filter(e=>e.estado==='erro').length, cli=envios.filter(e=>e.cliques>0).length,
+        sai=envios.filter(e=>e.saiu_em).length;
+  $('#vCampanha').innerHTML=`
+    <button class="voltar" id="voltarCamp">${ic('seta')}Campanhas</button>
+    ${n?`<div class="camp-numeros">
+      <div><strong>${env}/${n}</strong><span>enviados</span></div>
+      <div><strong>${cli}</strong><span>clicaram em Inscrever</span></div>
+      <div><strong>${sai}</strong><span>saíram da lista</span></div>
+      ${err?`<div class="mau"><strong>${err}</strong><span>com erro</span></div>`:''}
+    </div>`:''}
+    <div class="camp-ed">
+      <div class="card card-pad camp-form">
+        <div class="field"><label>Assunto</label><input id="cAssunto" value="${esc(c.assunto)}"${dis} placeholder="Nova turma de Front Office em janeiro"></div>
+        <div class="field"><label>Texto</label>
+          <textarea id="cCorpo" rows="12"${dis}>${esc(c.corpo)}</textarea>
+          <span class="hint">{nome} é o primeiro nome de cada pessoa. Uma linha em branco separa os parágrafos. Os links escritos ficam clicáveis.</span></div>
+        <div class="form-grid">
+          <div class="field"><label>Texto do botão</label><input id="cBotaoT" value="${esc(c.botao_texto)}"${dis}></div>
+          <div class="field"><label>Link da inscrição</label><input id="cBotaoL" value="${esc(c.botao_link)}"${dis} placeholder="https://..."></div>
+        </div>
+        <div class="field"><label>Para quem</label>
+          <select id="cPara"${dis}>
+            <option value="todos"${sel('todos')}>Toda a gente</option>
+            ${op.cursos.length?`<optgroup label="Quem fez o curso">${op.cursos.map(x=>`<option value="curso:${esc(x)}"${sel('curso:'+x)}>${esc(x)}</option>`).join('')}</optgroup>`:''}
+            ${op.turmas.length?`<optgroup label="Quem esteve na turma">${op.turmas.map(t=>`<option value="turma:${t.id}"${sel('turma:'+t.id)}>${esc(t.curso)} · ${periodo(t)}</option>`).join('')}</optgroup>`:''}
+            ${op.escolas.length?`<optgroup label="Quem fez formação na escola">${op.escolas.map(x=>`<option value="entidade:${esc(x)}"${sel('entidade:'+x)}>${esc(x)}</option>`).join('')}</optgroup>`:''}
+          </select>
+          <span class="hint" id="cQuantos">${n?`Preparada para ${n} pessoas.`:'A contar…'}</span></div>
+        <div class="camp-accoes">
+          ${c.id?`<button class="btn-danger" id="cApagar">${ic('lixo')}Apagar</button>`:'<span></span>'}
+          <div class="camp-accoes-d">
+            ${trava?'':`<button class="btn-sec" id="cGravar">Gravar</button>`}
+            ${trava&&env===n?'':`<button class="btn" id="cPreparar">${ic('baixo')}${n&&!trava?'Preparar outra vez':(trava?'Descarregar o que falta enviar':'Preparar envio')}</button>`}
+          </div>
+        </div>
+        ${trava?'<div class="hint camp-trava">Já saíram emails desta campanha: o texto e os destinatários ficam como foram enviados.</div>':''}
+      </div>
+      <div class="camp-ver">
+        <div class="camp-ver-cab"><strong id="cVerAssunto">${esc(c.assunto||'(sem assunto)')}</strong><span>como chega à Ana</span></div>
+        <iframe id="cVer" title="Pré-visualização do email" sandbox></iframe>
+      </div>
+    </div>
+    ${n?`<h3 class="camp-sub">Destinatários</h3>
+    <div class="table-wrap"><table><thead><tr><th>Nome</th><th>Email</th><th>Estado</th><th>Clicou</th><th>Saiu</th></tr></thead>
+    <tbody>${envios.map(e=>`<tr>
+      <td><div class="cell-main">${esc(e.nome)}</div></td><td>${esc(e.email)}</td>
+      <td>${e.estado==='enviado'?`<span class="pill green">Enviado</span> <span class="cell-sub">${dt(e.enviado_em)}</span>`
+        :e.estado==='erro'?`<span class="pill red" title="${esc(e.erro)}">Erro</span>`:'<span class="pill grey">Por enviar</span>'}</td>
+      <td>${e.cliques?`<span class="pill blue">${e.cliques}×</span>`:'<span class="muted">-</span>'}</td>
+      <td>${e.saiu_em?'<span class="pill amber">Saiu</span>':'<span class="muted">-</span>'}</td>
+    </tr>`).join('')}</tbody></table></div>`:''}`;
+
+  const ler=()=>({assunto:$('#cAssunto').value, corpo:$('#cCorpo').value, botao_texto:$('#cBotaoT').value,
+    botao_link:$('#cBotaoL').value, filtro:filtroDeChave($('#cPara').value)});
+  const ver=()=>{
+    const d=Object.assign({},c,trava?{}:ler());
+    $('#cVer').srcdoc=emailHTML(d,{nome:'Ana',inscrever:'#',sair:'#'});
+    $('#cVerAssunto').textContent=d.assunto||'(sem assunto)';
+  };
+  let tContar=null;
+  const contar=()=>{ if(trava||n&&chaveFiltro(c.filtro)===$('#cPara').value) return;
+    clearTimeout(tContar); tContar=setTimeout(async()=>{
+      try{ const r=await rpc('campanha_destinatarios',{p_token:sessao.token,p_filtro:filtroDeChave($('#cPara').value)});
+        $('#cQuantos').textContent='Vai para '+r.n+(r.n===1?' pessoa':' pessoas')
+          +(r.sairam?' ('+r.sairam+(r.sairam===1?' saiu':' saíram')+' da lista e fica'+(r.sairam===1?'':'m')+' de fora).':'.');
+      }catch(e){ if(!faltaSql(e,'12-campanhas.sql')) tratar(e); } },250); };
+  ['#cAssunto','#cCorpo','#cBotaoT','#cBotaoL'].forEach(s=>$(s).addEventListener('input',ver));
+  $('#cPara').addEventListener('change',()=>{ ver(); contar(); });
+  ver(); contar();
+
+  $('#voltarCamp').addEventListener('click',mostrarCampanhas);
+  const gravar=async()=>{
+    try{ const r=await rpc('campanha_gravar',{p_token:sessao.token,p_id:c.id,p_dados:ler()}); return r.id; }
+    catch(e){ if(e.message==='JA_ENVIADA'){ toast('Já saíram emails desta campanha: não se pode mudar.','err'); return null; }
+      if(faltaSql(e,'12-campanhas.sql')) return null; tratar(e); return null; }
+  };
+  if($('#cGravar')) $('#cGravar').addEventListener('click',async()=>{
+    const id=await gravar(); if(!id) return; toast('Gravada.'); abrirCampanha(id); });
+  if($('#cApagar')) $('#cApagar').addEventListener('click',async()=>{
+    const ok=await uiConfirm({titulo:'Apagar esta campanha?',ok:'Apagar',perigo:true,
+      texto:n?'Apaga também o registo de quem a recebeu, clicou e saiu. As pessoas que saíram da lista continuam fora dela.':'Não se desfaz.'});
+    if(!ok) return;
+    try{ await rpc('campanha_apagar',{p_token:sessao.token,p_id:c.id}); }catch(e){ return tratar(e); }
+    toast('Campanha apagada.'); mostrarCampanhas(); });
+  if($('#cPreparar')) $('#cPreparar').addEventListener('click',()=>prepararCampanha(trava?null:ler(),trava));
+}
+
+/* Preparar: grava, fixa os destinatários e descarrega o ficheiro que o
+   programa do PC envia. Numa campanha já com emails enviados, descarrega
+   só os que faltam - é assim que se retoma um envio interrompido. */
+async function prepararCampanha(dados,retomar){
+  const c=campAtual;
+  if(!retomar){
+    if(!dados.assunto.trim()||!dados.corpo.trim()) return toast('Falta o assunto ou o texto.','err');
+    if(dados.botao_texto.trim()&&!/^https?:\/\//i.test(dados.botao_link.trim()))
+      return toast('O link da inscrição tem de começar por https://','err');
+    const ok=await uiConfirm({titulo:'Preparar o envio?',ok:'Preparar',
+      texto:$('#cQuantos').textContent+'<br><br>Os destinatários ficam fixos. O Repo descarrega um ficheiro com um email para cada pessoa, que envias pelo Outlook.'});
+    if(!ok) return;
+  }
+  let id=c.id;
+  if(!retomar){
+    try{ const r=await rpc('campanha_gravar',{p_token:sessao.token,p_id:c.id,p_dados:dados}); id=r.id; }
+    catch(e){ return tratar(e); }
+  }
+  let p;
+  try{ p=await rpc('campanha_preparar',{p_token:sessao.token,p_id:id}); }
+  catch(e){ if(e.message==='SEM_DESTINATARIOS') return toast('Ninguém recebe com este "Para quem".','err'); return tratar(e); }
+  const base=retomar?c:Object.assign({},c,dados);
+  const lote={
+    versao:1, campanha_id:id, assunto:base.assunto, supa_url:SUPA_URL, supa_key:SUPA_KEY,
+    html_teste:emailHTML(base,{nome:'Diogo',inscrever:SITE_CAMP+'/i/?t=teste',sair:SITE_CAMP+'/s/?t=teste'}),
+    mensagens:p.envios.map(e=>({email:e.email,nome:e.nome,token:e.token,
+      html:emailHTML(base,{nome:e.nome,inscrever:SITE_CAMP+'/i/?t='+e.token,sair:SITE_CAMP+'/s/?t='+e.token})}))
+  };
+  const nome='campanha-'+slugDe(base.assunto||'email').slice(0,40)+'-'+new Date().toISOString().slice(0,10)+'.json';
+  const u=URL.createObjectURL(new Blob([JSON.stringify(lote)],{type:'application/json'}));
+  const a=document.createElement('a'); a.href=u; a.download=nome; a.click();
+  setTimeout(()=>URL.revokeObjectURL(u),2000);
+  const f=abrirModal(`<div class="modal" style="width:min(560px,100%)">
+    <div class="modal-head"><div><h3>Pronto a enviar</h3>
+      <div class="sub">${lote.mensagens.length} ${lote.mensagens.length===1?'email preparado':'emails preparados'}, um para cada pessoa.</div></div></div>
+    <div class="modal-body camp-passos">
+      <p>Descarreguei <strong>${esc(nome)}</strong> para a tua pasta Transferências. Agora, pela ordem:</p>
+      <ol>
+        <li><strong>Rascunho</strong>: cria o email no Outlook sem o enviar, para o veres.</li>
+        <li><strong>Teste</strong>: envia um só, para ti.</li>
+        <li><strong>Enviar</strong>: um a um, pela conta do Turismo de Portugal.</li>
+      </ol>
+      <p class="hint">O programa é o <code>enviar-campanha.ps1</code>. Os emails enviados vão aparecendo aqui na campanha.</p>
+    </div>
+    <div class="modal-foot"><span></span><button class="btn" data-fechar>Percebi</button></div></div>`);
+  abrirCampanha(id);
 }
 
 /* ---------- Arranque ---------- */

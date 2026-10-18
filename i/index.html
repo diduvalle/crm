@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A abrir a inscrição</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&display=swap">
+<style>
+/* O BOTÃO "INSCREVER" DE UM EMAIL DE CAMPANHA PASSA POR AQUI.
+   O link é pessoal (o token diz quem é): regista-se que esta pessoa
+   clicou e segue-se logo para a página de inscrição. O endereço da
+   inscrição vem na mesma resposta que regista o clique - guardado na
+   campanha, para se poder corrigir depois de o email já ter saído. */
+body{font-family:'Archivo',system-ui,sans-serif;font-size:17px;background:#efe9dd;color:#171412;line-height:1.6;margin:0}
+.aviso{max-width:520px;margin:90px auto;text-align:center;padding:0 20px}
+.aviso img{width:52px;height:52px;margin-bottom:20px}
+.aviso h1{font-size:1.5rem;font-weight:800;letter-spacing:-.015em;margin:0 0 10px}
+.aviso p{color:#6f655c;margin:0}
+.aviso a{color:#005e95}
+</style>
+</head>
+<body>
+<div class="aviso">
+  <img src="/favicon.svg" alt="">
+  <h1 id="t">A abrir a inscrição…</h1>
+  <p id="p">Só um momento.</p>
+</div>
+<noscript><div class="aviso"><h1>Ative o JavaScript</h1><p>Esta página precisa de JavaScript.</p></div></noscript>
+<script>
+(function(){
+  var SUPA_URL='https://qgfzbyhfyqvmmmdiqycu.supabase.co';
+  var SUPA_KEY='sb_publishable_atlEEoeN4-CWY8mD7KQNsw_m1cXjdIE';
+  var token=new URLSearchParams(location.search).get('t')||'';
+  function mostra(t,p){ document.getElementById('t').textContent=t; document.getElementById('p').innerHTML=p; }
+  if(token==='teste'){
+    mostra('Isto é um teste','Num email a sério, este botão regista que a pessoa clicou e leva-a à página de inscrição.');
+    return;
+  }
+  if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(token)){
+    mostra('Link incompleto','Este link não está completo. Experimenta abri-lo outra vez a partir do email.');
+    return;
+  }
+  fetch(SUPA_URL+'/rest/v1/rpc/campanha_clique',{method:'POST',
+    headers:{apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify({p_token:token})})
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    if(d&&d.link&&/^https?:\/\//i.test(d.link)){ location.replace(d.link); return; }
+    mostra('Link inválido','Este link já não é válido.');
+  })
+  .catch(function(){ mostra('Não foi possível ligar','Tenta outra vez daqui a pouco.'); });
+})();
+</script>
+</body>
+</html>
