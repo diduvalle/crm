@@ -342,6 +342,8 @@ td .tag{align-self:auto}
 .camp-numeros .mau strong{color:var(--danger)}
 /* quem saiu da lista: o email continua, riscado e a vermelho */
 .saiu-email{color:var(--danger);text-decoration:line-through;text-decoration-thickness:1.5px}
+/* email devolvido: o endereço já não existe (sublinhado ondulado, não riscado) */
+.devolvido-email{color:var(--danger);text-decoration:underline wavy;text-decoration-thickness:1px;text-underline-offset:3px}
 .camp-sub-cab{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:24px 0 10px;flex-wrap:wrap}
 .camp-sub-cab .camp-sub{margin:0}
 .camp-sub-cab .muted{font-size:.8rem}
@@ -2587,7 +2589,7 @@ function csvPauta(a){
    formador. Quando diz que são pessoas diferentes, o Repo não volta a
    perguntar.
    ========================================================= */
-let formandos=[], fDistintos=new Set(), fFiltro={curso:'',entidade:'',repetentes:false,saiu:false};
+let formandos=[], fDistintos=new Set(), fFiltro={curso:'',entidade:'',repetentes:false,saiu:false,devolvido:false};
 
 /* A mesma chave do servidor (_formando_chave em 11-formandos.sql). Aqui
    só serve para a pré-visualização saber quem já existe. */
@@ -2712,9 +2714,11 @@ function pintarFormandos(){
     (!fFiltro.curso||f.formacoes.some(c=>c.curso===fFiltro.curso)) &&
     (!fFiltro.entidade||f.formacoes.some(c=>c.entidade===fFiltro.entidade)) &&
     (!fFiltro.repetentes||f.formacoes.length>=2) &&
-    (!fFiltro.saiu||f.saiu_em));
+    (!fFiltro.saiu||f.saiu_em) &&
+    (!fFiltro.devolvido||f.devolvido_em));
   const nRep=formandos.filter(f=>f.formacoes.length>=2).length;
   const nSaiu=formandos.filter(f=>f.saiu_em).length;
+  const nDev=formandos.filter(f=>f.devolvido_em).length;
   const pares=paresRepetidos();
   const opc=(vals,sel,todos)=>`<option value="">${todos}</option>`
     +vals.map(x=>`<option${x===sel?' selected':''}>${esc(x)}</option>`).join('');
@@ -2729,6 +2733,7 @@ function pintarFormandos(){
       <div class="field"><select id="fEnt" aria-label="Entidade">${opc(entidades,fFiltro.entidade,'Todas as entidades')}</select></div>
       <button class="chip${fFiltro.repetentes?' active':''}" id="fRep" aria-pressed="${fFiltro.repetentes}">Com 2 ou mais formações · ${nRep}</button>
       ${nSaiu||fFiltro.saiu?`<button class="chip${fFiltro.saiu?' active':''}" id="fSaiu" aria-pressed="${fFiltro.saiu}">Saíram da lista · ${nSaiu}</button>`:''}
+      ${nDev||fFiltro.devolvido?`<button class="chip${fFiltro.devolvido?' active':''}" id="fDev" aria-pressed="${fFiltro.devolvido}">Email devolvido · ${nDev}</button>`:''}
       <span style="flex:1"></span>
       ${modelo}
     </div>
@@ -2740,8 +2745,9 @@ function pintarFormandos(){
       </tr></thead><tbody>${lista.map(f=>{
         const ult=f.formacoes[0];   /* o servidor ordena da mais recente para a mais antiga */
         return `<tr class="clickable" data-formando="${f.id}">
-          <td><div class="cell-main">${esc(nomeTodo(f))}</div>${f.notas?`<div class="cell-sub">${esc(f.notas.split('\n')[0])}</div>`:''}${f.saiu_em?'<div class="cell-sub"><span class="pill grey">Saiu da lista</span></div>':''}</td>
-          <td>${f.saiu_em?`<span class="saiu-email" title="Saiu da lista">${esc(f.email)}</span>`:esc(f.email)}</td>
+          <td><div class="cell-main">${esc(nomeTodo(f))}</div>${f.notas?`<div class="cell-sub">${esc(f.notas.split('\n')[0])}</div>`:''}${f.saiu_em?'<div class="cell-sub"><span class="pill grey">Saiu da lista</span></div>':''}${f.devolvido_em&&!f.saiu_em?'<div class="cell-sub"><span class="pill red">Email devolvido</span></div>':''}</td>
+          <td>${f.saiu_em?`<span class="saiu-email" title="Saiu da lista">${esc(f.email)}</span>`
+            :f.devolvido_em?`<span class="devolvido-email" title="Devolvido: ${esc(f.devolvido_motivo||'sem motivo')}">${esc(f.email)}</span>`:esc(f.email)}</td>
           <td>${f.formacoes.length>=2?`<span class="pill blue">${f.formacoes.length} formações</span>`:'<span class="muted">1</span>'}</td>
           <td>${ult?`<div class="cell-main" style="font-weight:600">${esc(ult.curso)}</div><div class="cell-sub">${esc(ult.entidade)} · ${periodo(ult)}</div>`:''}</td>
         </tr>`;}).join('')}</tbody></table></div>`
@@ -2751,6 +2757,7 @@ function pintarFormandos(){
   $('#fEnt').addEventListener('change',e=>{ fFiltro.entidade=e.target.value; pintarFormandos(); });
   $('#fRep').addEventListener('click',()=>{ fFiltro.repetentes=!fFiltro.repetentes; pintarFormandos(); });
   if($('#fSaiu')) $('#fSaiu').addEventListener('click',()=>{ fFiltro.saiu=!fFiltro.saiu; pintarFormandos(); });
+  if($('#fDev')) $('#fDev').addEventListener('click',()=>{ fFiltro.devolvido=!fFiltro.devolvido; pintarFormandos(); });
   if(pares.length) $('#fVerRep').addEventListener('click',()=>modalRepetidos(pares));
   v.querySelectorAll('[data-modelo]').forEach(b=>b.addEventListener('click',descarregarModelo));
   v.querySelectorAll('[data-formando]').forEach(r=>r.addEventListener('click',
@@ -2774,6 +2781,9 @@ function fichaFormando(f){
       </div>
       <div class="f-saida"><span>${f.saiu_em?'Saiu da lista em '+dataPT(String(f.saiu_em).slice(0,10))+'. Não recebe as campanhas.':'Recebe as campanhas.'}</span>
         <button class="btn-sec" data-saida>${f.saiu_em?'Voltar a pôr na lista':'Tirar da lista'}</button></div>
+      ${f.devolvido_em?`<div class="f-saida f-devolvido"><span><strong>Email devolvido</strong> em ${dataPT(String(f.devolvido_em).slice(0,10))}${f.devolvido_motivo?' ('+esc(f.devolvido_motivo)+')':''}.
+          Não recebe campanhas. Corrige o email acima e grava, e volta a receber.</span>
+        <button class="btn-sec" data-devolvido>O email está bom</button></div>`:''}
       <h4 class="f-sub">Formações</h4>
       <ul class="f-forms">${f.formacoes.map(c=>`<li><strong>${esc(c.curso)}</strong><span>${esc(c.entidade)} · ${periodo(c)}</span></li>`).join('')}</ul>
     </div>
@@ -2786,13 +2796,21 @@ function fichaFormando(f){
       email:fm.querySelector('#fhEmail').value, notas:fm.querySelector('#fhNotas').value};
     try{ await rpc('formando_gravar',{p_token:sessao.token,p_id:f.id,p_dados:dados}); }
     catch(e){ return tratar(e); }
-    fm.remove(); toast('Ficha gravada.'); carregarFormandos();
+    fm.remove();
+    toast(f.devolvido_em&&dados.email.trim()!==f.email?'Ficha gravada. Com o email novo, volta a receber as campanhas.':'Ficha gravada.');
+    carregarFormandos();
   });
   /* sair da lista à mão: quem pede por resposta ao email, ou quem volta */
   fm.querySelector('[data-saida]').addEventListener('click',async()=>{
     try{ await rpc('formando_saida',{p_token:sessao.token,p_id:f.id,p_saiu:!f.saiu_em}); }
     catch(e){ if(faltaSql(e,'12-campanhas.sql')) return; return tratar(e); }
     fm.remove(); toast(f.saiu_em?'Voltou à lista.':'Saiu da lista.'); carregarFormandos();
+  });
+  /* um aviso de devolução que foi engano (caixa cheia, servidor em baixo) */
+  if(fm.querySelector('[data-devolvido]')) fm.querySelector('[data-devolvido]').addEventListener('click',async()=>{
+    try{ await rpc('formando_devolvido',{p_token:sessao.token,p_id:f.id,p_devolvido:false}); }
+    catch(e){ if(faltaSql(e,'14-campanhas-devolvidos.sql')) return; return tratar(e); }
+    fm.remove(); toast('Volta a receber as campanhas.'); carregarFormandos();
   });
   fm.querySelector('[data-apagar]').addEventListener('click',async()=>{
     const ok=await uiConfirm({titulo:'Apagar '+nomeTodo(f)+'?',ok:'Apagar',perigo:true,
@@ -3309,7 +3327,7 @@ async function carregarCampanhas(){
           <td><div class="cell-main">${esc(c.assunto||'(sem assunto)')}</div>
               <div class="cell-sub">${c.enviada_em?'enviada '+dt(c.enviada_em):'editada '+dt(c.atualizada_em)}</div></td>
           <td>${esc(descreverFiltro(c.filtro))}</td>
-          <td>${c.filtro&&c.filtro.tipo==='teste'?'<span class="pill purple">Teste</span> ':''}${estado(c)}${c.erros?` <span class="pill red">${c.erros} com erro</span>`:''}</td>
+          <td>${c.filtro&&c.filtro.tipo==='teste'?'<span class="pill purple">Teste</span> ':''}${estado(c)}${c.erros?` <span class="pill red">${c.erros} com erro</span>`:''}${c.devolvidos?` <span class="pill red">${c.devolvidos} ${c.devolvidos===1?'devolvido':'devolvidos'}</span>`:''}</td>
           <td>${c.n?c.clicaram:'<span class="muted">-</span>'}</td>
           <td>${c.n?c.sairam:'<span class="muted">-</span>'}</td>
         </tr>`).join('')}</tbody></table></div>`;
@@ -3348,7 +3366,7 @@ function pintarDestinatarios(quando){
   const nf=k&&k.formacoes?k.formacoes.length:0;
   const n=envios.length, env=envios.filter(e=>e.estado==='enviado').length,
         err=envios.filter(e=>e.estado==='erro').length, cli=envios.filter(e=>e.cliques>0).length,
-        sai=envios.filter(e=>e.saiu_em).length;
+        sai=envios.filter(e=>e.saiu_em).length, dev=envios.filter(e=>e.devolvido_em).length;
   /* quem clicou em cada formação (pessoas, não cliques) */
   const porF=[...Array(nf)].map((_,i)=>envios.filter(e=>e.cliques_botoes&&+e.cliques_botoes[i]>0).length);
   const num=$('#cNumeros'), dest=$('#cDest'); if(!num||!dest) return;
@@ -3357,6 +3375,7 @@ function pintarDestinatarios(quando){
       <div><strong>${cli}</strong><span>clicaram para se inscrever</span></div>
       <div><strong>${sai}</strong><span>saíram da lista</span></div>
       ${err?`<div class="mau"><strong>${err}</strong><span>com erro</span></div>`:''}
+      ${dev?`<div class="mau"><strong>${dev}</strong><span>${dev===1?'email devolvido':'emails devolvidos'}</span></div>`:''}
     </div>${nf>1?`<div class="camp-numeros camp-numeros-f">${porF.map((x,i)=>`<div><strong>${x}</strong><span>${esc(tituloFormacao(k,i))}</span></div>`).join('')}</div>`:''}`:'';
   const clicou=e=>{
     if(!e.cliques) return '<span class="muted">-</span>';
@@ -3371,8 +3390,10 @@ function pintarDestinatarios(quando){
     <div class="table-wrap"><table><thead><tr><th>Nome</th><th>Email</th><th>Estado</th><th>Clicou</th><th>Saiu</th></tr></thead>
     <tbody>${envios.map(e=>`<tr>
       <td><div class="cell-main">${esc(e.nome)}</div></td>
-      <td>${e.saiu_em?`<span class="saiu-email" title="Saiu da lista">${esc(e.email)}</span>`:esc(e.email)}</td>
-      <td>${e.estado==='enviado'?`<span class="pill green">Enviado</span> <span class="cell-sub">${dt(e.enviado_em)}</span>`
+      <td>${e.saiu_em?`<span class="saiu-email" title="Saiu da lista">${esc(e.email)}</span>`
+        :e.devolvido_em?`<span class="devolvido-email">${esc(e.email)}</span>`:esc(e.email)}</td>
+      <td>${e.devolvido_em?`<span class="pill red" title="${esc(e.devolvido_motivo||'')}">Devolvido</span> <span class="cell-sub">${esc((e.devolvido_motivo||'').slice(0,40))}</span>`
+        :e.estado==='enviado'?`<span class="pill green">Enviado</span> <span class="cell-sub">${dt(e.enviado_em)}</span>`
         :e.estado==='erro'?`<span class="pill red" title="${esc(e.erro)}">Erro</span>`:'<span class="pill grey">Por enviar</span>'}</td>
       <td>${clicou(e)}</td>
       <td>${e.saiu_em?'<span class="pill amber">Saiu</span>':'<span class="muted">-</span>'}</td>
@@ -3537,8 +3558,12 @@ function pintarCampanha(){
     clearTimeout(tContar); tContar=setTimeout(async()=>{
       try{ const r=await rpc('campanha_destinatarios',{p_token:sessao.token,p_filtro:filtroDeChave($('#cPara').value)});
         if(r.teste){ $('#cQuantos').textContent='Vai só para '+r.teste+'. Zona de testes: não chega a nenhum formando.'; return; }
+        /* quem saiu da lista e quem tem o email devolvido ficam de fora */
+        const fora=[r.sairam?r.sairam+(r.sairam===1?' saiu':' saíram')+' da lista':'',
+          r.devolvidos?r.devolvidos+' com email devolvido':''].filter(Boolean);
+        const nf=(r.sairam||0)+(r.devolvidos||0);
         $('#cQuantos').textContent='Vai para '+r.n+(r.n===1?' pessoa':' pessoas')
-          +(r.sairam?' ('+r.sairam+(r.sairam===1?' saiu':' saíram')+' da lista e fica'+(r.sairam===1?'':'m')+' de fora).':'.');
+          +(fora.length?' ('+fora.join(' e ')+' fica'+(nf===1?'':'m')+' de fora).':'.');
       }catch(e){ if(!faltaSql(e,'12-campanhas.sql')) tratar(e); } },250); };
   if($('#cAssunto')) $('#cAssunto').addEventListener('input',ver);
   $('#cPara').addEventListener('change',()=>{ ver(); contar(); });

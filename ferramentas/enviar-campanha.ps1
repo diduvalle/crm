@@ -15,7 +15,8 @@
     Duplo clique em "Enviar campanha" no Ambiente de trabalho (é o
     Enviar campanha.cmd, que corre isto com -Menu): vai buscar o
     campanha-*.json mais recente das Transferências e pergunta o que
-    fazer - ver o rascunho, enviar um teste, ou enviar a toda a gente.
+    fazer - ver o rascunho, enviar um teste, enviar a toda a gente, ou
+    (depois de enviar) ver os emails devolvidos.
 
   Ou à mão, numa consola:
     .\enviar-campanha.ps1 -Rascunho          abre o email no Outlook, sem enviar
@@ -116,6 +117,75 @@ function FicheiroValido {
   catch { return $null }   # sem internet: não se sabe
 }
 
+# ---------- Emails devolvidos ----------
+# Quando um endereço já não existe, o Microsoft 365 devolve um aviso
+# ("Não é possível entregar", em inglês "Undeliverable") à caixa do
+# Turismo de Portugal. Às vezes é o servidor do outro lado que responde,
+# com um email normal do MAILER-DAEMON. Lê-se a Caixa de Entrada e o Lixo
+# desde que o ficheiro foi preparado, e procura-se em cada aviso o
+# endereço de alguém desta campanha.
+$PADRAO_AVISO = '(?i)undeliverable|undelivered|não é possível entregar|nao e possivel entregar|não foi possível entregar|' +
+  'delivery status notification \(failure\)|mail delivery failed|delivery has failed|returned mail|falha na entrega|não entregue'
+function MotivoDe([string]$texto) {
+  $c = ([regex]::Match($texto, '\b5\.\d{1,3}\.\d{1,3}\b')).Value
+  if ($c -match '^5\.1\.(1|10)$') { return $c + ' o endereço não existe' }
+  if ($c -eq '5.2.2') { return $c + ' caixa cheia' }
+  if ($c -match '^5\.4\.') { return $c + ' o domínio não recebe email' }
+  if ($c) { return $c + ' recusado' }
+  return 'devolvido'
+}
+# Pura (sem Outlook): recebe os itens, devolve @{ email = motivo }.
+function AnalisarDevolucoes($itens, [datetime]$desde, [hashtable]$por) {
+  $achados = @{}
+  foreach ($it in $itens) {
+    $quando = $null; try { $quando = [datetime]$it.ReceivedTime } catch { continue }
+    if ($quando -lt $desde) { break }   # os itens vêm do mais recente para o mais antigo
+    $classe = [string]$it.MessageClass; $assunto = [string]$it.Subject
+    $aviso = ($classe -like 'REPORT.IPM.Note.NDR*') -or ($classe -like 'IPM.Note*' -and $assunto -match $PADRAO_AVISO)
+    if (-not $aviso) { continue }
+    $corpo = ''; try { $corpo = [string]$it.Body } catch {}
+    foreach ($m in [regex]::Matches($assunto + ' ' + $corpo, '[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}')) {
+      $e = $m.Value.ToLower().TrimEnd('.')
+      if ($por.ContainsKey($e) -and -not $achados.ContainsKey($e)) { $achados[$e] = MotivoDe $corpo }
+    }
+  }
+  return $achados
+}
+function FazerDevolvidos {
+  $por = @{}; foreach ($m in $l.mensagens) { $por[$m.email.ToLower()] = $m }
+  $desde = (Get-Item $Lote).LastWriteTime.AddMinutes(-5)
+  $achados = @{}
+  foreach ($n_pasta in 6, 23) {   # Caixa de Entrada, Lixo
+    try {
+      $itens = $conta.DeliveryStore.GetDefaultFolder($n_pasta).Items
+      $itens.Sort('[ReceivedTime]', $true)
+      $a = AnalisarDevolucoes $itens $desde $por
+      foreach ($k in $a.Keys) { if (-not $achados.ContainsKey($k)) { $achados[$k] = $a[$k] } }
+    } catch { Write-Host ('  Não consegui ler uma pasta do Outlook: ' + $_.Exception.Message) -ForegroundColor Yellow }
+  }
+  if (-not $achados.Count) {
+    Write-Host '  Nenhum email devolvido desta campanha, até agora.' -ForegroundColor Green
+    Write-Host '  Os avisos chegam normalmente em minutos, às vezes horas depois: podes voltar a ver mais tarde.'
+    return
+  }
+  Write-Host ('  Encontrei ' + $achados.Count + $(if ($achados.Count -eq 1) { ' email devolvido:' } else { ' emails devolvidos:' }))
+  foreach ($k in $achados.Keys) { Write-Host ('    ' + $k + '  (' + $achados[$k] + ')') }
+  Write-Host ''
+  $r = Read-Host '  Marcar no Repo? As campanhas seguintes deixam de lhes enviar (S/N)'
+  if ($r.Trim() -notmatch '^(?i)s') { Write-Host '  Não marquei nada.'; return }
+  $ok = 0
+  foreach ($k in $achados.Keys) {
+    try {
+      $res = Repo 'campanha_devolvido' @{ p_token = $por[$k].token; p_motivo = $achados[$k] }
+      if ($res.ok) { $ok++ } else { Write-Host ('    ' + $k + ': o Repo não reconheceu este email') -ForegroundColor Yellow }
+    } catch {
+      if ("$_" -match '404|PGRST202') { Write-Host '  Falta correr o 14-campanhas-devolvidos.sql no Supabase.' -ForegroundColor Red; return }
+      Write-Host ('    ' + $k + ': ' + $_.Exception.Message) -ForegroundColor Red
+    }
+  }
+  Write-Host ('  Marquei ' + $ok + ' no Repo. Vês na campanha e nos Formandos (filtro "Email devolvido").') -ForegroundColor Green
+}
+
 function FazerRascunho {
   $m = Novo $paraTeste ('[RASCUNHO] ' + $l.assunto) $l.html_teste
   $m.Save()
@@ -173,6 +243,7 @@ if ($Menu) {
     if (-not $valido) { Write-Host '  3  (enviar: só com um ficheiro válido)' -ForegroundColor DarkGray; $falta = 0 }
     elseif ($falta -gt 0) { Write-Host ('  3  Enviar a ' + $falta + $(if ($falta -eq 1) { ' pessoa' } else { ' pessoas' })) }
     else { Write-Host '  3  (já foi enviada a toda a gente)' -ForegroundColor DarkGray }
+    if ($valido) { Write-Host '  4  Ver emails devolvidos desta campanha' } else { Write-Host '  4  (devolvidos: só com um ficheiro válido)' -ForegroundColor DarkGray }
     Write-Host '  0  Sair'
     Write-Host ''
     $o = (Read-Host '  Escolhe').Trim()
@@ -188,7 +259,9 @@ if ($Menu) {
         else { Write-Host '  Não enviei nada.' }
       }
       elseif ($o -eq '3') { Write-Host '  Com este ficheiro não há nada para enviar.' }
-      else { Write-Host '  Escolhe 1, 2, 3 ou 0.' }
+      elseif ($o -eq '4' -and $valido) { FazerDevolvidos }
+      elseif ($o -eq '4') { Write-Host '  Com este ficheiro não consigo marcar nada no Repo.' }
+      else { Write-Host '  Escolhe 1, 2, 3, 4 ou 0.' }
     } catch { Write-Host ('  Correu mal: ' + $_.Exception.Message) -ForegroundColor Red }
     Write-Host ''
     Read-Host '  Carrega em Enter para voltar ao menu' | Out-Null

@@ -3,6 +3,8 @@
 -- =====================================================================
 --  Correr uma vez no SQL Editor do Supabase, DEPOIS do 12-campanhas.sql.
 --  É idempotente.
+--  ATENÇÃO: depois do 14, se voltares a correr este, corre o 14 a seguir
+--  (este repõe uma campanha_preparar que ainda envia aos devolvidos).
 --
 --  1. O EMAIL PASSA A SER UMA ESTRUTURA (`conteudo`): texto de
 --     pré-visualização, cabeçalho, abertura, VÁRIAS formações (cada uma
