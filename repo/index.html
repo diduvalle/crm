@@ -340,6 +340,11 @@ td .tag{align-self:auto}
 .camp-numeros strong{display:block;font-size:1.5rem;font-weight:800;line-height:1.15}
 .camp-numeros span{font-size:.8rem;color:var(--muted)}
 .camp-numeros .mau strong{color:var(--danger)}
+/* quem saiu da lista: o email continua, riscado e a vermelho */
+.saiu-email{color:var(--danger);text-decoration:line-through;text-decoration-thickness:1.5px}
+.camp-sub-cab{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:24px 0 10px;flex-wrap:wrap}
+.camp-sub-cab .camp-sub{margin:0}
+.camp-sub-cab .muted{font-size:.8rem}
 .camp-ed{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}
 .camp-form{display:flex;flex-direction:column;gap:14px}
 .camp-accoes{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:4px;flex-wrap:wrap}
@@ -621,6 +626,7 @@ function voltarATurmas(){ escolaAtual?abrirEscola(escolaAtual):mostrarEscolas();
 
 function mostrarEscolas(){
   escolaAtual=null; turmaAtual=null;
+  lembrar('');
   mostrarVista('vEscolas');
   $('#hTitulo').textContent='Escolas'; $('#hSub').textContent='As escolas da plataforma - escolhe uma para ver as turmas';
   $('#btnPrimario').classList.add('hidden');
@@ -630,6 +636,7 @@ function mostrarEscolas(){
 }
 function abrirEscola(e){
   escolaAtual=e; turmaAtual=null;
+  lembrar('escola/'+rotaEscola(e));
   mostrarVista('vTurmas');
   $('#hTitulo').textContent=e.slug?(e.nome||e.slug):'Sem escola';
   $('#hSub').textContent=e.slug
@@ -642,6 +649,7 @@ function abrirEscola(e){
 }
 function abrirTurma(t){
   turmaAtual=t;
+  lembrar('turma/'+rotaTurma(t));
   mostrarVista('vSessoes');
   $('#hTitulo').textContent=t.nome||('Turma '+t.codigo);
   $('#hSub').textContent=(escolaAtual&&escolaAtual.slug?(escolaAtual.nome||escolaAtual.slug)+' · ':'')
@@ -653,9 +661,50 @@ function abrirTurma(t){
   carregarSessoes(t).then(filtrar);
 }
 
+/* ---------- Onde se está ----------
+   O sítio vai para o endereço (#campanha/<id>, #turma/<escola>/<codigo>,
+   #formandos...), para uma recarga voltar ao mesmo ecrã em vez de
+   recomeçar nas Escolas - e para se poder guardar um ecrã nos favoritos.
+   replaceState e não um hash novo: não enche o histórico do browser a
+   cada clique. */
+function lembrar(sitio){
+  try{ history.replaceState(null,'',sitio?'#'+sitio:location.pathname+location.search); }catch(e){}
+}
+const rotaEscola=e=>e&&e.slug?encodeURIComponent(e.slug):'-';
+const rotaTurma=t=>rotaEscola(escolaAtual)+'/'+encodeURIComponent(t.codigo);
+async function voltarAoSitio(){
+  const [r,a,b,c]=location.hash.slice(1).split('/').map(x=>{ try{ return decodeURIComponent(x); }catch(e){ return x; } });
+  /* as escolas carregam-se sempre: são elas que enchem a barra lateral */
+  await carregarEscolas();
+  try{
+    if(r==='testes') return mostrarTestes();
+    if(r==='teste'&&a) return editarTeste(a);
+    if(r==='formandos') return mostrarFormandos();
+    if(r==='campanhas') return mostrarCampanhas();
+    if(r==='campanha'&&a) return abrirCampanha(a);
+    if(['escola','turma','badges','avaliacoes','aplicacao'].includes(r)){
+      const e=escolas.find(x=>(x.slug||'')===(a==='-'?'':a));
+      if(!e) return mostrarEscolas();
+      if(r==='escola') return abrirEscola(e);
+      escolaAtual=e;
+      geridas=await rpc('repo_turmas_da_escola',{p_token:sessao.token,p_slug:e.slug||''});
+      const tu=geridas.find(x=>String(x.codigo)===b);
+      if(!tu) return abrirEscola(e);
+      if(r==='turma') return abrirTurma(tu);
+      if(r==='badges') return abrirSelos(tu);
+      if(r==='avaliacoes') return abrirAvaliacoes(tu);
+      turmaAtual=tu;
+      aplicacoes=await rpc('teste_aplicacoes_da_turma',{p_token:sessao.token,p_repo_turma_id:tu.id});
+      const ap=aplicacoes.find(x=>x.id===c);
+      return ap?abrirAplicacao(ap):abrirAvaliacoes(tu);
+    }
+  }catch(e){ if(e&&e.message==='SEM_PERMISSAO') return tratar(e); }
+  mostrarEscolas();
+}
+
 async function arrancar(){
   $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
-  mostrarEscolas();
+  voltarAoSitio();
 }
 
 /* ---------- Escolas ---------- */
@@ -1144,6 +1193,7 @@ let selosSess=null, selosEmail=null, selosCumLaude=null;
 
 async function abrirSelos(t){
   turmaAtual=t; selosSess=null;
+  lembrar('badges/'+rotaTurma(t));
   mostrarVista('vSelos');
   $('#hTitulo').textContent='Badges · '+(t.nome||('Turma '+t.codigo));
   $('#hSub').textContent='Turma '+t.codigo+' · '+t.n_formandos+' formandos';
@@ -1674,6 +1724,7 @@ const LETRA=i=>String.fromCharCode(97+i);
 /* ---------- A biblioteca ---------- */
 function mostrarTestes(){
   escolaAtual=null; turmaAtual=null;
+  lembrar('testes');
   mostrarVista('vTestes');
   accaoPrimaria=()=>editarTeste(null);
   $('#hTitulo').textContent='Testes';
@@ -1742,6 +1793,7 @@ async function editarTeste(id){
   testeEdit.itens=(testeEdit.itens||[]).map(it=>({...it,
     opcoes:Array.isArray(it.opcoes)?it.opcoes:[],
     certa:(it.certa===undefined?null:it.certa)}));
+  lembrar(testeEdit&&testeEdit.id?'teste/'+encodeURIComponent(testeEdit.id):'testes');
   mostrarVista('vTeste');
   $('#hTitulo').textContent=testeEdit.id?'Editar teste':'Novo teste';
   $('#hSub').textContent='As perguntas, as respostas certas e as cotações';
@@ -1959,6 +2011,7 @@ async function guardarTeste(ev){
 /* ---------- As avaliações de uma turma ---------- */
 async function abrirAvaliacoes(t){
   turmaAtual=t;
+  lembrar('avaliacoes/'+rotaTurma(t));
   mostrarVista('vAvals');
   $('#hTitulo').textContent='Avaliações · '+(t.nome||('Turma '+t.codigo));
   $('#hSub').textContent='Turma '+t.codigo+' · '+t.n_formandos+' formandos';
@@ -2087,6 +2140,7 @@ async function enviarAplicacao(sessaoId,botao){
 async function abrirAplicacao(a){
   if(!a) return;
   aplAtual=a;
+  if(turmaAtual) lembrar('aplicacao/'+rotaTurma(turmaAtual)+'/'+encodeURIComponent(a.id));
   mostrarVista('vApl');
   $('#hTitulo').textContent=a.titulo;
   $('#hSub').textContent=(turmaAtual?'Turma '+turmaAtual.codigo+' · ':'')+nm(a.pontos_total)+' pontos';
@@ -2588,6 +2642,7 @@ function paresRepetidos(){
 /* ---------- A lista ---------- */
 function mostrarFormandos(){
   escolaAtual=null; turmaAtual=null;
+  lembrar('formandos');
   mostrarVista('vFormandos');
   accaoPrimaria=escolherFicheiroFormandos;
   $('#hTitulo').textContent='Formandos';
@@ -2658,7 +2713,7 @@ function pintarFormandos(){
         const ult=f.formacoes[0];   /* o servidor ordena da mais recente para a mais antiga */
         return `<tr class="clickable" data-formando="${f.id}">
           <td><div class="cell-main">${esc(nomeTodo(f))}</div>${f.notas?`<div class="cell-sub">${esc(f.notas.split('\n')[0])}</div>`:''}${f.saiu_em?'<div class="cell-sub"><span class="pill grey">Saiu da lista</span></div>':''}</td>
-          <td>${esc(f.email)}</td>
+          <td>${f.saiu_em?`<span class="saiu-email" title="Saiu da lista">${esc(f.email)}</span>`:esc(f.email)}</td>
           <td>${f.formacoes.length>=2?`<span class="pill blue">${f.formacoes.length} formações</span>`:'<span class="muted">1</span>'}</td>
           <td>${ult?`<div class="cell-main" style="font-weight:600">${esc(ult.curso)}</div><div class="cell-sub">${esc(ult.entidade)} · ${periodo(ult)}</div>`:''}</td>
         </tr>`;}).join('')}</tbody></table></div>`
@@ -3044,6 +3099,7 @@ ${botao}
 /* ---------- A lista ---------- */
 function mostrarCampanhas(){
   escolaAtual=null; turmaAtual=null;
+  lembrar('campanhas');
   mostrarVista('vCampanhas');
   accaoPrimaria=()=>abrirCampanha(null);
   $('#hTitulo').textContent='Campanhas';
@@ -3089,6 +3145,7 @@ async function abrirCampanha(id){
     campAtual={id:null,assunto:'',corpo:CORPO_INICIAL,botao_texto:'Quero inscrever-me',botao_link:'',
       filtro:{tipo:'todos'},estado:'rascunho',envios:[]};
   }
+  lembrar(campAtual.id?'campanha/'+encodeURIComponent(campAtual.id):'campanhas');
   mostrarVista('vCampanha');
   accaoPrimaria=null;
   $('#btnPrimario').classList.add('hidden');
@@ -3096,6 +3153,41 @@ async function abrirCampanha(id){
   $('#hSub').textContent='Escreve o email e escolhe para quem. A pré-visualização mostra-o como vai chegar.';
   marcarNavEscola();
   pintarCampanha();
+}
+/* Os números e a lista de destinatários desenham-se à parte do resto: o
+   botão "Actualizar" refresca só isto, sem mexer no que se está a
+   escrever no formulário. Quem saiu da lista fica com o email riscado. */
+function pintarDestinatarios(quando){
+  const envios=(campAtual&&campAtual.envios)||[];
+  const n=envios.length, env=envios.filter(e=>e.estado==='enviado').length,
+        err=envios.filter(e=>e.estado==='erro').length, cli=envios.filter(e=>e.cliques>0).length,
+        sai=envios.filter(e=>e.saiu_em).length;
+  const num=$('#cNumeros'), dest=$('#cDest'); if(!num||!dest) return;
+  num.innerHTML=n?`<div class="camp-numeros">
+      <div><strong>${env}/${n}</strong><span>enviados</span></div>
+      <div><strong>${cli}</strong><span>clicaram em Inscrever</span></div>
+      <div><strong>${sai}</strong><span>saíram da lista</span></div>
+      ${err?`<div class="mau"><strong>${err}</strong><span>com erro</span></div>`:''}
+    </div>`:'';
+  dest.innerHTML=n?`<div class="camp-sub-cab"><h3 class="camp-sub">Destinatários</h3>
+      <div class="toolbar">${quando?`<span class="muted">actualizado às ${quando}</span>`:''}
+        <button class="btn-sec" id="cActualizar">${ic('refrescar')}Actualizar</button></div></div>
+    <div class="table-wrap"><table><thead><tr><th>Nome</th><th>Email</th><th>Estado</th><th>Clicou</th><th>Saiu</th></tr></thead>
+    <tbody>${envios.map(e=>`<tr>
+      <td><div class="cell-main">${esc(e.nome)}</div></td>
+      <td>${e.saiu_em?`<span class="saiu-email" title="Saiu da lista">${esc(e.email)}</span>`:esc(e.email)}</td>
+      <td>${e.estado==='enviado'?`<span class="pill green">Enviado</span> <span class="cell-sub">${dt(e.enviado_em)}</span>`
+        :e.estado==='erro'?`<span class="pill red" title="${esc(e.erro)}">Erro</span>`:'<span class="pill grey">Por enviar</span>'}</td>
+      <td>${e.cliques?`<span class="pill blue">${e.cliques}×</span>`:'<span class="muted">-</span>'}</td>
+      <td>${e.saiu_em?'<span class="pill amber">Saiu</span>':'<span class="muted">-</span>'}</td>
+    </tr>`).join('')}</tbody></table></div>`:'';
+  const b=$('#cActualizar'); if(b) b.addEventListener('click',async()=>{
+    b.disabled=true;
+    try{ const r=await rpc('campanha_ler',{p_token:sessao.token,p_id:campAtual.id});
+      campAtual.envios=r.envios; campAtual.estado=r.estado; campAtual.enviada_em=r.enviada_em; }
+    catch(e){ b.disabled=false; return tratar(e); }
+    pintarDestinatarios(new Date().toLocaleTimeString('pt-PT'));
+  });
 }
 function campanhaTravada(){ return (campAtual.envios||[]).some(e=>e.estado!=='por_enviar'); }
 function pintarCampanha(){
@@ -3108,12 +3200,7 @@ function pintarCampanha(){
         sai=envios.filter(e=>e.saiu_em).length;
   $('#vCampanha').innerHTML=`
     <button class="voltar" id="voltarCamp">${ic('seta')}Campanhas</button>
-    ${n?`<div class="camp-numeros">
-      <div><strong>${env}/${n}</strong><span>enviados</span></div>
-      <div><strong>${cli}</strong><span>clicaram em Inscrever</span></div>
-      <div><strong>${sai}</strong><span>saíram da lista</span></div>
-      ${err?`<div class="mau"><strong>${err}</strong><span>com erro</span></div>`:''}
-    </div>`:''}
+    <div id="cNumeros"></div>
     <div class="camp-ed">
       <div class="card card-pad camp-form">
         <div class="field"><label>Assunto</label><input id="cAssunto" value="${esc(c.assunto)}"${dis} placeholder="Nova turma de Front Office em janeiro"></div>
@@ -3147,15 +3234,8 @@ function pintarCampanha(){
         <iframe id="cVer" title="Pré-visualização do email" sandbox></iframe>
       </div>
     </div>
-    ${n?`<h3 class="camp-sub">Destinatários</h3>
-    <div class="table-wrap"><table><thead><tr><th>Nome</th><th>Email</th><th>Estado</th><th>Clicou</th><th>Saiu</th></tr></thead>
-    <tbody>${envios.map(e=>`<tr>
-      <td><div class="cell-main">${esc(e.nome)}</div></td><td>${esc(e.email)}</td>
-      <td>${e.estado==='enviado'?`<span class="pill green">Enviado</span> <span class="cell-sub">${dt(e.enviado_em)}</span>`
-        :e.estado==='erro'?`<span class="pill red" title="${esc(e.erro)}">Erro</span>`:'<span class="pill grey">Por enviar</span>'}</td>
-      <td>${e.cliques?`<span class="pill blue">${e.cliques}×</span>`:'<span class="muted">-</span>'}</td>
-      <td>${e.saiu_em?'<span class="pill amber">Saiu</span>':'<span class="muted">-</span>'}</td>
-    </tr>`).join('')}</tbody></table></div>`:''}`;
+    <div id="cDest"></div>`;
+  pintarDestinatarios();
 
   const ler=()=>({assunto:$('#cAssunto').value, corpo:$('#cCorpo').value, botao_texto:$('#cBotaoT').value,
     botao_link:$('#cBotaoL').value, filtro:filtroDeChave($('#cPara').value)});
