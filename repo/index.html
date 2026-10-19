@@ -3069,6 +3069,8 @@ const EMAIL_TESTE='luiz.vale@gmail.com';
 /* O ícone do LinkedIn vai como PNG num endereço completo: o Outlook e o
    Gmail não mostram SVG, nem imagens com caminho relativo. */
 const LINKEDIN_ICONE=SITE_CAMP+'/repo/img/linkedin.png';
+/* As dúvidas vão para a conta de onde os emails saem: é lá que se lê. */
+const EMAIL_RESPOSTA='diogo.vale@escolas.turismodeportugal.pt';
 
 /* As opções de "Para quem" saem das formações que estão nos Formandos. */
 async function garantirFormandos(){
@@ -3120,7 +3122,7 @@ function descreverFiltro(f){
    Um email é uma estrutura, não um texto solto: abertura, uma ou mais
    formações (cada uma com o seu botão e o seu link de inscrição), fecho,
    LinkedIn e rodapé. Todo o texto é teu, incluindo a frase de sair. */
-function formacaoVazia(){ return {titulo:'',inicio:'',fim:'',horas:'',texto:'',botao:'Quero inscrever-me',link:''}; }
+function formacaoVazia(){ return {titulo:'',inicio:'',fim:'',horas:'',texto:'',botao:'Quero inscrever-me',link:'',duvida:'Tenho uma dúvida'}; }
 /* As datas guardam-se aaaa-mm-dd (o que o calendário dá) e escrevem-se
    dd/mm/aaaa. As formações são sempre online. */
 function quandoFormacao(f){
@@ -3134,7 +3136,7 @@ function conteudoInicial(){
     cabecalho:'Diogo Vale · Formador',
     abertura:'Olá {nome},\n\n',
     formacoes:[formacaoVazia()],
-    fecho:'Até breve,\nDiogo Vale',
+    fecho:'Tens alguma dúvida sobre estas formações? Responde a este email, leio todas as respostas.\n\nAté breve,\nDiogo Vale',
     linkedin:'https://www.linkedin.com/in/ldvale/',
     linkedin_texto:'Diogo Vale no LinkedIn',
     rodape:'Recebes este email porque fizeste formação comigo. Se não quiseres receber mais, [sai da lista].'
@@ -3193,6 +3195,7 @@ function mjmlDe(k,assunto){
         ${meta?`<mj-text font-size="14px" color="#6f655c" padding="0 0 8px">${meta}</mj-text>`:''}
         ${tem(f.texto)?`<mj-text font-size="15px" padding="0 0 4px">${textoEmail(f.texto,true)}</mj-text>`:''}
         ${tem(f.botao)?`<mj-button href="%%LINK_${i}%%" padding="12px 0 0">${esc(f.botao.trim())}</mj-button>`:''}
+        ${tem(f.duvida)?`<mj-text font-size="14px" padding="12px 0 0"><a href="${esc('mailto:'+EMAIL_RESPOSTA+'?subject='+encodeURIComponent('Dúvida: '+(f.titulo.trim()||'formação')))}" style="color:#005e95;text-decoration:underline">${esc(f.duvida.trim())}</a></mj-text>`:''}
       </mj-column>
     </mj-section>`;
   }).join('');
@@ -3512,6 +3515,7 @@ function pintarCampanha(){
           ${campoCamp('Texto do botão','botao',f.botao,{i,dis,dica:'Em branco, não há botão.'})}
           ${campoCamp('Link da inscrição','link',f.link,{i,dis,ph:'https://...'})}
         </div>
+        ${campoCamp('Link para dúvidas','duvida',f.duvida,{i,dis,dica:'Abre um email para ti, com o assunto «Dúvida:» e o título da formação. Em branco, não aparece.'})}
       </div>`).join('');
     box.querySelectorAll('[data-fmover]').forEach(b=>b.addEventListener('click',()=>{
       const i=+b.dataset.fmover, j=i+(+b.dataset.dir); const [x]=k.formacoes.splice(i,1); k.formacoes.splice(j,0,x);
@@ -3636,6 +3640,10 @@ async function prepararCampanha(dados,retomar){
     versao:2, campanha_id:id, assunto:base.assunto, supa_url:SUPA_URL, supa_key:SUPA_KEY,
     email_teste:EMAIL_TESTE,   /* o rascunho e o teste do programa vão para aqui */
     html_teste:html('Diogo','teste'),
+    /* para o programa do PC abrir cada um antes de enviar */
+    links:base.conteudo?(base.conteudo.formacoes||[]).filter(f=>f.botao.trim()&&f.link.trim())
+      .map((f,i)=>({nome:f.titulo.trim()||'Formação '+(i+1),url:f.link.trim()}))
+      :(base.botao_link?[{nome:'Inscrição',url:base.botao_link}]:[]),
     mensagens:p.envios.map(e=>({email:e.email,nome:e.nome,token:e.token,html:html(e.nome,e.token)}))
   };
   const nome='campanha-'+slugDe(base.assunto||'email').slice(0,40)+'-'+new Date().toISOString().slice(0,10)+'.json';

@@ -70,6 +70,43 @@ if (-not $conta) { Sair 'A conta do Turismo de Portugal não está no Outlook cl
 # ficheiro); ficheiros antigos, sem ele, vão para a própria conta.
 $paraTeste = if ($Para) { $Para } elseif ($l.email_teste) { $l.email_teste } else { $conta.SmtpAddress }
 
+# ---------- Os links do email ----------
+# Abre-se cada link de inscrição (e o LinkedIn) como um browser, antes de
+# enviar: um link com gralha, ou uma inscrição já fechada, num email que
+# já saiu não se corrige. 404/410 ou um endereço que não existe = partido.
+# Alguns sites recusam programas (o LinkedIn responde 999, outros 403):
+# esses ficam "não deu para confirmar", não "partido".
+function VerificarLinks {
+  if (-not $l.links) { return @() }
+  $ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'
+  $res = @()
+  foreach ($k in @($l.links)) {
+    $estado = 'ok'; $nota = ''
+    try {
+      [void](Invoke-WebRequest -Uri $k.url -Method Get -UseBasicParsing -MaximumRedirection 8 -TimeoutSec 20 -UserAgent $ua)
+    } catch {
+      $c = $null; try { $c = [int]$_.Exception.Response.StatusCode } catch {}
+      if ($c -eq 404 -or $c -eq 410) { $estado = 'mal'; $nota = 'a página não existe (' + $c + ')' }
+      elseif ($c) { $estado = 'duvida'; $nota = 'o site não deixou confirmar (' + $c + ')' }
+      else { $estado = 'mal'; $nota = 'não abre: ' + $_.Exception.Message }
+    }
+    $res += [pscustomobject]@{ nome = $k.nome; url = $k.url; estado = $estado; nota = $nota }
+  }
+  return $res
+}
+function MostrarLinks {
+  if ($null -eq $script:links) { return }
+  if (-not @($script:links).Count) { Write-Host '  Links    : (este ficheiro não traz os links para verificar)' -ForegroundColor DarkGray; return }
+  $bons = @($script:links | Where-Object { $_.estado -eq 'ok' }).Count
+  $tot = @($script:links).Count
+  Write-Host ('  Links    : ' + $bons + ' de ' + $tot + ' a funcionar') -ForegroundColor $(if ($bons -eq $tot) { 'Green' } else { 'Yellow' })
+  foreach ($k in $script:links) {
+    if ($k.estado -eq 'mal') { Write-Host ('             PARTIDO  ' + $k.nome + ': ' + $k.nota) -ForegroundColor Red; Write-Host ('                      ' + $k.url) -ForegroundColor Red }
+    elseif ($k.estado -eq 'duvida') { Write-Host ('             ?        ' + $k.nome + ': ' + $k.nota) -ForegroundColor DarkYellow }
+  }
+}
+$links = $null
+
 function Cabecalho {
   $feitos = (JaEnviados).Count
   Write-Host ''
@@ -80,6 +117,7 @@ function Cabecalho {
     $(if ($feitos) { '  (' + $feitos + $(if ($feitos -eq 1) { ' já enviado)' } else { ' já enviados)' }) } else { '' }))
   Write-Host ('  Sai de   : ' + $conta.SmtpAddress)
   Write-Host ('  Preparada: ' + (Get-Item $Lote).LastWriteTime.ToString('dd/MM/yyyy HH:mm'))
+  MostrarLinks
   Write-Host ''
 }
 
@@ -224,6 +262,9 @@ function FazerEnvio {
 
 # ---------- O menu (duplo clique no Ambiente de trabalho) ----------
 if ($Menu) {
+  Write-Host ''
+  Write-Host '  A verificar os links do email...'
+  $links = VerificarLinks
   while ($true) {
     Clear-Host
     Cabecalho
@@ -253,6 +294,9 @@ if ($Menu) {
       elseif ($o -eq '1') { FazerRascunho }
       elseif ($o -eq '2') { FazerTeste }
       elseif ($o -eq '3' -and $falta -gt 0) {
+        if (@($links | Where-Object { $_.estado -eq 'mal' }).Count) {
+          Write-Host '  ATENÇÃO: há links partidos no email (ver acima). O melhor é corrigir no Repo e preparar outra vez.' -ForegroundColor Red
+        }
         Write-Host ('  Isto envia ' + $falta + $(if ($falta -eq 1) { ' email' } else { ' emails' }) + ' a partir de ' + $conta.SmtpAddress + '.') -ForegroundColor Yellow
         $c = Read-Host '  Para confirmar, escreve ENVIAR'
         if ($c.Trim() -ceq 'ENVIAR') { Write-Host ''; FazerEnvio }
