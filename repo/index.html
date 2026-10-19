@@ -316,6 +316,9 @@ td .tag{align-self:auto}
 .f-aviso>div{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
 .f-aviso span{font-size:.82rem;color:var(--muted)}
 .f-barra{margin-bottom:10px}
+.f-procura{position:relative;flex:1 1 260px;max-width:360px;margin:0}
+.f-procura svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted);pointer-events:none}
+.f-procura input{padding-left:34px;width:100%}
 .f-barra .field select{width:auto;min-width:190px}
 .f-conta{font-size:.8rem;margin:0 0 10px}
 .f-sub{font-size:.8rem;font-weight:700;margin:18px 0 8px}
@@ -583,6 +586,7 @@ const I={
   grafico:'M3 3v18h18M7 15l3-4 3 3 5-7',
   tranca:'M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4',
   papel:'M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h6',
+  lupa:'M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14M21 21l-4.35-4.35',
   esq:'M15 18l-6-6 6-6', dir:'M9 18l6-6-6-6', esq2:'M11 17l-5-5 5-5M18 17l-5-5 5-5', dir2:'M13 17l5-5-5-5M6 17l5-5-5-5',
   ordCima:'M8 14l4-4 4 4', ordBaixo:'M8 10l4 4 4-4', ordAmbos:'M8 9l4-4 4 4M8 15l4 4 4-4'
 };
@@ -2756,7 +2760,7 @@ function tabelaPaginada(box,cfg){
   if(!box) return;
   const st=TP[cfg.id]||(TP[cfg.id]={pag:1,ordem:cfg.ordem||null});
   const q=semAcentos(($('#pesquisa').value||'').trim());
-  const ls=q?cfg.linhas.filter(l=>semAcentos(cfg.texto(l)).includes(q)):cfg.linhas.slice();
+  const ls=q?cfg.linhas.filter(l=>semAcentos(cfg.texto(l)).includes(q)||(cfg.casa&&cfg.casa(l,q))):cfg.linhas.slice();
   const col=st.ordem&&cfg.colunas[st.ordem.i];
   if(col&&col.ord) ls.sort((a,b)=>{
     const x=col.ord(a), y=col.ord(b);
@@ -2809,7 +2813,7 @@ function mostrarFormandos(){
   escolaAtual=null; turmaAtual=null;
   lembrar('formandos');
   mostrarVista('vFormandos');
-  pesquisaPropria=pesquisaEm('formandos')(pintarTabelaFormandos);
+  pesquisaPropria=pesquisaEm('formandos')(()=>{ const c=$('#fProcura'); if(c&&c.value!==$('#pesquisa').value) c.value=$('#pesquisa').value; pintarTabelaFormandos(); });
   accaoPrimaria=novoFormando;
   $('#hTitulo').textContent='Formandos';
   $('#hSub').textContent='Quem já fez formação contigo. Uma pessoa, um email.';
@@ -2817,8 +2821,10 @@ function mostrarFormandos(){
   $('#btnPrimario').innerHTML=ic('mais')+'Novo formando';
   $('#pesquisa').value='';
   marcarNavEscola();
+  focarProcura=true;
   carregarFormandos();
 }
+let focarProcura=false;
 async function carregarFormandos(pintar=true){
   let d;
   try{ d=await rpc('formandos_listar',{p_token:sessao.token}); }
@@ -2869,6 +2875,7 @@ function pintarFormandos(){
         <span>Nomes parecidos com emails diferentes. Vê se são a mesma pessoa.</span></div>
       <button class="btn-sec" id="fVerRep">Ver</button></div>`:''}
     <div class="toolbar f-barra">
+      <div class="field f-procura">${ic('lupa')}<input id="fProcura" type="search" placeholder="Procurar por email ou nome" aria-label="Procurar por email ou nome" autocomplete="off" value="${esc($('#pesquisa').value)}"></div>
       <div class="field"><select id="fCurso" aria-label="Curso">${opc(cursos,fFiltro.curso,'Todos os cursos')}</select></div>
       <div class="field"><select id="fEnt" aria-label="Entidade">${opc(entidades,fFiltro.entidade,'Todas as entidades')}</select></div>
       ${chip('fRep',fFiltro.repetentes,'Com 2 ou mais formações · '+nRep)}
@@ -2883,6 +2890,8 @@ function pintarFormandos(){
   $('#fCurso').addEventListener('change',e=>{ fFiltro.curso=e.target.value; if(TP.formandos) TP.formandos.pag=1; pintarFormandos(); });
   $('#fEnt').addEventListener('change',e=>{ fFiltro.entidade=e.target.value; if(TP.formandos) TP.formandos.pag=1; pintarFormandos(); });
   rep('fRep','repetentes'); rep('fSaiu','saiu'); rep('fDev','devolvido');
+  $('#fProcura').addEventListener('input',e=>{ $('#pesquisa').value=e.target.value; if(TP.formandos) TP.formandos.pag=1; pintarTabelaFormandos(); });
+  if(focarProcura){ focarProcura=false; $('#fProcura').focus(); }
   if(pares.length) $('#fVerRep').addEventListener('click',()=>modalRepetidos(pares));
   v.querySelectorAll('[data-modelo]').forEach(b=>b.addEventListener('click',descarregarModelo));
   v.querySelectorAll('[data-carregar]').forEach(b=>b.addEventListener('click',escolherFicheiroFormandos));
@@ -2894,6 +2903,8 @@ function pintarTabelaFormandos(){
   tabelaPaginada($('#fTabela'),{
     id:'formandos', linhas:lista, ordem:{i:0,dir:1},
     texto:f=>[nomeTodo(f),f.email,f.notas].concat(f.formacoes.flatMap(c=>[c.curso,c.entidade])).join(' '),
+    /* ana.silva@gmail.com e anasilva@gmail.com são a mesma caixa: procura-se sem os pontos */
+    casa:(f,q)=>q.length>2&&f.email.toLowerCase().replace(/\./g,'').includes(q.replace(/\./g,'')),
     antes:n=>`<div class="muted f-conta">${n===formandos.length
       ?formandos.length+(formandos.length===1?' formando':' formandos')
       :n+' de '+formandos.length+' formandos'}</div>`,
