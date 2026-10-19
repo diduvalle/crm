@@ -410,6 +410,9 @@ td .tag{align-self:auto}
 .nf-aviso.mau>svg{color:var(--danger)}
 .nf-aviso>div{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0}
 .nf-aviso span{color:var(--muted)}
+.nf-resto{border:0;margin:14px 0 0;padding:0;min-width:0;transition:opacity .15s}
+.nf-resto:disabled{opacity:.45}
+.nf-dica-ok{color:var(--ok)!important}
 .nf-par{display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:var(--text)!important}
 /* o construtor de email */
 .camp-regras{font-size:.78rem;color:var(--muted);line-height:1.6;padding:10px 12px;border-radius:var(--rs);background:var(--surface2)}
@@ -3128,47 +3131,59 @@ function novoFormando(){
   const conhecidas=formacoesConhecidas();
   const m=abrirModal(`<div class="modal" style="width:min(640px,100%)">
     <div class="modal-head"><div><h3>Novo formando</h3>
-      <div class="sub">Uma pessoa, um email. As formações podem ser das que já estão no Repo ou novas.</div></div></div>
+      <div class="sub">Uma pessoa, um email. Começa pelo email: o Repo vê logo se a pessoa já está na lista.</div></div></div>
     <div class="modal-body">${listasFormacoes()}
-      <div class="form-grid">
-        <div class="field"><label>Nome</label><input id="nfNome" autocomplete="off"></div>
-        <div class="field"><label>Apelido</label><input id="nfAp" autocomplete="off"></div>
-        <div class="field full"><label>Email</label><input id="nfEmail" type="email" autocomplete="off"></div>
-        <div class="field full"><label>Notas</label><textarea id="nfNotas" rows="2"></textarea></div>
-      </div>
+      <div class="field"><label>Email</label><input id="nfEmail" type="email" autocomplete="off" placeholder="nome@exemplo.pt">
+        <span class="hint" id="nfDica"></span></div>
       <div id="nfAviso"></div>
-      <h4 class="f-sub">Formações</h4>
-      <div class="nf-lista" id="nfLista">${linhaFormacaoHTML(0,conhecidas)}</div>
-      <button type="button" class="btn-sec btn-sm" id="nfMais">${ic('mais')}Outra formação</button>
+      <fieldset class="nf-resto" id="nfResto" disabled>
+        <div class="form-grid">
+          <div class="field"><label>Nome</label><input id="nfNome" autocomplete="off"></div>
+          <div class="field"><label>Apelido</label><input id="nfAp" autocomplete="off"></div>
+          <div class="field full"><label>Notas</label><textarea id="nfNotas" rows="2"></textarea></div>
+        </div>
+        <div id="nfAvisoNome"></div>
+        <h4 class="f-sub">Formações</h4>
+        <div class="nf-lista" id="nfLista">${linhaFormacaoHTML(0,conhecidas)}</div>
+        <button type="button" class="btn-sec btn-sm" id="nfMais">${ic('mais')}Outra formação</button>
+      </fieldset>
     </div>
     <div class="modal-foot"><span></span><div style="display:flex;gap:10px"><button class="btn-sec" data-fechar>Cancelar</button>
       <button class="btn" id="nfGravar">Gravar</button></div></div></div>`);
   const q=s=>m.querySelector(s);
   m.querySelector('#nfMais').addEventListener('click',ligarFormacoes(q('#nfLista'),conhecidas));
-  let igual=null, parecidos=[];
+  let igual=null, parecidos=[], emailOk=false;
   const ver=()=>{
     const nome=(q('#nfNome').value+' '+q('#nfAp').value).trim(), email=q('#nfEmail').value.trim();
     const ch=email?chaveEmail(email):'';
+    emailOk=/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email);
     igual=ch?formandos.find(x=>chaveEmail(x.email)===ch)||null:null;
     parecidos=!igual&&nome?formandos.filter(x=>nomesParecidos(nomeTodo(x),nome)&&(!ch||chaveEmail(x.email)!==ch)):[];
     const abrir=p=>`<button type="button" class="btn-sec btn-sm" data-nfabrir="${p.id}">Abrir a ficha</button>`;
+    /* o resto do formulário só abre com um email completo e novo */
+    q('#nfResto').disabled=!emailOk||!!igual;
+    q('#nfDica').textContent=igual?'':!email?'':emailOk?'Email novo: preenche o resto.':'O email ainda não está completo.';
+    q('#nfDica').classList.toggle('nf-dica-ok',emailOk&&!igual);
     q('#nfAviso').innerHTML=igual
       ?`<div class="nf-aviso mau">${ic('alerta')}<div><strong>Já existe com este email: ${esc(nomeTodo(igual))}</strong>
-         <span>Uma pessoa, um email. Para lhe acrescentar formações, abre a ficha dela.</span></div>${abrir(igual)}</div>`
-      :parecidos.length?`<div class="nf-aviso">${ic('alerta')}<div><strong>Pode ser a mesma pessoa, com outro email</strong>
+         <span>Uma pessoa, um email. Para lhe acrescentar formações, abre a ficha dela.</span></div>${abrir(igual)}</div>`:'';
+    q('#nfAvisoNome').innerHTML=!igual&&parecidos.length?`<div class="nf-aviso">${ic('alerta')}<div><strong>Pode ser a mesma pessoa, com outro email</strong>
          ${parecidos.map(p=>`<span class="nf-par">${esc(nomeTodo(p))} · ${esc(p.email)} ${abrir(p)}</span>`).join('')}
          <span>Se for, abre a ficha e muda lá o email. Se for outra pessoa, grava.</span></div></div>`:'';
-    q('#nfGravar').disabled=!!igual;
+    q('#nfGravar').disabled=!emailOk||!!igual;
     q('#nfGravar').textContent=parecidos.length?'É outra pessoa - gravar':'Gravar';
     m.querySelectorAll('[data-nfabrir]').forEach(b=>b.addEventListener('click',()=>{ m.remove(); abrirFormando(b.dataset.nfabrir); }));
   };
-  let t=null; ['#nfNome','#nfAp','#nfEmail'].forEach(s=>q(s).addEventListener('input',()=>{ clearTimeout(t); t=setTimeout(ver,200); }));
+  /* o email vê-se a cada letra; os nomes (comparar com todos) com uma pausa */
+  q('#nfEmail').addEventListener('input',ver);
+  let t=null; ['#nfNome','#nfAp'].forEach(s=>q(s).addEventListener('input',()=>{ clearTimeout(t); t=setTimeout(ver,200); }));
+  ver();
   q('#nfGravar').addEventListener('click',async()=>{
     ver();
     const nome=q('#nfNome').value.trim(), apelido=q('#nfAp').value.trim(), email=q('#nfEmail').value.trim(), notas=q('#nfNotas').value.trim();
-    if(!nome) return toast('Falta o nome.','err');
-    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return toast('O email não parece certo.','err');
+    if(!emailOk) return toast('O email não parece certo.','err');
     if(igual) return;
+    if(!nome) return toast('Falta o nome.','err');
     const {out,erro}=lerFormacoes(q('#nfLista'),conhecidas);
     if(erro) return toast(erro,'err');
     if(!out.length) return toast('Escolhe pelo menos uma formação: a lista é de quem já fez formação contigo.','err');
@@ -3183,7 +3198,7 @@ function novoFormando(){
     m.remove(); toast('Formando acrescentado.');
     if(novo) abrirFormando(novo.id); else mostrarFormandos();
   });
-  setTimeout(()=>q('#nfNome').focus(),50);
+  setTimeout(()=>q('#nfEmail').focus(),50);
 }
 
 /* ---------- Carregar o Excel ---------- */
