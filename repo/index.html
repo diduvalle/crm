@@ -403,7 +403,18 @@ td .tag{align-self:auto}
 .nf-lista{display:flex;flex-direction:column;gap:10px;margin-bottom:10px}
 .nf-f{display:flex;flex-direction:column;gap:10px;padding:10px;border:1px solid var(--border);border-radius:var(--rs);background:var(--surface2)}
 .nf-f-cab{display:flex;gap:8px;align-items:center}
+.nf-f-cab{align-items:flex-end}
 .nf-f-cab .field{flex:1;min-width:0;margin:0}
+.nf-f .nf-nova{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:640px){ .nf-f .nf-nova{grid-template-columns:1fr} }
+.nf-turmas{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.nf-turmas:empty{display:none}
+.nf-turmas-rot{font-size:.78rem;font-weight:700;color:var(--muted);margin-right:4px}
+.nf-chip{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border:1px solid var(--border);border-radius:999px;background:var(--surface);color:var(--text);font:inherit;font-size:.82rem;cursor:pointer}
+.nf-chip:hover{border-color:var(--g300)}
+.nf-chip.on{background:var(--g50);border-color:var(--g400);color:var(--g-texto);font-weight:700}
+.nf-chip svg{width:13px;height:13px}
+.nf-chip-nova{border-style:dashed;color:var(--muted)}
 .nf-aviso{display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding:10px 12px;border-radius:var(--rs);background:var(--warn-bg);color:var(--text);font-size:.84rem}
 .nf-aviso>svg{flex:none;color:var(--warn);margin-top:2px}
 .nf-aviso.mau{background:var(--danger-bg)}
@@ -3052,42 +3063,72 @@ function formacoesConhecidas(){
   const m=new Map(); formandos.forEach(f=>f.formacoes.forEach(c=>m.set(c.id,c)));
   return [...m.values()].sort((a,b)=>String(b.inicio||'').localeCompare(String(a.inicio||''))||a.curso.localeCompare(b.curso,'pt'));
 }
-function linhaFormacaoHTML(i,conhecidas){
+/* Uma linha = uma formação: primeiro o CURSO (escreve-se ou escolhe-se
+   da lista), depois a TURMA desse curso, em botões por mês. Um curso que
+   ainda não existe, ou "Outra data", abre a entidade e os meses. */
+function linhaFormacaoHTML(i){
   return `<div class="nf-f" data-nf="${i}">
-    <div class="nf-f-cab"><div class="field"><select data-nfsel aria-label="Formação">
-      <option value="">Escolhe a formação…</option>
-      ${conhecidas.map(c=>`<option value="${c.id}">${esc(c.curso)} · ${esc(c.entidade)} · ${periodo(c)}</option>`).join('')}
-      <option value="nova">Outra formação (nova)…</option></select></div>
+    <div class="nf-f-cab"><div class="field"><label>Curso</label>
+      <input data-nfk="curso" list="nfCursos" autocomplete="off" placeholder="Escreve ou escolhe o curso"></div>
       <button type="button" class="btn-ghost btn-xs" data-nftirar title="Tirar" aria-label="Tirar">${ic('lixo')}</button></div>
+    <div class="nf-turmas" data-nfturmas></div>
     <div class="form-grid nf-nova hidden">
-      <div class="field"><label>Curso</label><input data-nfk="curso" list="nfCursos"></div>
       <div class="field"><label>Entidade</label><input data-nfk="entidade" list="nfEnts" value="Turismo de Portugal"></div>
       <div class="field"><label>Início (mês)</label><input data-nfk="inicio" type="month"></div>
       <div class="field"><label>Fim (mês)</label><input data-nfk="fim" type="month"></div>
     </div></div>`;
 }
+/* as turmas de um curso, como estão no Repo (sem olhar a maiúsculas) */
+const turmasDoCurso=(conhecidas,curso)=>{ const c=semAcentos(curso.trim()); return c?conhecidas.filter(x=>semAcentos(x.curso)===c):[]; };
+function pintarTurmas(l,conhecidas){
+  const curso=l.querySelector('[data-nfk="curso"]').value;
+  const ts=turmasDoCurso(conhecidas,curso), box=l.querySelector('[data-nfturmas]'), nova=l.querySelector('.nf-nova');
+  /* uma turma escolhida que já não é deste curso deixa de contar */
+  if(l.dataset.turma&&l.dataset.turma!=='nova'&&!ts.some(x=>x.id===l.dataset.turma)) delete l.dataset.turma;
+  const variasEnt=new Set(ts.map(x=>x.entidade.toLowerCase())).size>1;
+  if(!curso.trim()){ box.innerHTML=''; nova.classList.add('hidden'); return; }
+  if(!ts.length){
+    box.innerHTML='<span class="hint">Curso novo: diz a entidade e os meses.</span>';
+    l.dataset.turma='nova'; nova.classList.remove('hidden'); return;
+  }
+  box.innerHTML=`<span class="nf-turmas-rot">Turma</span>`
+    +ts.map(x=>`<button type="button" class="nf-chip${l.dataset.turma===x.id?' on':''}" data-turma="${x.id}" aria-pressed="${l.dataset.turma===x.id}">${periodo(x)}${variasEnt?' · '+esc(x.entidade):''}</button>`).join('')
+    +`<button type="button" class="nf-chip nf-chip-nova${l.dataset.turma==='nova'?' on':''}" data-turma="nova" aria-pressed="${l.dataset.turma==='nova'}">${ic('mais')}Outra data</button>`;
+  nova.classList.toggle('hidden',l.dataset.turma!=='nova');
+  box.querySelectorAll('[data-turma]').forEach(b=>b.addEventListener('click',()=>{
+    l.dataset.turma=b.dataset.turma;
+    if(b.dataset.turma==='nova') l.querySelector('[data-nfk="entidade"]').value=ts[0].entidade;   /* a do curso, para não escrever */
+    pintarTurmas(l,conhecidas);
+  }));
+}
 /* lê as formações de um contentor com linhas .nf-f; erro = texto */
 function lerFormacoes(box,conhecidas){
   const out=[]; let erro='';
   box.querySelectorAll('.nf-f').forEach(l=>{
-    const v=l.querySelector('[data-nfsel]').value;
-    if(!v) return;
-    if(v!=='nova'){ const c=conhecidas.find(x=>x.id===v);
-      out.push({curso:c.curso,entidade:c.entidade,inicio:c.inicio?String(c.inicio).slice(0,10):'',fim:c.fim?String(c.fim).slice(0,10):''}); return; }
     const g=k=>l.querySelector(`[data-nfk="${k}"]`).value.trim();
-    if(!g('curso')||!g('entidade')){ erro='Numa formação nova, o curso e a entidade são obrigatórios.'; return; }
-    if(g('inicio')&&g('fim')&&g('fim')<g('inicio')){ erro='Uma formação acaba antes de começar.'; return; }
-    out.push({curso:g('curso'),entidade:g('entidade'),inicio:g('inicio')?g('inicio')+'-01':'',fim:g('fim')?g('fim')+'-01':''});
+    const curso=g('curso'); if(!curso) return;
+    const t=l.dataset.turma;
+    if(t&&t!=='nova'){ const c=conhecidas.find(x=>x.id===t);
+      out.push({curso:c.curso,entidade:c.entidade,inicio:c.inicio?String(c.inicio).slice(0,10):'',fim:c.fim?String(c.fim).slice(0,10):''}); return; }
+    if(t!=='nova'){ erro='Escolhe a turma de «'+curso+'», ou «Outra data».'; return; }
+    if(!g('entidade')){ erro='Falta a entidade de «'+curso+'».'; return; }
+    if(g('inicio')&&g('fim')&&g('fim')<g('inicio')){ erro='«'+curso+'» acaba antes de começar.'; return; }
+    /* o nome do curso como já está escrito no Repo, se já existir */
+    const igual=turmasDoCurso(conhecidas,curso)[0];
+    out.push({curso:igual?igual.curso:curso,entidade:g('entidade'),inicio:g('inicio')?g('inicio')+'-01':'',fim:g('fim')?g('fim')+'-01':''});
   });
   return {out,erro};
 }
 function ligarFormacoes(box,conhecidas){
   const liga=l=>{
-    l.querySelector('[data-nfsel]').addEventListener('change',e=>l.querySelector('.nf-nova').classList.toggle('hidden',e.target.value!=='nova'));
-    l.querySelector('[data-nftirar]').addEventListener('click',()=>{ if(box.querySelectorAll('.nf-f').length>1) l.remove(); else l.querySelector('[data-nfsel]').value=''; });
+    l.querySelector('[data-nfk="curso"]').addEventListener('input',()=>pintarTurmas(l,conhecidas));
+    l.querySelector('[data-nftirar]').addEventListener('click',()=>{
+      if(box.querySelectorAll('.nf-f').length>1) return l.remove();
+      l.querySelector('[data-nfk="curso"]').value=''; delete l.dataset.turma; pintarTurmas(l,conhecidas); });
   };
   box.querySelectorAll('.nf-f').forEach(liga);
-  return ()=>{ const i=box.querySelectorAll('.nf-f').length; box.insertAdjacentHTML('beforeend',linhaFormacaoHTML(i,conhecidas)); liga(box.lastElementChild); };
+  return ()=>{ box.insertAdjacentHTML('beforeend',linhaFormacaoHTML(box.querySelectorAll('.nf-f').length)); liga(box.lastElementChild);
+    box.lastElementChild.querySelector('[data-nfk="curso"]').focus(); };
 }
 function listasFormacoes(){
   const pt=(a,b)=>a.localeCompare(b,'pt');
@@ -3102,7 +3143,7 @@ function escolherFormacoes(titulo){
     const m=abrirModal(`<div class="modal" style="width:min(620px,100%)">
       <div class="modal-head"><div><h3>${esc(titulo)}</h3></div></div>
       <div class="modal-body">${listasFormacoes()}
-        <div class="nf-lista" id="efLista">${linhaFormacaoHTML(0,conhecidas)}</div>
+        <div class="nf-lista" id="efLista">${linhaFormacaoHTML(0)}</div>
         <button type="button" class="btn-sec btn-sm" id="efMais">${ic('mais')}Outra formação</button></div>
       <div class="modal-foot"><span></span><div style="display:flex;gap:10px"><button class="btn-sec" data-fechar>Cancelar</button>
         <button class="btn" id="efOk">Acrescentar</button></div></div></div>`);
@@ -3112,7 +3153,7 @@ function escolherFormacoes(titulo){
     m.querySelector('#efOk').addEventListener('click',()=>{
       const {out,erro}=lerFormacoes(m.querySelector('#efLista'),conhecidas);
       if(erro) return toast(erro,'err');
-      if(!out.length) return toast('Escolhe uma formação.','err');
+      if(!out.length) return toast('Escreve o curso.','err');
       feito=true; m.remove(); res(out);
     });
     const obs=new MutationObserver(()=>{ if(!document.body.contains(m)){ obs.disconnect(); if(!feito) res(null); } });
@@ -3143,8 +3184,8 @@ function novoFormando(){
           <div class="field full"><label>Notas</label><textarea id="nfNotas" rows="2"></textarea></div>
         </div>
         <div id="nfAvisoNome"></div>
-        <h4 class="f-sub">Formações</h4>
-        <div class="nf-lista" id="nfLista">${linhaFormacaoHTML(0,conhecidas)}</div>
+        <h4 class="f-sub">Formações que fez contigo</h4>
+        <div class="nf-lista" id="nfLista">${linhaFormacaoHTML(0)}</div>
         <button type="button" class="btn-sec btn-sm" id="nfMais">${ic('mais')}Outra formação</button>
       </fieldset>
     </div>
