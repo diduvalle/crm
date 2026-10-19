@@ -359,6 +359,58 @@ td .tag{align-self:auto}
 .camp-sub{font-size:.95rem;font-weight:700;margin:24px 0 10px}
 .camp-passos ol{margin:10px 0 12px 20px;display:flex;flex-direction:column;gap:6px}
 .camp-passos p{margin:0 0 6px}
+/* ---------- Tabelas com páginas ---------- */
+.th-ord button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font:inherit;color:inherit;letter-spacing:inherit;text-transform:inherit}
+.th-ord button svg{width:13px;height:13px;opacity:.35}
+.th-ord.on button svg{opacity:1}
+.th-ord button:focus-visible{outline:2px solid var(--g500);outline-offset:2px;border-radius:4px}
+.pag{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:12px;font-size:.84rem;color:var(--muted)}
+.pag-nav{display:flex;align-items:center;gap:4px}
+.pag-nav span{margin:0 8px}
+.pag-nav strong{color:var(--text)}
+.pag-b{width:32px;height:32px}
+.pag-b svg{width:16px;height:16px}
+.pag-b:disabled{opacity:.4;cursor:default}
+.pag-tam{display:flex;align-items:center;gap:8px}
+.pag-tam select{width:auto;padding:5px 8px}
+.f-recebe{color:var(--muted);display:inline-flex}
+.f-recebe svg{width:16px;height:16px}
+/* ---------- A ficha do formando ---------- */
+.fh{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:18px;align-items:start}
+.fh-col{display:flex;flex-direction:column;gap:18px}
+.fh-tit{font-size:.95rem;font-weight:700;margin:0 0 14px}
+.fh-cab{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.fh-cab .fh-tit{margin:0}
+.fh-acc{display:flex;justify-content:space-between;gap:10px;margin-top:16px}
+.fh .f-saida:first-of-type{margin-top:0}
+.tl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.tl li{display:grid;grid-template-columns:30px minmax(0,1fr) auto 28px;gap:10px;align-items:start;padding:10px 0;border-bottom:1px solid var(--border);position:relative}
+.tl li:last-child{border-bottom:0}
+.tl-ic{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--surface2);color:var(--muted)}
+.tl-ic svg{width:15px;height:15px}
+.tl-form .tl-ic{background:var(--g50);color:var(--g-texto)}
+.tl-clicou .tl-ic{background:var(--info-bg);color:var(--info)}
+.tl-mau .tl-ic{background:var(--danger-bg);color:var(--danger)}
+.tl-c{display:flex;flex-direction:column;gap:2px;min-width:0;font-size:.88rem}
+.tl-c span{color:var(--muted);font-size:.8rem}
+.tl-q{font-size:.78rem;color:var(--muted);white-space:nowrap;padding-top:2px}
+.tl li .btn-xs svg{width:14px;height:14px}
+.tl-link{all:unset;cursor:pointer;color:inherit;font-weight:inherit}
+.tl-link:hover{text-decoration:underline}
+.tl-espera{opacity:.7}
+@media(max-width:1000px){ .fh{grid-template-columns:1fr} }
+/* ---------- Novo formando / escolher formações ---------- */
+.nf-lista{display:flex;flex-direction:column;gap:10px;margin-bottom:10px}
+.nf-f{display:flex;flex-direction:column;gap:10px;padding:10px;border:1px solid var(--border);border-radius:var(--rs);background:var(--surface2)}
+.nf-f-cab{display:flex;gap:8px;align-items:center}
+.nf-f-cab .field{flex:1;min-width:0;margin:0}
+.nf-aviso{display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding:10px 12px;border-radius:var(--rs);background:var(--warn-bg);color:var(--text);font-size:.84rem}
+.nf-aviso>svg{flex:none;color:var(--warn);margin-top:2px}
+.nf-aviso.mau{background:var(--danger-bg)}
+.nf-aviso.mau>svg{color:var(--danger)}
+.nf-aviso>div{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0}
+.nf-aviso span{color:var(--muted)}
+.nf-par{display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:var(--text)!important}
 /* o construtor de email */
 .camp-regras{font-size:.78rem;color:var(--muted);line-height:1.6;padding:10px 12px;border-radius:var(--rs);background:var(--surface2)}
 .camp-regras code{font-family:var(--mono);font-size:.72rem;color:var(--text)}
@@ -475,6 +527,7 @@ td .tag{align-self:auto}
       <section class="view" id="vAvals"></section>
       <section class="view" id="vApl"></section>
       <section class="view" id="vFormandos"></section>
+      <section class="view" id="vFormando"></section>
       <section class="view" id="vCampanhas"></section>
       <section class="view" id="vCampanha"></section>
     </div>
@@ -515,7 +568,9 @@ const I={
   baixo:'M12 5v14M19 12l-7 7-7-7',
   grafico:'M3 3v18h18M7 15l3-4 3 3 5-7',
   tranca:'M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4',
-  papel:'M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h6'
+  papel:'M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h6',
+  esq:'M15 18l-6-6 6-6', dir:'M9 18l6-6-6-6', esq2:'M11 17l-5-5 5-5M18 17l-5-5 5-5', dir2:'M13 17l5-5-5-5M6 17l5-5-5-5',
+  ordCima:'M8 14l4-4 4 4', ordBaixo:'M8 10l4 4 4-4', ordAmbos:'M8 9l4-4 4 4M8 15l4 4 4-4'
 };
 // width/height por omissão: sem isto, um SVG sem regra de CSS renderiza
 // gigante. Onde há regra (.btn svg, .nav-link svg…) o CSS ganha à mesma.
@@ -613,6 +668,7 @@ $('#btnSair').addEventListener('click',sair);
 $('#btnRecolher').addEventListener('click',()=>$('#app').classList.toggle('nav-collapsed'));
 $('#pesquisa').addEventListener('input',filtrar);
 function filtrar(){
+  if(pesquisaPropria) return pesquisaPropria();
   const q=($('#pesquisa').value||'').trim().toLowerCase();
   const vista=document.querySelector('.view.active');
   if(!vista) return;
@@ -621,6 +677,7 @@ function filtrar(){
   });
 }
 let accaoPrimaria=null;
+let pesquisaPropria=null;   /* a vista com tabela paginada procura em todas as páginas */
 $('#btnPrimario').addEventListener('click',()=>{
   if(accaoPrimaria) return accaoPrimaria();
   if(turmaAtual) modalSessao(turmaAtual,null);
@@ -645,7 +702,7 @@ $('#btnPrimario').addEventListener('click',()=>{
 
 /* A hierarquia é Escolas -> Turmas -> Sessões. Só uma vista está ativa. */
 function mostrarVista(id){
-  accaoPrimaria=null;
+  accaoPrimaria=null; pesquisaPropria=null;
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
 }
 function rotuloVoltar(){
@@ -710,6 +767,7 @@ async function voltarAoSitio(){
     if(r==='testes') return mostrarTestes();
     if(r==='teste'&&a) return editarTeste(a);
     if(r==='formandos') return mostrarFormandos();
+    if(r==='formando'&&a) return abrirFormando(a);
     if(r==='campanhas') return mostrarCampanhas();
     if(r==='campanha'&&a) return abrirCampanha(a);
     if(['escola','turma','badges','avaliacoes','aplicacao'].includes(r)){
@@ -904,7 +962,7 @@ function marcarNavEscola(){
   document.querySelectorAll('.nav-escola').forEach(el=>
     el.classList.toggle('active', !!escolaAtual && el.dataset.escola===escolaAtual.slug));
   const emTestes=!!document.querySelector('#vTestes.active, #vTeste.active');
-  const emFormandos=!!document.querySelector('#vFormandos.active');
+  const emFormandos=!!document.querySelector('#vFormandos.active, #vFormando.active');
   const emCampanhas=!!document.querySelector('#vCampanhas.active, #vCampanha.active');
   $('.nav-link[data-view="escolas"]').classList.toggle('active', !escolaAtual && !emTestes && !emFormandos && !emCampanhas);
   const bcm=$('.nav-link[data-view="campanhas"]'); if(bcm) bcm.classList.toggle('active', emCampanhas);
@@ -2669,38 +2727,111 @@ function paresRepetidos(){
   return out;
 }
 
+/* ---------- Tabelas com páginas ----------
+   As listas compridas (formandos, destinatários, campanhas) mostram-se
+   aos bocados: 10, 25, 50 ou 100 por página - 25 por omissão, e a
+   escolha fica guardada neste browser. A pesquisa da barra lateral
+   procura em TODAS as páginas, não só na que está à vista, e as colunas
+   ordenam-se com um clique no título (outro clique inverte). */
+const TP={};
+const TAMANHOS=[10,25,50,100];
+function porPagina(){ try{ const v=+localStorage.getItem('repo-por-pagina'); return TAMANHOS.includes(v)?v:25; }catch(e){ return 25; } }
+const semAcentos=s=>String(s==null?'':s).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const vazio=v=>v==null||v==='';
+function tabelaPaginada(box,cfg){
+  if(!box) return;
+  const st=TP[cfg.id]||(TP[cfg.id]={pag:1,ordem:cfg.ordem||null});
+  const q=semAcentos(($('#pesquisa').value||'').trim());
+  const ls=q?cfg.linhas.filter(l=>semAcentos(cfg.texto(l)).includes(q)):cfg.linhas.slice();
+  const col=st.ordem&&cfg.colunas[st.ordem.i];
+  if(col&&col.ord) ls.sort((a,b)=>{
+    const x=col.ord(a), y=col.ord(b);
+    if(vazio(x)||vazio(y)) return vazio(x)&&vazio(y)?0:vazio(x)?1:-1;   /* os vazios ficam sempre no fim */
+    const r=typeof x==='number'&&typeof y==='number'?x-y:String(x).localeCompare(String(y),'pt',{sensitivity:'base',numeric:true});
+    return r*st.ordem.dir;
+  });
+  const pp=porPagina(), np=Math.max(1,Math.ceil(ls.length/pp));
+  st.pag=Math.min(Math.max(1,st.pag),np);
+  const ini=(st.pag-1)*pp, pg=ls.slice(ini,ini+pp);
+  const th=(c,i)=>{
+    if(!c.ord) return `<th>${c.rot}</th>`;
+    const on=st.ordem&&st.ordem.i===i;
+    return `<th class="th-ord${on?' on':''}" aria-sort="${on?(st.ordem.dir>0?'ascending':'descending'):'none'}">
+      <button type="button" data-ord="${i}">${c.rot}${ic(on?(st.ordem.dir>0?'ordCima':'ordBaixo'):'ordAmbos')}</button></th>`;
+  };
+  const b=(p,icone,titulo,dis)=>`<button type="button" class="icon-btn pag-b" data-pag="${p}" title="${titulo}" aria-label="${titulo}"${dis?' disabled':''}>${ic(icone)}</button>`;
+  box.innerHTML=(cfg.antes?cfg.antes(ls.length):'')
+    +(ls.length?`<div class="table-wrap"><table><thead><tr>${cfg.colunas.map(th).join('')}</tr></thead>
+      <tbody>${pg.map(l=>`<tr${cfg.attrs?cfg.attrs(l):''}>${cfg.colunas.map(c=>`<td>${c.td(l)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`
+      :(q?`<div class="empty">${ic('lista')}<strong>Nada com «${esc($('#pesquisa').value.trim())}»</strong></div>`:(cfg.vazio||'')))
+    +(ls.length>TAMANHOS[0]?`<div class="pag">
+      <span class="pag-info">${ini+1} a ${ini+pg.length} de ${ls.length}</span>
+      <div class="pag-nav">${b(1,'esq2','Primeira página',st.pag===1)}${b(st.pag-1,'esq','Página anterior',st.pag===1)}
+        <span>Página <strong>${st.pag}</strong> de ${np}</span>
+        ${b(st.pag+1,'dir','Página seguinte',st.pag===np)}${b(np,'dir2','Última página',st.pag===np)}</div>
+      <label class="pag-tam">Por página <select>${TAMANHOS.map(n=>`<option${n===pp?' selected':''}>${n}</option>`).join('')}</select></label>
+    </div>`:'');
+  const repinta=()=>tabelaPaginada(box,cfg);
+  box.querySelectorAll('[data-ord]').forEach(x=>x.addEventListener('click',()=>{
+    const i=+x.dataset.ord;
+    st.ordem=st.ordem&&st.ordem.i===i?{i,dir:-st.ordem.dir}:{i,dir:cfg.colunas[i].desc?-1:1};
+    st.pag=1; repinta(); }));
+  box.querySelectorAll('[data-pag]').forEach(x=>x.addEventListener('click',()=>{
+    st.pag=+x.dataset.pag; repinta();
+    if(box.getBoundingClientRect().top<0) box.scrollIntoView({block:'start'}); }));
+  const sel=box.querySelector('.pag-tam select');
+  if(sel) sel.addEventListener('change',()=>{ try{ localStorage.setItem('repo-por-pagina',sel.value); }catch(e){} st.pag=1; repinta(); });
+  if(cfg.depois) cfg.depois(box);
+}
+/* a pesquisa, numa vista com tabela paginada, volta à primeira página */
+const pesquisaEm=id=>repinta=>()=>{ if(TP[id]) TP[id].pag=1; repinta(); };
+
+/* O email de uma pessoa, como está: riscado se saiu, ondulado se foi devolvido */
+const emailMarcado=f=>f.saiu_em?`<span class="saiu-email" title="Saiu da lista">${esc(f.email)}</span>`
+  :f.devolvido_em?`<span class="devolvido-email" title="Devolvido: ${esc(f.devolvido_motivo||'sem motivo')}">${esc(f.email)}</span>`:esc(f.email);
+
 /* ---------- A lista ---------- */
 function mostrarFormandos(){
   escolaAtual=null; turmaAtual=null;
   lembrar('formandos');
   mostrarVista('vFormandos');
-  accaoPrimaria=escolherFicheiroFormandos;
+  pesquisaPropria=pesquisaEm('formandos')(pintarTabelaFormandos);
+  accaoPrimaria=novoFormando;
   $('#hTitulo').textContent='Formandos';
   $('#hSub').textContent='Quem já fez formação contigo. Uma pessoa, um email.';
   $('#btnPrimario').classList.remove('hidden');
-  $('#btnPrimario').innerHTML=ic('cima')+'Carregar ficheiro';
+  $('#btnPrimario').innerHTML=ic('mais')+'Novo formando';
   $('#pesquisa').value='';
   marcarNavEscola();
   carregarFormandos();
 }
-async function carregarFormandos(){
+async function carregarFormandos(pintar=true){
   let d;
   try{ d=await rpc('formandos_listar',{p_token:sessao.token}); }
-  catch(e){ if(faltaSql(e,'11-formandos.sql')) return; return tratar(e); }
+  catch(e){ if(faltaSql(e,'11-formandos.sql')) return false; tratar(e); return false; }
   formandos=d.formandos||[];
   fDistintos=new Set((d.distintos||[]).map(p=>parKey(p[0],p[1])));
-  pintarFormandos();
+  if(pintar) pintarFormandos();
+  return true;
+}
+function formandosFiltrados(){
+  return formandos.filter(f=>
+    (!fFiltro.curso||f.formacoes.some(c=>c.curso===fFiltro.curso)) &&
+    (!fFiltro.entidade||f.formacoes.some(c=>c.entidade===fFiltro.entidade)) &&
+    (!fFiltro.repetentes||f.formacoes.length>=2) &&
+    (!fFiltro.saiu||f.saiu_em) &&
+    (!fFiltro.devolvido||f.devolvido_em));
 }
 function pintarFormandos(){
   const v=$('#vFormandos');
   const modelo=`<button class="btn-sec" data-modelo>${ic('baixo')}Descarregar o modelo</button>`;
+  const carregar=`<button class="btn-sec" data-carregar>${ic('cima')}Carregar ficheiro</button>`;
   if(!formandos.length){
     v.innerHTML=`<div class="empty">${ic('gente')}<strong>Ainda não há formandos</strong>
-      <span>Descarrega o modelo, preenche-o no Excel e carrega-o aqui. Uma linha por pessoa em cada formação.</span>
-      <div class="toolbar" style="justify-content:center;margin-top:6px">${modelo}
-        <button class="btn" id="fCarregar0">${ic('cima')}Carregar ficheiro</button></div></div>`;
-    $('#fCarregar0').addEventListener('click',escolherFicheiroFormandos);
+      <span>Acrescenta um à mão em «Novo formando», ou carrega um Excel: descarrega o modelo, preenche-o e carrega-o aqui.</span>
+      <div class="toolbar" style="justify-content:center;margin-top:6px">${modelo}${carregar}</div></div>`;
     v.querySelectorAll('[data-modelo]').forEach(b=>b.addEventListener('click',descarregarModelo));
+    v.querySelectorAll('[data-carregar]').forEach(b=>b.addEventListener('click',escolherFicheiroFormandos));
     return;
   }
   const pt=(a,b)=>a.localeCompare(b,'pt');
@@ -2710,18 +2841,13 @@ function pintarFormandos(){
      curso) volta a "todos", em vez de mostrar uma lista vazia sem razão */
   if(fFiltro.curso&&!cursos.includes(fFiltro.curso)) fFiltro.curso='';
   if(fFiltro.entidade&&!entidades.includes(fFiltro.entidade)) fFiltro.entidade='';
-  const lista=formandos.filter(f=>
-    (!fFiltro.curso||f.formacoes.some(c=>c.curso===fFiltro.curso)) &&
-    (!fFiltro.entidade||f.formacoes.some(c=>c.entidade===fFiltro.entidade)) &&
-    (!fFiltro.repetentes||f.formacoes.length>=2) &&
-    (!fFiltro.saiu||f.saiu_em) &&
-    (!fFiltro.devolvido||f.devolvido_em));
   const nRep=formandos.filter(f=>f.formacoes.length>=2).length;
   const nSaiu=formandos.filter(f=>f.saiu_em).length;
   const nDev=formandos.filter(f=>f.devolvido_em).length;
   const pares=paresRepetidos();
   const opc=(vals,sel,todos)=>`<option value="">${todos}</option>`
     +vals.map(x=>`<option${x===sel?' selected':''}>${esc(x)}</option>`).join('');
+  const chip=(id,on,txt)=>`<button class="chip${on?' active':''}" id="${id}" aria-pressed="${!!on}">${txt}</button>`;
 
   v.innerHTML=`
     ${pares.length?`<div class="f-aviso">${ic('alerta')}
@@ -2731,95 +2857,333 @@ function pintarFormandos(){
     <div class="toolbar f-barra">
       <div class="field"><select id="fCurso" aria-label="Curso">${opc(cursos,fFiltro.curso,'Todos os cursos')}</select></div>
       <div class="field"><select id="fEnt" aria-label="Entidade">${opc(entidades,fFiltro.entidade,'Todas as entidades')}</select></div>
-      <button class="chip${fFiltro.repetentes?' active':''}" id="fRep" aria-pressed="${fFiltro.repetentes}">Com 2 ou mais formações · ${nRep}</button>
-      ${nSaiu||fFiltro.saiu?`<button class="chip${fFiltro.saiu?' active':''}" id="fSaiu" aria-pressed="${fFiltro.saiu}">Saíram da lista · ${nSaiu}</button>`:''}
-      ${nDev||fFiltro.devolvido?`<button class="chip${fFiltro.devolvido?' active':''}" id="fDev" aria-pressed="${fFiltro.devolvido}">Email devolvido · ${nDev}</button>`:''}
+      ${chip('fRep',fFiltro.repetentes,'Com 2 ou mais formações · '+nRep)}
+      ${nSaiu||fFiltro.saiu?chip('fSaiu',fFiltro.saiu,'Saíram da lista · '+nSaiu):''}
+      ${nDev||fFiltro.devolvido?chip('fDev',fFiltro.devolvido,'Email devolvido · '+nDev):''}
       <span style="flex:1"></span>
-      ${modelo}
+      ${carregar}${modelo}
     </div>
-    <div class="muted f-conta">${lista.length===formandos.length
-      ? formandos.length+(formandos.length===1?' formando':' formandos')
-      : lista.length+' de '+formandos.length+' formandos'}</div>
-    ${lista.length?`<div class="table-wrap"><table><thead><tr>
-        <th>Nome</th><th>Email</th><th>Formações</th><th>Última</th>
-      </tr></thead><tbody>${lista.map(f=>{
-        const ult=f.formacoes[0];   /* o servidor ordena da mais recente para a mais antiga */
-        return `<tr class="clickable" data-formando="${f.id}">
-          <td><div class="cell-main">${esc(nomeTodo(f))}</div>${f.notas?`<div class="cell-sub">${esc(f.notas.split('\n')[0])}</div>`:''}${f.saiu_em?'<div class="cell-sub"><span class="pill grey">Saiu da lista</span></div>':''}${f.devolvido_em&&!f.saiu_em?'<div class="cell-sub"><span class="pill red">Email devolvido</span></div>':''}</td>
-          <td>${f.saiu_em?`<span class="saiu-email" title="Saiu da lista">${esc(f.email)}</span>`
-            :f.devolvido_em?`<span class="devolvido-email" title="Devolvido: ${esc(f.devolvido_motivo||'sem motivo')}">${esc(f.email)}</span>`:esc(f.email)}</td>
-          <td>${f.formacoes.length>=2?`<span class="pill blue">${f.formacoes.length} formações</span>`:'<span class="muted">1</span>'}</td>
-          <td>${ult?`<div class="cell-main" style="font-weight:600">${esc(ult.curso)}</div><div class="cell-sub">${esc(ult.entidade)} · ${periodo(ult)}</div>`:''}</td>
-        </tr>`;}).join('')}</tbody></table></div>`
-      :`<div class="empty">${ic('gente')}<strong>Ninguém com estes filtros</strong></div>`}`;
+    <div id="fTabela"></div>`;
 
-  $('#fCurso').addEventListener('change',e=>{ fFiltro.curso=e.target.value; pintarFormandos(); });
-  $('#fEnt').addEventListener('change',e=>{ fFiltro.entidade=e.target.value; pintarFormandos(); });
-  $('#fRep').addEventListener('click',()=>{ fFiltro.repetentes=!fFiltro.repetentes; pintarFormandos(); });
-  if($('#fSaiu')) $('#fSaiu').addEventListener('click',()=>{ fFiltro.saiu=!fFiltro.saiu; pintarFormandos(); });
-  if($('#fDev')) $('#fDev').addEventListener('click',()=>{ fFiltro.devolvido=!fFiltro.devolvido; pintarFormandos(); });
+  const rep=(id,k)=>{ const b=$('#'+id); if(b) b.addEventListener('click',()=>{ fFiltro[k]=!fFiltro[k]; if(TP.formandos) TP.formandos.pag=1; pintarFormandos(); }); };
+  $('#fCurso').addEventListener('change',e=>{ fFiltro.curso=e.target.value; if(TP.formandos) TP.formandos.pag=1; pintarFormandos(); });
+  $('#fEnt').addEventListener('change',e=>{ fFiltro.entidade=e.target.value; if(TP.formandos) TP.formandos.pag=1; pintarFormandos(); });
+  rep('fRep','repetentes'); rep('fSaiu','saiu'); rep('fDev','devolvido');
   if(pares.length) $('#fVerRep').addEventListener('click',()=>modalRepetidos(pares));
   v.querySelectorAll('[data-modelo]').forEach(b=>b.addEventListener('click',descarregarModelo));
-  v.querySelectorAll('[data-formando]').forEach(r=>r.addEventListener('click',
-    ()=>fichaFormando(formandos.find(f=>f.id===r.dataset.formando))));
-  filtrar();   /* a pesquisa da barra lateral continua a valer depois de mudar um filtro */
+  v.querySelectorAll('[data-carregar]').forEach(b=>b.addEventListener('click',escolherFicheiroFormandos));
+  pintarTabelaFormandos();
+}
+function pintarTabelaFormandos(){
+  const lista=formandosFiltrados();
+  const estado=f=>f.saiu_em?2:f.devolvido_em?1:0;
+  tabelaPaginada($('#fTabela'),{
+    id:'formandos', linhas:lista, ordem:{i:0,dir:1},
+    texto:f=>[nomeTodo(f),f.email,f.notas].concat(f.formacoes.flatMap(c=>[c.curso,c.entidade])).join(' '),
+    antes:n=>`<div class="muted f-conta">${n===formandos.length
+      ?formandos.length+(formandos.length===1?' formando':' formandos')
+      :n+' de '+formandos.length+' formandos'}</div>`,
+    vazio:`<div class="empty">${ic('gente')}<strong>Ninguém com estes filtros</strong></div>`,
+    attrs:f=>` class="clickable" data-formando="${f.id}"`,
+    colunas:[
+      {rot:'Nome', ord:f=>semAcentos(nomeTodo(f)),
+       td:f=>`<div class="cell-main">${esc(nomeTodo(f))}</div>${f.notas?`<div class="cell-sub">${esc(f.notas.split('\n')[0])}</div>`:''}`},
+      {rot:'Email', ord:f=>f.email.toLowerCase(), td:emailMarcado},
+      {rot:'Formações', ord:f=>f.formacoes.length, desc:true,
+       td:f=>f.formacoes.length>=2?`<span class="pill blue">${f.formacoes.length} formações</span>`:`<span class="muted">${f.formacoes.length}</span>`},
+      {rot:'Última', ord:f=>f.formacoes[0]&&f.formacoes[0].inicio||'', desc:true,
+       td:f=>{ const u=f.formacoes[0];   /* o servidor ordena da mais recente para a mais antiga */
+         return u?`<div class="cell-main" style="font-weight:600">${esc(u.curso)}</div><div class="cell-sub">${esc(u.entidade)} · ${periodo(u)}</div>`:''; }},
+      {rot:'Campanhas', ord:f=>f.campanhas==null?null:f.clicou*1000+f.campanhas, desc:true,
+       td:f=>f.campanhas==null?'<span class="muted">-</span>'
+         :!f.campanhas?'<span class="muted">nenhuma</span>'
+         :`<span>${f.campanhas} ${f.campanhas===1?'recebida':'recebidas'}</span>${f.clicou?` <span class="pill blue">clicou em ${f.clicou}</span>`:''}`},
+      {rot:'Estado', ord:estado,
+       td:f=>f.saiu_em?'<span class="pill grey">Saiu da lista</span>'
+         :f.devolvido_em?'<span class="pill red">Email devolvido</span>'
+         :`<span class="f-recebe" title="Recebe as campanhas">${ic('ok')}</span>`}
+    ],
+    depois:box=>box.querySelectorAll('[data-formando]').forEach(r=>r.addEventListener('click',()=>abrirFormando(r.dataset.formando)))
+  });
 }
 
-/* ---------- A ficha ---------- */
-function fichaFormando(f){
-  if(!f) return;
-  const n=f.formacoes.length;
-  const fm=abrirModal(`<div class="modal" style="width:min(620px,100%)">
-    <div class="modal-head"><div><h3>${esc(nomeTodo(f))}</h3>
-      <div class="sub">${n===1?'1 formação contigo':n+' formações contigo'} · na lista desde ${dataPT(String(f.criado_em).slice(0,10))}</div></div></div>
-    <div class="modal-body">
-      <div class="form-grid">
-        <div class="field"><label>Nome</label><input id="fhNome" value="${esc(f.nome)}"></div>
-        <div class="field"><label>Apelido</label><input id="fhAp" value="${esc(f.apelido)}"></div>
-        <div class="field full"><label>Email</label><input id="fhEmail" type="email" value="${esc(f.email)}"></div>
-        <div class="field full"><label>Notas</label><textarea id="fhNotas" placeholder="O que te ajuda a lembrar desta pessoa">${esc(f.notas)}</textarea></div>
+/* ---------- A ficha ----------
+   Uma página por pessoa: os dados, o estado nas campanhas e o percurso -
+   as formações que fez e as campanhas que recebeu (em que clicou, se
+   saiu, se o email voltou para trás), do mais recente para o mais antigo. */
+async function abrirFormando(id){
+  if(!formandos.some(x=>x.id===id)&&!(await carregarFormandos(false))) return;
+  const f=formandos.find(x=>x.id===id); if(!f) return mostrarFormandos();
+  escolaAtual=null; turmaAtual=null;
+  lembrar('formando/'+encodeURIComponent(id));
+  mostrarVista('vFormando');
+  $('#hTitulo').textContent=nomeTodo(f);
+  $('#hSub').textContent=f.formacoes.length===1?'1 formação contigo':f.formacoes.length+' formações contigo';
+  $('#btnPrimario').classList.add('hidden');
+  $('#pesquisa').value='';
+  marcarNavEscola();
+  pintarFicha(f,null);
+  let hist;
+  try{ hist=await rpc('formando_historico',{p_token:sessao.token,p_id:id}); }
+  catch(e){ if(!faltaSql(e,'15-formandos-historico.sql')) tratar(e); hist=[]; }
+  if(location.hash==='#formando/'+encodeURIComponent(id)) pintarFicha(f,hist);
+}
+function pintarFicha(f,hist){
+  const v=$('#vFormando');
+  const outros=paresRepetidos().filter(([a,b])=>a.id===f.id||b.id===f.id);
+  /* o percurso: cada coisa com a sua data; sem data, vai para o fim */
+  const ev=[];
+  f.formacoes.forEach(c=>ev.push({d:c.inicio, quando:periodo(c), icone:'louro', cls:'tl-form',
+    html:`<strong>${esc(c.curso)}</strong><span>${esc(c.entidade)}</span>`,
+    acc:`<button class="btn-ghost btn-xs" data-tirarf="${c.id}" title="Tirar esta formação" aria-label="Tirar esta formação">${ic('lixo')}</button>`}));
+  (hist||[]).forEach(h=>{
+    const cb=h.cliques_botoes||{};
+    const em=Object.keys(cb).filter(k=>+cb[k]>0).sort((a,b)=>a-b).map(k=>(h.formacoes||[])[+k]||'Formação '+(+k+1));
+    const sub=h.estado==='erro'?'Não chegou a sair (erro no envio)':h.estado!=='enviado'?'Ainda por enviar'
+      :h.cliques?'Clicou em '+(em.length?em.join(', '):'inscrever'):'Não clicou';
+    ev.push({d:h.enviado_em, quando:h.enviado_em?dataPT(h.enviado_em):'', icone:'mail', cls:h.cliques?'tl-clicou':'',
+      html:`<strong><button class="tl-link" data-camp-abrir="${h.campanha_id}">${esc(h.assunto||'(sem assunto)')}</button></strong><span>${esc(sub)}</span>`});
+    if(h.devolvido_em) ev.push({d:h.devolvido_em, quando:dataPT(h.devolvido_em), icone:'alerta', cls:'tl-mau',
+      html:`<strong>Email devolvido</strong><span>${esc(h.devolvido_motivo||'sem motivo')}</span>`});
+    if(h.saiu_em) ev.push({d:h.saiu_em, quando:dataPT(h.saiu_em), icone:'alerta',
+      html:`<strong>Saiu da lista</strong><span>pelo link do email «${esc(h.assunto||'')}»</span>`});
+  });
+  if(f.saiu_em&&!(hist||[]).some(h=>h.saiu_em)) ev.push({d:f.saiu_em, quando:dataPT(f.saiu_em), icone:'alerta',
+    html:'<strong>Saiu da lista</strong><span>tirado à mão</span>'});
+  ev.push({d:f.criado_em, quando:dataPT(f.criado_em), icone:'gente', html:'<strong>Entrou na lista</strong>'});
+  ev.sort((a,b)=>vazio(a.d)||vazio(b.d)?(vazio(a.d)?1:0)-(vazio(b.d)?1:0):String(b.d).localeCompare(String(a.d)));
+
+  v.innerHTML=`
+    <button class="voltar" id="voltarFormandos">${ic('seta')}Formandos</button>
+    ${outros.length?`<div class="f-aviso">${ic('alerta')}
+      <div><strong>Pode ser a mesma pessoa que ${outros.map(([a,b])=>esc(nomeTodo(a.id===f.id?b:a))).join(', ')}</strong>
+        <span>Nomes parecidos, emails diferentes.</span></div>
+      <button class="btn-sec" id="fhRep">Ver</button></div>`:''}
+    <div class="fh">
+      <div class="fh-col">
+        <div class="card card-pad">
+          <h3 class="fh-tit">Dados</h3>
+          <div class="form-grid">
+            <div class="field"><label>Nome</label><input id="fhNome" value="${esc(f.nome)}"></div>
+            <div class="field"><label>Apelido</label><input id="fhAp" value="${esc(f.apelido)}"></div>
+            <div class="field full"><label>Email</label><input id="fhEmail" type="email" value="${esc(f.email)}"></div>
+            <div class="field full"><label>Notas</label><textarea id="fhNotas" rows="3" placeholder="O que te ajuda a lembrar desta pessoa">${esc(f.notas)}</textarea></div>
+          </div>
+          <div class="fh-acc">
+            <button class="btn-danger" id="fhApagar">${ic('lixo')}Apagar</button>
+            <button class="btn" id="fhGravar">Gravar</button>
+          </div>
+        </div>
+        <div class="card card-pad">
+          <h3 class="fh-tit">Campanhas</h3>
+          <div class="f-saida"><span>${f.saiu_em?'Saiu da lista em '+dataPT(String(f.saiu_em).slice(0,10))+'. Não recebe as campanhas.':'Recebe as campanhas.'}</span>
+            <button class="btn-sec" data-saida>${f.saiu_em?'Voltar a pôr na lista':'Tirar da lista'}</button></div>
+          ${f.devolvido_em?`<div class="f-saida f-devolvido"><span><strong>Email devolvido</strong> em ${dataPT(String(f.devolvido_em).slice(0,10))}${f.devolvido_motivo?' ('+esc(f.devolvido_motivo)+')':''}.
+              Não recebe campanhas. Corrige o email acima e grava, e volta a receber.</span>
+            <button class="btn-sec" data-devolvido>O email está bom</button></div>`:''}
+        </div>
       </div>
-      <div class="f-saida"><span>${f.saiu_em?'Saiu da lista em '+dataPT(String(f.saiu_em).slice(0,10))+'. Não recebe as campanhas.':'Recebe as campanhas.'}</span>
-        <button class="btn-sec" data-saida>${f.saiu_em?'Voltar a pôr na lista':'Tirar da lista'}</button></div>
-      ${f.devolvido_em?`<div class="f-saida f-devolvido"><span><strong>Email devolvido</strong> em ${dataPT(String(f.devolvido_em).slice(0,10))}${f.devolvido_motivo?' ('+esc(f.devolvido_motivo)+')':''}.
-          Não recebe campanhas. Corrige o email acima e grava, e volta a receber.</span>
-        <button class="btn-sec" data-devolvido>O email está bom</button></div>`:''}
-      <h4 class="f-sub">Formações</h4>
-      <ul class="f-forms">${f.formacoes.map(c=>`<li><strong>${esc(c.curso)}</strong><span>${esc(c.entidade)} · ${periodo(c)}</span></li>`).join('')}</ul>
-    </div>
-    <div class="modal-foot">
-      <button class="btn-danger" data-apagar>${ic('lixo')}Apagar</button>
-      <div style="display:flex;gap:10px"><button class="btn-sec" data-fechar>Cancelar</button>
-        <button class="btn" data-gravar>Gravar</button></div></div></div>`);
-  fm.querySelector('[data-gravar]').addEventListener('click',async()=>{
-    const dados={nome:fm.querySelector('#fhNome').value, apelido:fm.querySelector('#fhAp').value,
-      email:fm.querySelector('#fhEmail').value, notas:fm.querySelector('#fhNotas').value};
+      <div class="card card-pad">
+        <div class="fh-cab"><h3 class="fh-tit">Percurso</h3>
+          <button class="btn-sec btn-sm" id="fhMaisF">${ic('mais')}Acrescentar formação</button></div>
+        <ol class="tl">${ev.map(e=>`<li class="${e.cls||''}"><span class="tl-ic">${ic(e.icone)}</span>
+          <div class="tl-c">${e.html}</div><span class="tl-q">${esc(e.quando||'')}</span>${e.acc||'<span></span>'}</li>`).join('')}
+          ${hist===null?`<li class="tl-espera"><span class="tl-ic">${ic('mail')}</span><div class="tl-c"><span>A ver as campanhas…</span></div><span></span><span></span></li>`:''}</ol>
+      </div>
+    </div>`;
+
+  const depois=async(msg)=>{ await carregarFormandos(false); toast(msg); abrirFormando(f.id); };
+  $('#voltarFormandos').addEventListener('click',mostrarFormandos);
+  if($('#fhRep')) $('#fhRep').addEventListener('click',()=>modalRepetidos(outros));
+  $('#fhGravar').addEventListener('click',async()=>{
+    const dados={nome:$('#fhNome').value, apelido:$('#fhAp').value, email:$('#fhEmail').value, notas:$('#fhNotas').value};
     try{ await rpc('formando_gravar',{p_token:sessao.token,p_id:f.id,p_dados:dados}); }
-    catch(e){ return tratar(e); }
-    fm.remove();
-    toast(f.devolvido_em&&dados.email.trim()!==f.email?'Ficha gravada. Com o email novo, volta a receber as campanhas.':'Ficha gravada.');
-    carregarFormandos();
+    catch(e){ const m=e&&e.message; return toast(ERROS[m]||m,'err'); }
+    depois(f.devolvido_em&&dados.email.trim()!==f.email?'Gravado. Com o email novo, volta a receber as campanhas.':'Gravado.');
   });
   /* sair da lista à mão: quem pede por resposta ao email, ou quem volta */
-  fm.querySelector('[data-saida]').addEventListener('click',async()=>{
+  v.querySelector('[data-saida]').addEventListener('click',async()=>{
     try{ await rpc('formando_saida',{p_token:sessao.token,p_id:f.id,p_saiu:!f.saiu_em}); }
     catch(e){ if(faltaSql(e,'12-campanhas.sql')) return; return tratar(e); }
-    fm.remove(); toast(f.saiu_em?'Voltou à lista.':'Saiu da lista.'); carregarFormandos();
+    depois(f.saiu_em?'Voltou à lista.':'Saiu da lista.');
   });
   /* um aviso de devolução que foi engano (caixa cheia, servidor em baixo) */
-  if(fm.querySelector('[data-devolvido]')) fm.querySelector('[data-devolvido]').addEventListener('click',async()=>{
+  if(v.querySelector('[data-devolvido]')) v.querySelector('[data-devolvido]').addEventListener('click',async()=>{
     try{ await rpc('formando_devolvido',{p_token:sessao.token,p_id:f.id,p_devolvido:false}); }
     catch(e){ if(faltaSql(e,'14-campanhas-devolvidos.sql')) return; return tratar(e); }
-    fm.remove(); toast('Volta a receber as campanhas.'); carregarFormandos();
+    depois('Volta a receber as campanhas.');
   });
-  fm.querySelector('[data-apagar]').addEventListener('click',async()=>{
+  $('#fhApagar').addEventListener('click',async()=>{
     const ok=await uiConfirm({titulo:'Apagar '+nomeTodo(f)+'?',ok:'Apagar',perigo:true,
       texto:'Sai da lista com as formações que tinha registadas. Não se desfaz.'});
     if(!ok) return;
     try{ await rpc('formando_apagar',{p_token:sessao.token,p_id:f.id}); }
     catch(e){ return tratar(e); }
-    fm.remove(); toast('Apagado.'); carregarFormandos();
+    toast('Apagado.'); mostrarFormandos();
   });
+  $('#fhMaisF').addEventListener('click',async()=>{
+    const fs=await escolherFormacoes('Acrescentar formação a '+nomeTodo(f));
+    if(!fs) return;
+    const linhas=fs.map((c,i)=>({linha:i+1,nome:f.nome,apelido:f.apelido,email:f.email,curso:c.curso,entidade:c.entidade,inicio:c.inicio,fim:c.fim,notas:''}));
+    try{ await rpc('formandos_importar',{p_token:sessao.token,p_linhas:linhas,p_ensaio:false}); }
+    catch(e){ return tratar(e); }
+    depois(fs.length===1?'Formação acrescentada.':'Formações acrescentadas.');
+  });
+  v.querySelectorAll('[data-tirarf]').forEach(b=>b.addEventListener('click',async()=>{
+    const c=f.formacoes.find(x=>x.id===b.dataset.tirarf);
+    const ok=await uiConfirm({titulo:'Tirar esta formação?',ok:'Tirar',perigo:true,
+      texto:esc(c.curso)+' · '+esc(c.entidade)+' · '+periodo(c)+'<br><br>A formação continua no Repo para os outros formandos.'});
+    if(!ok) return;
+    try{ await rpc('formando_formacao_tirar',{p_token:sessao.token,p_formando:f.id,p_formacao:c.id}); }
+    catch(e){ if(faltaSql(e,'15-formandos-historico.sql')) return; return tratar(e); }
+    depois('Formação tirada.');
+  }));
+  v.querySelectorAll('[data-camp-abrir]').forEach(b=>b.addEventListener('click',()=>abrirCampanha(b.dataset.campAbrir)));
+}
+
+/* ---------- Escolher formações ----------
+   Uma das que já estão no Repo, ou uma nova (curso, entidade, meses). Os
+   meses são o que manda: as turmas gerem-se por mês. Devolve a lista
+   escolhida, ou null se se cancelar. */
+function formacoesConhecidas(){
+  const m=new Map(); formandos.forEach(f=>f.formacoes.forEach(c=>m.set(c.id,c)));
+  return [...m.values()].sort((a,b)=>String(b.inicio||'').localeCompare(String(a.inicio||''))||a.curso.localeCompare(b.curso,'pt'));
+}
+function linhaFormacaoHTML(i,conhecidas){
+  return `<div class="nf-f" data-nf="${i}">
+    <div class="nf-f-cab"><div class="field"><select data-nfsel aria-label="Formação">
+      <option value="">Escolhe a formação…</option>
+      ${conhecidas.map(c=>`<option value="${c.id}">${esc(c.curso)} · ${esc(c.entidade)} · ${periodo(c)}</option>`).join('')}
+      <option value="nova">Outra formação (nova)…</option></select></div>
+      <button type="button" class="btn-ghost btn-xs" data-nftirar title="Tirar" aria-label="Tirar">${ic('lixo')}</button></div>
+    <div class="form-grid nf-nova hidden">
+      <div class="field"><label>Curso</label><input data-nfk="curso" list="nfCursos"></div>
+      <div class="field"><label>Entidade</label><input data-nfk="entidade" list="nfEnts" value="Turismo de Portugal"></div>
+      <div class="field"><label>Início (mês)</label><input data-nfk="inicio" type="month"></div>
+      <div class="field"><label>Fim (mês)</label><input data-nfk="fim" type="month"></div>
+    </div></div>`;
+}
+/* lê as formações de um contentor com linhas .nf-f; erro = texto */
+function lerFormacoes(box,conhecidas){
+  const out=[]; let erro='';
+  box.querySelectorAll('.nf-f').forEach(l=>{
+    const v=l.querySelector('[data-nfsel]').value;
+    if(!v) return;
+    if(v!=='nova'){ const c=conhecidas.find(x=>x.id===v);
+      out.push({curso:c.curso,entidade:c.entidade,inicio:c.inicio?String(c.inicio).slice(0,10):'',fim:c.fim?String(c.fim).slice(0,10):''}); return; }
+    const g=k=>l.querySelector(`[data-nfk="${k}"]`).value.trim();
+    if(!g('curso')||!g('entidade')){ erro='Numa formação nova, o curso e a entidade são obrigatórios.'; return; }
+    if(g('inicio')&&g('fim')&&g('fim')<g('inicio')){ erro='Uma formação acaba antes de começar.'; return; }
+    out.push({curso:g('curso'),entidade:g('entidade'),inicio:g('inicio')?g('inicio')+'-01':'',fim:g('fim')?g('fim')+'-01':''});
+  });
+  return {out,erro};
+}
+function ligarFormacoes(box,conhecidas){
+  const liga=l=>{
+    l.querySelector('[data-nfsel]').addEventListener('change',e=>l.querySelector('.nf-nova').classList.toggle('hidden',e.target.value!=='nova'));
+    l.querySelector('[data-nftirar]').addEventListener('click',()=>{ if(box.querySelectorAll('.nf-f').length>1) l.remove(); else l.querySelector('[data-nfsel]').value=''; });
+  };
+  box.querySelectorAll('.nf-f').forEach(liga);
+  return ()=>{ const i=box.querySelectorAll('.nf-f').length; box.insertAdjacentHTML('beforeend',linhaFormacaoHTML(i,conhecidas)); liga(box.lastElementChild); };
+}
+function listasFormacoes(){
+  const pt=(a,b)=>a.localeCompare(b,'pt');
+  const cursos=[...new Set(formandos.flatMap(f=>f.formacoes.map(c=>c.curso)))].sort(pt);
+  const ents=[...new Set(['Turismo de Portugal'].concat(formandos.flatMap(f=>f.formacoes.map(c=>c.entidade))))].sort(pt);
+  return `<datalist id="nfCursos">${cursos.map(c=>`<option value="${esc(c)}">`).join('')}</datalist>
+    <datalist id="nfEnts">${ents.map(c=>`<option value="${esc(c)}">`).join('')}</datalist>`;
+}
+function escolherFormacoes(titulo){
+  const conhecidas=formacoesConhecidas();
+  return new Promise(res=>{
+    const m=abrirModal(`<div class="modal" style="width:min(620px,100%)">
+      <div class="modal-head"><div><h3>${esc(titulo)}</h3></div></div>
+      <div class="modal-body">${listasFormacoes()}
+        <div class="nf-lista" id="efLista">${linhaFormacaoHTML(0,conhecidas)}</div>
+        <button type="button" class="btn-sec btn-sm" id="efMais">${ic('mais')}Outra formação</button></div>
+      <div class="modal-foot"><span></span><div style="display:flex;gap:10px"><button class="btn-sec" data-fechar>Cancelar</button>
+        <button class="btn" id="efOk">Acrescentar</button></div></div></div>`);
+    let feito=false;
+    const mais=ligarFormacoes(m.querySelector('#efLista'),conhecidas);
+    m.querySelector('#efMais').addEventListener('click',mais);
+    m.querySelector('#efOk').addEventListener('click',()=>{
+      const {out,erro}=lerFormacoes(m.querySelector('#efLista'),conhecidas);
+      if(erro) return toast(erro,'err');
+      if(!out.length) return toast('Escolhe uma formação.','err');
+      feito=true; m.remove(); res(out);
+    });
+    const obs=new MutationObserver(()=>{ if(!document.body.contains(m)){ obs.disconnect(); if(!feito) res(null); } });
+    obs.observe(document.body,{childList:true});
+  });
+}
+
+/* ---------- Novo formando ----------
+   Uma pessoa = um email. Antes de gravar vê-se se já existe:
+   - o MESMO email: já está na lista, abre-se a ficha dela;
+   - um nome parecido com OUTRO email: pode ser a mesma pessoa que mudou
+     de email. Mostra-se quem é; se o formador disser que é outra pessoa,
+     o par fica marcado como "pessoas diferentes" e não volta a aparecer
+     nos possíveis repetidos. */
+function novoFormando(){
+  const conhecidas=formacoesConhecidas();
+  const m=abrirModal(`<div class="modal" style="width:min(640px,100%)">
+    <div class="modal-head"><div><h3>Novo formando</h3>
+      <div class="sub">Uma pessoa, um email. As formações podem ser das que já estão no Repo ou novas.</div></div></div>
+    <div class="modal-body">${listasFormacoes()}
+      <div class="form-grid">
+        <div class="field"><label>Nome</label><input id="nfNome" autocomplete="off"></div>
+        <div class="field"><label>Apelido</label><input id="nfAp" autocomplete="off"></div>
+        <div class="field full"><label>Email</label><input id="nfEmail" type="email" autocomplete="off"></div>
+        <div class="field full"><label>Notas</label><textarea id="nfNotas" rows="2"></textarea></div>
+      </div>
+      <div id="nfAviso"></div>
+      <h4 class="f-sub">Formações</h4>
+      <div class="nf-lista" id="nfLista">${linhaFormacaoHTML(0,conhecidas)}</div>
+      <button type="button" class="btn-sec btn-sm" id="nfMais">${ic('mais')}Outra formação</button>
+    </div>
+    <div class="modal-foot"><span></span><div style="display:flex;gap:10px"><button class="btn-sec" data-fechar>Cancelar</button>
+      <button class="btn" id="nfGravar">Gravar</button></div></div></div>`);
+  const q=s=>m.querySelector(s);
+  m.querySelector('#nfMais').addEventListener('click',ligarFormacoes(q('#nfLista'),conhecidas));
+  let igual=null, parecidos=[];
+  const ver=()=>{
+    const nome=(q('#nfNome').value+' '+q('#nfAp').value).trim(), email=q('#nfEmail').value.trim();
+    const ch=email?chaveEmail(email):'';
+    igual=ch?formandos.find(x=>chaveEmail(x.email)===ch)||null:null;
+    parecidos=!igual&&nome?formandos.filter(x=>nomesParecidos(nomeTodo(x),nome)&&(!ch||chaveEmail(x.email)!==ch)):[];
+    const abrir=p=>`<button type="button" class="btn-sec btn-sm" data-nfabrir="${p.id}">Abrir a ficha</button>`;
+    q('#nfAviso').innerHTML=igual
+      ?`<div class="nf-aviso mau">${ic('alerta')}<div><strong>Já existe com este email: ${esc(nomeTodo(igual))}</strong>
+         <span>Uma pessoa, um email. Para lhe acrescentar formações, abre a ficha dela.</span></div>${abrir(igual)}</div>`
+      :parecidos.length?`<div class="nf-aviso">${ic('alerta')}<div><strong>Pode ser a mesma pessoa, com outro email</strong>
+         ${parecidos.map(p=>`<span class="nf-par">${esc(nomeTodo(p))} · ${esc(p.email)} ${abrir(p)}</span>`).join('')}
+         <span>Se for, abre a ficha e muda lá o email. Se for outra pessoa, grava.</span></div></div>`:'';
+    q('#nfGravar').disabled=!!igual;
+    q('#nfGravar').textContent=parecidos.length?'É outra pessoa - gravar':'Gravar';
+    m.querySelectorAll('[data-nfabrir]').forEach(b=>b.addEventListener('click',()=>{ m.remove(); abrirFormando(b.dataset.nfabrir); }));
+  };
+  let t=null; ['#nfNome','#nfAp','#nfEmail'].forEach(s=>q(s).addEventListener('input',()=>{ clearTimeout(t); t=setTimeout(ver,200); }));
+  q('#nfGravar').addEventListener('click',async()=>{
+    ver();
+    const nome=q('#nfNome').value.trim(), apelido=q('#nfAp').value.trim(), email=q('#nfEmail').value.trim(), notas=q('#nfNotas').value.trim();
+    if(!nome) return toast('Falta o nome.','err');
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return toast('O email não parece certo.','err');
+    if(igual) return;
+    const {out,erro}=lerFormacoes(q('#nfLista'),conhecidas);
+    if(erro) return toast(erro,'err');
+    if(!out.length) return toast('Escolhe pelo menos uma formação: a lista é de quem já fez formação contigo.','err');
+    const linhas=out.map((c,i)=>({linha:i+1,nome,apelido,email,curso:c.curso,entidade:c.entidade,inicio:c.inicio,fim:c.fim,notas}));
+    q('#nfGravar').disabled=true;
+    try{ await rpc('formandos_importar',{p_token:sessao.token,p_linhas:linhas,p_ensaio:false}); }
+    catch(e){ q('#nfGravar').disabled=false; return tratar(e); }
+    await carregarFormandos(false);
+    const novo=formandos.find(x=>chaveEmail(x.email)===chaveEmail(email));
+    /* disse que é outra pessoa: o par não volta aos possíveis repetidos */
+    if(novo) for(const p of parecidos){ try{ await rpc('formandos_distintos_marcar',{p_token:sessao.token,p_a:novo.id,p_b:p.id}); fDistintos.add(parKey(novo.id,p.id)); }catch(e){} }
+    m.remove(); toast('Formando acrescentado.');
+    if(novo) abrirFormando(novo.id); else mostrarFormandos();
+  });
+  setTimeout(()=>q('#nfNome').focus(),50);
 }
 
 /* ---------- Carregar o Excel ---------- */
@@ -3304,6 +3668,8 @@ function mostrarCampanhas(){
   escolaAtual=null; turmaAtual=null;
   lembrar('campanhas');
   mostrarVista('vCampanhas');
+  $('#vCampanhas').innerHTML='';
+  pesquisaPropria=pesquisaEm('campanhas')(()=>pintarListaCampanhas());
   accaoPrimaria=()=>abrirCampanha(null);
   $('#hTitulo').textContent='Campanhas';
   $('#hSub').textContent='Emails para quem já fez formação contigo. Saem do teu Outlook, um a um.';
@@ -3320,22 +3686,28 @@ async function carregarCampanhas(){
   const estado=c=>c.estado==='enviada'?'<span class="pill green">Enviada</span>'
     :c.estado==='preparada'?`<span class="pill amber">A enviar · ${c.enviados}/${c.n}</span>`
     :'<span class="pill grey">Rascunho</span>';
-  $('#vCampanhas').innerHTML = !campanhas.length
-    ? `<div class="empty">${ic('mail')}<strong>Ainda não há campanhas</strong>
-        <span>Escreve o email, escolhe para quem, e o Repo prepara uma versão para cada pessoa.</span></div>`
-    : `<div class="table-wrap"><table><thead><tr>
-        <th>Assunto</th><th>Para</th><th>Estado</th><th>Clicaram</th><th>Saíram</th>
-      </tr></thead><tbody>${campanhas.map(c=>`
-        <tr class="clickable" data-camp="${c.id}">
-          <td><div class="cell-main">${esc(c.assunto||'(sem assunto)')}</div>
-              <div class="cell-sub">${c.enviada_em?'enviada '+dt(c.enviada_em):'editada '+dt(c.atualizada_em)}</div></td>
-          <td>${esc(descreverFiltro(c.filtro))}</td>
-          <td>${c.filtro&&c.filtro.tipo==='teste'?'<span class="pill purple">Teste</span> ':''}${estado(c)}${c.erros?` <span class="pill red">${c.erros} com erro</span>`:''}${c.devolvidos?` <span class="pill red">${c.devolvidos} ${c.devolvidos===1?'devolvido':'devolvidos'}</span>`:''}</td>
-          <td>${c.n?c.clicaram:'<span class="muted">-</span>'}</td>
-          <td>${c.n?c.sairam:'<span class="muted">-</span>'}</td>
-        </tr>`).join('')}</tbody></table></div>`;
-  document.querySelectorAll('[data-camp]').forEach(r=>r.addEventListener('click',()=>abrirCampanha(r.dataset.camp)));
-  filtrar();
+  pintarListaCampanhas(estado);
+}
+function pintarListaCampanhas(estado){
+  estado=estado||(c=>c.estado==='enviada'?'<span class="pill green">Enviada</span>'
+    :c.estado==='preparada'?`<span class="pill amber">A enviar · ${c.enviados}/${c.n}</span>`:'<span class="pill grey">Rascunho</span>');
+  if(!campanhas.length){ $('#vCampanhas').innerHTML=`<div class="empty">${ic('mail')}<strong>Ainda não há campanhas</strong>
+        <span>Escreve o email, escolhe para quem, e o Repo prepara uma versão para cada pessoa.</span></div>`; return; }
+  if(!$('#cLista')) $('#vCampanhas').innerHTML='<div id="cLista"></div>';
+  tabelaPaginada($('#cLista'),{
+    id:'campanhas', linhas:campanhas,
+    texto:c=>[c.assunto,descreverFiltro(c.filtro)].join(' '),
+    attrs:c=>` class="clickable" data-camp="${c.id}"`,
+    colunas:[
+      {rot:'Assunto', ord:c=>semAcentos(c.assunto), td:c=>`<div class="cell-main">${esc(c.assunto||'(sem assunto)')}</div>
+              <div class="cell-sub">${c.enviada_em?'enviada '+dt(c.enviada_em):'editada '+dt(c.atualizada_em)}</div>`},
+      {rot:'Para', ord:c=>semAcentos(descreverFiltro(c.filtro)), td:c=>esc(descreverFiltro(c.filtro))},
+      {rot:'Estado', td:c=>`${c.filtro&&c.filtro.tipo==='teste'?'<span class="pill purple">Teste</span> ':''}${estado(c)}${c.erros?` <span class="pill red">${c.erros} com erro</span>`:''}${c.devolvidos?` <span class="pill red">${c.devolvidos} ${c.devolvidos===1?'devolvido':'devolvidos'}</span>`:''}`},
+      {rot:'Clicaram', ord:c=>c.n?c.clicaram:null, desc:true, td:c=>c.n?c.clicaram:'<span class="muted">-</span>'},
+      {rot:'Saíram', ord:c=>c.n?c.sairam:null, desc:true, td:c=>c.n?c.sairam:'<span class="muted">-</span>'}
+    ],
+    depois:box=>box.querySelectorAll('[data-camp]').forEach(r=>r.addEventListener('click',()=>abrirCampanha(r.dataset.camp)))
+  });
 }
 
 /* ---------- O editor ---------- */
@@ -3352,6 +3724,8 @@ async function abrirCampanha(id){
 function mostrarEditorCampanha(){
   lembrar(campAtual.id?'campanha/'+encodeURIComponent(campAtual.id):'campanhas');
   mostrarVista('vCampanha');
+  if(TP.destinatarios) TP.destinatarios.pag=1;
+  pesquisaPropria=pesquisaEm('destinatarios')(()=>pintarDestinatarios());
   accaoPrimaria=null;
   $('#btnPrimario').classList.add('hidden');
   $('#hTitulo').textContent=campAtual.id?'Campanha':'Nova campanha';
@@ -3390,17 +3764,21 @@ function pintarDestinatarios(quando){
   dest.innerHTML=n?`<div class="camp-sub-cab"><h3 class="camp-sub">Destinatários</h3>
       <div class="toolbar">${quando?`<span class="muted">actualizado às ${quando}</span>`:''}
         <button class="btn-sec" id="cActualizar">${ic('refrescar')}Actualizar</button></div></div>
-    <div class="table-wrap"><table><thead><tr><th>Nome</th><th>Email</th><th>Estado</th><th>Clicou</th><th>Saiu</th></tr></thead>
-    <tbody>${envios.map(e=>`<tr>
-      <td><div class="cell-main">${esc(e.nome)}</div></td>
-      <td>${e.saiu_em?`<span class="saiu-email" title="Saiu da lista">${esc(e.email)}</span>`
-        :e.devolvido_em?`<span class="devolvido-email">${esc(e.email)}</span>`:esc(e.email)}</td>
-      <td>${e.devolvido_em?`<span class="pill red" title="${esc(e.devolvido_motivo||'')}">Devolvido</span> <span class="cell-sub">${esc((e.devolvido_motivo||'').slice(0,40))}</span>`
+    <div id="cDestTab"></div>`:'';
+  if(n) tabelaPaginada($('#cDestTab'),{
+    id:'destinatarios', linhas:envios,
+    texto:e=>[e.nome,e.email].join(' '),
+    colunas:[
+      {rot:'Nome', ord:e=>semAcentos(e.nome), td:e=>`<div class="cell-main">${esc(e.nome)}</div>`},
+      {rot:'Email', ord:e=>e.email.toLowerCase(), td:e=>`${e.saiu_em?`<span class="saiu-email" title="Saiu da lista">${esc(e.email)}</span>`
+        :e.devolvido_em?`<span class="devolvido-email">${esc(e.email)}</span>`:esc(e.email)}`},
+      {rot:'Estado', ord:e=>e.devolvido_em?3:e.estado==='erro'?2:e.estado==='enviado'?1:0, td:e=>`${e.devolvido_em?`<span class="pill red" title="${esc(e.devolvido_motivo||'')}">Devolvido</span> <span class="cell-sub">${esc((e.devolvido_motivo||'').slice(0,40))}</span>`
         :e.estado==='enviado'?`<span class="pill green">Enviado</span> <span class="cell-sub">${dt(e.enviado_em)}</span>`
-        :e.estado==='erro'?`<span class="pill red" title="${esc(e.erro)}">Erro</span>`:'<span class="pill grey">Por enviar</span>'}</td>
-      <td>${clicou(e)}</td>
-      <td>${e.saiu_em?'<span class="pill amber">Saiu</span>':'<span class="muted">-</span>'}</td>
-    </tr>`).join('')}</tbody></table></div>`:'';
+        :e.estado==='erro'?`<span class="pill red" title="${esc(e.erro)}">Erro</span>`:'<span class="pill grey">Por enviar</span>'}`},
+      {rot:'Clicou', ord:e=>e.cliques||null, desc:true, td:clicou},
+      {rot:'Saiu', ord:e=>e.saiu_em||null, desc:true, td:e=>e.saiu_em?'<span class="pill amber">Saiu</span>':'<span class="muted">-</span>'}
+    ]
+  });
   const b=$('#cActualizar'); if(b) b.addEventListener('click',async()=>{
     b.disabled=true;
     const antes=campanhaTravada();
