@@ -217,6 +217,8 @@ td .tag{align-self:auto}
 .nav-link.active::before{left:-2px;width:3px;height:60%;background:var(--g600);border-radius:2px}
 .nav::-webkit-scrollbar-thumb{background:var(--regua)}
 .nav-foot{border-top:1.5px solid var(--regua)}
+.nav-espaco{flex:1 0 14px}
+.nav-divulgacao{border-top:1.5px solid var(--regua);margin-top:4px}
 .profile{background:var(--papel-claro);border:1px solid var(--regua)}
 .profile-txt strong{font-family:Archivo,system-ui,sans-serif;color:var(--tinta)} .profile-txt span{color:var(--fraco)}
 .avatar{background:var(--tinta);color:var(--papel)}
@@ -510,13 +512,16 @@ td .tag{align-self:auto}
       <input id="pesquisa" type="search" placeholder="Pesquisar…" autocomplete="off" aria-label="Pesquisar">
     </div>
     <nav class="nav">
-      <div class="nav-group">Gestão</div>
+      <div class="nav-group">Aulas</div>
       <button class="nav-link active" data-view="escolas"></button>
       <button class="nav-link" data-view="testes"></button>
-      <button class="nav-link" data-view="formandos"></button>
-      <button class="nav-link" data-view="campanhas"></button>
       <div class="nav-group">Escolas</div>
       <div id="navEscolas"></div>
+      <!-- a divulgação é uma ferramenta à parte das escolas: em baixo, encostada ao fundo -->
+      <div class="nav-espaco"></div>
+      <div class="nav-group nav-divulgacao">Divulgação</div>
+      <button class="nav-link" data-view="formandos"></button>
+      <button class="nav-link" data-view="campanhas"></button>
     </nav>
     <div class="nav-foot">
       <div class="profile">
