@@ -362,6 +362,19 @@ td .tag{align-self:auto}
 .camp-sub{font-size:.95rem;font-weight:700;margin:24px 0 10px}
 .camp-passos ol{margin:10px 0 12px 20px;display:flex;flex-direction:column;gap:6px}
 .camp-passos p{margin:0 0 6px}
+.conv{margin:0 0 18px;display:flex;flex-direction:column;gap:10px}
+.conv-cab{display:flex;flex-direction:column;gap:2px;margin-bottom:4px}
+.conv-cab .camp-sub{margin:0}
+.conv-passo{display:grid;grid-template-columns:200px minmax(0,1fr) 260px;gap:14px;align-items:center}
+.conv-rot{display:flex;align-items:baseline;gap:8px}
+.conv-rot strong{font-size:1.35rem;font-weight:800}
+.conv-rot span{font-size:.82rem;color:var(--muted)}
+.conv-barra{height:10px;border-radius:99px;background:var(--surface2);overflow:hidden}
+.conv-barra span{display:block;height:100%;border-radius:99px;background:var(--g500)}
+.conv-passo em{font-style:normal;font-size:.8rem;color:var(--muted)}
+.conv-vazio{margin-top:2px}
+.conv-f{margin-top:6px}
+@media(max-width:900px){ .conv-passo{grid-template-columns:1fr} }
 /* ---------- Tabelas com páginas ---------- */
 .th-ord button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font:inherit;color:inherit;letter-spacing:inherit;text-transform:inherit}
 .th-ord button svg{width:13px;height:13px;opacity:.35}
@@ -3553,7 +3566,7 @@ function descreverFiltro(f){
    Um email é uma estrutura, não um texto solto: abertura, uma ou mais
    formações (cada uma com o seu botão e o seu link de inscrição), fecho,
    LinkedIn e rodapé. Todo o texto é teu, incluindo a frase de sair. */
-function formacaoVazia(){ return {titulo:'',inicio:'',fim:'',horas:'',texto:'',botao:'Quero inscrever-me',link:'',duvida:'Tenho uma dúvida'}; }
+function formacaoVazia(){ return {titulo:'',inicio:'',fim:'',horas:'',texto:'',botao:'Quero inscrever-me',link:'',duvida:'Tenho uma dúvida',curso:''}; }
 /* As datas guardam-se aaaa-mm-dd (o que o calendário dá) e escrevem-se
    dd/mm/aaaa. As formações são sempre online. */
 function quandoFormacao(f){
@@ -3754,6 +3767,11 @@ async function carregarCampanhas(){
     :c.estado==='preparada'?`<span class="pill amber">A enviar · ${c.enviados}/${c.n}</span>`
     :'<span class="pill grey">Rascunho</span>';
   pintarListaCampanhas(estado);
+  /* a conversão de cada campanha lê-se depois, sem atrasar a lista */
+  const conv=await lerConversoes(true);
+  if(!conv||!document.querySelector('#vCampanhas.active')) return;
+  campanhas.forEach(c=>{ const m=conv.porCamp.get(c.id); c.inscritos=m?[...m.keys()].length:null; });
+  pintarListaCampanhas(estado);
 }
 function pintarListaCampanhas(estado){
   estado=estado||(c=>c.estado==='enviada'?'<span class="pill green">Enviada</span>'
@@ -3771,10 +3789,106 @@ function pintarListaCampanhas(estado){
       {rot:'Para', ord:c=>semAcentos(descreverFiltro(c.filtro)), td:c=>esc(descreverFiltro(c.filtro))},
       {rot:'Estado', td:c=>`${c.filtro&&c.filtro.tipo==='teste'?'<span class="pill purple">Teste</span> ':''}${estado(c)}${c.erros?` <span class="pill red">${c.erros} com erro</span>`:''}${c.devolvidos?` <span class="pill red">${c.devolvidos} ${c.devolvidos===1?'devolvido':'devolvidos'}</span>`:''}`},
       {rot:'Clicaram', ord:c=>c.n?c.clicaram:null, desc:true, td:c=>c.n?c.clicaram:'<span class="muted">-</span>'},
-      {rot:'Saíram', ord:c=>c.n?c.sairam:null, desc:true, td:c=>c.n?c.sairam:'<span class="muted">-</span>'}
+      {rot:'Saíram', ord:c=>c.n?c.sairam:null, desc:true, td:c=>c.n?c.sairam:'<span class="muted">-</span>'},
+      {rot:'Inscreveram-se', ord:c=>c.inscritos==null?null:c.inscritos, desc:true,
+       td:c=>c.inscritos==null?'<span class="muted">-</span>':`${c.inscritos}${c.enviados?` <span class="cell-sub">${pct(c.inscritos,c.enviados)}</span>`:''}`}
     ],
     depois:box=>box.querySelectorAll('[data-camp]').forEach(r=>r.addEventListener('click',()=>abrirCampanha(r.dataset.camp)))
   });
+}
+
+/* ---------- Conversão ----------
+   Das pessoas a quem a campanha foi enviada, quantas se inscreveram
+   depois? "Inscreveu-se" = aparece nos Formandos numa turma que começou
+   no mês do envio ou depois - sabe-se quando o formador carrega a lista
+   da turma seguinte. Sem contactar ninguém, com o que o Repo já tem.
+
+   Uma inscrição conta UMA vez: para a campanha mais recente que a pessoa
+   recebeu antes de a turma começar, e só até 4 meses depois do envio.
+   As campanhas de teste não entram. Tudo se calcula aqui, no browser. */
+const CONV_MESES=4;
+const mesDe=d=>String(d||'').slice(0,7);
+const mesesEntre=(a,b)=>{ const [ya,ma]=a.split('-').map(Number), [yb,mb]=b.split('-').map(Number); return (yb-ya)*12+(mb-ma); };
+/* o curso do Repo a que corresponde cada formação do email: o escolhido
+   no cartão ou, sem ele, um curso cujo nome está no título (ou o inverso) */
+function cursoDaFormacao(f,cursos){
+  if(f&&f.curso) return f.curso;
+  const t=semAcentos((f&&f.titulo)||'').trim(); if(!t) return '';
+  const c=cursos.find(x=>{ const n=semAcentos(x); return n===t||t.includes(n)||n.includes(t); });
+  return c||'';
+}
+let convCache=null;   /* {chave do envio -> resultado}, refeito a cada Actualizar */
+async function lerConversoes(forcar){
+  if(convCache&&!forcar) return convCache;
+  if(!(await garantirFormandos())) return null;
+  let lista; try{ lista=await rpc('campanhas_listar',{p_token:sessao.token}); }catch(e){ return null; }
+  const reais=lista.filter(c=>!(c.filtro&&c.filtro.tipo==='teste')&&c.enviados>0);
+  let todas; try{ todas=await Promise.all(reais.map(c=>rpc('campanha_ler',{p_token:sessao.token,p_id:c.id}))); }catch(e){ return null; }
+  const pessoas=new Map(formandos.map(f=>[chaveEmail(f.email),f]));
+  /* o que cada pessoa recebeu, por ordem */
+  const porPessoa=new Map();
+  todas.forEach(c=>(c.envios||[]).forEach(e=>{
+    if(e.estado!=='enviado'||!e.enviado_em) return;
+    const k=chaveEmail(e.email); if(!porPessoa.has(k)) porPessoa.set(k,[]);
+    porPessoa.get(k).push({c,e,mes:mesDe(e.enviado_em)});
+  }));
+  /* cada turma de cada pessoa vai para a última campanha antes dela */
+  const porCamp=new Map(todas.map(c=>[c.id,new Map()]));
+  porPessoa.forEach((rec,k)=>{
+    const f=pessoas.get(k); if(!f) return;
+    rec.sort((a,b)=>String(a.e.enviado_em).localeCompare(String(b.e.enviado_em)));
+    f.formacoes.forEach(t=>{
+      if(!t.inicio) return; const mt=mesDe(t.inicio);
+      let r=null; rec.forEach(x=>{ if(x.mes<=mt) r=x; });
+      if(!r||mesesEntre(r.mes,mt)>CONV_MESES) return;
+      const m=porCamp.get(r.c.id); if(!m.has(k)) m.set(k,[]); m.get(k).push(t);
+    });
+  });
+  convCache={todas,porCamp};
+  return convCache;
+}
+/* os números de uma campanha, a partir do que lerConversoes juntou */
+function numerosConversao(c,conv){
+  const insc=(conv&&conv.porCamp.get(c.id))||new Map();
+  const env=(c.envios||[]).filter(e=>e.estado==='enviado');
+  const cursos=[...new Set(formandos.flatMap(f=>f.formacoes.map(x=>x.curso)))];
+  const fs=(c.conteudo&&c.conteudo.formacoes)||[];
+  const clicou=e=>e.cliques>0;
+  const inscritos=env.filter(e=>insc.has(chaveEmail(e.email)));
+  const porF=fs.map((f,i)=>{
+    const curso=cursoDaFormacao(f,cursos), nc=semAcentos(curso);
+    const clic=env.filter(e=>e.cliques_botoes&&+e.cliques_botoes[i]>0);
+    const ins=curso?env.filter(e=>(insc.get(chaveEmail(e.email))||[]).some(t=>semAcentos(t.curso)===nc)):[];
+    return {titulo:f.titulo||'Formação '+(i+1), curso, escolhido:!!f.curso, clicaram:clic.length, inscritos:ins.length,
+      clicaramEInscreveram:ins.filter(e=>e.cliques_botoes&&+e.cliques_botoes[i]>0).length};
+  });
+  return {enviados:env.length, clicaram:env.filter(clicou).length, inscritos:inscritos.length,
+    comClique:inscritos.filter(clicou).length, semClique:inscritos.filter(e=>!clicou(e)).length, porF, insc};
+}
+const pct=(a,b)=>b?(Math.round(a/b*1000)/10).toLocaleString('pt-PT')+'%':'-';
+async function pintarConversao(forcar){
+  const box=$('#cConv'), c=campAtual; if(!box||!c) return;
+  const env=(c.envios||[]).filter(e=>e.estado==='enviado').length;
+  if(!env||(c.filtro&&c.filtro.tipo==='teste')){ box.innerHTML=''; c.conv=null; return; }
+  const conv=await lerConversoes(forcar); if(campAtual!==c) return;
+  if(!conv){ box.innerHTML=''; return; }
+  const n=numerosConversao(c,conv); c.conv=n.insc;
+  const barra=(rot,v,txt)=>`<div class="conv-passo"><div class="conv-rot"><strong>${v}</strong><span>${rot}</span></div>
+    <div class="conv-barra"><span style="width:${n.enviados?Math.max(v?2:0,Math.round(v/n.enviados*100)):0}%"></span></div><em>${txt}</em></div>`;
+  const mapa=n.porF.length>1||n.porF.some(f=>f.curso);
+  box.innerHTML=`<div class="card card-pad conv">
+    <div class="conv-cab"><h3 class="camp-sub">Conversão</h3>
+      <span class="hint">Inscreveu-se = aparece numa turma que começou depois do envio (até ${CONV_MESES} meses). Conta para a campanha mais recente que a pessoa recebeu.</span></div>
+    ${barra('enviados',n.enviados,'')}
+    ${barra('clicaram em inscrever-me',n.clicaram,pct(n.clicaram,n.enviados)+' dos enviados')}
+    ${barra('inscreveram-se',n.inscritos,pct(n.inscritos,n.enviados)+' dos enviados'+(n.inscritos?' · '+n.comClique+' depois de clicar, '+n.semClique+' sem clicar':''))}
+    ${!n.inscritos?'<div class="hint conv-vazio">Ainda ninguém desta campanha aparece numa turma posterior. Os números aparecem quando carregares a lista da próxima turma em Formandos.</div>':''}
+    ${mapa?`<div class="table-wrap conv-f"><table><thead><tr><th>Formação</th><th>Curso no Repo</th><th>Clicaram</th><th>Inscreveram-se</th><th>Dos quais clicaram</th></tr></thead>
+      <tbody>${n.porF.map(f=>`<tr><td><div class="cell-main">${esc(f.titulo)}</div></td>
+        <td>${f.curso?esc(f.curso)+(f.escolhido?'':' <span class="muted" title="Pelo título da formação">(pelo título)</span>'):'<span class="muted">sem correspondência</span>'}</td>
+        <td>${f.clicaram}</td><td>${f.curso?f.inscritos:'<span class="muted">-</span>'}</td><td>${f.curso?f.clicaramEInscreveram:'<span class="muted">-</span>'}</td></tr>`).join('')}</tbody></table></div>`:''}
+  </div>`;
+  pintarDestinatarios();
 }
 
 /* ---------- O editor ---------- */
@@ -3805,6 +3919,7 @@ const tituloFormacao=(k,i)=>{ const f=k&&k.formacoes&&k.formacoes[i]; return (f&
    botão "Actualizar" refresca só isto, sem mexer no que se está a
    escrever no formulário. Quem saiu da lista fica com o email riscado. */
 function pintarDestinatarios(quando){
+  quando=quando||(campAtual&&campAtual._quando);
   const envios=(campAtual&&campAtual.envios)||[];
   const k=campAtual&&campAtual.conteudo;
   const nf=k&&k.formacoes?k.formacoes.length:0;
@@ -3843,7 +3958,10 @@ function pintarDestinatarios(quando){
         :e.estado==='enviado'?`<span class="pill green">Enviado</span> <span class="cell-sub">${dt(e.enviado_em)}</span>`
         :e.estado==='erro'?`<span class="pill red" title="${esc(e.erro)}">Erro</span>`:'<span class="pill grey">Por enviar</span>'}`},
       {rot:'Clicou', ord:e=>e.cliques||null, desc:true, td:clicou},
-      {rot:'Saiu', ord:e=>e.saiu_em||null, desc:true, td:e=>e.saiu_em?'<span class="pill amber">Saiu</span>':'<span class="muted">-</span>'}
+      {rot:'Saiu', ord:e=>e.saiu_em||null, desc:true, td:e=>e.saiu_em?'<span class="pill amber">Saiu</span>':'<span class="muted">-</span>'},
+      {rot:'Inscreveu-se', ord:e=>{ const t=campAtual.conv&&campAtual.conv.get(chaveEmail(e.email)); return t?t.length:null; }, desc:true,
+       td:e=>{ const t=campAtual.conv&&campAtual.conv.get(chaveEmail(e.email));
+         return t?t.map(x=>`<span class="pill green" title="${esc(x.entidade)}">${esc(x.curso.length>24?x.curso.slice(0,23)+'…':x.curso)} · ${periodo(x)}</span>`).join(' '):'<span class="muted">-</span>'; }}
     ]
   });
   const b=$('#cActualizar'); if(b) b.addEventListener('click',async()=>{
@@ -3855,7 +3973,9 @@ function pintarDestinatarios(quando){
     /* entretanto saíram emails: o formulário já não se pode gravar, por
        isso redesenha-se travado (não se perde nada que se pudesse guardar) */
     if(!antes&&campanhaTravada()) pintarCampanha();
-    pintarDestinatarios(new Date().toLocaleTimeString('pt-PT'));
+    campAtual._quando=new Date().toLocaleTimeString('pt-PT');
+    pintarDestinatarios(campAtual._quando);
+    pintarConversao(true);
   });
 }
 function campanhaTravada(){ return (campAtual.envios||[]).some(e=>e.estado!=='por_enviar'); }
@@ -3877,6 +3997,7 @@ function pintarCampanha(){
   $('#vCampanha').innerHTML=`
     <button class="voltar" id="voltarCamp">${ic('seta')}Campanhas</button>
     <div id="cNumeros"></div>
+    <div id="cConv"></div>
     <div class="camp-ed">
       <div class="card card-pad camp-form">
         ${antiga?'<div class="hint camp-trava">Campanha enviada antes do construtor de email: fica como foi.</div>':`
@@ -3937,8 +4058,10 @@ function pintarCampanha(){
     </div>
     <div id="cDest"></div>`;
   pintarDestinatarios();
+  pintarConversao(true);
 
   /* As formações: cada uma com o seu botão e o seu link de inscrição */
+  const cursosRepo=[...new Set(formandos.flatMap(x=>x.formacoes.map(c=>c.curso)))].sort((a,b)=>a.localeCompare(b,'pt'));
   const pintarFormacoes=()=>{
     const box=$('#cFormacoes'); if(!box) return;
     const nf=k.formacoes.length;
@@ -3961,6 +4084,10 @@ function pintarCampanha(){
           ${campoCamp('Link da inscrição','link',f.link,{i,dis,ph:'https://...'})}
         </div>
         ${campoCamp('Link para dúvidas','duvida',f.duvida,{i,dis,dica:'Abre um email para ti, com o assunto «Dúvida:» e o título da formação. Em branco, não aparece.'})}
+        <div class="field"><label>Corresponde ao curso</label>
+          <select data-ck="curso" data-ci="${i}"${dis}><option value="">Pelo título (automático)</option>
+            ${cursosRepo.map(x=>`<option${x===f.curso?' selected':''}>${esc(x)}</option>`).join('')}</select>
+          <span class="hint">Para a conversão: quem se inscrever depois neste curso conta para esta formação.</span></div>
       </div>`).join('');
     box.querySelectorAll('[data-fmover]').forEach(b=>b.addEventListener('click',()=>{
       const i=+b.dataset.fmover, j=i+(+b.dataset.dir); const [x]=k.formacoes.splice(i,1); k.formacoes.splice(j,0,x);
