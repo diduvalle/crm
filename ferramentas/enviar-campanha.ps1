@@ -166,9 +166,10 @@ $PADRAO_AVISO = '(?i)undeliverable|undelivered|não é possível entregar|nao e 
   'delivery status notification \(failure\)|mail delivery failed|delivery has failed|returned mail|falha na entrega|não entregue'
 function MotivoDe([string]$texto) {
   $c = ([regex]::Match($texto, '\b5\.\d{1,3}\.\d{1,3}\b')).Value
-  if ($c -match '^5\.1\.(1|10)$') { return $c + ' o endereço não existe' }
+  # 5.1.x e o 5.4.1 do Microsoft 365: "não foi encontrado" (o endereço não existe)
+  if ($c -match '^5\.1\.' -or $c -eq '5.4.1') { return $c + ' o endereço não existe' }
   if ($c -eq '5.2.2') { return $c + ' caixa cheia' }
-  if ($c -match '^5\.4\.') { return $c + ' o domínio não recebe email' }
+  if ($c -match '^5\.4\.') { return $c + ' o servidor do destino não aceitou' }
   if ($c) { return $c + ' recusado' }
   return 'devolvido'
 }
@@ -176,8 +177,11 @@ function MotivoDe([string]$texto) {
 function AnalisarDevolucoes($itens, [datetime]$desde, [hashtable]$por) {
   $achados = @{}
   foreach ($it in $itens) {
-    $quando = $null; try { $quando = [datetime]$it.ReceivedTime } catch { continue }
-    if ($quando -lt $desde) { break }   # os itens vêm do mais recente para o mais antigo
+    # os avisos do Microsoft 365 não têm data de receção, só de criação
+    $quando = $null
+    try { $quando = $it.ReceivedTime } catch {}
+    if (-not $quando) { try { $quando = $it.CreationTime } catch {} }
+    if (-not $quando -or [datetime]$quando -lt $desde) { continue }
     $classe = [string]$it.MessageClass; $assunto = [string]$it.Subject
     $aviso = ($classe -like 'REPORT.IPM.Note.NDR*') -or ($classe -like 'IPM.Note*' -and $assunto -match $PADRAO_AVISO)
     if (-not $aviso) { continue }
@@ -196,7 +200,7 @@ function FazerDevolvidos {
   foreach ($n_pasta in 6, 23) {   # Caixa de Entrada, Lixo
     try {
       $itens = $conta.DeliveryStore.GetDefaultFolder($n_pasta).Items
-      $itens.Sort('[ReceivedTime]', $true)
+      $itens.Sort('[CreationTime]', $true)
       $a = AnalisarDevolucoes $itens $desde $por
       foreach ($k in $a.Keys) { if (-not $achados.ContainsKey($k)) { $achados[$k] = $a[$k] } }
     } catch { Write-Host ('  Não consegui ler uma pasta do Outlook: ' + $_.Exception.Message) -ForegroundColor Yellow }
