@@ -3825,8 +3825,7 @@ function pintarListaCampanhas(estado){
 /* ---------- Conversão ----------
    Das pessoas a quem a campanha foi enviada, quantas se inscreveram
    depois? "Inscreveu-se" = aparece nos Formandos numa turma que começou
-   no mês A SEGUIR ao envio ou depois (uma do próprio mês podia já ter
-   começado quando o email saiu) - sabe-se quando o formador carrega a lista
+   no mês do envio ou depois - sabe-se quando o formador carrega a lista
    da turma seguinte. Sem contactar ninguém, com o que o Repo já tem.
 
    Uma inscrição conta UMA vez: para a campanha mais recente que a pessoa
@@ -3865,8 +3864,11 @@ async function lerConversoes(forcar){
     rec.sort((a,b)=>String(a.e.enviado_em).localeCompare(String(b.e.enviado_em)));
     f.formacoes.forEach(t=>{
       if(!t.inicio) return; const mt=mesDe(t.inicio);
-      /* a turma tem de começar no mês A SEGUIR ao envio, ou depois */
-      let r=null; rec.forEach(x=>{ if(x.mes<mt) r=x; });
+      /* a turma começa no mês do envio ou depois. As turmas guardam-se
+         por mês, sem o dia: uma turma do próprio mês conta, porque costumam
+         começar depois do anúncio (a Distribuição Online de out. 2026 começou
+         a 26, o email saiu a 21) */
+      let r=null; rec.forEach(x=>{ if(x.mes<=mt) r=x; });
       if(!r||mesesEntre(r.mes,mt)>CONV_MESES) return;
       const m=porCamp.get(r.c.id); if(!m.has(k)) m.set(k,[]); m.get(k).push(t);
     });
@@ -3905,7 +3907,7 @@ async function pintarConversao(forcar){
   const mapa=n.porF.length>1||n.porF.some(f=>f.curso);
   box.innerHTML=`<div class="card card-pad conv">
     <div class="conv-cab"><h3 class="camp-sub">Conversão</h3>
-      <span class="hint">Inscreveu-se = aparece numa turma que começou no mês a seguir ao envio, ou até ${CONV_MESES} meses depois. Conta para a campanha mais recente que a pessoa recebeu.</span></div>
+      <span class="hint">Inscreveu-se = aparece numa turma que começou no mês do envio ou até ${CONV_MESES} meses depois. Conta para a campanha mais recente que a pessoa recebeu.</span></div>
     ${barra('enviados',n.enviados,'')}
     ${barra('clicaram em inscrever-me',n.clicaram,pct(n.clicaram,n.enviados)+' dos enviados')}
     ${barra('inscreveram-se',n.inscritos,pct(n.inscritos,n.enviados)+' dos enviados'+(n.inscritos?' · '+n.comClique+' depois de clicar, '+n.semClique+' sem clicar':''))}
