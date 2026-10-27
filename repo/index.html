@@ -318,6 +318,8 @@ td .tag{align-self:auto}
 .f-aviso>div{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
 .f-aviso span{font-size:.82rem;color:var(--muted)}
 .f-barra{margin-bottom:10px}
+.f-turmas{margin:-2px 0 12px}
+.f-turma-n{font-size:.74rem;opacity:.7;margin-left:2px}
 .f-procura{position:relative;flex:1 1 260px;max-width:360px;margin:0}
 .f-procura svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted);pointer-events:none}
 .f-procura input{padding-left:34px;width:100%}
@@ -2683,7 +2685,7 @@ function csvPauta(a){
    formador. Quando diz que são pessoas diferentes, o Repo não volta a
    perguntar.
    ========================================================= */
-let formandos=[], fDistintos=new Set(), fFiltro={curso:'',entidade:'',repetentes:false,saiu:false,devolvido:false};
+let formandos=[], fDistintos=new Set(), fFiltro={curso:'',entidade:'',repetentes:false,saiu:false,devolvido:false,turma:''};
 
 /* A mesma chave do servidor (_formando_chave em 11-formandos.sql). Aqui
    só serve para a pré-visualização saber quem já existe. */
@@ -2855,10 +2857,26 @@ async function carregarFormandos(pintar=true){
 function formandosFiltrados(){
   return formandos.filter(f=>
     (!fFiltro.curso||f.formacoes.some(c=>c.curso===fFiltro.curso)) &&
+    (!fFiltro.turma||f.formacoes.some(c=>c.id===fFiltro.turma)) &&
     (!fFiltro.entidade||f.formacoes.some(c=>c.entidade===fFiltro.entidade)) &&
     (!fFiltro.repetentes||f.formacoes.length>=2) &&
     (!fFiltro.saiu||f.saiu_em) &&
     (!fFiltro.devolvido||f.devolvido_em));
+}
+/* As turmas do curso escolhido, por mês, com quantas pessoas tem cada uma.
+   A turma é só um filtro da lista: o ponto de partida continua a ser a pessoa. */
+function turmasHTML(curso){
+  if(!curso) return '';
+  const m=new Map();
+  formandos.forEach(f=>f.formacoes.forEach(c=>{ if(c.curso!==curso) return;
+    const x=m.get(c.id)||{c,n:0}; x.n++; m.set(c.id,x); }));
+  const ts=[...m.values()].sort((a,b)=>String(b.c.inicio||'').localeCompare(String(a.c.inicio||'')));
+  /* uma turma que já não existe (tirou-se a última pessoa) volta a todas */
+  if(fFiltro.turma&&!m.has(fFiltro.turma)) fFiltro.turma='';
+  const variasEnt=new Set(ts.map(x=>x.c.entidade.toLowerCase())).size>1;
+  const b=(id,txt)=>`<button type="button" class="nf-chip${fFiltro.turma===id?' on':''}" data-fturma="${id}" aria-pressed="${fFiltro.turma===id}">${txt}</button>`;
+  return `<div class="nf-turmas f-turmas" id="fTurmas"><span class="nf-turmas-rot">Turma</span>${b('','Todas')}`
+    +ts.map(x=>b(x.c.id,periodo(x.c)+(variasEnt?' · '+esc(x.c.entidade):'')+` <span class="f-turma-n">${x.n}</span>`)).join('')+'</div>';
 }
 function pintarFormandos(){
   const v=$('#vFormandos');
@@ -2902,10 +2920,12 @@ function pintarFormandos(){
       <span style="flex:1"></span>
       ${carregar}${modelo}
     </div>
+    ${turmasHTML(fFiltro.curso)}
     <div id="fTabela"></div>`;
 
   const rep=(id,k)=>{ const b=$('#'+id); if(b) b.addEventListener('click',()=>{ fFiltro[k]=!fFiltro[k]; if(TP.formandos) TP.formandos.pag=1; pintarFormandos(); }); };
-  $('#fCurso').addEventListener('change',e=>{ fFiltro.curso=e.target.value; if(TP.formandos) TP.formandos.pag=1; pintarFormandos(); });
+  $('#fCurso').addEventListener('change',e=>{ fFiltro.curso=e.target.value; fFiltro.turma=''; if(TP.formandos) TP.formandos.pag=1; pintarFormandos(); });
+  v.querySelectorAll('[data-fturma]').forEach(b=>b.addEventListener('click',()=>{ fFiltro.turma=b.dataset.fturma; if(TP.formandos) TP.formandos.pag=1; pintarFormandos(); }));
   $('#fEnt').addEventListener('change',e=>{ fFiltro.entidade=e.target.value; if(TP.formandos) TP.formandos.pag=1; pintarFormandos(); });
   rep('fRep','repetentes'); rep('fSaiu','saiu'); rep('fDev','devolvido');
   $('#fProcura').addEventListener('input',e=>{ $('#pesquisa').value=e.target.value; if(TP.formandos) TP.formandos.pag=1; pintarTabelaFormandos(); });
@@ -3805,7 +3825,8 @@ function pintarListaCampanhas(estado){
 /* ---------- Conversão ----------
    Das pessoas a quem a campanha foi enviada, quantas se inscreveram
    depois? "Inscreveu-se" = aparece nos Formandos numa turma que começou
-   no mês do envio ou depois - sabe-se quando o formador carrega a lista
+   no mês A SEGUIR ao envio ou depois (uma do próprio mês podia já ter
+   começado quando o email saiu) - sabe-se quando o formador carrega a lista
    da turma seguinte. Sem contactar ninguém, com o que o Repo já tem.
 
    Uma inscrição conta UMA vez: para a campanha mais recente que a pessoa
@@ -3844,7 +3865,8 @@ async function lerConversoes(forcar){
     rec.sort((a,b)=>String(a.e.enviado_em).localeCompare(String(b.e.enviado_em)));
     f.formacoes.forEach(t=>{
       if(!t.inicio) return; const mt=mesDe(t.inicio);
-      let r=null; rec.forEach(x=>{ if(x.mes<=mt) r=x; });
+      /* a turma tem de começar no mês A SEGUIR ao envio, ou depois */
+      let r=null; rec.forEach(x=>{ if(x.mes<mt) r=x; });
       if(!r||mesesEntre(r.mes,mt)>CONV_MESES) return;
       const m=porCamp.get(r.c.id); if(!m.has(k)) m.set(k,[]); m.get(k).push(t);
     });
@@ -3883,7 +3905,7 @@ async function pintarConversao(forcar){
   const mapa=n.porF.length>1||n.porF.some(f=>f.curso);
   box.innerHTML=`<div class="card card-pad conv">
     <div class="conv-cab"><h3 class="camp-sub">Conversão</h3>
-      <span class="hint">Inscreveu-se = aparece numa turma que começou depois do envio (até ${CONV_MESES} meses). Conta para a campanha mais recente que a pessoa recebeu.</span></div>
+      <span class="hint">Inscreveu-se = aparece numa turma que começou no mês a seguir ao envio, ou até ${CONV_MESES} meses depois. Conta para a campanha mais recente que a pessoa recebeu.</span></div>
     ${barra('enviados',n.enviados,'')}
     ${barra('clicaram em inscrever-me',n.clicaram,pct(n.clicaram,n.enviados)+' dos enviados')}
     ${barra('inscreveram-se',n.inscritos,pct(n.inscritos,n.enviados)+' dos enviados'+(n.inscritos?' · '+n.comClique+' depois de clicar, '+n.semClique+' sem clicar':''))}
