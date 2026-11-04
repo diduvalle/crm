@@ -3838,8 +3838,10 @@ const mesesEntre=(a,b)=>{ const [ya,ma]=a.split('-').map(Number), [yb,mb]=b.spli
    no cartão ou, sem ele, um curso cujo nome está no título (ou o inverso) */
 function cursoDaFormacao(f,cursos){
   if(f&&f.curso) return f.curso;
-  const t=semAcentos((f&&f.titulo)||'').trim(); if(!t) return '';
-  const c=cursos.find(x=>{ const n=semAcentos(x); return n===t||t.includes(n)||n.includes(t); });
+  /* sem acentos nem pontuação: "IA A arte" e "IA: a arte" são o mesmo */
+  const limpo=x=>semAcentos(x).replace(/[^a-z0-9]+/g,' ').trim();
+  const t=limpo((f&&f.titulo)||''); if(!t) return '';
+  const c=cursos.find(x=>{ const n=limpo(x); return n===t||t.includes(n)||n.includes(t); });
   return c||'';
 }
 let convCache=null;   /* {chave do envio -> resultado}, refeito a cada Actualizar */
