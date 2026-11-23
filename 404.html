@@ -4526,15 +4526,23 @@ function rascunhoEstadoHTML(){
 }
 
 /* ---------- Recuperar ----------
-   Só se oferece quando FAZ SENTIDO: sandbox praticamente por estrear e cópia no
-   servidor. Perguntar a quem está a trabalhar bem seria assustar sem motivo. */
-function sandboxPorEstrear(){
-  const n=(state.empresas||[]).filter(ehProprio).length
-         +(state.clientes||[]).filter(ehProprio).length
-         +(state.propostas||[]).filter(ehProprio).length
-         +(state.produtos||[]).filter(ehProprio).length;
-  return n===0;
+   A cópia no servidor guarda-se sozinha (basta abrir a turma) e sair limpa o
+   navegador: cada entrada via "navegador vazio + há cópia", e o aviso aparecia
+   sempre, até numa turma por estrear. A regra olha agora para o que a CÓPIA tem:
+   - trabalho neste navegador          -> não se mexe;
+   - cópia sem trabalho da pessoa       -> nada a recuperar, silêncio;
+   - navegador vazio + cópia com trabalho -> repõe-se sozinho, com uma nota.
+   Não se pergunta: com o navegador vazio não há nada a perder.
+   "Trabalho" = registos criados pela pessoa nas listas de trabalho. Ficam de
+   fora as que se enchem sozinhas (utilizadores do servidor, registos de
+   atividade), senão uma turma nova contava como trabalhada. */
+const LISTAS_TRABALHO=['empresas','clientes','propostas','produtos','tarefas','agendamentos','casos','retencoes',
+  'campanhas','jornadas','automacoes','templates','propostaTemplates','pedidos','consentimentos','familias',
+  'subfamilias','camposExtra'];   /* sem 'envios': o arranque já lá põe um registo automático */
+function trabalhoProprio(st){
+  return LISTAS_TRABALHO.reduce((n,k)=>n+(Array.isArray(st&&st[k])?st[k].filter(ehProprio).length:0),0);
 }
+function sandboxPorEstrear(){ return trabalhoProprio(state)===0; }
 async function rascunhoOferecer(){
   if(!rascunhoLigado()) return;
   try{
@@ -4542,18 +4550,14 @@ async function rascunhoOferecer(){
     if(!r||!r.existe) return;
     rascunhoEm=r.em;
     if(!sandboxPorEstrear()) return;   /* já há trabalho aqui: não mexer */
-    const d=new Date(r.em);
-    const quando=dPT(String(r.em).slice(0,10))+" às "+pad(d.getHours(),2)+":"+pad(d.getMinutes(),2);
-    const sim=await uiConfirm(
-      "Este navegador está sem trabalho seu, mas há uma cópia guardada no servidor de <strong>"+esc(quando)+"</strong>.<br><br>Isto acontece quando se muda de computador ou de navegador, ou quando se limpam os dados de navegação. <strong>Recuperar?</strong>",
-      {title:"Encontrámos o seu trabalho", okText:"Recuperar", icon:"rotate", html:true});
-    if(!sim) return;
-    await rascunhoRepor();
+    const copia=await supaObterRascunho();
+    if(!copia||!copia.payload||!trabalhoProprio(copia.payload)) return;   /* turma por estrear: nada a recuperar */
+    await rascunhoRepor(copia);
   }catch(e){ /* sem cópia, ou sem ligação: segue-se em silêncio */ }
 }
-async function rascunhoRepor(){
+async function rascunhoRepor(jaLida){
   try{
-    const r=await supaObterRascunho();
+    const r=jaLida||await supaObterRascunho();
     if(!r||!r.payload) { toast("Sem cópia","Não há nenhuma cópia guardada para si","warn"); return; }
     const u=currentUser();
     /* escreve-se e volta a carregar: load() é que corre as migrações todas,
