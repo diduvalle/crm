@@ -2273,6 +2273,13 @@ async function abrirAplicacao(a){
   $('#btnPrimario').classList.add('hidden');
   $('#pesquisa').value='';
   $('#vApl').innerHTML='<div class="empty"><strong>A carregar…</strong></div>';
+  /* Os destinatários sincronizam-se AO ABRIR: quem entrou na turma depois
+     de aplicar - ou quem só agora tem email - ganha aqui a sua linha e o
+     seu link. Quem já recebeu fica exatamente como está. */
+  try{ await rpc('teste_sincronizar',{p_token:sessao.token,p_aplicacao_id:a.id}); }
+  catch(e){
+    if(!faltaSql(e,'16-teste-destinatarios.sql')) tratar(e);
+  }
   try{
     const d=await rpc('teste_aplicacao_ler',{p_token:sessao.token,p_aplicacao_id:a.id});
     aplItens=d.itens||[];
