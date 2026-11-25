@@ -7403,6 +7403,32 @@ const CARA_ESTILOS={
       ['accessories','Óculos',['glasses','glasses2','glasses3','glasses4','glasses5','sunglasses','sunglasses2'],1],['facialHair','Barba',null,1]],
     cores:[['skinColor','Pele'],['headContrastColor','Cabelo'],['clothingColor','Roupa']]},
 };
+/* O "Aleatório" (e a primeira cara) seguem o Género e a Idade da ficha. A
+   classificação foi feita a olhar para cada variante desenhada, não pelo nome.
+   As setas continuam a mostrar tudo: isto só orienta a sugestão.
+   fora = nunca no aleatório (chapéus, lenços, tranças de criança...);
+   M/F = só para esse género; o resto serve aos dois. cinza = cor do cabelo grisalho. */
+const CARA_PERFIL={
+  'personas':{cabelo:'hair', barba:'facialHair', cinza:['hairColor','dee1f5'],
+    fora:{hair:['pigtails','cap','beanie']},
+    M:{hair:['shortCombover','curlyHighTop','curly','buzzcut','bald','balding','fade','shortComboverChops','mohawk'],mouth:['smile','bigSmile','smirk','frown','surprise']},
+    F:{hair:['long','sideShave','bobCut','curly','curlyBun','bobBangs','bunUndercut','straightBun','extraLong']}},
+  'avataaars':{cabelo:'top', barba:'facialHair', cinza:['hairColor','e8e1e1'],
+    fora:{top:['hat','hijab','turban','winterHat1','winterHat02','winterHat03','winterHat04','frida']},
+    M:{top:['dreads01','dreads02','frizzle','shaggy','shaggyMullet','shortCurly','shortFlat','shortRound','shortWaved','sides','theCaesar','theCaesarAndSidePart']},
+    F:{top:['bob','bun','curly','curvy','dreads','fro','froBand','longButNotTooLong','miaWallace','shavedSides','straight01','straight02','straightAndStrand','bigHair']}},
+  'open-peeps':{cabelo:'head', barba:'facialHair', cinza:['headContrastColor','e8e1e1'],
+    fora:{head:['bear','hatBeanie','hatHip','hijab','turban']},
+    M:{head:['afro','dreads1','flatTop','flatTopLong','grayShort','mohawk','noHair1','noHair2','noHair3','pomp','shaved1','shaved2','shaved3','short1','short2','short3','short4','short5','twists','twists2','cornrows']},
+    F:{head:['afro','bangs','bangs2','bantuKnots','bun','bun2','buns','cornrows','cornrows2','dreads1','dreads2','grayBun','grayMedium','long','longAfro','longBangs','longCurly','medium1','medium2','medium3','mediumBangs','mediumBangs2','mediumBangs3','mediumStraight','mohawk2']}},
+};
+/* lê a ficha aberta: género (texto livre) e idade (o primeiro número, ou a média de "35-45") */
+function caraPerfilDaFicha(){
+  const v=n=>(($('#modalForm [name="'+n+'"]')||{}).value||'');
+  const g=persFold(v('genero')), ns=(v('idade').match(/\d+/g)||[]).map(Number).filter(n=>n>0&&n<120);
+  return {g:/(^f|fem|mulher|senhora|rapariga)/.test(g)?'F':/(^m|^h$|masc|homem|senhor|rapaz)/.test(g)?'M':'',
+          idade:ns.length?Math.round(ns.reduce((a,b)=>a+b,0)/ns.length):0};
+}
 const caraMods={}; let caraDraft=null, caraVez=0;
 function caraCarregar(estilo){
   const imp=n=>caraMods[n]||(caraMods[n]=import(CARA_CDN+n+'@'+CARA_VER+'/+esm').catch(e=>{ delete caraMods[n]; throw e; }));
@@ -7417,11 +7443,20 @@ function caraListas(st,E){
   E.cores.forEach(([k])=>{ cores[k]=en(k); });
   return {partes,cores};
 }
-function caraAleatoria(estilo,L){
-  const E=CARA_ESTILOS[estilo], r=l=>l[Math.floor(Math.random()*l.length)];
+function caraAleatoria(estilo,L,perfil){
+  const E=CARA_ESTILOS[estilo], P=CARA_PERFIL[estilo]||{}, pf=perfil||{}, r=l=>l[Math.floor(Math.random()*l.length)];
   const d={estilo,p:{},c:{},fundo:r(CARA_FUNDOS)};
-  E.partes.forEach(([k,,,opc])=>{ const l=L.partes[k]||[]; d.p[k]=opc&&Math.random()<0.7?-1:Math.floor(Math.random()*Math.max(l.length,1)); });
+  E.partes.forEach(([k,,,opc])=>{ const l=L.partes[k]||[];
+    if(k===P.barba){ const prob=pf.g==='M'?0.45:pf.g==='F'?0:0.2; d.p[k]=l.length&&Math.random()<prob?Math.floor(Math.random()*l.length):-1; return; }
+    if(opc&&Math.random()<0.7){ d.p[k]=-1; return; }
+    /* candidatos: os do género (se a ficha o diz), sem os que ficam fora do aleatório */
+    let c=l.filter(x=>!((P.fora||{})[k]||[]).includes(x));
+    const so=pf.g&&P[pf.g]&&P[pf.g][k]; if(so){ const c2=c.filter(x=>so.includes(x)); if(c2.length) c=c2; }
+    if(!c.length) c=l;
+    d.p[k]=c.length?l.indexOf(r(c)):0; });
   E.cores.forEach(([k])=>{ d.c[k]=r(L.cores[k]||['']); });
+  /* grisalho: 70% a partir dos 60 anos, 30% dos 50 aos 59 */
+  if(P.cinza&&pf.idade){ const prob=pf.idade>=60?0.7:pf.idade>=50?0.3:0; if(Math.random()<prob) d.c[P.cinza[0]]=P.cinza[1]; }
   return d;
 }
 function caraOpcoes(d,L){
@@ -7448,7 +7483,9 @@ function caraPainelHTML(){
     <div class="toolbar" style="margin-top:12px;flex-wrap:wrap"><button type="button" class="btn-sec btn-sm" data-act="cara-aleatorio">${ic('rotate',14)} Aleatório</button>
       <button type="button" class="btn btn-sm" data-act="cara-usar" ${L?'':'disabled'}>${ic('check',14)} Usar esta cara</button>
       <button type="button" class="btn-ghost btn-sm" data-act="cara-fechar">Fechar</button></div>
-    <div class="muted" style="font-size:.72rem;margin-top:8px">Desenho: ${esc(E.credito)}. Gerado no seu navegador.</div>`;
+    ${(()=>{ const pf=caraPerfilDaFicha(); const t=[pf.g==='M'?'género masculino':pf.g==='F'?'género feminino':'',pf.idade?pf.idade+' anos':''].filter(Boolean).join(', ');
+      return `<div class="muted" style="font-size:.74rem;margin-top:8px">${t?'O Aleatório segue a ficha: '+esc(t)+'. As setas mostram todas as opções.':'Preencha o Género e a Idade na ficha e o Aleatório passa a segui-los.'}</div>`; })()}
+    <div class="muted" style="font-size:.72rem;margin-top:4px">Desenho: ${esc(E.credito)}. Gerado no seu navegador.</div>`;
 }
 function caraPintar(){
   const box=$('#caraPainel'); if(!box||!caraDraft) return;
@@ -7456,7 +7493,7 @@ function caraPintar(){
   const d=caraDraft, vez=++caraVez;
   caraCarregar(d.estilo).then(({createAvatar,style})=>{
     if(vez!==caraVez) return;
-    if(!d.L){ d.L=caraListas(style,CARA_ESTILOS[d.estilo]); if(d.novo){ Object.assign(d,caraAleatoria(d.estilo,d.L),{L:d.L}); delete d.novo; } return caraPintar(); }
+    if(!d.L){ d.L=caraListas(style,CARA_ESTILOS[d.estilo]); if(d.novo){ Object.assign(d,caraAleatoria(d.estilo,d.L,caraPerfilDaFicha()),{L:d.L}); delete d.novo; } return caraPintar(); }
     d.uri=createAvatar(style,caraOpcoes(d,d.L)).toDataUri();
     const img=$('#caraImg'); if(img) img.src=d.uri;
   }).catch(()=>{ if(vez!==caraVez) return; const s=$('#caraEstado'); if(s) s.textContent='Não foi possível carregar os desenhos. Verifique a ligação à internet e recarregue a página (F5).'; });   /* o navegador guarda a falha do módulo: só um F5 a limpa */
@@ -9401,7 +9438,7 @@ document.addEventListener('click', async e=>{
     case 'cara-estilo': caraEstilo(el.dataset.e); break;
     case 'cara-passo': caraPasso(el.dataset.k,+el.dataset.d||1); break;
     case 'cara-cor': caraCor(el.dataset.k,el.dataset.v); break;
-    case 'cara-aleatorio': if(caraDraft&&caraDraft.L){ Object.assign(caraDraft,caraAleatoria(caraDraft.estilo,caraDraft.L)); caraPintar(); } break;
+    case 'cara-aleatorio': if(caraDraft&&caraDraft.L){ Object.assign(caraDraft,caraAleatoria(caraDraft.estilo,caraDraft.L,caraPerfilDaFicha())); caraPintar(); } break;
     case 'cara-usar': caraUsar(); break;
     case 'cara-fechar': caraFechar(); break;
     case 'persona-associar': { e.stopPropagation(); const c=getC(el.dataset.cli), pe=personaDe(el.dataset.id);
