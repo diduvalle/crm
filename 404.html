@@ -333,6 +333,26 @@
 .legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
 .persona-card{display:flex;gap:14px;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px}
 .persona-card .pav{width:54px;height:54px;border-radius:14px;display:grid;place-items:center;font-size:1.5rem;background:var(--g100);flex:0 0 auto}
+/* ---------- PERSONAS ---------- */
+.pers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.pers-card{border:1px solid var(--border);border-radius:14px;padding:14px;background:var(--surface)}
+.pers-top{display:flex;gap:12px;align-items:flex-start}
+.pers-av{border-radius:14px;overflow:hidden;display:grid;place-items:center;background:var(--g100);color:var(--g700,var(--g600));font-weight:800;flex:0 0 auto}
+.pers-av img{width:100%;height:100%;object-fit:cover;display:block}
+.pers-frase{font-style:italic;font-size:.84rem;margin-top:4px;color:var(--text)}
+.pers-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px;font-size:.8rem;color:var(--muted)}
+.pers-meta span{display:inline-flex;align-items:center;gap:5px}
+.pers-ficha .pers-cab{display:flex;gap:16px;align-items:center;margin-bottom:16px}
+.pers-ficha h3{font-size:1.25rem;font-weight:800;margin:0}
+.pers-blocos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.pers-blocos.pers-crm{margin-top:12px}
+.pers-bloco{background:var(--surface2);border-radius:12px;padding:12px 14px}
+.pers-bloco h4{font-size:.86rem;font-weight:800;margin:0 0 8px;color:var(--g700,var(--g600))}
+.pers-bloco ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:.84rem}
+.pers-bloco li span{display:block;font-size:.7rem;font-weight:700;color:var(--muted)}
+.form-sec{margin-top:6px}
+.form-sec h4{font-size:.8rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--g700,var(--g600));border-top:1px solid var(--border);padding-top:12px;margin:0}
+@media(max-width:900px){ .pers-blocos{grid-template-columns:repeat(2,minmax(0,1fr))} }
 .kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:.86rem}
 .kv dt{color:var(--muted);font-weight:600}
 .kv dd{text-align:right;font-weight:700}
@@ -684,6 +704,7 @@ const clone = o => JSON.parse(JSON.stringify(o));
 /* ---------- ÍCONES (line, 24x24) ---------- */
 const I = {
   dash:'<path d="M3 13h8V3H3zM13 21h8V3h-8zM3 21h8v-6H3z"/>',
+  persona:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3"/><path d="M6.7 18.2a6.5 6.5 0 0 1 10.6 0"/>',
   users:'<circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2M16 3.1A4 4 0 0 1 16 11M21 21v-2a4 4 0 0 0-3-3.8"/>',
   box:'<path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>',
   building:'<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 8h.01M12 8h.01M15 8h.01M9 12h.01M12 12h.01M15 12h.01M10 21v-4h4v4"/>',
@@ -821,7 +842,7 @@ function placeInfotip(tip){
 document.addEventListener('mouseover',e=>{ const t=e.target.closest&&e.target.closest('.infotip'); if(t) placeInfotip(t); },true);
 document.addEventListener('focusin',e=>{ const t=e.target.closest&&e.target.closest('.infotip'); if(t) placeInfotip(t); });
 function initialsOf(u){ return (((u&&u.nome||'?')[0]||'')+((u&&u.apelido||'')[0]||'')).toUpperCase(); }
-function avatarHTML(u, size){ size=size||36; const ini=initialsOf(u); if(u&&u.avatar) return `<div class="avatar" style="width:${size}px;height:${size}px;padding:0;overflow:hidden;font-size:${Math.round(size*0.34)}px"><img src="${esc(u.avatar)}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="this.remove();this.parentNode.textContent='${esc(ini)}'"></div>`; return `<div class="avatar" style="width:${size}px;height:${size}px;font-size:${Math.round(size*0.34)}px">${esc(ini)}</div>`; }
+function avatarHTML(u, size){ size=size||36; const ini=initialsOf(u); if(u&&u.avatar) return `<div class="avatar" style="width:${size}px;height:${size}px;padding:0;overflow:hidden;font-size:${Math.round(size*0.34)}px"><img src="${esc(u.avatar)}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="var pn=this.parentNode;this.remove();if(pn)pn.textContent='${esc(ini)}'"></div>`; return `<div class="avatar" style="width:${size}px;height:${size}px;font-size:${Math.round(size*0.34)}px">${esc(ini)}</div>`; }
 
 /* ---------- taxas de IVA ---------- */
 function ivaRates(){ return (state.settings&&state.settings.ivaRates)||[]; }
@@ -922,6 +943,7 @@ const NAV = [
   ]},
   {g:'Marketing & Análise', items:[
     {id:'campanhas', label:'Campanhas', icon:'target'},
+    {id:'personas',  label:'Personas',  icon:'persona'},
     {id:'email',     label:'Email',     icon:'mail'},
     {id:'analytics', label:'Analytics', icon:'chart'},
     {id:'decisao',   label:'Decisão',   icon:'bulb'},
@@ -1013,7 +1035,7 @@ const I18N_EN = {
   'Validade':'Valid until','Descrição':'Description','Família':'Family','Subfamília':'Subfamily','Categoria':'Category',
   'Tipo':'Type','Ativo':'Active','Inativo':'Inactive','Morada':'Address','País':'Country','Código Postal':'Postal code',
   'Assunto':'Subject','Mensagem':'Message','Modo':'Mode','Simulado':'Simulated','Sim':'Yes','Não':'No','Todos':'All','Abertos':'Open',
-  'Fidelização':'Loyalty','Persona':'Persona','Pesquisar':'Search','NIF':'Tax ID','Website':'Website','Cargo':'Position',
+  'Fidelização':'Loyalty','Persona':'Persona','Personas':'Personas','Nova persona':'New persona','Personas da turma':'Class personas','Enviar ao formador':'Send to trainer','Imagem para o slide':'Image for the slide','Pesquisar':'Search','NIF':'Tax ID','Website':'Website','Cargo':'Position',
   'Setor':'Sector','Dimensão':'Size','Responsável':'Owner','Prioridade':'Priority','Prazo':'Deadline','Criado':'Created',
   'Criada':'Created','Atualizado':'Updated','Ações':'Actions','Detalhes':'Details','Resumo':'Summary','Histórico':'History',
   // Títulos de modais
@@ -1573,7 +1595,15 @@ function demoData(){
       ]},
     familias:fams, subfamilias:subs, produtos:prods, clientes, propostas, casos, retencoes,
     consentimentos, pedidos, ropa, violacoes, campanhas, utilizadores, loyalty, templates,
-    roles, propostaTemplates, envios, automacoes, agendamentos, checklistRGPD:{}
+    roles, propostaTemplates, envios, automacoes, agendamentos, checklistRGPD:{},
+    /* exemplo de arranque (id curto = não conta como trabalho do formando) */
+    personas:[{id:'pe1',fonte:'base',nome:'Zé Miguel',frase:'Quero mais tempo para os hóspedes e menos para a papelada.',base:'Exemplo do CRM',
+      idade:'40',genero:'Masculino',localizacao:'Algarve',escolaridade:'Licenciatura em Gestão Hoteleira',ocupacao:'Hoteleiro independente',
+      estiloVida:'Muitas horas na época alta; família por perto',valores:'Hospitalidade, autonomia, qualidade',interesses:'Vinhos, golfe, turismo sustentável',
+      atitudes:'Desconfia de tecnologia cara; adere quando vê resultados',personalidade:'Prático e direto',
+      dispositivos:'Portátil e telemóvel',redesSociais:'LinkedIn, Instagram',aplicativos:'Extranet do Booking, WhatsApp, Excel',habitosConsumo:'Compra depois de comparar e pedir referências',
+      historicoCompras:'Software de reservas em 2022; renova todos os anos',interacoes:'Responde a emails curtos; prefere reuniões presenciais',canaisAquisicao:'Recomendação e feiras do setor',
+      objetivos:'Automatizar processos e fidelizar hóspedes',dificuldades:'Pouco tempo e equipa pequena',objecoes:'Preço e tempo de implementação',canais:'LinkedIn e email'}]
   };
 }
 
@@ -1618,6 +1648,8 @@ function load(){
     // reply-to: placeholder antigo → email real
   { const adm=state.utilizadores.find(u=>u.id==='u1'); if(adm && adm.apelido==='Vale') adm.apelido='du Valle'; }
   Object.values(state.roles||{}).forEach(r=>{ if(r&&Array.isArray(r.modules)&&!r.modules.includes('email')&&(r.gestor||r.modules.includes('campanhas'))) r.modules.push('email'); });
+  Object.values(state.roles||{}).forEach(r=>{ if(r&&Array.isArray(r.modules)&&!r.modules.includes('personas')&&(r.gestor||r.modules.includes('campanhas'))) r.modules.push('personas'); });
+  if(!Array.isArray(state.personas)) state.personas=[];
   // --- Empresas & Contactos (modelo Account/Contact) - migração additiva ---
   if(!Array.isArray(state.empresas)) state.empresas=[];
   if(state.settings.empSeq==null) state.settings.empSeq=0;
@@ -2635,7 +2667,8 @@ function cliBodyHTML(){
   const q=(state._q||'').toLowerCase();
   const rg=rangeOf('cli'); const act=!!(rg.from||rg.to);
   const base=act?state.clientes.filter(c=>inDateRange(c.criado,rg.from,rg.to)):state.clientes;
-  const list=base.filter(c=>!q||[c.numero,c.nome,c.apelido,c.empresa,c.email,c.cidade,c.cargo,c.funcao].join(' ').toLowerCase().includes(q));
+  const list=base.filter(c=>!q||[c.numero,c.nome,c.apelido,c.empresa,c.email,c.cidade,c.cargo,c.funcao].join(' ').toLowerCase().includes(q))
+    .filter(c=>!state._fPersona||(state._fPersona==='__sem'?!c.personaId:c.personaId===state._fPersona));
   const pg=paginate(list,'clientes');
   return `<div class="table-wrap"><table><thead><tr><th>N.º</th><th>Contacto</th><th>Empresa</th><th>Cargo / função</th><th>Cidade</th><th>Telefone</th><th></th></tr></thead><tbody>
       ${list.length?pg.slice.map(c=>{const e=accEmpOf(c);const fz=e?(e.fase||'Lead'):'';return `<tr data-act="open-client" data-id="${c.id}" style="cursor:pointer">
@@ -2668,6 +2701,7 @@ views.clientes = () => {
       <div class="toolbar">
         <div class="search-inp">${ic('eye',15)}<input type="search" placeholder="Filtrar pessoas…" data-search value="${esc(state._q||'')}"></div>
         <button class="btn-sec" data-act="duplicados" title="Procurar contactos repetidos">${ic('shield',15)} Duplicados</button>
+        ${(state.personas||[]).length?`<select data-act="persona-filtro" title="Filtrar por persona" style="width:auto"><option value="">Todas as personas</option>${state.personas.map(p=>`<option value="${p.id}" ${state._fPersona===p.id?'selected':''}>${esc(p.nome||'(sem nome)')}</option>`).join('')}<option value="__sem" ${state._fPersona==='__sem'?'selected':''}>Sem persona</option></select>`:''}
         <button class="btn" data-act="new" data-type="cliente">${ic('users',16)} Novo contacto</button>
       </div>
     </div>
@@ -2688,6 +2722,7 @@ function openClient360(id){ drawer360Emp=null; drawer360Cli=id;
   const hist=Array.isArray(c.historicoEmpresas)?c.historicoEmpresas:[];
   $('#drawerTitle').innerHTML=`<h3 style="font-size:1.1rem;font-weight:800">${esc(c.nome)} ${esc(c.apelido||'')}${emp?` <span class="pill ${faseColor(empFz)}" style="font-size:.66rem;vertical-align:middle" title="Fase de lead da empresa">${esc(empFz)}</span>`:` <span class="pill grey" style="font-size:.66rem;vertical-align:middle">Sem empresa</span>`}</h3><div class="sub" style="color:var(--muted);font-size:.82rem">Contacto n.º ${esc(c.numero)} · ${emp?esc(emp.nome):'só no diretório'}${c.cargo?' · '+esc(c.cargo):''}</div>`;
   $('#drawerBody').innerHTML=`
+    ${(()=>{ const pe=personaDe(c.personaId); return pe?`<div class="card card-pad" data-act="persona-ver" data-id="${pe.id}" style="cursor:pointer;display:flex;gap:12px;align-items:center">${personaAvatar(pe,44)}<div><div class="muted" style="font-size:.68rem;font-weight:800;letter-spacing:.05em">PERSONA</div><strong>${esc(pe.nome||'')}</strong>${personaSub(pe)?`<div class="muted" style="font-size:.8rem">${esc(personaSub(pe))}</div>`:''}</div></div>`:''; })()}
     ${emp?`<div class="card card-pad" data-act="open-empresa" data-id="${emp.id}" style="cursor:pointer">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="muted" style="font-size:.68rem;font-weight:800;letter-spacing:.05em">CONTA · EMPRESA</div><strong style="font-size:1.02rem">${esc(emp.nome)}</strong></div><span class="pill ${faseColor(empFz)}">${esc(empFz)}</span></div>
       <div style="display:flex;gap:10px;margin-top:12px;text-align:center">
@@ -4538,7 +4573,7 @@ function rascunhoEstadoHTML(){
    atividade), senão uma turma nova contava como trabalhada. */
 const LISTAS_TRABALHO=['empresas','clientes','propostas','produtos','tarefas','agendamentos','casos','retencoes',
   'campanhas','jornadas','automacoes','templates','propostaTemplates','pedidos','consentimentos','familias',
-  'subfamilias','camposExtra'];   /* sem 'envios': o arranque já lá põe um registo automático */
+  'subfamilias','camposExtra','personas'];   /* sem 'envios': o arranque já lá põe um registo automático */
 function trabalhoProprio(st){
   return LISTAS_TRABALHO.reduce((n,k)=>n+(Array.isArray(st&&st[k])?st[k].filter(ehProprio).length:0),0);
 }
@@ -6163,6 +6198,7 @@ function praticasEntrega(p){
   const set=p.settings||{};
   const pEmp=proprios(emp), pCli=proprios(cli), pProp=proprios(prop), pProd=proprios(prod);
   const pCamp=proprios(camp), pAuto=proprios(auto), pTpl=proprios(tpl), pMod=proprios(mod);
+  const pPers=proprios(p.personas||[]), pCliPers=cli.filter(c=>c.personaId&&(p.personas||[]).some(x=>x.id===c.personaId));
   const pCasos=proprios(casos), pRet=proprios(ret), pCons=proprios(cons), pPed=proprios(ped);
   const pTar=proprios(tar), pRopa=proprios(ropa), pViol=proprios(viol);
 
@@ -6240,6 +6276,9 @@ function praticasEntrega(p){
     P_("autosaida","Automação com critério de saída", autoComSaida, "Marketing",
        pAuto.filter(a=>a.saida).length,
        pAuto.filter(a=>a.saida).map(a=>(a.nome||'-')+' · sai se '+saidaLabel(a.saida))),
+    P_("pers","Construiu uma persona", pPers.length>0, "Marketing", pPers.length, pPers.map(x=>x.nome||'(sem nome)')),
+    P_("perscli","Associou personas a contactos", pCliPers.length>0, "Marketing", pCliPers.length,
+       pCliPers.map(c=>((c.nome||'')+' '+(c.apelido||'')).trim()+' · '+(((p.personas||[]).find(x=>x.id===c.personaId)||{}).nome||''))),
     P_("caso","Abriu casos de apoio", pCasos.length>0, "Serviço", pCasos.length,
        pCasos.map(c=>(c.titulo||c.assunto||'(sem título)')+' · '+(c.estado||'-'))),
     P_("casofecha","Resolveu casos", casosFechados>0, "Serviço", casosFechados,
@@ -6268,9 +6307,9 @@ function praticasEntrega(p){
       empresas:pEmp.length, contactos:pCli.length, produtos:pProd.length, propostas:pProp.length,
       modelos:pMod.length, templates:pTpl.length, campanhas:pCamp.length, automacoes:pAuto.length,
       casos:pCasos.length, retencoes:pRet.length, consentimentos:pCons.length, pedidos:pPed.length,
-      tarefas:pTar.length, campos:cx.length,
+      tarefas:pTar.length, campos:cx.length, personas:pPers.length,
       totalCriado:pEmp.length+pCli.length+pProd.length+pProp.length+pMod.length+pTpl.length+
-                  pCamp.length+pAuto.length+pCasos.length+pRet.length+pCons.length+pPed.length+pTar.length+cx.length
+                  pCamp.length+pAuto.length+pCasos.length+pRet.length+pCons.length+pPed.length+pTar.length+cx.length+pPers.length
     }};
 }
 /* módulos com pelo menos uma prática cumprida */
@@ -7067,12 +7106,201 @@ function cxFlat(item){ const o=Object.assign({},item||{}); camposExtra().forEach
 /* valor pronto a mostrar (a data crua ISO nao serve para o cliente ler) */
 function cxTexto(item,c){ const v=cxValor(item,c.chave);
   if(v==='') return ''; return c.tipo==='data'?dPT(v):String(v); }
+/* =========================================================================
+   PERSONAS - o perfil do cliente ideal
+   O exercício "Construir uma Persona" das aulas, dentro do CRM: os mesmos
+   quatro blocos do slide (Demográficos, Psicográficos, Tecnológicos,
+   Comportamentais) e o que os modelos profissionais acrescentam
+   (objetivos, dificuldades, objeções, canais). Cada contacto pode ter uma
+   persona; é perfilagem, por isso aparece no relatório RGPD do titular.
+   Numa turma, o formando envia a persona ao formador (com a foto
+   fictícia) e o formador vê as da turma juntas e descarrega cada uma
+   como imagem para o slide.
+   Nota: no ecrã das Campanhas há um assistente com "personas" fixas
+   (PERSONAS, e um campo de formulário chamado "persona"). São outra
+   coisa - por isso aqui tudo se chama personaId / PERSONA_*.
+   ========================================================================= */
+const PERSONA_BLOCOS=[
+  {t:'Demográficos', campos:[['idade','Idade'],['genero','Género'],['localizacao','Localização'],['escolaridade','Escolaridade'],['ocupacao','Ocupação']]},
+  {t:'Psicográficos', campos:[['estiloVida','Estilo de vida'],['valores','Valores'],['interesses','Interesses'],['atitudes','Atitudes'],['personalidade','Personalidade']]},
+  {t:'Tecnológicos', campos:[['dispositivos','Dispositivos'],['redesSociais','Redes sociais'],['aplicativos','Aplicativos'],['habitosConsumo','Hábitos de consumo']]},
+  {t:'Comportamentais', campos:[['historicoCompras','Histórico de compras'],['interacoes','Interações'],['canaisAquisicao','Canais de aquisição']]},
+];
+const PERSONA_CRM=[['objetivos','Objetivos'],['dificuldades','Dificuldades'],['objecoes','Objeções (o que trava a compra)'],['canais','Canais preferidos']];
+const personaDe=id=>(state.personas||[]).find(p=>p.id===id)||null;
+const personaSub=p=>[p.idade?(/^\d+$/.test(String(p.idade).trim())?p.idade+' anos':p.idade):'',p.ocupacao,p.localizacao].filter(x=>String(x||'').trim()).join(' · ');
+function personaAvatar(p,size){
+  size=size||56;
+  if(p&&p.avatar) return `<div class="pers-av" style="width:${size}px;height:${size}px"><img src="${esc(p.avatar)}" alt=""></div>`;
+  return `<div class="pers-av" style="width:${size}px;height:${size}px;font-size:${Math.round(size*0.36)}px">${esc(((p&&p.nome)||'?').trim().charAt(0).toUpperCase())}</div>`;
+}
+/* a persona como no slide: foto, nome, frase, os quatro blocos e o que serve ao CRM */
+function personaFichaHTML(p,autor){
+  const bloco=(t,campos)=>{ const ls=campos.filter(([k])=>String(p[k]||'').trim());
+    return `<div class="pers-bloco"><h4>${esc(t)}</h4>${ls.length?`<ul>${ls.map(([k,l])=>`<li><span>${esc(l)}</span>${esc(p[k])}</li>`).join('')}</ul>`:'<p class="muted">-</p>'}</div>`; };
+  return `<div class="pers-ficha">
+    <div class="pers-cab">${personaAvatar(p,96)}<div><h3>${esc(p.nome||'(sem nome)')}</h3>
+      ${personaSub(p)?`<div class="muted">${esc(personaSub(p))}</div>`:''}
+      ${p.frase?`<div class="pers-frase">“${esc(String(p.frase).replace(/^["“”]+|["“”]+$/g,''))}”</div>`:''}
+      ${autor?`<div class="muted" style="font-size:.78rem;margin-top:6px">Persona de ${esc(autor)}</div>`:''}</div></div>
+    <div class="pers-blocos">${PERSONA_BLOCOS.map(b=>bloco(b.t,b.campos)).join('')}</div>
+    <div class="pers-blocos pers-crm">${PERSONA_CRM.map(([k,l])=>bloco(l,[[k,'']])).join('')}</div>
+    ${p.base?`<p class="muted" style="font-size:.8rem;margin-top:10px">Baseada em: ${esc(p.base)}</p>`:''}
+  </div>`;
+}
+/* ---------- servidor: enviar ao formador / as da turma ---------- */
+let personasEnviadas={}, personasEnvPedido=false, personasTurma=null;
+const semFuncao16=e=>/PGRST202|Could not find the function/.test((e&&(e.message||e.code))||'');
+async function personaEnviar(id){
+  const p=personaDe(id); if(!p) return;
+  if(!TURMA||!supaToken()){ toast('Indisponível','O envio ao formador só funciona dentro de uma turma','warn'); return; }
+  if(!String(p.nome||'').trim()){ toast('Falta o nome','Dê um nome à persona antes de a enviar','warn'); return; }
+  const dados=clone(p); delete dados.avatar;
+  try{
+    const r=await supaRpc('persona_partilhar',{p_token:supaToken(),p_persona_id:p.id,p_persona:dados,p_foto:p.avatar||''});
+    personasEnviadas[p.id]=(r&&r.em)||new Date().toISOString();
+    toast('Persona enviada','O formador já a vê na lista da turma'); render();
+  }catch(e){ toast('Não foi possível enviar', semFuncao16(e)?'Falta correr o 16-personas.sql no Supabase':supaMsg(e),'err'); }
+}
+async function personaRetirar(id){
+  if(!(await uiConfirm('Retirar esta persona da lista do formador? Continua aqui no seu CRM.',{title:'Retirar do formador',okText:'Retirar'}))) return;
+  try{ await supaRpc('persona_retirar',{p_token:supaToken(),p_persona_id:id}); delete personasEnviadas[id]; toast('Retirada','Já não aparece na lista do formador'); render(); }
+  catch(e){ toast('Não foi possível retirar',supaMsg(e),'err'); }
+}
+const ehFormadorTurma=()=>!!TURMA&&(papelReal()==='Formador'||papelReal()==='Administrador');
+/* depois de desenhar a vista: o que já foi enviado, e (para o formador) as da turma */
+function personasDepois(){
+  if(!TURMA||!supaToken()) return;
+  if(!personasEnvPedido){ personasEnvPedido=true;
+    supaRpc('minhas_personas_enviadas',{p_token:supaToken()}).then(l=>{
+      personasEnviadas={}; (l||[]).forEach(x=>{ personasEnviadas[x.persona_id]=x.em; });
+      if(currentView()==='personas'&&Object.keys(personasEnviadas).length) render();
+    }).catch(()=>{}); }
+  if(ehFormadorTurma()){ if(personasTurma) pintarPersonasTurma(); else carregarPersonasTurma(); }
+}
+function carregarPersonasTurma(){
+  const box=$('#persTurma'); if(box) box.innerHTML='<p class="muted">A carregar as personas da turma…</p>';
+  supaRpc('personas_da_turma',{p_token:supaToken()}).then(l=>{ personasTurma=l||[]; pintarPersonasTurma(); })
+    .catch(e=>{ const b=$('#persTurma'); if(b) b.innerHTML=`<p class="muted">${semFuncao16(e)?'Falta correr o <code>16-personas.sql</code> no Supabase.':'Não foi possível carregar: '+esc(supaMsg(e))}</p>`; });
+}
+function pintarPersonasTurma(){
+  const box=$('#persTurma'); if(!box) return;
+  const l=personasTurma||[];
+  box.innerHTML=!l.length?empty('Ainda ninguém enviou uma persona','Quando um formando carregar em «Enviar ao formador», a persona aparece aqui.')
+    :`<div class="pers-grid">${l.map((x,i)=>{ const p=Object.assign({},x.persona,{avatar:x.foto});
+      return `<div class="pers-card"><div class="pers-top">${personaAvatar(p,58)}<div style="min-width:0"><strong>${esc(p.nome||'(sem nome)')}</strong>
+        <div class="muted" style="font-size:.8rem">${esc(x.autor||'')} · ${dPT(String(x.em).slice(0,10))}</div>
+        ${personaSub(p)?`<div class="muted" style="font-size:.8rem">${esc(personaSub(p))}</div>`:''}</div></div>
+        <div class="toolbar" style="margin-top:10px"><button class="btn-sec btn-sm" data-act="persona-turma-ver" data-i="${i}">${ic('eye',14)} Ver</button>
+          <button class="btn-sec btn-sm" data-act="persona-turma-png" data-i="${i}">${ic('image',14)} Imagem para o slide</button></div></div>`; }).join('')}</div>`;
+}
+function personaVer(p,autor){
+  editing={type:'__persona'};
+  $('#modalTitle').textContent=p.nome||'Persona';
+  $('#modalSub').textContent=autor?('Persona de '+autor):'Persona';
+  $('#modal').classList.add('wide');
+  $('#modalDelete').style.display='none';
+  { const sv=$('[data-act="modal-save"]'); if(sv){ sv.disabled=false; sv.textContent='Fechar'; } }
+  $('#modalForm').innerHTML=personaFichaHTML(p,autor);
+  $('#modalBack').classList.add('open');
+}
+/* ---------- a imagem para o slide (PNG 1600x900) ---------- */
+function personaPNG(p,autor){
+  const W=1600,H=900, cv=document.createElement('canvas'); cv.width=W; cv.height=H; const g=cv.getContext('2d');
+  const css=getComputedStyle(document.documentElement);
+  const verde=(css.getPropertyValue('--g600')||'#0b7a3e').trim()||'#0b7a3e', escuro='#14211b', cinza='#5c6b63', claro=(css.getPropertyValue('--g50')||'').trim()||'#eef5f1';   /* a cor clara da escola */
+  const fonte=(getComputedStyle(document.body).fontFamily||'Arial, sans-serif');
+  const F=(peso,px)=>`${peso} ${px}px ${fonte}`;
+  /* parte o texto em linhas que cabem em w; devolve o y a seguir */
+  const texto=(t,x,y,w,px,peso,cor,max)=>{ g.font=F(peso,px); g.fillStyle=cor; const pal=String(t||'').split(/\s+/); let lin='', n=0;
+    for(const p_ of pal){ const ten=lin?lin+' '+p_:p_; if(g.measureText(ten).width>w&&lin){ g.fillText(lin,x,y); y+=px*1.3; n++; lin=p_; if(max&&n>=max){ return y; } } else lin=ten; }
+    if(lin){ g.fillText(lin,x,y); y+=px*1.3; } return y; };
+  const desenha=img=>{
+    g.fillStyle='#ffffff'; g.fillRect(0,0,W,H);
+    g.fillStyle=verde; g.fillRect(0,0,W,10);
+    /* foto */
+    const fx=70,fy=60,fs=190, r=26;
+    g.save(); g.beginPath(); g.moveTo(fx+r,fy); g.arcTo(fx+fs,fy,fx+fs,fy+fs,r); g.arcTo(fx+fs,fy+fs,fx,fy+fs,r); g.arcTo(fx,fy+fs,fx,fy,r); g.arcTo(fx,fy,fx+fs,fy,r); g.closePath(); g.clip();
+    if(img){ g.drawImage(img,fx,fy,fs,fs); } else { g.fillStyle=claro; g.fillRect(fx,fy,fs,fs); g.fillStyle=verde; g.font=F(800,90); g.textAlign='center'; g.fillText(((p.nome||'?').trim().charAt(0)||'?').toUpperCase(),fx+fs/2,fy+fs/2+32); g.textAlign='left'; }
+    g.restore();
+    /* nome, subtítulo, frase */
+    let y=texto(p.nome||'(sem nome)',300,118,1230,54,800,escuro,1);
+    if(personaSub(p)) y=texto(personaSub(p),300,y+2,1230,28,500,cinza,1);
+    if(p.frase) texto('“'+String(p.frase).replace(/^["“”]+|["“”]+$/g,'')+'”',300,y+14,1230,28,'italic 500',escuro,2);
+    /* os quatro blocos */
+    const top=300, gap=26, cw=(W-140-gap*3)/4, ch=420;
+    PERSONA_BLOCOS.forEach((b,i)=>{ const x=70+i*(cw+gap);
+      g.fillStyle=claro; g.beginPath(); g.roundRect?g.roundRect(x,top,cw,ch,18):g.rect(x,top,cw,ch); g.fill();
+      g.fillStyle=verde; g.fillRect(x+24,top+26,40,6);
+      let yy=texto(b.t,x+24,top+70,cw-48,30,800,escuro,1)+6;
+      b.campos.forEach(([k,l])=>{ if(!String(p[k]||'').trim()||yy>top+ch-30) return;
+        yy=texto(l,x+24,yy,cw-48,18,700,verde,1);
+        yy=texto(p[k],x+24,yy-2,cw-48,21,500,escuro,3)+8; });
+    });
+    /* rodapé: objetivos, dificuldades, objeções */
+    const fy2=top+ch+28, bw=(W-140-gap*2)/3;
+    [['objetivos','Objetivos'],['dificuldades','Dificuldades'],['objecoes','Objeções']].forEach(([k,l],i)=>{ const x=70+i*(bw+gap);
+      let yy=texto(l,x,fy2+20,bw,20,800,verde,1); texto(p[k]||'-',x,yy,bw,20,500,escuro,3); });
+    if(autor){ g.font=F(500,18); g.fillStyle=cinza; g.textAlign='right'; g.fillText('Persona de '+autor,W-70,H-24); g.textAlign='left'; }
+    const a=document.createElement('a'); a.href=cv.toDataURL('image/png');
+    a.download='persona-'+String((p.nome||'persona')+(autor?'-'+autor:'')).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,60)+'.png';
+    a.click();
+  };
+  if(p.avatar){ const img=new Image(); img.onload=()=>desenha(img); img.onerror=()=>desenha(null); img.src=p.avatar; } else desenha(null);
+}
+/* ---------- a vista ---------- */
+views.personas = () => {
+  const L=state.personas||[];
+  const nCli=id=>(state.clientes||[]).filter(c=>c.personaId===id).length;
+  const env=id=>personasEnviadas[id];
+  const naTurma=!!TURMA&&!!supaToken();
+  return `
+  <div class="card card-pad">
+    <div class="section-head" style="margin-bottom:14px">
+      <div><h3>Personas ${infoTip('persona')}</h3><div class="sub">O perfil do cliente ideal: quem é, o que valoriza, como usa a tecnologia e como compra. Associe cada contacto à persona que lhe corresponde.</div></div>
+      <div class="toolbar"><button class="btn" data-act="new" data-type="persona">${ic('persona',16)} Nova persona</button></div>
+    </div>
+    ${L.length?`<div class="pers-grid">${L.map(p=>`<div class="pers-card">
+      <div class="pers-top">${personaAvatar(p,58)}<div style="min-width:0"><strong>${esc(p.nome||'(sem nome)')}</strong>
+        ${personaSub(p)?`<div class="muted" style="font-size:.8rem">${esc(personaSub(p))}</div>`:''}
+        ${p.frase?`<div class="pers-frase">“${esc(String(p.frase).replace(/^["“”]+|["“”]+$/g,''))}”</div>`:''}</div></div>
+      <div class="pers-meta"><span>${ic('users',14)} ${nCli(p.id)} ${nCli(p.id)===1?'contacto':'contactos'}</span>
+        ${naTurma&&env(p.id)?`<span class="pill green" title="Enviada ao formador">Enviada · ${dPT(String(env(p.id)).slice(0,10))}</span>`:''}</div>
+      <div class="toolbar" style="margin-top:10px;flex-wrap:wrap">
+        <button class="btn-sec btn-sm" data-act="persona-ver" data-id="${p.id}">${ic('eye',14)} Ver</button>
+        <button class="btn-sec btn-sm" data-act="edit" data-type="persona" data-id="${p.id}">Editar</button>
+        ${naTurma?`<button class="btn-sec btn-sm" data-act="persona-enviar" data-id="${p.id}">${ic('send',14)} ${env(p.id)?'Enviar de novo':'Enviar ao formador'}</button>`:''}
+        ${naTurma&&env(p.id)?`<button class="btn-ghost btn-sm" data-act="persona-retirar" data-id="${p.id}">Retirar</button>`:''}
+        <button class="btn-ghost btn-sm" data-act="persona-png" data-id="${p.id}" title="Descarregar como imagem">${ic('image',14)} Imagem</button>
+      </div></div>`).join('')}</div>`
+      :empty('Ainda não há personas','Crie a primeira com base na sua experiência: os quatro blocos são os do exercício da aula.')}
+  </div>
+  ${ehFormadorTurma()?`<div class="card card-pad">
+    <div class="section-head" style="margin-bottom:14px"><div><h3>Personas da turma</h3><div class="sub">As que os formandos lhe enviaram, com a foto. Descarregue cada uma como imagem para o slide.</div></div>
+      <div class="toolbar"><button class="btn-sec btn-sm" data-act="persona-turma-atualizar">${ic('rotate',14)} Atualizar</button></div></div>
+    <div id="persTurma"></div></div>`:''}`;
+};
+/* os campos da ficha (o modal genérico de fichas do CRM); 'sec' é um título de secção */
+function personaCampos(){
+  const topo=[
+    {n:'nome',l:'Nome da persona',req:1,full:1,hint:'Um nome e um papel, ex.: Ana, diretora de hotel independente'},
+    {n:'avatar',l:'Foto (fictícia)',type:'avatar',full:1,hint:'Uma imagem fictícia (gerada por IA ou de um banco de imagens). Fica reduzida a 220 px.'},
+    {n:'frase',l:'Frase típica',full:1,hint:'Uma frase que esta persona diria'},
+    {n:'base',l:'Baseada em',full:1,hint:'De onde vem: experiência profissional, entrevistas, dados de clientes…'},
+  ];
+  const blocos=PERSONA_BLOCOS.reduce((a,b)=>a.concat([{type:'sec',l:b.t}],b.campos.map(([n,l])=>({n,l}))),[]);
+  const crm=[{type:'sec',l:'Para o CRM'}].concat(PERSONA_CRM.map(([n,l])=>n==='canais'?{n,l}:{n,l,type:'textarea',full:1}));
+  return topo.concat(blocos,crm);
+}
+
 const SCHEMAS = {
+  persona:{store:'personas',label:'Persona',fem:1,fields:personaCampos()},
   cliente:{store:'clientes',label:'Contacto',code:c=>{c.numero=c.numero||pad(++state.settings.numeroSeq,4);},after:c=>{ const e=state.empresas.find(x=>x.id===c.empresaId); if(e){ c.empresa=e.nome; if(!c.cidade)c.cidade=e.cidade; if(!c.regiao)c.regiao=e.regiao; } else if(!c.empresaId){ c.empresa=c.empresa||''; } },fields:[
     {n:'nome',l:'Nome',req:1},{n:'apelido',l:'Apelido',req:1},
     {n:'empresaId',l:'Empresa',type:'combo',src:'empresas',full:1,placeholder:'Escreva o nome ou NIPC da empresa…'},
     {n:'cargo',l:'Cargo / função',hint:'ex.: Diretor Comercial, Responsável de Compras'},
     {n:'funcao',l:'Função na empresa',type:'select',outro:'Outro',outroPlaceholder:'Qual a função?',opts:()=>[''].concat(funcoesList()).map(x=>({v:x,t:x||'- não definida -'})),hint:'A quem recorrer nesta empresa (financeiro, dono, etc.)'},
+    {n:'personaId',l:'Persona',type:'select',opts:()=>[{v:'',t:'- nenhuma -'}].concat((state.personas||[]).map(p=>({v:p.id,t:p.nome||'(sem nome)'}))),labelFor:v=>'persona apagada',hint:'O perfil de marketing a que este contacto corresponde. É perfilagem: aparece no relatório RGPD do titular.'},
     {n:'email',l:'Email',type:'email'},{n:'telefone',l:'Telefone',type:'tel'},
     {n:'nif',l:'NIF (pessoal)',hint:'9 dígitos - validado'},{n:'cidade',l:'Cidade'},
     {n:'regiao',l:'Região (IVA)',type:'select',opts:['Continente','Madeira','Açores'].map(x=>({v:x,t:x}))},
@@ -7312,7 +7540,8 @@ function fieldHTML(f,item){
     }
     return `<div class="${cls}"><label>${esc(f.l)}</label><select name="${f.n}">${opt(opts,v)}</select>${hint}</div>`;
   }
-  if(f.type==='avatar'){ const ini=initialsOf(item); return `<div class="${cls}"><label>${esc(f.l)}</label><div style="display:flex;align-items:center;gap:14px"><div id="avPreview" class="avatar" style="width:58px;height:58px;padding:0;overflow:hidden;font-size:1.15rem">${v?`<img src="${esc(v)}" style="width:100%;height:100%;object-fit:cover">`:esc(ini)}</div><label class="btn-sec btn-sm" style="cursor:pointer">${ic('image',15)} Carregar foto<input type="file" accept="image/*" data-avatar style="display:none"></label><input type="hidden" name="avatar" value="${esc(v)}"><button type="button" class="btn-ghost btn-sm" data-act="av-clear" ${v?'':'style="display:none"'}>Remover</button></div><span class="hint">Imagem quadrada recomendada. ${TURMA?'Fica guardada na sua conta, no servidor, e volta sempre que iniciar sessão - também noutro computador. É apagada com a conta.':'Fica guardada no perfil do utilizador.'}</span></div>`; }
+  if(f.type==='sec') return `<div class="field full form-sec"><h4>${esc(f.l)}</h4></div>`;
+  if(f.type==='avatar'){ const ini=initialsOf(item); return `<div class="${cls}"><label>${esc(f.l)}</label><div style="display:flex;align-items:center;gap:14px"><div id="avPreview" class="avatar" style="width:58px;height:58px;padding:0;overflow:hidden;font-size:1.15rem">${v?`<img src="${esc(v)}" style="width:100%;height:100%;object-fit:cover">`:esc(ini)}</div><label class="btn-sec btn-sm" style="cursor:pointer">${ic('image',15)} Carregar foto<input type="file" accept="image/*" data-avatar style="display:none"></label><input type="hidden" name="avatar" value="${esc(v)}"><button type="button" class="btn-ghost btn-sm" data-act="av-clear" ${v?'':'style="display:none"'}>Remover</button></div><span class="hint">${f.hint?esc(f.hint):`Imagem quadrada recomendada. ${TURMA?'Fica guardada na sua conta, no servidor, e volta sempre que iniciar sessão - também noutro computador. É apagada com a conta.':'Fica guardada no perfil do utilizador.'}`}</span></div>`; }
   if(f.type==='textarea') return `<div class="${cls}"><label>${esc(f.l)}</label><textarea name="${f.n}">${esc(v)}</textarea>${hint}</div>`;
   if(f.type==='contactlist'){
     const rows=Array.isArray(item[f.n])?item[f.n]:[];
@@ -7426,6 +7655,7 @@ async function saveModal(){
   if(editing&&editing.type==='__submitwork') return sendSubmitWork();
   if(editing&&editing.type==='__revisao') return closeModal();
   if(editing&&editing.type==='__taca') return closeModal();
+  if(editing&&editing.type==='__persona') return closeModal();
   if(editing&&editing.type==='__import') return confirmImport();
   if(editing&&editing.type==='__auto') return saveAuto();
   if(editing&&editing.type==='__group') return saveGroup();
@@ -7435,7 +7665,7 @@ async function saveModal(){
   const fd=new FormData($('#modalForm'));
   const cur=id?state[store].find(x=>x.id===id):null;
   const obj=cur?clone(cur):{id:uid(type.slice(0,3))};
-  schemaFields(type,sc).forEach(f=>{ if(f.type==='contactlist') return; if(f.type==='check'){ obj[f.n]=fd.get(f.n)!=null; return; } let v=fd.get(f.n); if(f.type==='number'||f.numeric)v=Number(v||0);
+  schemaFields(type,sc).forEach(f=>{ if(f.type==='contactlist'||f.type==='sec') return; if(f.type==='check'){ obj[f.n]=fd.get(f.n)!=null; return; } let v=fd.get(f.n); if(f.type==='number'||f.numeric)v=Number(v||0);
     if(f.outro){ obj[f.n]=v; obj[f.n+'Outro'] = (String(v)===f.outro) ? String(fd.get(f.n+'__outro')||'').trim() : ''; return; }
     if(f.xf){ obj.extra=Object.assign({},obj.extra); obj.extra[f.xf]=v; return; }
     obj[f.n]=v; });
@@ -7759,7 +7989,7 @@ function openDrawer(){ $('#drawerBack').classList.add('open'); $('#drawer').clas
 function closeDrawer(){ $('#drawerBack').classList.remove('open'); $('#drawer').classList.remove('open'); drawer360Emp=null; drawer360Cli=null; drawer360Caso=null; drawer360Ret=null; const df=$('#drawerFoot'); if(df) df.innerHTML=''; }
 
 /* ---------- eliminar ---------- */
-const STORE_OF={cliente:'clientes',empresa:'empresas',tarefa:'tarefas',produto:'produtos',familia:'familias',subfamilia:'subfamilias',proposta:'propostas',caso:'casos',retencao:'retencoes',utilizador:'utilizadores',loyalty:'loyalty',campanha:'campanhas',consentimento:'consentimentos',pedido:'pedidos',ropa:'ropa',violacao:'violacoes',automacao:'automacoes'};
+const STORE_OF={cliente:'clientes',empresa:'empresas',tarefa:'tarefas',produto:'produtos',familia:'familias',subfamilia:'subfamilias',proposta:'propostas',caso:'casos',retencao:'retencoes',utilizador:'utilizadores',loyalty:'loyalty',campanha:'campanhas',consentimento:'consentimentos',pedido:'pedidos',ropa:'ropa',violacao:'violacoes',automacao:'automacoes',persona:'personas'};
 async function deleteEntity(type,id){
   const store=STORE_OF[type]; if(!store) return;
   const item=state[store].find(x=>x.id===id);
@@ -7768,6 +7998,7 @@ async function deleteEntity(type,id){
   if(!(await uiConfirm(`Eliminar "${nm}"? Esta ação não pode ser anulada.`,{title:'Eliminar '+esc(type)+'?',danger:true,okText:'Eliminar'}))) return;
   if(type==='proposta' && item && item.stockAbatido) applyStockForProp(item, 'Ganha', 'Perdida');   // apagar uma venda repõe o stock
   state[store]=state[store].filter(x=>x.id!==id);
+  if(type==='persona') (state.clientes||[]).forEach(c=>{ if(c.personaId===id) c.personaId=''; });
   if(type==='cliente'){ // limpar dependências
     state.propostas=state.propostas.filter(p=>p.clienteId!==id);
     state.consentimentos=state.consentimentos.filter(c=>c.clienteId!==id);
@@ -8131,7 +8362,7 @@ function render(){
   buildNav(); updateNotifBadge();
   $$('#nav .nav-link').forEach(a=>a.classList.toggle('active',a.dataset.nav===v));
   $('#pageTitle').textContent=titleOf(v);
-  const crumbs={dashboard:'Visão geral',empresas:'Entidades & dados fiscais',clientes:'Contactos (pessoas)',agenda:'Calendário & tarefas',produtos:'Catálogo',propostas:'Pipeline comercial',modelos:'Construtor de modelos de proposta',campanhas:'Marketing direcionado',email:'Envio e acompanhamento de emails',analytics:'KPIs & Dashboards'+ufcd(' (UFCD 10868)'),rgpd:'Proteção de dados'+ufcd(' (UFCD 10870)'),comunicacao:'Templates de email',alertas:'Alertas & atividade',definicoes:'Configuração do sistema'};
+  const crumbs={dashboard:'Visão geral',empresas:'Entidades & dados fiscais',clientes:'Contactos (pessoas)',agenda:'Calendário & tarefas',produtos:'Catálogo',propostas:'Pipeline comercial',modelos:'Construtor de modelos de proposta',campanhas:'Marketing direcionado',personas:'Perfil do cliente ideal',email:'Envio e acompanhamento de emails',analytics:'KPIs & Dashboards'+ufcd(' (UFCD 10868)'),rgpd:'Proteção de dados'+ufcd(' (UFCD 10870)'),comunicacao:'Templates de email',alertas:'Alertas & atividade',definicoes:'Configuração do sistema'};
   $('#breadcrumb').innerHTML='<span>'+esc(brandName())+'</span> · <span>'+esc(crumbs[v]||'')+'</span>';
   const fn=views[v]||views.dashboard;
   $('#content').innerHTML=`<section class="view active">${fn()}</section>`;
@@ -8139,6 +8370,7 @@ function render(){
   if(v==='definicoes') makeDefCollapsible();
   if(v==='definicoes' && isAdmin()) renderSiteAnalytics();
   if(v==='definicoes' && rootSession) renderRootPanel('#rootPanel');
+  if(v==='personas') personasDepois();
   if(v==='decisao') recalcWhatIf();
   startI18n();
 }
@@ -8902,6 +9134,13 @@ document.addEventListener('click', async e=>{
     case 'process-agend': { const n=processAgendamentos(); render(); toast('Agendados processados',n?`${n} email(s) enviado(s)`:'Nada vencido'); } break;
     case 'campaign-send': sendCampaign(id); break;
     case 'wizard': openWizard(); break;
+    case 'persona-ver': { const p=personaDe(el.dataset.id); if(p) personaVer(p,''); } break;
+    case 'persona-enviar': personaEnviar(el.dataset.id); break;
+    case 'persona-retirar': personaRetirar(el.dataset.id); break;
+    case 'persona-png': { const p=personaDe(el.dataset.id); if(p) personaPNG(p,''); } break;
+    case 'persona-turma-ver': { const x=(personasTurma||[])[+el.dataset.i]; if(x) personaVer(Object.assign({},x.persona,{avatar:x.foto}),x.autor); } break;
+    case 'persona-turma-png': { const x=(personasTurma||[])[+el.dataset.i]; if(x) personaPNG(Object.assign({},x.persona,{avatar:x.foto}),x.autor); } break;
+    case 'persona-turma-atualizar': carregarPersonasTurma(); break;
     case 'portal-consent': submitPortalConsent(); break;
     case 'portal-dsar': submitPortalDsar(); break;
     case 'portal-lookup': { const v=($('#lookupEmail')?.value||'').trim(); state._portalEmail=v; state._portalTab='consent'; renderPortal(); if(v&&!state.clientes.some(x=>(x.email||'').toLowerCase()===v.toLowerCase())) toast('Sem registos','Nenhum consentimento para esse email','info'); } break;
@@ -8953,6 +9192,7 @@ document.addEventListener('change', e=>{
   if(emailDraft && (e.target.id==='emCor'||e.target.id==='emLogo'||e.target.dataset.em!=null)){ updateEmailPreview(); return; }
   if(sendDraft && e.target.dataset.send==='templateId'){ syncSendDraft(); renderSendForm(); return; }
   if(e.target.dataset&&e.target.dataset.act==='resp-filtro'){ state._respF=e.target.value; render(); return; }
+  if(e.target.dataset&&e.target.dataset.act==='persona-filtro'){ state._fPersona=e.target.value; render(); return; }
   const fl=e.target.closest('[data-filter]'); if(fl){ if(fl.dataset.filter==='fFam'){state._fFam=fl.value;state._fSub='';} else state._fSub=fl.value; render(); return; }
   const dr=e.target.closest('[data-drange]'); if(dr){ const a=dr.dataset.drange.split(':'); setDateField(a[0],a[1],dr.value); return; }
   const perm=e.target.closest('[data-perm]'); if(perm){ togglePerm(perm.dataset.perm, perm.dataset.mod, perm.checked, perm); return; }
@@ -9198,6 +9438,7 @@ function dsarReportHTML(id){
     ${sec(9,'Decisões automatizadas e definição de perfis (alínea h)')}
     <p>O sistema calcula uma <strong>pontuação de interesse comercial (lead score)</strong> a partir do histórico de compras, do envolvimento com as comunicações e do perfil da empresa.</p>
     <table>${linha('Pontuação atual',score+'/100 ('+si.l+')')}</table>
+    ${(()=>{ const pe=personaDe(c.personaId); return pe?`<p>Está também associado a uma <strong>persona</strong> (perfil de marketing): <strong>${esc(pe.nome||'')}</strong>. É uma definição de perfil, usada para adaptar a comunicação comercial; pode opor-se a ela a qualquer momento (art. 21.º).</p>`:''; })()}
     <div class="aviso">Esta pontuação <strong>apoia</strong> a decisão humana e <strong>não produz</strong> efeitos jurídicos nem afeta significativamente o titular, pelo que não constitui uma decisão exclusivamente automatizada nos termos do art. 22.º.</div>
 
     ${sec(10,'Registos associados')}
@@ -9244,6 +9485,7 @@ function exportClient(id){
     _documento:'Exportação de dados pessoais - RGPD Art. 20.º (direito à portabilidade)',
     _entidade:state.settings.entidade,
     _exportadoEm:new Date().toISOString(),
+    persona:(personaDe(c.personaId)||{}).nome||null,
     titular:c,
     propostas:state.propostas.filter(p=>p.clienteId===id),
     consentimentos:state.consentimentos.filter(x=>x.clienteId===id),
