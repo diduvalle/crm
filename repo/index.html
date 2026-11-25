@@ -64,6 +64,10 @@ td .tag{align-self:auto}
 .tc:hover .lapis-t,.lapis-t:focus-visible{opacity:1}
 .nome-in{width:100%;font:inherit;font-size:1.05rem;font-weight:800;padding:3px 9px;
   border:1.5px solid var(--g600);border-radius:9px;background:var(--surface);color:var(--text);outline:0}
+
+/* o ícone do "Atualizar" roda enquanto lê */
+@keyframes rodar{to{transform:rotate(360deg)}}
+.a-rodar svg{animation:rodar .8s linear infinite}
 /* o dourado do badge: so existe aqui, nao entra no sistema de estilos */
 .btn-ouro{background:#d4af37;border-color:#d4af37;color:#241d0a}
 .btn-ouro:hover{background:#c8a42d;border-color:#c8a42d}
@@ -741,6 +745,7 @@ $('#btnPrimario').addEventListener('click',()=>{
 /* A hierarquia é Escolas -> Turmas -> Sessões. Só uma vista está ativa. */
 function mostrarVista(id){
   accaoPrimaria=null; pesquisaPropria=null;
+  if(id!=='vApl'&&typeof pararRelogioApl==='function') pararRelogioApl();
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
 }
 function rotuloVoltar(){
@@ -2286,8 +2291,71 @@ async function abrirAplicacao(a){
     aplAtual={...a,...d};
     pauta=await rpc('teste_pauta',{p_token:sessao.token,p_aplicacao_id:a.id});
   }catch(e){ return tratar(e); }
+  aplAssinatura=assinaturaPauta(pauta); aplVistoEm=new Date();
   pintarAplicacao();
+  arrancarRelogioApl();
 }
+
+/* ---------- O ecrã fica vivo enquanto está aberto ----------
+   Numa aula o teste está a ser respondido NESTE momento. Entrar e sair para
+   ver quem já entregou não é trabalho de ninguém: de 20 em 20 segundos
+   relê-se a pauta sozinha.
+
+   Três cuidados, todos pela mesma razão - não estragar o que está a ser
+   feito: só volta a desenhar se alguma coisa mudou (senão o ecrã saltava
+   debaixo dos olhos de quem lê), não lê com uma janela aberta por cima (a
+   correção a meio perdia-se), e não lê com o separador escondido (não vale
+   a pena bater no servidor por trás). Ao voltar ao separador, lê logo. */
+const APL_INTERVALO=20000;
+let aplRelogio=null, aplAssinatura='', aplVistoEm=null;
+
+const horas=d=>d?d.toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'}):'';
+function assinaturaPauta(l){
+  return (l||[]).map(x=>[x.user_id,x.enviado_em,x.primeiro_clique,x.submetido_em,
+                         x.corrigido_em,x.devolvido_em,x.nota].join('|')).join('\n');
+}
+function pararRelogioApl(){ if(aplRelogio){ clearInterval(aplRelogio); aplRelogio=null; } }
+function arrancarRelogioApl(){
+  pararRelogioApl();
+  if(aplAtual&&aplAtual.fechado) return;      /* fechada: já não entra nada */
+  aplRelogio=setInterval(()=>refrescarApl(false),APL_INTERVALO);
+}
+async function refrescarApl(manual,btn){
+  if(!aplAtual||!$('#vApl').classList.contains('active')) return pararRelogioApl();
+  if(document.querySelector('.modal-back')) return;
+  if(document.hidden&&!manual) return;
+  const id=aplAtual.id;
+  if(btn){ btn.disabled=true; btn.classList.add('a-rodar'); }
+  let nova;
+  try{ nova=await rpc('teste_pauta',{p_token:sessao.token,p_aplicacao_id:id}); }
+  catch(e){
+    if(btn){ btn.disabled=false; btn.classList.remove('a-rodar'); }
+    if(manual) tratar(e);
+    return;
+  }
+  /* enquanto se esperava, ele pode ter mudado de ecrã */
+  if(!aplAtual||aplAtual.id!==id||!$('#vApl').classList.contains('active')) return;
+
+  const antes=pauta, assin=assinaturaPauta(nova);
+  aplVistoEm=new Date();
+  if(assin===aplAssinatura){
+    if(btn){ btn.disabled=false; btn.classList.remove('a-rodar'); }
+    const v=$('#aVisto'); if(v) v.textContent=' · atualizado às '+horas(aplVistoEm);
+    if(manual) toast('Sem novidades.');
+    return;
+  }
+  const novas=nova.filter(l=>l.submetido_em&&
+    !((antes||[]).find(x=>x.user_id===l.user_id)||{}).submetido_em);
+  pauta=nova; aplAssinatura=assin;
+  const y=window.scrollY;
+  pintarAplicacao();
+  window.scrollTo(0,y);
+  if(novas.length) toast(novas.length<=3
+    ? 'Entregou: '+novas.map(l=>String(l.nome||'').split(' ')[0]).join(', ')
+    : novas.length+' entregas novas.');
+}
+/* Voltar ao separador é o momento em que ele quer mesmo ver o que mudou. */
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) refrescarApl(false); });
 
 function pintarAplicacao(){
   const a=aplAtual;
@@ -2314,10 +2382,11 @@ function pintarAplicacao(){
   $('#vApl').innerHTML=`<button class="voltar" id="voltarAvals">${ic('seta')}Avaliações</button>
     <div class="section-head" style="margin-bottom:16px">
       <div><h3>${esc(a.titulo)}</h3>
-        <div class="sub">${a.fechado?'Fechada a respostas':'A aceitar respostas'} · ${nm(a.pontos_total)} pontos</div></div>
+        <div class="sub">${a.fechado?'Fechada a respostas':'A aceitar respostas'} · ${nm(a.pontos_total)} pontos<span id="aVisto">${aplVistoEm?' · atualizado às '+horas(aplVistoEm):''}</span></div></div>
       <div class="toolbar" style="gap:8px">
         ${enviados<total?`<button class="btn btn-sm" id="aEnviar">${ic('mail')}Enviar${enviados?' a quem falta':''}</button>`:''}
         ${porDevolver>0?`<button class="btn btn-sm" id="aDevolver">${ic('ok')}Devolver ${porDevolver} nota${porDevolver==1?'':'s'}</button>`:''}
+        <button class="btn-sec btn-sm" id="aRefrescar" title="Ler outra vez a pauta">${ic('refrescar')}Atualizar</button>
         <button class="btn-sec btn-sm" id="aFechar">${ic('tranca')}${a.fechado?'Reabrir':'Fechar'}</button>
         <button class="btn-sec btn-sm" id="aCsv">${ic('copiar')}CSV</button>
       </div>
@@ -2352,6 +2421,7 @@ function pintarAplicacao(){
   if(be) be.addEventListener('click',()=>enviarAplicacao(a.sessao_id,be));
   const bd=$('#aDevolver');
   if(bd) bd.addEventListener('click',()=>devolverNotas(a,porDevolver,bd));
+  $('#aRefrescar').addEventListener('click',e=>refrescarApl(true,e.currentTarget));
   $('#aFechar').addEventListener('click',async()=>{
     try{ await rpc('teste_fechar',{p_token:sessao.token,p_aplicacao_id:a.id,p_fechado:!a.fechado}); }
     catch(e){ return tratar(e); }
