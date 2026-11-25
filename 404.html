@@ -2751,7 +2751,7 @@ function openClient360(id){ drawer360Emp=null; drawer360Cli=id;
   const hist=Array.isArray(c.historicoEmpresas)?c.historicoEmpresas:[];
   $('#drawerTitle').innerHTML=`<h3 style="font-size:1.1rem;font-weight:800">${esc(c.nome)} ${esc(c.apelido||'')}${emp?` <span class="pill ${faseColor(empFz)}" style="font-size:.66rem;vertical-align:middle" title="Fase de lead da empresa">${esc(empFz)}</span>`:` <span class="pill grey" style="font-size:.66rem;vertical-align:middle">Sem empresa</span>`}</h3><div class="sub" style="color:var(--muted);font-size:.82rem">Contacto n.º ${esc(c.numero)} · ${emp?esc(emp.nome):'só no diretório'}${c.cargo?' · '+esc(c.cargo):''}</div>`;
   $('#drawerBody').innerHTML=`
-    ${(()=>{ const pe=personaDe(c.personaId); return pe?`<div class="card card-pad" data-act="persona-ver" data-id="${pe.id}" style="cursor:pointer;display:flex;gap:12px;align-items:center">${personaAvatar(pe,44)}<div><div class="muted" style="font-size:.68rem;font-weight:800;letter-spacing:.05em">PERSONA</div><strong>${esc(pe.nome||'')}</strong>${personaSub(pe)?`<div class="muted" style="font-size:.8rem">${esc(personaSub(pe))}</div>`:''}</div></div>`:''; })()}
+    ${(()=>{ const pe=personaDe(c.personaId); return pe?`<div class="card card-pad" data-act="persona-ver" data-id="${pe.id}" style="cursor:pointer;display:flex;gap:12px;align-items:center">${personaAvatar(pe,44)}<div><div class="muted" style="font-size:.68rem;font-weight:800;letter-spacing:.05em">PERSONA</div><strong>${esc(pe.nome||'')}</strong>${personaSub(pe)?`<div class="muted" style="font-size:.8rem">${esc(personaSub(pe))}</div>`:''}</div></div>`:personaSugeridaHTML(c); })()}
     ${emp?`<div class="card card-pad" data-act="open-empresa" data-id="${emp.id}" style="cursor:pointer">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div class="muted" style="font-size:.68rem;font-weight:800;letter-spacing:.05em">CONTA · EMPRESA</div><strong style="font-size:1.02rem">${esc(emp.nome)}</strong></div><span class="pill ${faseColor(empFz)}">${esc(empFz)}</span></div>
       <div style="display:flex;gap:10px;margin-top:12px;text-align:center">
@@ -3111,7 +3111,7 @@ views.campanhas = () => {
     <div class="card card-pad">
       <div class="section-head" style="margin-bottom:14px"><div><h3>Campanhas ${infoTip('segmento')}</h3><div class="sub">Marketing direcionado por segmento</div></div><div class="toolbar"><button class="btn-sec" data-act="wizard">✨ Gerar de persona</button><button class="btn" data-act="new" data-type="campanha">+ Campanha</button></div></div>
       <div class="table-wrap"><table><thead><tr><th>Campanha</th><th>Segmento</th><th>Período</th><th>Abertura</th><th>CTR</th><th>Estado</th><th></th></tr></thead><tbody>
-        ${camps.map(c=>{const ab=c.enviados?c.abertos/c.enviados*100:0;const ct=c.enviados?c.cliques/c.enviados*100:0;return `<tr><td><div class="cell-main">${esc(c.nome)}</div><div class="cell-sub">${esc(c.canal)} · ${fmtN(c.enviados)} envios · ${audienciaLinha(c)}</div></td><td><span class="chip">${esc(c.segmento||'Todos')}</span>${c.nivel?` <span class="chip">${esc(c.nivel)}</span>`:''}</td><td class="muted">${dPT(c.inicio)} - ${dPT(c.fim)}</td><td>${pct(ab)}</td><td>${pct(ct)}</td><td><span class="pill ${c.estado==='Ativa'?'green':c.estado==='Concluída'?'grey':'blue'}">${esc(c.estado)}</span></td><td><div class="row-actions"><button class="btn-sec btn-xs" data-act="campaign-send" data-id="${c.id}">${ic('send',13)} Enviar</button><button class="btn-sec btn-xs" data-act="edit" data-type="campanha" data-id="${c.id}">Editar</button><button class="btn-danger btn-xs" data-act="delete" data-type="campanha" data-id="${c.id}">✕</button></div></td></tr>`;}).join('')||`<tr><td colspan="7">${empty(act?'Sem campanhas no período':'Sem campanhas')}</td></tr>`}
+        ${camps.map(c=>{const ab=c.enviados?c.abertos/c.enviados*100:0;const ct=c.enviados?c.cliques/c.enviados*100:0;return `<tr><td><div class="cell-main">${esc(c.nome)}</div><div class="cell-sub">${esc(c.canal)} · ${fmtN(c.enviados)} envios · ${audienciaLinha(c)}</div></td><td><span class="chip">${esc(c.segmento||'Todos')}</span>${c.nivel?` <span class="chip">${esc(c.nivel)}</span>`:''}${c.personaId?` <span class="chip" title="Persona-alvo">${ic('persona',12)} ${esc((personaDe(c.personaId)||{}).nome||'persona apagada')}</span>`:''}</td><td class="muted">${dPT(c.inicio)} - ${dPT(c.fim)}</td><td>${pct(ab)}</td><td>${pct(ct)}</td><td><span class="pill ${c.estado==='Ativa'?'green':c.estado==='Concluída'?'grey':'blue'}">${esc(c.estado)}</span></td><td><div class="row-actions"><button class="btn-sec btn-xs" data-act="campaign-send" data-id="${c.id}">${ic('send',13)} Enviar</button><button class="btn-sec btn-xs" data-act="edit" data-type="campanha" data-id="${c.id}">Editar</button><button class="btn-danger btn-xs" data-act="delete" data-type="campanha" data-id="${c.id}">✕</button></div></td></tr>`;}).join('')||`<tr><td colspan="7">${empty(act?'Sem campanhas no período':'Sem campanhas')}</td></tr>`}
       </tbody></table></div>
     </div>
     <div class="card card-pad">
@@ -5495,6 +5495,7 @@ function fireAutomations(trigger, ctx){
     if(a.condFase && (!cli || accFaseOf(cli)!==a.condFase)) return;
     if(a.condNivel && !loyaltyTriggers.includes(trigger) && (!cli || !accMatchNivel(cli,a.condNivel))) return;   // nível atual da conta
     if(a.condScore && (!cli || scoreInfo(accScoreOf(cli)).l!==a.condScore)) return;
+    if(a.condPersona && (!cli || cli.personaId!==a.condPersona)) return;        // só contactos desta persona
     if(a.condNivel && ctx.loyaltyPara && ctx.loyaltyPara!==a.condNivel) return;   // só para este nível de fidelização
     (a.passos||[]).forEach((p,idx)=>{
       const tipo=p.tipo||'email';
@@ -5535,7 +5536,8 @@ function runSemContacto(){ const autos=(state.automacoes||[]).filter(a=>a.estado
   (state.empresas||[]).forEach(e=>{ if(e._scFired) return; if(['Cliente','Perdido'].includes(e.fase||'Lead')) return; const contacts=empContacts(e.id); const rep=contacts[0]; if(!rep) return;
     const ids=contacts.map(x=>x.id); const envs=state.envios.filter(x=>ids.includes(x.clienteId)); const last=envs.length?envs.map(x=>x.data).sort().pop():e.criado; const dias=last?daysBetween(last,todayISO()):9999; const score=empLeadScore(e);
     for(const a of autos){ if(a.condSegmento&&a.condSegmento!=='Todos'&&!accMatchSeg(rep,a.condSegmento)) continue; if(a.condFase&&(e.fase||'Lead')!==a.condFase) continue; if(a.condScore&&scoreInfo(score).l!==a.condScore) continue;
-      if(dias>=(+a.condDias||7)){ e._scFired=true; fireAutomations('sem-contacto',{clienteId:rep.id}); n++; break; } } });
+      const alvo=a.condPersona?contacts.find(x=>x.personaId===a.condPersona):rep; if(!alvo) continue;   // com persona: a pessoa da empresa que a tem
+      if(dias>=(+a.condDias||7)){ e._scFired=true; fireAutomations('sem-contacto',{clienteId:alvo.id}); n++; break; } } });
   if(n) save(); return n; }
 function processAgendamentos(){
   const today=todayISO(); const due=(state.agendamentos||[]).filter(a=>a.dataAgendada<=today); let n=0;
@@ -5569,7 +5571,7 @@ function temConsentimento(c){
   return (state.consentimentos||[]).some(x=>x.clienteId===c.id && x.estado==="Ativo");
 }
 function campAudiencia(cp){
-  const alvo=(state.clientes||[]).filter(c=>accMatchSeg(c,cp.segmento)&&accMatchNivel(c,cp.nivel));
+  const alvo=(state.clientes||[]).filter(c=>accMatchSeg(c,cp.segmento)&&accMatchNivel(c,cp.nivel)&&(!cp.personaId||c.personaId===cp.personaId));
   const semEmail=alvo.filter(c=>!String(c.email||"").trim());
   const comEmail=alvo.filter(c=>String(c.email||"").trim());
   const semCons=comEmail.filter(c=>!temConsentimento(c));
@@ -5595,7 +5597,7 @@ async function sendCampaign(id){
   const cp=state.campanhas.find(c=>c.id===id); if(!cp) return;
   /* o alvo e o cruzamento dos dois filtros: segmento (dimensao) E nivel de fidelizacao */
   const aud=campAudiencia(cp); const alvo=aud.enviaveis;
-  if(!aud.alvo.length){ const q=[cp.segmento&&cp.segmento!=='Todos'?('segmento '+cp.segmento):'',cp.nivel?('nível '+cp.nivel):''].filter(Boolean).join(' + ')||'todos';
+  if(!aud.alvo.length){ const q=[cp.segmento&&cp.segmento!=='Todos'?('segmento '+cp.segmento):'',cp.nivel?('nível '+cp.nivel):'',cp.personaId?('persona '+((personaDe(cp.personaId)||{}).nome||'apagada')):''].filter(Boolean).join(' + ')||'todos';
     toast('Sem destinatários','Nenhum cliente em: '+q,'warn'); return; }
   if(!alvo.length){ toast('Ninguém pode receber','Dos '+aud.alvo.length+' do alvo, nenhum tem email E consentimento ativo. Registe os consentimentos em RGPD.','warn'); return; }
   /* nada sai sem se ver primeiro a quem vai - e porque e que alguem ficou de fora */
@@ -5641,8 +5643,10 @@ function passoDescricao(p,tpls){
   return 'Nota: '+(p.texto||'-');
 }
 /* Todas as condicoes ativas, nao so a primeira. */
-function condicoesTexto(a){
+/* pers: as personas a usar no nome (ao avaliar uma entrega são as do formando) */
+function condicoesTexto(a,pers){
   const r=[];
+  if(a.condPersona) r.push('persona '+(((pers||state.personas||[]).find(x=>x.id===a.condPersona)||{}).nome||'apagada'));
   if(a.condSegmento&&a.condSegmento!=='Todos') r.push('segmento '+a.condSegmento);
   if(a.condNivel) r.push('nível '+a.condNivel);
   if(a.condFase) r.push('fase '+a.condFase);
@@ -6001,6 +6005,7 @@ function renderAutoForm(){
       <div class="field"><label>${loyaltyTriggers.includes(d.trigger)?'Só quando chega ao nível':'Só p/ nível de fidelização'}</label><select name="anivel">${['Todos'].concat(niveisList()).map(s=>{const v=s==='Todos'?'':s;return `<option value="${v}" ${(d.condNivel||'')===v?'selected':''}>${s}</option>`;}).join('')}</select><span class="hint">${loyaltyTriggers.includes(d.trigger)?'O nível é calculado do volume ganho - muda sozinho quando uma proposta é ganha.':'Nível atual da conta.'}</span></div>
       <div class="field"><label>Só p/ fase</label><select name="afase">${['Todas'].concat(FASES).map(s=>{const v=s==='Todas'?'':s;return `<option value="${v}" ${(d.condFase||'')===v?'selected':''}>${s}</option>`;}).join('')}</select></div>
       <div class="field"><label>Só p/ score ${infoTip('leadscore')}</label><select name="ascore">${['Todos','Frio','Morno','Quente'].map(s=>{const v=s==='Todos'?'':s;return `<option value="${v}" ${(d.condScore||'')===v?'selected':''}>${s}</option>`;}).join('')}</select></div>
+      <div class="field full"><label>Só p/ persona</label><select name="apersona"><option value="">Todas</option>${(state.personas||[]).map(p=>`<option value="${p.id}" ${d.condPersona===p.id?'selected':''}>${esc(p.nome||'(sem nome)')}</option>`).join('')}</select><span class="hint">${(state.personas||[]).length?'Só dispara para contactos associados a esta persona.':'Ainda não há personas: crie-as em Marketing → Personas.'}</span></div>
       <div class="field full"><label>Parar a sequência quando…</label><select name="asaida">${SAIDAS.map(x=>`<option value="${x.v}" ${(d.saida||'')===x.v?'selected':''}>${esc(x.t)}</option>`).join('')}</select><span class="hint">Evita continuar a insistir com quem já reagiu. Cancela apenas os passos ainda por enviar.</span></div>
     </div>
     <div class="divider" style="margin:16px 0 12px"></div>
@@ -6016,6 +6021,7 @@ function renderAutoForm(){
 function syncAutoDraft(){ const f=$('#modalForm'); if(!f||!autoDraft) return; autoDraft.nome=f.querySelector('[name="anome"]').value; autoDraft.trigger=f.querySelector('[name="atrigger"]').value; autoDraft.condSegmento=f.querySelector('[name="aseg"]').value; autoDraft.estado=f.querySelector('[name="aestado"]').value;
   { const fz=f.querySelector('[name="afase"]'); if(fz)autoDraft.condFase=fz.value; const scr=f.querySelector('[name="ascore"]'); if(scr)autoDraft.condScore=scr.value; const dd=f.querySelector('[name="adias"]'); if(dd)autoDraft.condDias=Number(dd.value||7);
     const nv=f.querySelector('[name="anivel"]'); if(nv)autoDraft.condNivel=nv.value;
+    const ps=f.querySelector('[name="apersona"]'); if(ps)autoDraft.condPersona=ps.value;
     const sd=f.querySelector('[name="asaida"]'); if(sd)autoDraft.saida=sd.value; } $$('[data-step]',f).forEach(row=>{ const i=+row.dataset.step; if(!autoDraft.passos[i])return; const P=autoDraft.passos[i];
     const tp=row.querySelector('[data-as="tipo"]'); if(tp)P.tipo=tp.value;
     const ts=row.querySelector('[data-as="templateId"]'); if(ts)P.templateId=ts.value;
@@ -6228,6 +6234,9 @@ function praticasEntrega(p){
   const pEmp=proprios(emp), pCli=proprios(cli), pProp=proprios(prop), pProd=proprios(prod);
   const pCamp=proprios(camp), pAuto=proprios(auto), pTpl=proprios(tpl), pMod=proprios(mod);
   const pPers=proprios(p.personas||[]), pCliPers=cli.filter(c=>c.personaId&&(p.personas||[]).some(x=>x.id===c.personaId));
+  const nomePers=id=>(((p.personas||[]).find(x=>x.id===id)||{}).nome||'persona apagada');
+  const pPersAlvo=pCamp.filter(c=>c.personaId).map(c=>'Campanha '+(c.nome||'(sem nome)')+' · '+nomePers(c.personaId))
+    .concat(pAuto.filter(a=>a.condPersona).map(a=>'Automação '+(a.nome||'-')+' · '+nomePers(a.condPersona)));
   const pCasos=proprios(casos), pRet=proprios(ret), pCons=proprios(cons), pPed=proprios(ped);
   const pTar=proprios(tar), pRopa=proprios(ropa), pViol=proprios(viol);
 
@@ -6239,7 +6248,7 @@ function praticasEntrega(p){
   const perdidaComMotivo = pProp.some(x=>x.estado==="Perdida") && pProp.filter(x=>x.estado==="Perdida").every(x=>String(x.motivoPerda||"").trim());
   const modComTags = pMod.some(m=>(m.blocks||[]).some(b=>/\{\{[\w.]+\}\}/.test(String(b.conteudo||""))));
   const autoMultiPasso = pAuto.some(a=>(a.passos||[]).length>1);
-  const autoComCondicao = pAuto.some(a=>(a.condSegmento&&a.condSegmento!=="Todos")||a.condFase||a.condScore||a.condNivel);
+  const autoComCondicao = pAuto.some(a=>(a.condSegmento&&a.condSegmento!=="Todos")||a.condFase||a.condScore||a.condNivel||a.condPersona);
   const autoNaoEmail = pAuto.some(a=>(a.passos||[]).some(x=>(x.tipo||"email")!=="email"));
   const autoComSaida = pAuto.some(a=>a.saida);
   const casosFechados = pCasos.filter(c=>/Resolvid|Fechad/i.test(String(c.estado||""))).length;
@@ -6297,8 +6306,8 @@ function praticasEntrega(p){
        pAuto.filter(a=>(a.passos||[]).length>1).length,
        pAuto.filter(a=>(a.passos||[]).length>1).map(a=>(a.nome||'-')+' · '+(a.passos||[]).map(x=>passoDescricao(x,tpl)).join(' → '))),
     P_("autocond","Automação com condições", autoComCondicao, "Marketing",
-       pAuto.filter(a=>(a.condSegmento&&a.condSegmento!=="Todos")||a.condFase||a.condScore||a.condNivel).length,
-       pAuto.filter(a=>(a.condSegmento&&a.condSegmento!=="Todos")||a.condFase||a.condScore||a.condNivel).map(a=>(a.nome||'-')+' · '+condicoesTexto(a))),
+       pAuto.filter(a=>(a.condSegmento&&a.condSegmento!=="Todos")||a.condFase||a.condScore||a.condNivel||a.condPersona).length,
+       pAuto.filter(a=>(a.condSegmento&&a.condSegmento!=="Todos")||a.condFase||a.condScore||a.condNivel||a.condPersona).map(a=>(a.nome||'-')+' · '+condicoesTexto(a,p.personas||[]))),
     P_("autoacao","Automação com ação que não é email", autoNaoEmail, "Marketing",
        pAuto.filter(a=>(a.passos||[]).some(x=>(x.tipo||"email")!=="email")).length,
        pAuto.filter(a=>(a.passos||[]).some(x=>(x.tipo||"email")!=="email")).map(a=>(a.nome||'-')+' · '+(a.passos||[]).filter(x=>(x.tipo||'email')!=='email').map(x=>passoDescricao(x,tpl)).join(' + '))),
@@ -6308,6 +6317,7 @@ function praticasEntrega(p){
     P_("pers","Construiu uma persona", pPers.length>0, "Marketing", pPers.length, pPers.map(x=>x.nome||'(sem nome)')),
     P_("perscli","Associou personas a contactos", pCliPers.length>0, "Marketing", pCliPers.length,
        pCliPers.map(c=>((c.nome||'')+' '+(c.apelido||'')).trim()+' · '+(((p.personas||[]).find(x=>x.id===c.personaId)||{}).nome||''))),
+    P_("persalvo","Usou uma persona como alvo", pPersAlvo.length>0, "Marketing", pPersAlvo.length, pPersAlvo),
     P_("caso","Abriu casos de apoio", pCasos.length>0, "Serviço", pCasos.length,
        pCasos.map(c=>(c.titulo||c.assunto||'(sem título)')+' · '+(c.estado||'-'))),
     P_("casofecha","Resolveu casos", casosFechados>0, "Serviço", casosFechados,
@@ -7157,6 +7167,81 @@ const PERSONA_BLOCOS=[
 ];
 const PERSONA_CRM=[['objetivos','Objetivos'],['dificuldades','Dificuldades'],['objecoes','Objeções (o que trava a compra)'],['canais','Canais preferidos']];
 const personaDe=id=>(state.personas||[]).find(p=>p.id===id)||null;
+/* ---------- Fase 2: quem encaixa, sugestões e resultados ----------
+   Critérios opcionais na persona; todos os preenchidos têm de bater. O CRM só
+   SUGERE os contactos sem persona que encaixam - quem os associa é uma pessoa
+   (associar é perfilagem, e fica no relatório RGPD do titular). */
+const SETORES=['Comércio','Indústria','Serviços','Hotelaria','Restauração','Saúde','Tecnologia','Construção','Educação','Transportes','Outro'];
+const PERSONA_CRIT=[['critSetor','setor'],['critSegmento','segmento'],['critOrigem','origem'],['critFuncao','função'],['critCargo','cargo']];
+const persFold=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().trim();
+const personaTemCrit=p=>!!p&&PERSONA_CRIT.some(([k])=>String(p[k]||'').trim());
+function personaCritTexto(p){ return PERSONA_CRIT.filter(([k])=>String(p[k]||'').trim()).map(([k,l])=>l+' '+String(p[k]).trim()).join(' · '); }
+function personaEncaixa(p,c){
+  if(!personaTemCrit(p)||!c) return false;
+  const e=c.empresaId?(state.empresas||[]).find(x=>x.id===c.empresaId):null;
+  if(p.critSetor&&(!e||(e.setor||'')!==p.critSetor)) return false;
+  if(p.critSegmento&&(!e||(e.dimensao||'')!==p.critSegmento)) return false;
+  if(p.critOrigem&&((e&&e.origem)||c.origem||'')!==p.critOrigem) return false;
+  if(p.critFuncao&&(c.funcao||'')!==p.critFuncao) return false;
+  if(String(p.critCargo||'').trim()){
+    const cg=persFold(c.cargo), ps=String(p.critCargo).split(',').map(persFold).filter(Boolean);
+    if(!cg||!ps.some(w=>cg.includes(w))) return false; }
+  return true;
+}
+/* os contactos SEM persona que encaixam nesta; e as personas em que um contacto encaixa */
+const personaSugestoes=p=>(state.clientes||[]).filter(c=>!c.personaId&&personaEncaixa(p,c));
+const personasParaContacto=c=>(state.personas||[]).filter(p=>personaEncaixa(p,c));
+async function personaRever(id){
+  const p=personaDe(id); if(!p) return;
+  const l=personaSugestoes(p);
+  if(!l.length){ toast('Sem sugestões','Nenhum contacto sem persona encaixa nos critérios desta'); return; }
+  const linha=c=>{ const e=c.empresaId?(state.empresas||[]).find(x=>x.id===c.empresaId):null;
+    return `<label style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;cursor:pointer;font-weight:500"><input type="checkbox" data-sug="${c.id}" checked style="margin-top:3px;width:15px;height:15px;accent-color:var(--g600)"><span><strong>${esc(((c.nome||'')+' '+(c.apelido||'')).trim())}</strong><span class="muted" style="font-size:.8rem"> · ${esc([c.cargo,e&&e.nome].filter(Boolean).join(' · ')||'-')}</span></span></label>`; };
+  const msg=`<p style="margin:0 0 8px">Estes contactos ainda não têm persona e encaixam em <strong>${esc(personaCritTexto(p))}</strong>. Escolha os que associa a <strong>${esc(p.nome||'')}</strong>.</p>
+    <div style="max-height:300px;overflow:auto">${l.map(linha).join('')}</div>
+    <p class="muted" style="font-size:.76rem;margin:8px 0 0">O CRM só sugere. Associar um contacto a uma persona é perfilagem: fica no relatório RGPD do titular.</p>`;
+  const ok=await uiConfirm(msg,{title:'Sugestões para '+(p.nome||'a persona'),okText:'Associar os escolhidos',icon:'users',html:true});
+  /* o diálogo ainda está no ecrã (sai 170 ms depois): lê-se já o que ficou marcado */
+  const marcados=[...document.querySelectorAll('.dlg-back [data-sug]:checked')].map(x=>x.dataset.sug);
+  if(!ok||!marcados.length) return;
+  let n=0; marcados.forEach(cid=>{ const c=getC(cid); if(c&&!c.personaId){ c.personaId=p.id; n++; } });
+  save(); render(); toast('Persona associada',n+' contacto(s) a '+(p.nome||'a persona'));
+}
+/* o cartão da ficha 360 quando o contacto ainda não tem persona mas encaixa numa */
+function personaSugeridaHTML(c){
+  const sg=personasParaContacto(c); if(!sg.length) return '';
+  return `<div class="card card-pad" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">${personaAvatar(sg[0],44)}
+    <div style="flex:1;min-width:150px"><div class="muted" style="font-size:.68rem;font-weight:800;letter-spacing:.05em">PERSONA SUGERIDA</div><strong>${sg.map(x=>esc(x.nome||'(sem nome)')).join(' ou ')}</strong>
+    <div class="muted" style="font-size:.78rem">Encaixa nos critérios. Só fica associada se confirmar.</div></div>
+    ${sg.slice(0,3).map(x=>`<button class="btn-sec btn-sm" data-act="persona-associar" data-id="${x.id}" data-cli="${c.id}">Associar${sg.length>1?' '+esc(x.nome||''):''}</button>`).join('')}</div>`;
+}
+/* os números de cada persona (e dos contactos sem persona, para comparar) */
+function personaResultados(){
+  const cli=state.clientes||[];
+  const grupos=(state.personas||[]).map(p=>({p,l:cli.filter(c=>c.personaId===p.id)}));
+  grupos.push({p:null,l:cli.filter(c=>!c.personaId||!personaDe(c.personaId))});
+  return grupos.map(({p,l})=>{
+    const ids=new Set(l.map(c=>c.id));
+    const props=(state.propostas||[]).filter(x=>ids.has(x.clienteId));
+    const ganhas=props.filter(x=>x.estado==='Ganha'), fechadas=props.filter(x=>x.estado==='Ganha'||x.estado==='Perdida');
+    const env=(state.envios||[]).filter(x=>ids.has(x.clienteId));
+    return {p, n:l.length, cons:l.filter(temConsentimento).length, env:env.length,
+      abert:env.length?env.filter(x=>x.aberto).length/env.length*100:null,
+      cliq:env.length?env.filter(x=>x.clicado).length/env.length*100:null,
+      props:props.length, ganhas:ganhas.length, conv:fechadas.length?ganhas.length/fechadas.length*100:null,
+      valor:ganhas.reduce((s,x)=>s+propTotal(x),0)};
+  });
+}
+function personaResultadosHTML(){
+  const r=personaResultados(); const tr=x=>x==null?'<span class="muted">-</span>':pct(x);
+  return `<div class="card card-pad">
+    <div class="section-head" style="margin-bottom:14px"><div><h3>Resultados por persona</h3><div class="sub">O que vale cada perfil, a partir dos contactos associados: emails, propostas em que são o cliente e vendas ganhas. A linha «Sem persona» serve de comparação.</div></div></div>
+    <div class="table-wrap"><table><thead><tr><th>Persona</th><th>Contactos</th><th title="Com consentimento ativo para marketing">Com consentimento</th><th>Emails</th><th>Abertura</th><th>Cliques</th><th>Propostas</th><th title="Ganhas a dividir por fechadas (ganhas + perdidas)">Conversão</th><th>Valor ganho</th></tr></thead><tbody>
+    ${r.map(x=>`<tr${x.p?'':' style="color:var(--muted)"'}><td>${x.p?`<div style="display:flex;gap:8px;align-items:center">${personaAvatar(x.p,28)}<strong>${esc(x.p.nome||'(sem nome)')}</strong></div>`:'<em>Sem persona</em>'}</td>
+      <td>${fmtN(x.n)}</td><td>${fmtN(x.cons)}</td><td>${fmtN(x.env)}</td><td>${tr(x.abert)}</td><td>${tr(x.cliq)}</td>
+      <td>${fmtN(x.props)}${x.ganhas?` <span class="muted" style="font-size:.78rem">(${x.ganhas} ganha${x.ganhas>1?'s':''})</span>`:''}</td><td>${tr(x.conv)}</td><td>${x.valor?money(x.valor):'<span class="muted">-</span>'}</td></tr>`).join('')}
+    </tbody></table></div></div>`;
+}
 const personaSub=p=>[p.idade?(/^\d+$/.test(String(p.idade).trim())?p.idade+' anos':p.idade):'',p.ocupacao,p.localizacao].filter(x=>String(x||'').trim()).join(' · ');
 function personaAvatar(p,size){
   size=size||56;
@@ -7175,6 +7260,7 @@ function personaFichaHTML(p,autor){
     <div class="pers-blocos">${PERSONA_BLOCOS.map(b=>bloco(b.t,b.campos)).join('')}</div>
     <div class="pers-blocos pers-crm">${PERSONA_CRM.map(([k,l])=>bloco(l,[[k,'']])).join('')}</div>
     ${p.base?`<p class="muted" style="font-size:.8rem;margin-top:10px">Baseada em: ${esc(p.base)}</p>`:''}
+    ${personaTemCrit(p)?`<p class="muted" style="font-size:.8rem;margin-top:4px">Quem encaixa: ${esc(personaCritTexto(p))}</p>`:''}
   </div>`;
 }
 /* ---------- servidor: enviar ao formador / as da turma ---------- */
@@ -7298,12 +7384,14 @@ views.personas = () => {
       <div class="toolbar" style="margin-top:10px;flex-wrap:wrap">
         <button class="btn-sec btn-sm" data-act="persona-ver" data-id="${p.id}">${ic('eye',14)} Ver</button>
         <button class="btn-sec btn-sm" data-act="edit" data-type="persona" data-id="${p.id}">Editar</button>
+        ${(()=>{ const ns=personaSugestoes(p).length; return ns?`<button class="btn btn-sm" data-act="persona-sugestoes" data-id="${p.id}" title="Contactos sem persona que encaixam nos critérios">${ic('users',14)} ${ns} ${ns===1?'sugestão':'sugestões'}</button>`:''; })()}
         ${naTurma?`<button class="btn-sec btn-sm" data-act="persona-enviar" data-id="${p.id}">${ic('send',14)} ${env(p.id)?'Enviar de novo':'Enviar ao formador'}</button>`:''}
         ${naTurma&&env(p.id)?`<button class="btn-ghost btn-sm" data-act="persona-retirar" data-id="${p.id}">Retirar</button>`:''}
         <button class="btn-ghost btn-sm" data-act="persona-png" data-id="${p.id}" title="Descarregar como imagem">${ic('image',14)} Imagem</button>
       </div></div>`).join('')}</div>`
       :empty('Ainda não há personas','Crie a primeira com base na sua experiência: os quatro blocos são os do exercício da aula.')}
   </div>
+  ${L.length?personaResultadosHTML():''}
   ${ehFormadorTurma()?`<div class="card card-pad">
     <div class="section-head" style="margin-bottom:14px"><div><h3>Personas da turma</h3><div class="sub">As que os formandos lhe enviaram, com a foto. Descarregue cada uma como imagem para o slide.</div></div>
       <div class="toolbar"><button class="btn-sec btn-sm" data-act="persona-turma-atualizar">${ic('rotate',14)} Atualizar</button></div></div>
@@ -7319,7 +7407,14 @@ function personaCampos(){
   ];
   const blocos=PERSONA_BLOCOS.reduce((a,b)=>a.concat([{type:'sec',l:b.t}],b.campos.map(([n,l])=>({n,l}))),[]);
   const crm=[{type:'sec',l:'Para o CRM'}].concat(PERSONA_CRM.map(([n,l])=>n==='canais'?{n,l}:{n,l,type:'textarea',full:1}));
-  return topo.concat(blocos,crm);
+  const qq=l=>[{v:'',t:'- qualquer -'}].concat(l.filter(Boolean).map(x=>({v:x,t:x})));
+  const crit=[{type:'sec',l:'Quem encaixa (o CRM sugere, você decide)'},
+    {n:'critSetor',l:'Setor da empresa',type:'select',opts:()=>qq(SETORES),hint:'Tudo opcional. Os critérios preenchidos têm de bater todos.'},
+    {n:'critSegmento',l:'Segmento (dimensão)',type:'select',opts:()=>qq(segmentosList())},
+    {n:'critOrigem',l:'Origem (aquisição)',type:'select',opts:()=>qq(state.settings.origens||[])},
+    {n:'critFuncao',l:'Função na empresa',type:'select',opts:()=>qq(funcoesList())},
+    {n:'critCargo',l:'Palavras no cargo',full:1,hint:'Separadas por vírgula; basta uma (ex.: diretor, gerente). Sem critérios, não há sugestões.'}];
+  return topo.concat(blocos,crm,crit);
 }
 
 const SCHEMAS = {
@@ -7340,7 +7435,7 @@ const SCHEMAS = {
     {n:'nome',l:'Razão social / Nome da empresa',req:1,full:1},
     {n:'nipc',l:'NIPC / NIF',hint:'9 dígitos - validado pelo dígito de controlo'},
     {n:'cae',l:'CAE (código de atividade)'},
-    {n:'setor',l:'Setor',type:'select',outro:'Outro',outroPlaceholder:'Que setor?',opts:['Comércio','Indústria','Serviços','Hotelaria','Restauração','Saúde','Tecnologia','Construção','Educação','Transportes','Outro'].map(x=>({v:x,t:x}))},
+    {n:'setor',l:'Setor',type:'select',outro:'Outro',outroPlaceholder:'Que setor?',opts:SETORES.map(x=>({v:x,t:x}))},
     {n:'dimensao',l:'Dimensão (segmento)',type:'select',opts:()=>segmentosList().map(x=>({v:x,t:x})),hint:'Editável em Definições → Segmentos.'},
     {n:'natureza',l:'Natureza jurídica',hint:'SA · Lda · Unipessoal · ENI (preenche-se com Procurar)'},
     {n:'fase',l:'Fase (ciclo de vida)',type:'select',opts:FASES.map(x=>({v:x,t:x})),def:'Lead',hint:'Lead → MQL (demonstrou interesse) → SQL (oportunidade real) → Cliente'},
@@ -7426,6 +7521,7 @@ const SCHEMAS = {
     {n:'canal',l:'Canal',type:'select',opts:['Email','SMS','Redes Sociais','Telefone'].map(x=>({v:x,t:x}))},
     {n:'segmento',l:'Segmento-alvo',type:'select',opts:()=>['Todos'].concat(segmentosList()).map(x=>({v:x,t:x})),hint:'Dimensão da empresa.'},
     {n:'nivel',l:'Nível de fidelização',type:'select',opts:()=>['Todos'].concat(niveisList()).map(x=>({v:x==='Todos'?'':x,t:x})),hint:'Filtro independente do segmento - pode usar os dois.'},
+    {n:'personaId',l:'Persona-alvo',type:'select',opts:()=>[{v:'',t:'Todas'}].concat((state.personas||[]).map(p=>({v:p.id,t:p.nome||'(sem nome)'}))),labelFor:()=>'persona apagada',hint:'Só os contactos associados a esta persona. Soma-se aos filtros de cima.'},
     {n:'templateId',l:'Template de email',type:'select',opts:()=>state.templates.map(t=>({v:t.id,t:t.nome}))},
     {n:'inicio',l:'Início',type:'date'},{n:'fim',l:'Fim',type:'date'},
     {n:'enviados',l:'Enviados',type:'number'},{n:'abertos',l:'Abertos',type:'number'},
@@ -8027,7 +8123,9 @@ async function deleteEntity(type,id){
   if(!(await uiConfirm(`Eliminar "${nm}"? Esta ação não pode ser anulada.`,{title:'Eliminar '+esc(type)+'?',danger:true,okText:'Eliminar'}))) return;
   if(type==='proposta' && item && item.stockAbatido) applyStockForProp(item, 'Ganha', 'Perdida');   // apagar uma venda repõe o stock
   state[store]=state[store].filter(x=>x.id!==id);
-  if(type==='persona') (state.clientes||[]).forEach(c=>{ if(c.personaId===id) c.personaId=''; });
+  if(type==='persona'){ (state.clientes||[]).forEach(c=>{ if(c.personaId===id) c.personaId=''; });
+    (state.campanhas||[]).forEach(c=>{ if(c.personaId===id) c.personaId=''; });       /* a campanha volta a "Todas" */
+    (state.automacoes||[]).forEach(a=>{ if(a.condPersona===id) a.condPersona=''; }); }
   if(type==='cliente'){ // limpar dependências
     state.propostas=state.propostas.filter(p=>p.clienteId!==id);
     state.consentimentos=state.consentimentos.filter(c=>c.clienteId!==id);
@@ -9169,6 +9267,9 @@ document.addEventListener('click', async e=>{
     case 'process-agend': { const n=processAgendamentos(); render(); toast('Agendados processados',n?`${n} email(s) enviado(s)`:'Nada vencido'); } break;
     case 'campaign-send': sendCampaign(id); break;
     case 'wizard': openWizard(); break;
+    case 'persona-sugestoes': personaRever(el.dataset.id); break;
+    case 'persona-associar': { e.stopPropagation(); const c=getC(el.dataset.cli), pe=personaDe(el.dataset.id);
+      if(c&&pe){ c.personaId=pe.id; save(); toast('Persona associada',((c.nome||'')+' '+(c.apelido||'')).trim()+' · '+(pe.nome||'')); openClient360(c.id); render(); } } break;
     case 'persona-ver': { const p=personaDe(el.dataset.id); if(p) personaVer(p,''); } break;
     case 'persona-enviar': personaEnviar(el.dataset.id); break;
     case 'persona-retirar': personaRetirar(el.dataset.id); break;
