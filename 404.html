@@ -2,6 +2,23 @@
 <html lang="pt-PT" data-theme="light">
 <head>
 <meta charset="UTF-8">
+<style>html.marca-espera body{visibility:hidden}</style>
+<script>
+/* A MARCA DA ESCOLA ANTES DO PRIMEIRO DESENHO. As cores da escola guardam-se
+   neste navegador (applyBrand) e aplicam-se aqui, antes de a página aparecer:
+   sem isto, cada F5 mostrava o CRM azul de origem e só depois a escola.
+   Na primeira visita não há nada guardado: esconde-se a página até a marca
+   chegar (espacoCarregar tira a classe), nunca mais de 2,5 s. */
+(function(){ try{
+  var v=function(x){ x=(x||"").toLowerCase().replace(/[^a-z0-9-]/g,""); return /^[a-z0-9][a-z0-9-]{1,30}$/.test(x)?x:""; };
+  var seg=location.pathname.split("/").filter(Boolean)[0]||"";
+  var slug=(!/\./.test(seg)&&v(seg))||v(new URLSearchParams(location.search).get("e"));
+  if(!slug) return;
+  var c=JSON.parse(localStorage.getItem("crm-marca::"+slug)||"null"), r=document.documentElement;
+  if(c&&c.vars){ for(var k in c.vars) r.style.setProperty(k,c.vars[k]); }
+  else if(!c){ r.classList.add("marca-espera"); setTimeout(function(){ r.classList.remove("marca-espera"); },2500); }
+}catch(e){} })();
+</script>
 <script>
 /* REDE POR BAIXO DO LINK DO BADGE - ler antes de mexer.
    Isto só corre quando /b/<codigo>/ NAO existe como pasta: se existir,
@@ -623,7 +640,7 @@ function currentEspaco(){
   }catch(e){ return ''; }
 }
 const ESPACO_SLUG = currentEspaco();
-let ESPACO = null;          /* preenchido pelo servidor; null = marca neutra */
+let ESPACO = espacoGuardado();          /* preenchido pelo servidor; null = marca neutra */
 
 const TURMA = currentTurma();
 const TURMA_SFX = TURMA ? ('::'+TURMA) : '';
@@ -1935,11 +1952,23 @@ let _supa=null;
 /* Vai buscar a identidade da escola. Falha em silêncio de propósito: sem rede,
    a app abre com a marca neutra em vez de não abrir. Uma escola sem logótipo é
    um contratempo; uma app que não arranca é um problema. */
+/* a última marca desta escola, guardada neste navegador */
+function espacoGuardado(){
+  try{ return ESPACO_SLUG ? JSON.parse(localStorage.getItem('crm-espaco::'+ESPACO_SLUG)||'null') : null; }catch(e){ return null; }
+}
 async function espacoCarregar(){
+  let novo=null, falhou=false;
   try{
-    if(ESPACO_SLUG)      ESPACO = await supaRpc('espaco_publico', { p_slug: ESPACO_SLUG });
-    else if(TURMA)       ESPACO = await supaRpc('turma_espaco',   { p_codigo: TURMA });
-  }catch(e){ ESPACO = null; }
+    if(ESPACO_SLUG)      novo = await supaRpc('espaco_publico', { p_slug: ESPACO_SLUG });
+    else if(TURMA)       novo = await supaRpc('turma_espaco',   { p_codigo: TURMA });
+  }catch(e){ falhou=true; }
+  document.documentElement.classList.remove('marca-espera');
+  /* sem rede: fica a marca guardada (ou a neutra). Antes isto punha ESPACO a
+     null e mandava para a página de escola desconhecida. */
+  if(falhou){ if(ESPACO){ try{ applyBrand(); }catch(e){} } return ESPACO; }
+  ESPACO = novo || null;
+  if(ESPACO_SLUG){ try{ if(ESPACO) localStorage.setItem('crm-espaco::'+ESPACO_SLUG, JSON.stringify(ESPACO));
+    else { localStorage.removeItem('crm-espaco::'+ESPACO_SLUG); localStorage.removeItem('crm-marca::'+ESPACO_SLUG); } }catch(e){} }
   if(ESPACO){ try{ applyBrand(); render(); }catch(e){} }
   else if(ESPACO_SLUG){
     /* pediu-se uma escola que não existe: isto é mesmo um 404, e o sítio
@@ -8566,7 +8595,9 @@ function applyBrand(){
   if(b.cor && /^#?[0-9a-fA-F]{3,6}$/.test(b.cor)){ const c=b.cor[0]==='#'?b.cor:'#'+b.cor;
     const map={'--g900':_mix(c,'#000',.36),'--g800':_mix(c,'#000',.22),'--g700':_mix(c,'#000',.1),'--g600':c,'--g500':_mix(c,'#fff',.12),'--g400':_mix(c,'#fff',.28),'--g300':_mix(c,'#fff',.55),'--g100':_mix(c,'#fff',.88),'--g50':_mix(c,'#fff',.95),'--accent':_mix(c,'#fff',.2)};
     Object.keys(map).forEach(k=>r.style.setProperty(k,map[k]));
-  } else { ['--g900','--g800','--g700','--g600','--g500','--g400','--g300','--g100','--g50','--accent'].forEach(k=>r.style.removeProperty(k)); }
+    if(ESPACO&&ESPACO_SLUG){ try{ localStorage.setItem('crm-marca::'+ESPACO_SLUG, JSON.stringify({vars:map})); }catch(e){} }
+  } else { ['--g900','--g800','--g700','--g600','--g500','--g400','--g300','--g100','--g50','--accent'].forEach(k=>r.style.removeProperty(k));
+    if(ESPACO&&ESPACO_SLUG){ try{ localStorage.setItem('crm-marca::'+ESPACO_SLUG, JSON.stringify({vars:{}})); }catch(e){} } }
   // fundo do login
   const bg = loginBgURL();
   if (bg) r.style.setProperty('--login-bg', `url('${bg}')`);
