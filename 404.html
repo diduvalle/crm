@@ -9003,7 +9003,11 @@ document.addEventListener('click', async e=>{
       try{
         await supaResetPwd(el.dataset.id,pwd);
         const r=await sendInvite({nome:nm,apelido:el.dataset.apelido||'',email:em,email2:em2,username:un},pwd);
-        if(r&&r.sent){ await supaMarcarConvite(el.dataset.id).catch(()=>{}); toast(ja?'Convite reenviado':'Convite enviado',dests.join(' + ')); renderTurmaRoster(); }
+        if(r&&r.sent){
+          const marcou=await supaMarcarConvite(el.dataset.id).then(()=>true,()=>false);
+          if(marcou) toast(ja?'Convite reenviado':'Convite enviado',dests.join(' + '));
+          else toast(ja?'Convite reenviado':'Convite enviado',dests.join(' + ')+' · mas não ficou registado na lista (o email saiu)','warn');
+          renderTurmaRoster(); }
         else toast('Falha no envio',dests.join(' + '),'warn');
       }catch(er){ toast('Erro',supaMsg(er),'err'); }
       break; }
@@ -9015,17 +9019,17 @@ document.addEventListener('click', async e=>{
       if(!pend.length){ toast('Nada a enviar','Todos os formandos já receberam o convite'); break; }
       if(!(await uiConfirm('Vão ser enviados '+pend.length+' convite(s). A palavra-passe de cada formando é reposta para a regra do sistema e enviada para o(s) email(s) dele.',{title:'Enviar convites pendentes?',okText:'Enviar '+pend.length,icon:'send'}))) break;
       toast('A enviar convites…',pend.length+' formando(s)');
-      let ok=0,fail=0;
+      let ok=0,fail=0,semMarca=0;
       for(const u of pend){
         try{
           const pwd=genFormandoPwd(u.email,u.nome,u.apelido,u.username);
           await supaResetPwd(u.id,pwd);
           const r=await sendInvite({nome:u.nome,apelido:u.apelido,email:u.email,email2:u.email2,username:u.username},pwd);
-          if(r&&r.sent){ ok++; await supaMarcarConvite(u.id).catch(()=>{}); } else fail++;
+          if(r&&r.sent){ ok++; if(!(await supaMarcarConvite(u.id).then(()=>true,()=>false))) semMarca++; } else fail++;
         }catch(e){ fail++; }
       }
       renderTurmaRoster();
-      toast('Convites enviados',ok+' enviado(s)'+(fail?' · '+fail+' falhou(aram)':''),fail?'warn':'ok');
+      toast('Convites enviados',ok+' enviado(s)'+(fail?' · '+fail+' falhou(aram)':'')+(semMarca?' · '+semMarca+' sem registo na lista (os emails saíram)':''),(fail||semMarca)?'warn':'ok');
       break; }
     case 'invite-editor': openInviteEditor(); break;
     case 'inv-reset': { const t=INVITE_DEFAULT; document.querySelectorAll('#modalForm [data-inv]').forEach(el=>{ if(t[el.dataset.inv]!=null) el.value=t[el.dataset.inv]; }); const p=$('#invPreview'); if(p) p.innerHTML=invitePreviewHTML(); toast('Reposto','Modelo predefinido'); break; }
