@@ -356,6 +356,20 @@
 .pers-top{display:flex;gap:12px;align-items:flex-start}
 .pers-av{border-radius:14px;overflow:hidden;display:grid;place-items:center;background:var(--g100);color:var(--g700,var(--g600));font-weight:800;flex:0 0 auto}
 .pers-av img{width:100%;height:100%;object-fit:cover;display:block}
+.cara-painel{margin-top:12px;border:1px solid var(--border);border-radius:14px;padding:14px;background:var(--surface2)}
+.cara-estilos{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.cara-corpo{display:grid;grid-template-columns:170px 1fr;gap:16px;align-items:start}
+.cara-ver{text-align:center}
+.cara-ver img{width:170px;height:170px;border-radius:18px;background:var(--surface);display:block;border:1px solid var(--border)}
+.cara-ver img:not([src]){visibility:hidden}
+.cara-ctl{display:flex;flex-direction:column;gap:6px;min-width:0}
+.cara-linha{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.cara-linha>span{flex:0 0 96px;font-size:.8rem;font-weight:700;color:var(--muted)}
+.cara-linha>b{min-width:54px;text-align:center;font-size:.8rem}
+.cara-cores{display:flex;gap:5px;flex-wrap:wrap}
+.cara-cor{width:22px;height:22px;border-radius:50%;border:2px solid var(--surface);box-shadow:0 0 0 1px var(--border);cursor:pointer;padding:0}
+.cara-cor.on{box-shadow:0 0 0 2px var(--g600)}
+@media (max-width:600px){.cara-corpo{grid-template-columns:1fr}.cara-ver img{margin:0 auto}}
 .pers-frase{font-style:italic;font-size:.84rem;margin-top:4px;color:var(--text)}
 .pers-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px;font-size:.8rem;color:var(--muted)}
 .pers-meta span{display:inline-flex;align-items:center;gap:5px}
@@ -7260,6 +7274,7 @@ function personaFichaHTML(p,autor){
     <div class="pers-blocos">${PERSONA_BLOCOS.map(b=>bloco(b.t,b.campos)).join('')}</div>
     <div class="pers-blocos pers-crm">${PERSONA_CRM.map(([k,l])=>bloco(l,[[k,'']])).join('')}</div>
     ${p.base?`<p class="muted" style="font-size:.8rem;margin-top:10px">Baseada em: ${esc(p.base)}</p>`:''}
+    ${p.avatarCredito?`<p class="muted" style="font-size:.74rem;margin-top:4px">Desenho da cara: ${esc(p.avatarCredito)}</p>`:''}
     ${personaTemCrit(p)?`<p class="muted" style="font-size:.8rem;margin-top:4px">Quem encaixa: ${esc(personaCritTexto(p))}</p>`:''}
   </div>`;
 }
@@ -7357,12 +7372,124 @@ function personaPNG(p,autor){
     [['objetivos','Objetivos'],['dificuldades','Dificuldades'],['objecoes','Objeções']].forEach(([k,l],i)=>{ const x=70+i*(bw+gap);
       let yy=texto(l,x,fy2+20,bw,20,800,verde,1); texto(p[k]||'-',x,yy,bw,20,500,escuro,3); });
     if(autor){ g.font=F(500,18); g.fillStyle=cinza; g.textAlign='right'; g.fillText('Persona de '+autor,W-70,H-24); g.textAlign='left'; }
+    if(p.avatarCredito&&img){ g.font=F(500,15); g.fillStyle=cinza; g.fillText('Ilustração: '+p.avatarCredito,70,H-24); }
     const a=document.createElement('a'); a.href=cv.toDataURL('image/png');
     a.download='persona-'+String((p.nome||'persona')+(autor?'-'+autor:'')).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,60)+'.png';
     a.click();
   };
   if(p.avatar){ const img=new Image(); img.onload=()=>desenha(img); img.onerror=()=>desenha(null); img.src=p.avatar; } else desenha(null);
 }
+/* ---------- desenhar a cara (DiceBear, carregado só quando se abre) ----------
+   Três estilos de ilustração com pele, cabelo, barba, óculos e roupa. Nada sai
+   do navegador: os desenhos são gerados aqui e gravados como imagem, como uma
+   foto carregada. Versão fixa (9.4.2); cada estilo traz a sua licença, e a de
+   Personas (CC BY 4.0) obriga a indicar o autor - por isso o crédito fica na
+   persona e aparece na ficha e na imagem para o slide. */
+const CARA_VER='9.4.2', CARA_CDN='https://cdn.jsdelivr.net/npm/@dicebear/';
+const CARA_FUNDOS=['e8eef7','e6f4ea','fdf1e0','f3e8f7','fde8e8','eceff1','fff8db','dff3f5'];
+const CARA_ESTILOS={
+  'personas':{nome:'Personas',credito:'Personas, de Draftbit (CC BY 4.0), via DiceBear',
+    partes:[['hair','Cabelo'],['eyes','Olhos',['open','happy','wink','glasses','sunglasses','sleep']],['mouth','Boca',['smile','bigSmile','smirk','lips','frown','surprise']],
+      ['nose','Nariz'],['facialHair','Barba',null,1],['body','Corpo']],
+    cores:[['skinColor','Pele'],['hairColor','Cabelo'],['clothingColor','Roupa']]},
+  'avataaars':{nome:'Avataaars',credito:'Avataaars, de Pablo Stanley (uso livre), via DiceBear',
+    partes:[['top','Cabelo'],['eyebrows','Sobrancelhas',['defaultNatural','flatNatural','raisedExcitedNatural','upDownNatural','frownNatural','sadConcernedNatural','angryNatural','unibrowNatural']],
+      ['eyes','Olhos',['default','happy','side','squint','wink','surprised','closed']],['mouth','Boca',['default','smile','serious','twinkle','concerned','disbelief','grimace','sad']],
+      ['accessories','Óculos',['prescription01','prescription02','round','wayfarers','kurt','sunglasses'],1],['facialHair','Barba',null,1],
+      ['clothing','Roupa',['blazerAndShirt','blazerAndSweater','collarAndSweater','hoodie','overall','shirtCrewNeck','shirtScoopNeck','shirtVNeck']]],
+    cores:[['skinColor','Pele'],['hairColor','Cabelo'],['clothesColor','Roupa']]},
+  'open-peeps':{nome:'Open Peeps',credito:'Open Peeps, de Pablo Stanley (CC0), via DiceBear',
+    partes:[['head','Cabelo'],['face','Expressão',['calm','smile','smileBig','smileLOL','smileTeethGap','cheeky','cute','driven','explaining','serious','solemn','awe','blank','concerned','contempt','suspicious','tired','old','hectic','lovingGrin1','lovingGrin2','eyesClosed']],
+      ['accessories','Óculos',['glasses','glasses2','glasses3','glasses4','glasses5','sunglasses','sunglasses2'],1],['facialHair','Barba',null,1]],
+    cores:[['skinColor','Pele'],['headContrastColor','Cabelo'],['clothingColor','Roupa']]},
+};
+const caraMods={}; let caraDraft=null, caraVez=0;
+function caraCarregar(estilo){
+  const imp=n=>caraMods[n]||(caraMods[n]=import(CARA_CDN+n+'@'+CARA_VER+'/+esm').catch(e=>{ delete caraMods[n]; throw e; }));
+  return Promise.all([imp('core'),imp(estilo)]).then(([c,s])=>({createAvatar:c.createAvatar,style:s}));
+}
+/* as listas de cada parte e de cada cor vêm do próprio estilo (schema), filtradas pelas nossas */
+function caraListas(st,E){
+  /* as partes vêm em items.enum; as cores não têm enum (aceitam qualquer hex), a paleta do autor está no default */
+  const pr=(st.schema&&st.schema.properties)||{}, en=k=>((pr[k]&&((pr[k].items&&pr[k].items.enum)||pr[k].default))||[]).slice();
+  const partes={}, cores={};
+  E.partes.forEach(([k,,so])=>{ const l=en(k); partes[k]=so?so.filter(x=>l.includes(x)):l; });
+  E.cores.forEach(([k])=>{ cores[k]=en(k); });
+  return {partes,cores};
+}
+function caraAleatoria(estilo,L){
+  const E=CARA_ESTILOS[estilo], r=l=>l[Math.floor(Math.random()*l.length)];
+  const d={estilo,p:{},c:{},fundo:r(CARA_FUNDOS)};
+  E.partes.forEach(([k,,,opc])=>{ const l=L.partes[k]||[]; d.p[k]=opc&&Math.random()<0.7?-1:Math.floor(Math.random()*Math.max(l.length,1)); });
+  E.cores.forEach(([k])=>{ d.c[k]=r(L.cores[k]||['']); });
+  return d;
+}
+function caraOpcoes(d,L){
+  const E=CARA_ESTILOS[d.estilo], o={seed:'crm-persona',backgroundColor:[d.fundo||CARA_FUNDOS[0]]};
+  E.partes.forEach(([k,,,opc])=>{ const l=L.partes[k]||[], i=d.p[k];
+    if(opc&&(i==null||i<0)){ o[k+'Probability']=0; return; }
+    if(l.length) o[k]=[l[Math.min(Math.max(i||0,0),l.length-1)]];
+    if(opc) o[k+'Probability']=100; });
+  E.cores.forEach(([k])=>{ if(d.c[k]) o[k]=[d.c[k]]; });
+  if(d.estilo==='open-peeps') o.maskProbability=0;   /* a máscara não está no editor: nunca */
+  if(d.estilo==='avataaars'){ o.topProbability=100; o.style=['default']; if(d.c.hairColor) o.facialHairColor=[d.c.hairColor]; }
+  return o;
+}
+function caraPainelHTML(){
+  const d=caraDraft; if(!d) return '';
+  const E=CARA_ESTILOS[d.estilo], L=d.L;
+  const passo=(k,l,opc)=>{ const n=(L&&L.partes[k]||[]).length, i=d.p[k];
+    const txt=opc&&(i==null||i<0)?'sem':((i||0)+1)+' / '+n;
+    return `<div class="cara-linha"><span>${esc(l)}</span><button type="button" class="btn-ghost btn-xs" data-act="cara-passo" data-k="${k}" data-d="-1" aria-label="${esc(l)}: anterior">${ic('chevL',14)}</button><b>${txt}</b><button type="button" class="btn-ghost btn-xs" data-act="cara-passo" data-k="${k}" data-d="1" aria-label="${esc(l)}: seguinte">${ic('chevR',14)}</button></div>`; };
+  const cores=(k,l,lista)=>`<div class="cara-linha"><span>${esc(l)}</span><div class="cara-cores">${(lista||[]).map(h=>`<button type="button" class="cara-cor${d.c[k]===h||(k==='__fundo'&&d.fundo===h)?' on':''}" style="background:#${h}" data-act="cara-cor" data-k="${k}" data-v="${h}" aria-label="${esc(l)} #${h}"></button>`).join('')}</div></div>`;
+  return `<div class="cara-estilos">${Object.keys(CARA_ESTILOS).map(k=>`<button type="button" class="${k===d.estilo?'btn':'btn-sec'} btn-sm" data-act="cara-estilo" data-e="${k}">${esc(CARA_ESTILOS[k].nome)}</button>`).join('')}</div>
+    <div class="cara-corpo"><div class="cara-ver"><img id="caraImg" alt="Pré-visualização da cara"><div id="caraEstado" class="muted" style="font-size:.76rem">${L?'':'A carregar os desenhos…'}</div></div>
+      <div class="cara-ctl">${L?E.partes.map(([k,l,,opc])=>passo(k,l,opc)).join('')+E.cores.map(([k,l])=>cores(k,l,L.cores[k])).join('')+cores('__fundo','Fundo',CARA_FUNDOS):''}</div></div>
+    <div class="toolbar" style="margin-top:12px;flex-wrap:wrap"><button type="button" class="btn-sec btn-sm" data-act="cara-aleatorio">${ic('rotate',14)} Aleatório</button>
+      <button type="button" class="btn btn-sm" data-act="cara-usar" ${L?'':'disabled'}>${ic('check',14)} Usar esta cara</button>
+      <button type="button" class="btn-ghost btn-sm" data-act="cara-fechar">Fechar</button></div>
+    <div class="muted" style="font-size:.72rem;margin-top:8px">Desenho: ${esc(E.credito)}. Gerado no seu navegador.</div>`;
+}
+function caraPintar(){
+  const box=$('#caraPainel'); if(!box||!caraDraft) return;
+  box.innerHTML=caraPainelHTML(); box.hidden=false;
+  const d=caraDraft, vez=++caraVez;
+  caraCarregar(d.estilo).then(({createAvatar,style})=>{
+    if(vez!==caraVez) return;
+    if(!d.L){ d.L=caraListas(style,CARA_ESTILOS[d.estilo]); if(d.novo){ Object.assign(d,caraAleatoria(d.estilo,d.L),{L:d.L}); delete d.novo; } return caraPintar(); }
+    d.uri=createAvatar(style,caraOpcoes(d,d.L)).toDataUri();
+    const img=$('#caraImg'); if(img) img.src=d.uri;
+  }).catch(()=>{ if(vez!==caraVez) return; const s=$('#caraEstado'); if(s) s.textContent='Não foi possível carregar os desenhos. Verifique a ligação à internet e recarregue a página (F5).'; });   /* o navegador guarda a falha do módulo: só um F5 a limpa */
+}
+function caraAbrir(){
+  let cfg=null; try{ cfg=JSON.parse(($('#modalForm [name="caraCfg"]')||{}).value||'null'); }catch(e){}
+  caraDraft=cfg&&CARA_ESTILOS[cfg.estilo]?{estilo:cfg.estilo,p:cfg.p||{},c:cfg.c||{},fundo:cfg.fundo}:{estilo:'personas',p:{},c:{},novo:1};
+  caraPintar();
+}
+function caraEstilo(e){ if(!CARA_ESTILOS[e]||!caraDraft) return; caraDraft={estilo:e,p:{},c:{},novo:1}; caraPintar(); }
+function caraPasso(k,dir){ const d=caraDraft; if(!d||!d.L) return;
+  const E=CARA_ESTILOS[d.estilo], def=E.partes.find(x=>x[0]===k); if(!def) return;
+  const n=(d.L.partes[k]||[]).length, opc=!!def[3], i=d.p[k]==null?(opc?-1:0):d.p[k];
+  const min=opc?-1:0; let j=i+dir; if(j>n-1) j=min; if(j<min) j=n-1;
+  d.p[k]=j; caraPintar(); }
+function caraCor(k,v){ const d=caraDraft; if(!d) return; if(k==='__fundo') d.fundo=v; else d.c[k]=v; caraPintar(); }
+function caraUsar(){
+  const d=caraDraft; if(!d||!d.uri) return;
+  const img=new Image();
+  img.onload=()=>{ const S=320, cv=document.createElement('canvas'); cv.width=S; cv.height=S; cv.getContext('2d').drawImage(img,0,0,S,S);
+    let url; try{ url=cv.toDataURL('image/png'); }catch(e){ return toast('Não foi possível usar a cara','','err'); }
+    const set=(n,v)=>{ const x=$('#modalForm [name="'+n+'"]'); if(x) x.value=v; };
+    set('avatar',url); set('caraCfg',JSON.stringify({estilo:d.estilo,p:d.p,c:d.c,fundo:d.fundo})); set('avatarCredito',CARA_ESTILOS[d.estilo].credito);
+    const prev=$('#avPreview'); if(prev) prev.innerHTML='<img src="'+url+'" style="width:100%;height:100%;object-fit:cover">';
+    const clr=$('#modalForm [data-act="av-clear"]'); if(clr) clr.style.display='';
+    caraFechar(); toast('Cara aplicada','Grave a persona para a guardar'); };
+  img.onerror=()=>toast('Não foi possível usar a cara','','err');
+  img.src=d.uri;
+}
+function caraFechar(){ caraDraft=null; caraVez++; const box=$('#caraPainel'); if(box){ box.hidden=true; box.innerHTML=''; } }
+/* uma foto carregada (ou removida) deixa de ser um desenho: sem crédito nem receita */
+function caraEsquecer(){ ['caraCfg','avatarCredito'].forEach(n=>{ const x=$('#modalForm [name="'+n+'"]'); if(x) x.value=''; }); caraFechar(); }
+
 /* ---------- a vista ---------- */
 views.personas = () => {
   const L=state.personas||[];
@@ -7401,7 +7528,8 @@ views.personas = () => {
 function personaCampos(){
   const topo=[
     {n:'nome',l:'Nome da persona',req:1,full:1,hint:'Um nome e um papel, ex.: Ana, diretora de hotel independente'},
-    {n:'avatar',l:'Foto (fictícia)',type:'avatar',full:1,hint:'Uma imagem fictícia (gerada por IA ou de um banco de imagens). Fica reduzida a 220 px.'},
+    {n:'avatar',l:'Foto (fictícia)',type:'avatar',cara:1,full:1,hint:'Desenhe a cara aqui, ou carregue uma imagem fictícia (gerada por IA ou de um banco de imagens). Nunca a foto de uma pessoa real.'},
+    {n:'caraCfg',type:'hidden'},{n:'avatarCredito',type:'hidden'},
     {n:'frase',l:'Frase típica',full:1,hint:'Uma frase que esta persona diria'},
     {n:'base',l:'Baseada em',full:1,hint:'De onde vem: experiência profissional, entrevistas, dados de clientes…'},
   ];
@@ -7666,7 +7794,8 @@ function fieldHTML(f,item){
     return `<div class="${cls}"><label>${esc(f.l)}</label><select name="${f.n}">${opt(opts,v)}</select>${hint}</div>`;
   }
   if(f.type==='sec') return `<div class="field full form-sec"><h4>${esc(f.l)}</h4></div>`;
-  if(f.type==='avatar'){ const ini=initialsOf(item); return `<div class="${cls}"><label>${esc(f.l)}</label><div style="display:flex;align-items:center;gap:14px"><div id="avPreview" class="avatar" style="width:58px;height:58px;padding:0;overflow:hidden;font-size:1.15rem">${v?`<img src="${esc(v)}" style="width:100%;height:100%;object-fit:cover">`:esc(ini)}</div><label class="btn-sec btn-sm" style="cursor:pointer">${ic('image',15)} Carregar foto<input type="file" accept="image/*" data-avatar style="display:none"></label><input type="hidden" name="avatar" value="${esc(v)}"><button type="button" class="btn-ghost btn-sm" data-act="av-clear" ${v?'':'style="display:none"'}>Remover</button></div><span class="hint">${f.hint?esc(f.hint):`Imagem quadrada recomendada. ${TURMA?'Fica guardada na sua conta, no servidor, e volta sempre que iniciar sessão - também noutro computador. É apagada com a conta.':'Fica guardada no perfil do utilizador.'}`}</span></div>`; }
+  if(f.type==='hidden') return `<input type="hidden" name="${f.n}" value="${esc(v)}">`;
+  if(f.type==='avatar'){ const ini=initialsOf(item); return `<div class="${cls}"><label>${esc(f.l)}</label><div style="display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap"><div id="avPreview" class="avatar" style="width:58px;height:58px;padding:0;overflow:hidden;font-size:1.15rem">${v?`<img src="${esc(v)}" style="width:100%;height:100%;object-fit:cover">`:esc(ini)}</div><label class="btn-sec btn-sm" style="cursor:pointer">${ic('image',15)} Carregar foto<input type="file" accept="image/*" data-avatar style="display:none"></label>${f.cara?`<button type="button" class="btn-sec btn-sm" data-act="cara-abrir">${ic('persona',15)} Desenhar a cara</button>`:''}<input type="hidden" name="avatar" value="${esc(v)}"><button type="button" class="btn-ghost btn-sm" data-act="av-clear" ${v?'':'style="display:none"'}>Remover</button></div><span class="hint">${f.hint?esc(f.hint):`Imagem quadrada recomendada. ${TURMA?'Fica guardada na sua conta, no servidor, e volta sempre que iniciar sessão - também noutro computador. É apagada com a conta.':'Fica guardada no perfil do utilizador.'}`}</span>${f.cara?'<div id="caraPainel" class="cara-painel" hidden></div>':''}</div>`; }
   if(f.type==='textarea') return `<div class="${cls}"><label>${esc(f.l)}</label><textarea name="${f.n}">${esc(v)}</textarea>${hint}</div>`;
   if(f.type==='contactlist'){
     const rows=Array.isArray(item[f.n])?item[f.n]:[];
@@ -9180,7 +9309,7 @@ document.addEventListener('click', async e=>{
           state.settings.emailPlano=n; state.settings.emailDiaCiclo=dia; save(); renderUsoEmail();
           toast('Plano atualizado',n+' envios · repõe dia '+dia); }); } break;
     case 'test-emailjs': if(!isAdmin()){ toast('Sem permissão','Só administradores','warn'); break; } sendTestEmailJS(); break;
-    case 'av-clear': { const hid=$('#modalForm [name="avatar"]'); if(hid) hid.value=''; const prev=$('#avPreview'); if(prev){ const fd=new FormData($('#modalForm')); prev.textContent=initialsOf({nome:fd.get('nome'),apelido:fd.get('apelido')}); } el.style.display='none'; } break;
+    case 'av-clear': { const hid=$('#modalForm [name="avatar"]'); if(hid) hid.value=''; caraEsquecer(); const prev=$('#avPreview'); if(prev){ const fd=new FormData($('#modalForm')); prev.textContent=initialsOf({nome:fd.get('nome'),apelido:fd.get('apelido')}); } el.style.display='none'; } break;
     case 'add-origem': { if(!canFeat('origens')){ toast('Sem permissão','','warn'); break; } const v=($('#newOrigem')?.value||'').trim(); if(!v){ toast('Indique a origem','','warn'); break; } state.settings.origens=state.settings.origens||[]; if(state.settings.origens.some(o=>o.toLowerCase()===v.toLowerCase())){ toast('Já existe','','warn'); break; } state.settings.origens.push(v); save(); render(); toast('Origem adicionada',v); } break;
     case 'del-origem': { if(!canFeat('origens')){ toast('Sem permissão','','warn'); break; } const o=el.dataset.origem; state.settings.origens=(state.settings.origens||[]).filter(x=>x!==o); save(); render(); toast('Origem removida',o); } break;
     case 'add-funcao': { if(!canFeat('funcoes')){ toast('Sem permissão','','warn'); break; } const v=($('#newFuncao')?.value||'').trim(); if(!v){ toast('Indique a função','','warn'); break; } state.settings.funcoes=funcoesList().slice(); if(state.settings.funcoes.some(o=>o.toLowerCase()===v.toLowerCase())){ toast('Já existe','','warn'); break; } state.settings.funcoes.push(v); save(); render(); toast('Função adicionada',v); } break;
@@ -9268,6 +9397,13 @@ document.addEventListener('click', async e=>{
     case 'campaign-send': sendCampaign(id); break;
     case 'wizard': openWizard(); break;
     case 'persona-sugestoes': personaRever(el.dataset.id); break;
+    case 'cara-abrir': caraAbrir(); break;
+    case 'cara-estilo': caraEstilo(el.dataset.e); break;
+    case 'cara-passo': caraPasso(el.dataset.k,+el.dataset.d||1); break;
+    case 'cara-cor': caraCor(el.dataset.k,el.dataset.v); break;
+    case 'cara-aleatorio': if(caraDraft&&caraDraft.L){ Object.assign(caraDraft,caraAleatoria(caraDraft.estilo,caraDraft.L)); caraPintar(); } break;
+    case 'cara-usar': caraUsar(); break;
+    case 'cara-fechar': caraFechar(); break;
     case 'persona-associar': { e.stopPropagation(); const c=getC(el.dataset.cli), pe=personaDe(el.dataset.id);
       if(c&&pe){ c.personaId=pe.id; save(); toast('Persona associada',((c.nome||'')+' '+(c.apelido||'')).trim()+' · '+(pe.nome||'')); openClient360(c.id); render(); } } break;
     case 'persona-ver': { const p=personaDe(el.dataset.id); if(p) personaVer(p,''); } break;
@@ -10307,7 +10443,7 @@ function syncTplMeta(){ const n=$('#tplName'), c=$('#tplCor'); if(n)tplDraft.nom
 function saveTpl(){ syncTplMeta(); if(!String(tplDraft.nome||'').trim()){ toast('Falta o nome','Dê um nome ao modelo','warn'); return; } const i=state.propostaTemplates.findIndex(x=>x.id===tplDraft.id); if(i>=0) state.propostaTemplates[i]=tplDraft; else { tplDraft.criadoPor=currentUser()?currentUser().id:tplDraft.criadoPor; tplDraft.criadoEm=todayISO(); if(!tplDraft.fonte) tplDraft.fonte='manual'; state.propostaTemplates.push(tplDraft); } const nm=tplDraft.nome; save(); tplDraft=null; tplSel=null; render(); toast(i>=0?'Modelo atualizado':'Modelo criado', nm); }
 function cancelTpl(){ tplDraft=null; tplSel=null; render(); }
 function onBlockImage(input){ const f=input.files&&input.files[0]; const i=+input.dataset.bimg; if(!f||!tplDraft||!tplDraft.blocks[i]) return; const r=new FileReader(); r.onload=ev=>{ const img=new Image(); img.onload=()=>{ const max=1000; let w=img.width,h=img.height; if(w>max){h=Math.round(h*max/w);w=max;} const cv=document.createElement('canvas'); cv.width=w;cv.height=h; cv.getContext('2d').drawImage(img,0,0,w,h); let url; try{url=cv.toDataURL('image/jpeg',0.82);}catch(e){url=ev.target.result;} tplDraft.blocks[i].src=url; render(); toast('Imagem adicionada'); }; img.src=ev.target.result; }; r.readAsDataURL(f); }
-function onAvatarFile(input){ const f=input.files&&input.files[0]; if(!f) return; const r=new FileReader(); r.onload=ev=>{ const img=new Image(); img.onload=()=>{ const S=220, cv=document.createElement('canvas'); cv.width=S; cv.height=S; const ctx=cv.getContext('2d'); const min=Math.min(img.width,img.height), sx=(img.width-min)/2, sy=(img.height-min)/2; ctx.drawImage(img,sx,sy,min,min,0,0,S,S); let url; try{ url=cv.toDataURL('image/jpeg',0.85); }catch(e){ url=ev.target.result; } const hid=$('#modalForm [name="avatar"]'); if(hid) hid.value=url; const prev=$('#avPreview'); if(prev) prev.innerHTML='<img src="'+url+'" style="width:100%;height:100%;object-fit:cover">'; const clr=$('#modalForm [data-act="av-clear"]'); if(clr) clr.style.display=''; }; img.src=ev.target.result; }; r.readAsDataURL(f); }
+function onAvatarFile(input){ const f=input.files&&input.files[0]; if(!f) return; if(typeof caraEsquecer==='function') caraEsquecer(); const r=new FileReader(); r.onload=ev=>{ const img=new Image(); img.onload=()=>{ const S=220, cv=document.createElement('canvas'); cv.width=S; cv.height=S; const ctx=cv.getContext('2d'); const min=Math.min(img.width,img.height), sx=(img.width-min)/2, sy=(img.height-min)/2; ctx.drawImage(img,sx,sy,min,min,0,0,S,S); let url; try{ url=cv.toDataURL('image/jpeg',0.85); }catch(e){ url=ev.target.result; } const hid=$('#modalForm [name="avatar"]'); if(hid) hid.value=url; const prev=$('#avPreview'); if(prev) prev.innerHTML='<img src="'+url+'" style="width:100%;height:100%;object-fit:cover">'; const clr=$('#modalForm [data-act="av-clear"]'); if(clr) clr.style.display=''; }; img.src=ev.target.result; }; r.readAsDataURL(f); }
 function insertTag(tag){ const ta=(lastTagEl&&lastTagEl.isConnected)?lastTagEl:document.querySelector('#content [data-tagtarget]'); if(!ta) return; const s=ta.selectionStart??ta.value.length, e=ta.selectionEnd??ta.value.length; const ins='{{'+tag+'}}'; ta.value=ta.value.slice(0,s)+ins+ta.value.slice(e); ta.focus(); const np=s+ins.length; ta.setSelectionRange(np,np); if(ta.dataset.bf!=null) applyBlockField(ta); }
 
 /* ---- vistas do módulo Modelos ---- */
